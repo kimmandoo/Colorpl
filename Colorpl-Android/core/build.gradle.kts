@@ -70,4 +70,7 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kapt(libs.hilt.compiler)
     kaptAndroidTest(libs.hilt.compiler)
+
+    // Firebase
+    implementation(libs.firebase.cloud.messaging)
 }

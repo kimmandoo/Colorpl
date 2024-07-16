@@ -15,6 +15,10 @@ datastore = "1.1.1"
 lifecycle-runtime-ktx = "2.8.3"
 lifecycle-extensions = "2.2.0"
 
+# Firebase
+firebase-bom = "32.8.1"
+fcm = "24.0.0"
+
 # Maps
 playServicesLocation = "21.3.0"
 navermaps = "3.18.0"
@@ -52,6 +56,9 @@ lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensi
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+
+# Firebase
+firebase-cloud-messaging = {group="com.google.firebase", name="firebase-messaging-ktx", version.ref = "fcm" }
 
 # Maps
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
