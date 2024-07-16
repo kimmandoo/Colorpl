@@ -16,6 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    //local property로 따로 빼기
     val baseUrl = ""
 
     @Singleton
