@@ -75,4 +75,14 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)
+
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.kotlinxSerialization)
+    implementation(libs.okhttp)
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp.loggingInterceptor)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
 }
