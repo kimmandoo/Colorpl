@@ -1,4 +1,4 @@
-package com.colorpl
+package com.colorpl.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
