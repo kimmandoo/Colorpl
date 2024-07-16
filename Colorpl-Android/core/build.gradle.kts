@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.gradle.plugin)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.google.services)
 }
 
 fun getApiKey(propertyKey: String): String {
@@ -41,6 +42,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }

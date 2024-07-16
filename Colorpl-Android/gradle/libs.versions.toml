@@ -18,6 +18,7 @@ lifecycle-extensions = "2.2.0"
 # Firebase
 firebase-bom = "32.8.1"
 fcm = "24.0.0"
+google-services = "4.3.15"
 
 # Maps
 playServicesLocation = "21.3.0"
@@ -58,7 +59,7 @@ navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fr
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 
 # Firebase
-firebase-cloud-messaging = {group="com.google.firebase", name="firebase-messaging-ktx", version.ref = "fcm" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "fcm" }
 
 # Maps
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
@@ -97,4 +98,4 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-gradle-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
