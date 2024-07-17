@@ -12,6 +12,9 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.colorpl.presentation.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -28,8 +31,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Timber.d("메세지 호출 ${remoteMessage.notification}")
         Timber.d("데이터 메세지 호출 ${remoteMessage.data}")
         sendNotification(remoteMessage)
+        initWorkerManager()
     }
 
+    private fun initWorkerManager(){
+        val fcmWorkRequest : WorkRequest = OneTimeWorkRequestBuilder<FcmWorker>().build()
+
+        WorkManager.getInstance(this).enqueue(fcmWorkRequest)
+    }
 
 
     private fun sendNotification(remoteMessage: RemoteMessage) {
