@@ -75,6 +75,7 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)
+    implementation(platform(libs.firebase.bom))
 
     // Network
     implementation(libs.retrofit)
@@ -85,4 +86,8 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    // Log
+    implementation(libs.timber)
+
 }

@@ -16,7 +16,7 @@ lifecycle-runtime-ktx = "2.8.3"
 lifecycle-extensions = "2.2.0"
 
 # Firebase
-firebase-bom = "32.8.1"
+firebaseBom = "33.1.2"
 fcm = "24.0.0"
 google-services = "4.3.15"
 
@@ -51,6 +51,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycle-extensions" }

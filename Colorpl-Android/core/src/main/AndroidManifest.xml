@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+
+
     <application
         android:name=".app.ColorplApplication"
         android:allowBackup="true"
@@ -24,6 +26,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Colorpl"
         tools:targetApi="31">
+
+        <service
+            android:name="com.presentation.notification.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

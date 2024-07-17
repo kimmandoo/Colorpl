@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.gradle.plugin)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.google.services)
 }
 
 
@@ -84,4 +83,5 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)
+    implementation(platform(libs.firebase.bom))
 }
