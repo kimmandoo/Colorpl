@@ -34,6 +34,7 @@
             app:itemIconTint="@color/selector_bottom_menu_item"
             app:itemPaddingBottom="16dp"
             app:itemPaddingTop="16dp"
+            app:itemRippleColor="@android:color/transparent"
             app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
             app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
             app:itemTextColor="@color/selector_bottom_menu_item"
