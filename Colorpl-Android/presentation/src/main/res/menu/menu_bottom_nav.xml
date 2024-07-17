@@ -13,7 +13,7 @@
         android:id="@+id/fragment_ticket"
         android:title=""
         android:icon="@drawable/selector_ticket"
-        android:enabled="true" />
+        android:enabled="false" />
     <item
         android:id="@+id/fragment_feed"
         android:icon="@drawable/selector_review"
