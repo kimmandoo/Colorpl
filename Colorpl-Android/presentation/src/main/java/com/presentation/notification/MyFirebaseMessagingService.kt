@@ -28,7 +28,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     // 메시지 수신
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Timber.d("메세지 호출 ${remoteMessage.notification}")
+        Timber.d("메세지 위치 호출 ${remoteMessage.notification}")
         Timber.d("데이터 메세지 호출 ${remoteMessage.data}")
         sendNotification(remoteMessage)
         initWorkerManager()
