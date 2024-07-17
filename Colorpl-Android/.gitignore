@@ -11,7 +11,7 @@
 .DS_Store
 /build
 /captures
-presentation/google-services.json
+/core/google-services.json
 .externalNativeBuild
 .cxx
 local.properties
