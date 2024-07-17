@@ -9,6 +9,8 @@ import com.colorpl.presentation.R
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
+import com.presentation.util.locationPermission
+import com.presentation.util.notificationPermission
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -16,7 +18,8 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        notificationPermission()
+        locationPermission()
         // FCM SDK 초기화
         FirebaseApp.initializeApp(this);
 

@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    //androidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.material)
     testImplementation(libs.junit)
     implementation(libs.datastore.preferences)
+    implementation(libs.androidx.work.runtime.ktx)
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
