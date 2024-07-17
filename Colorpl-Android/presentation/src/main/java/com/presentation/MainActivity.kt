@@ -1,8 +1,5 @@
 package com.presentation
 
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -25,18 +22,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         initFCM()
     }
 
-    private fun initBottomNavBar(){
+    private fun initBottomNavBar() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         navController = navHostFragment.navController
-
-        binding.bottomNavigationBar.setupWithNavController(navController)
-        binding.bottomNavigationBar.setOnItemReselectedListener {
-
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
+            binding.fabTicket.isSelected = destination.id == R.id.fragment_ticket
         }
+        binding.apply {
+            fabTicket.setOnClickListener {
+                binding.fabTicket.isSelected = true
+                bottomNavigationBar.selectedItemId = R.id.fragment_ticket
+            }
+            bottomNavigationBar.background = null
+            bottomNavigationBar.setupWithNavController(navController)
+            bottomNavigationBar.setOnItemReselectedListener {
+            }
+        }
+
     }
 
-    private fun initFCM(){
+    private fun initFCM() {
         // FCM SDK 초기화
         FirebaseApp.initializeApp(this);
 

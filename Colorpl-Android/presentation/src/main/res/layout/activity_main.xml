@@ -7,7 +7,7 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,31 +17,51 @@
             android:id="@+id/nav_host"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/nav_graph" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation_bar"
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="@drawable/layer_menu_bottom_nav"
-            app:itemActiveIndicatorStyle="@style/CustomBottomNavTextAppearance"
-            app:itemIconSize="24dp"
-            app:itemIconTint="@color/selector_bottom_menu_item"
-            app:itemPaddingBottom="16dp"
-            app:itemPaddingTop="16dp"
-            app:itemRippleColor="@android:color/transparent"
-            app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
-            app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
-            app:itemTextColor="@color/selector_bottom_menu_item"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/menu_bottom_nav" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/eerie_black"
+            app:fabAnchorMode="cradle"
+            app:fabCradleMargin="5dp"
+            app:fabCradleRoundedCornerRadius="20dp">
 
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation_bar"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:paddingVertical="4dp"
+                app:itemActiveIndicatorStyle="@style/CustomBottomNavTextAppearance"
+                app:itemIconSize="24dp"
+                app:itemIconTint="@color/selector_bottom_menu_item"
+                app:itemRippleColor="@android:color/transparent"
+                app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
+                app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
+                app:itemTextColor="@color/selector_bottom_menu_item"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/menu_bottom_nav" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_ticket"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:clickable="true"
+            android:contentDescription="@string/menu_ticket"
+            android:focusable="true"
+            android:foreground="@drawable/selector_ticket"
+            app:layout_anchor="@id/bottom_app_bar" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
