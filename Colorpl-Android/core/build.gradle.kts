@@ -54,8 +54,8 @@ android {
 
 dependencies {
     // module
-    implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":domain"))
     implementation(project(":presentation"))
 
     implementation(libs.androidx.core.ktx)
