@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="night">#FF0B090A</color>
+    <color name="eerie_black">#FF161A1D</color>
+    <color name="cornell_red">#FFA4161A</color>
+    <color name="imperial_red">#FFE5383B</color>
+    <color name="timber_wolf">#FFD3D3D3</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

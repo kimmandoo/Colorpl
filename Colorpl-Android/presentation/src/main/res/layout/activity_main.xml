@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.presentation.MainActivity">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/nav_graph" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@drawable/layer_menu_bottom_nav"
+            app:itemActiveIndicatorStyle="@style/CustomBottomNavTextAppearance"
+            app:itemIconSize="24dp"
+            app:itemIconTint="@color/selector_bottom_menu_item"
+            app:itemPaddingBottom="16dp"
+            app:itemPaddingTop="16dp"
+            app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
+            app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
+            app:itemTextColor="@color/selector_bottom_menu_item"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/menu_bottom_nav" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
