@@ -17,7 +17,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     //local property로 따로 빼기
-    val baseUrl = "http://192.168.100.142/"
+    val baseUrl = "http://192.168.100.142:8080/"
 
     @Singleton
     @Provides
