@@ -43,11 +43,11 @@
                 android:paddingVertical="4dp"
                 app:itemActiveIndicatorStyle="@style/CustomBottomNavTextAppearance"
                 app:itemIconSize="24dp"
-                app:itemIconTint="@color/selector_bottom_menu_item"
+                app:itemIconTint="@color/selector_timber_wolf_to_imperial_red"
                 app:itemRippleColor="@android:color/transparent"
                 app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
                 app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
-                app:itemTextColor="@color/selector_bottom_menu_item"
+                app:itemTextColor="@color/selector_timber_wolf_to_imperial_red"
                 app:labelVisibilityMode="labeled"
                 app:menu="@menu/menu_bottom_nav" />
 
