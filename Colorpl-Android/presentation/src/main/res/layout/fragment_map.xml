@@ -8,10 +8,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
+
+        <com.naver.maps.map.MapView
+            android:id="@+id/mv_naver_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/menu_map"/>
+            android:layout_marginBottom="68dp"
+            android:layout_height="match_parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
