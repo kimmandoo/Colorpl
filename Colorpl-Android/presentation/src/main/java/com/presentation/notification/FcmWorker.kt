@@ -14,45 +14,46 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 
 @HiltWorker
 class FcmWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val notificationUseCase: NotificationUseCase
+    private val notificationUseCase : NotificationUseCase
 ) :
     CoroutineWorker(context, workerParams) {
+
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(context)
     }
 
     override suspend fun doWork(): Result {
-            checkLocation{ latitude, longitude ->
-                val la = latitude
-                val long = longitude
-                CoroutineScope(Dispatchers.IO).launch {
-                    Timber.d("위치 쏘세요!")
-                    notificationUseCase.getMarkers(latitude = la, long, 2.0)
-                }
+        checkLocation { latitude, longitude ->
+            val la = latitude
+            val long = longitude
+            CoroutineScope(Dispatchers.IO).launch {
+                notificationUseCase.getMarkers(latitude = la, long, 2.0)
             }
+        }
         return Result.success()
     }
 
     @SuppressLint("MissingPermission")
-    fun checkLocation(listener : (Double, Double) -> Unit){
+    fun checkLocation(listener: (Double, Double) -> Unit) {
         mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
             kotlin.runCatching {
                 task.result
-            }.onSuccess {location ->
-
+            }.onSuccess { location ->
+                listener(location.latitude, location.longitude)
                 Timber.d("위치 불러오기 성공 ${location.latitude}, ${location.longitude}")
 
             }.onFailure { e ->
                 Timber.d("위치 불러오기 에러 확인 $e")
 
-            }.getOrNull()
+            }
         }
     }
 }

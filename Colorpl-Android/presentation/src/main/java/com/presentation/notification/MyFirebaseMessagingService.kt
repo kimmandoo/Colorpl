@@ -11,7 +11,12 @@ import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
@@ -20,11 +25,18 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.presentation.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+    }
 
     // 메시지 수신
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -34,11 +46,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         initWorkerManager()
     }
 
-    private fun initWorkerManager(){
-        val fcmWorkRequest : WorkRequest = OneTimeWorkRequestBuilder<FcmWorker>().build()
+    private fun initWorkerManager() {
 
-        WorkManager.getInstance(this).enqueue(fcmWorkRequest)
-    }
+        val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>().build()
+
+        val workManager = WorkManager.getInstance(this)
+
+        workManager.enqueue(fcmWorkRequest)
+
+}
 
 
     private fun sendNotification(remoteMessage: RemoteMessage) {
