@@ -11,9 +11,7 @@
         android:title="@string/menu_map" />
     <item
         android:id="@+id/fragment_ticket"
-        android:title=""
-        android:icon="@drawable/selector_ticket"
-        android:enabled="true" />
+        android:title="예매" />
     <item
         android:id="@+id/fragment_feed"
         android:icon="@drawable/selector_review"
