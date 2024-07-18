@@ -43,15 +43,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Permission
-    implementation(libs.ted.permission.normal)
-    implementation(libs.ted.permission.coroutine)
-
     // Log
     implementation(libs.timber)
 
-    // Glide
-    implementation(libs.glide)
 
     // Coroutine
     implementation(libs.coroutines.android)

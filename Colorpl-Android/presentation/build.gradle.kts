@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.gradle.plugin)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.google.services)
 }
 
 
@@ -42,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    //androidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
@@ -53,6 +54,7 @@ dependencies {
     implementation(libs.material)
     testImplementation(libs.junit)
     implementation(libs.datastore.preferences)
+    implementation(libs.androidx.work.runtime.ktx)
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
@@ -84,4 +86,5 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)
+    implementation(platform(libs.firebase.bom))
 }

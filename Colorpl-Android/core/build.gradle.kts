@@ -48,14 +48,15 @@ android {
     }
 
     buildFeatures {
+        dataBinding = true
         buildConfig = true
     }
 }
 
 dependencies {
     // module
-    implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":domain"))
     implementation(project(":presentation"))
 
     implementation(libs.androidx.core.ktx)
@@ -75,6 +76,7 @@ dependencies {
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)
+    implementation(platform(libs.firebase.bom))
 
     // Network
     implementation(libs.retrofit)
@@ -85,4 +87,8 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    // Log
+    implementation(libs.timber)
+
 }

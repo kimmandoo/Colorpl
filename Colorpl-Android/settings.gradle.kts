@@ -22,6 +22,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Colorpl"
 include(":core")
-include(":domain")
-include(":data")
 include(":presentation")
+include(":data")
+include(":domain")
