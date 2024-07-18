@@ -1,26 +1,50 @@
 package com.presentation
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.work.WorkManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.colorpl.presentation.R
+import com.colorpl.presentation.databinding.ActivityMainBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.presentation.util.locationPermission
-import com.presentation.util.notificationPermission
+import com.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        notificationPermission()
-        locationPermission()
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+
+    private lateinit var navController: NavController
+
+    override fun init() {
+        initBottomNavBar()
+        initFCM()
+    }
+
+    private fun initBottomNavBar() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
+        navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
+            binding.fabTicket.isSelected = destination.id == R.id.fragment_ticket
+        }
+        binding.apply {
+            fabTicket.setOnClickListener {
+                binding.fabTicket.isSelected = true
+                bottomNavigationBar.selectedItemId = R.id.fragment_ticket
+            }
+            bottomNavigationBar.background = null
+            bottomNavigationBar.setupWithNavController(navController)
+            bottomNavigationBar.setOnItemReselectedListener {
+            }
+        }
+
+    }
+
+    private fun initFCM() {
         // FCM SDK 초기화
         FirebaseApp.initializeApp(this);
 
@@ -34,7 +58,5 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-
-
     }
 }

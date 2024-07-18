@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/fragment_schedule"
+        android:icon="@drawable/selector_calendar"
+        android:title="@string/menu_schedule" />
+    <item
+        android:id="@+id/fragment_map"
+        android:icon="@drawable/selector_map"
+        android:title="@string/menu_map" />
+    <item
+        android:id="@+id/fragment_ticket"
+        android:title="예매" />
+    <item
+        android:id="@+id/fragment_feed"
+        android:icon="@drawable/selector_review"
+        android:title="@string/menu_feed" />
+    <item
+        android:id="@+id/fragment_my_page"
+        android:icon="@drawable/selector_my_page"
+        android:title="@string/menu_my_page" />
+</menu>
