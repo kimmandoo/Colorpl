@@ -1,13 +1,13 @@
-package com.D109.Colorpl_Backend;
+package com.colorpl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ColorplBackendApplication {
+public class ColorplApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ColorplBackendApplication.class, args);
+		SpringApplication.run(ColorplApplication.class, args);
 	}
 
 }

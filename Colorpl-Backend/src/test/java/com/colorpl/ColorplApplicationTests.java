@@ -1,10 +1,10 @@
-package com.D109.Colorpl_Backend;
+package com.colorpl;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ColorplBackendApplicationTests {
+class ColorplApplicationTests {
 
 	@Test
 	void contextLoads() {
