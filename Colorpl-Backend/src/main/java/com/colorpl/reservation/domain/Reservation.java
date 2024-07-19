@@ -1,10 +1,13 @@
 package com.colorpl.reservation.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +31,10 @@ public class Reservation {
 
     @Column(name = "RESERVE_AMOUNT")
     private String amount;
+
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<ReservationDetail> reservationDetails;
 
     @Column(name = "RESERVE_COMMENT")
     private String comment;
