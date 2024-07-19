@@ -1,8 +1,8 @@
 package com.domain.usecase
 
-import com.domain.model.MarkerData
+import com.domain.model.Marker
 
 interface NotificationUseCase {
 
-    suspend fun getMarkers(latitude : Double, longitude : Double, radius : Double) : List<MarkerData>
+    suspend fun getMarkers(latitude : Double, longitude : Double, radius : Double) : List<Marker>
 }

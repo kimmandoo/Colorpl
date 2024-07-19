@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/fragment_schedule">
 
     <fragment
         android:id="@+id/fragment_feed"
         android:name="com.presentation.feed.FeedFragment"
-        android:label="FeedFragment" />
+        android:label="FeedFragment"
+        tools:layout="@layout/fragment_feed"/>
     <fragment
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map"/>
     <fragment
         android:id="@+id/fragment_my_page"
         android:name="com.presentation.my_page.MyPageFragment"
-        android:label="MyPageFragment" />
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page"/>
     <fragment
         android:id="@+id/fragment_schedule"
         android:name="com.presentation.schedule.ScheduleFragment"
-        android:label="ScheduleFragment" />
+        android:label="ScheduleFragment"
+        tools:layout="@layout/fragment_schedule">
+        <action
+            android:id="@+id/action_fragment_schedule_to_fragment_notification"
+            app:destination="@id/fragment_notification" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment" />
+        android:label="TicketFragment"
+        tools:layout="@layout/fragment_ticket"/>
+
+    <fragment
+        android:id="@+id/fragment_notification"
+        android:name="com.presentation.notification.NotificationFragment"
+        tools:layout="@layout/fragment_notification"/>
+
+
+
 
 </navigation>

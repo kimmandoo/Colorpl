@@ -1,11 +1,11 @@
 package com.domain.mapper
 
-import com.data.model.response.ResponseMarkerData
-import com.domain.model.MarkerData
+import com.data.model.response.ResponseMarker
+import com.domain.model.Marker
 
-fun ResponseMarkerData.toEntity() : List<MarkerData>{
+fun ResponseMarker.toEntity() : List<Marker>{
     return this.data.map {
-        MarkerData(
+        Marker(
             latitude = it.latitude,
             longitude = it.longitude
         )

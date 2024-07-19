@@ -37,7 +37,10 @@
         <item name="fontFamily">@font/suite_bold</item>
         <item name="android:textSize">18sp</item>
     </style>
-
+    <style name="suite_bold_17">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">17sp</item>
+    </style>
     <style name="suite_bold_16">
         <item name="fontFamily">@font/suite_bold</item>
         <item name="android:textSize">16sp</item>
@@ -73,7 +76,10 @@
         <item name="fontFamily">@font/suite_medium</item>
         <item name="android:textSize">14sp</item>
     </style>
-
+    <style name="suite_medium_13">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">13sp</item>
+    </style>
     <style name="suite_medium_12">
         <item name="fontFamily">@font/suite_medium</item>
         <item name="android:textSize">12sp</item>

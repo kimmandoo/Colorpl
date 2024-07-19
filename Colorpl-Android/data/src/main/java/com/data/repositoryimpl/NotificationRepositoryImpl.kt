@@ -1,7 +1,7 @@
 package com.data.repositoryimpl
 
 import com.data.datasource.NotificationDataSource
-import com.data.model.response.ResponseMarkerData
+import com.data.model.response.ResponseMarker
 import com.data.repository.NotificationRepository
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class NotificationRepositoryImpl @Inject constructor(
         latitude: Double,
         longitude: Double,
         radius: Double
-    ): ResponseMarkerData {
+    ): ResponseMarker {
         return notificationDataSource.getMarkers(latitude, longitude, radius)
     }
 }

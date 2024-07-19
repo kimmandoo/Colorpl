@@ -1,8 +1,6 @@
 package com.domain.model
 
-import com.data.model.response.ResponseMarkerData
-
-data class MarkerData(
+data class Marker(
     val latitude : Int,
     val longitude : Int
 )
