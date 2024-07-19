@@ -5,13 +5,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 interface ItemTouchHelperListener {
-    fun onItemSwipe(position : Int)
-    
+    fun onItemSwipe(position: Int)
+
 }
 
 
-class ItemTouchHelperCallback(val listener: ItemTouchHelperListener)
-    : ItemTouchHelper.Callback() {
+class ItemTouchHelperCallback(val listener: ItemTouchHelperListener) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,

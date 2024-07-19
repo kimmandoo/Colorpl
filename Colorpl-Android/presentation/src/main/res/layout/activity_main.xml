@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="bottomVisibility"
             type="boolean" />
@@ -32,9 +34,9 @@
             android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/eerie_black"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             app:fabAnchorMode="cradle"
             app:fabCradleMargin="5dp"
             app:fabCradleRoundedCornerRadius="20dp">
@@ -63,10 +65,10 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
-            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/menu_ticket"
             android:focusable="true"
             android:foreground="@drawable/selector_ticket"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             app:layout_anchor="@id/bottom_app_bar" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

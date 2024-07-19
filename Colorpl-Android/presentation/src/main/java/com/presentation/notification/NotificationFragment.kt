@@ -25,7 +25,7 @@ class NotificationFragment :
     private fun initNotificationAdapter() {
         notificationAdapter = NotificationAdapter()
         binding.rcNotification.adapter = notificationAdapter
-        
+
         val helper = ItemTouchHelper(ItemTouchHelperCallback(notificationAdapter))
         helper.attachToRecyclerView(binding.rcNotification)
 
@@ -33,7 +33,7 @@ class NotificationFragment :
     }
 
 
-    private fun navigatePop(){
+    private fun navigatePop() {
         binding.imgBack.setOnClickListener {
             navigatePopBackStack(findNavController())
         }
