@@ -1,11 +1,13 @@
 package com.presentation.notification
 
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentNotificationBinding
 import com.domain.model.Notification
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.NotificationAdapter
+import com.presentation.component.custom.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -23,6 +25,9 @@ class NotificationFragment :
     private fun initNotificationAdapter() {
         notificationAdapter = NotificationAdapter()
         binding.rcNotification.adapter = notificationAdapter
+        
+        val helper = ItemTouchHelper(ItemTouchHelperCallback(notificationAdapter))
+        helper.attachToRecyclerView(binding.rcNotification)
 
         notificationAdapter.submitList(Notification.DEFAULT)
     }

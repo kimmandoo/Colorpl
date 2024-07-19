@@ -10,10 +10,11 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemNotificationBinding
 import com.domain.model.Notification
 import com.presentation.base.BaseDiffUtil
+import com.presentation.component.custom.ItemTouchHelperListener
 
 class NotificationAdapter : ListAdapter<Notification, NotificationAdapter.NotificationViewHolder >(
     BaseDiffUtil<Notification>()
-) {
+), ItemTouchHelperListener {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         val binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return NotificationViewHolder(binding)
@@ -35,6 +36,9 @@ class NotificationAdapter : ListAdapter<Notification, NotificationAdapter.Notifi
                 notificationData = notification
             }
         }
+    }
 
+    override fun onItemSwipe(position: Int) {
+        notifyItemRemoved(position)
     }
 }
