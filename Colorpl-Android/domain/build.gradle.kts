@@ -45,7 +45,6 @@ dependencies {
 
     // DI
     implementation(libs.hilt.android)
-    androidTestImplementation(libs.hilt.android.testing)
     kapt(libs.hilt.compiler)
-    kaptAndroidTest(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.work)
 }
