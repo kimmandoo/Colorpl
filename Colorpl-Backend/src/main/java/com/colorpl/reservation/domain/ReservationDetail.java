@@ -3,6 +3,7 @@ package com.colorpl.reservation.domain;
 import com.colorpl.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -32,9 +33,11 @@ public class ReservationDetail extends BaseEntity {
     private Byte col;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESERVE_ID", nullable = false)
     private Reservation reservation;
+
+    //공연일시Id
 
 
 

@@ -27,6 +27,8 @@ public class Reservation extends BaseEntity {
     @Column(name = "RESERVE_ID")
     private Long id;
 
+    //사용자 id
+
     @Column(name = "RESERVE_DATE")
     private LocalDateTime date;
 
