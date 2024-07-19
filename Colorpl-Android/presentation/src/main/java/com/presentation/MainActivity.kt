@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.presentation.base.BaseActivity
+import com.presentation.util.locationPermission
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -20,6 +21,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navController: NavController
 
     override fun init() {
+        locationPermission()
         initBottomNavBar()
         initFCM()
     }

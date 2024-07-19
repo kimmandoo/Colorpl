@@ -1,6 +1,7 @@
 package com.colorpl.app
 
 import android.app.Application
+import com.colorpl.BuildConfig
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
@@ -10,6 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import timber.log.Timber
+import com.naver.maps.map.NaverMapSdk
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -31,6 +33,10 @@ class ColorplApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
+        // NaverMapSdk
+        NaverMapSdk.getInstance(this).client =
+            NaverMapSdk.NaverCloudPlatformClient(BuildConfig.NAVER_MAP_CLIENT_ID)
+
 
         WorkManager.initialize(this, workManagerConfiguration)
     }
