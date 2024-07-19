@@ -78,7 +78,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     }
 
     private fun navigateNotification(){
-        binding.imgNotification.setOnClickListener {
+        binding.ivNoti.setOnClickListener {
             navigateDestination(findNavController(), R.id.action_fragment_schedule_to_fragment_notification)
         }
     }

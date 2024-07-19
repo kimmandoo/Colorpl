@@ -9,7 +9,7 @@ import com.domain.model.CalendarItem
 import com.presentation.base.BaseDiffUtil
 
 class CalendarAdapter(private val onItemClick: (CalendarItem) -> Unit) :
-    ListAdapter<CalendarItem, ViewHolder>(calendarDiffUtil) {
+    ListAdapter<CalendarItem, ViewHolder>(BaseDiffUtil<CalendarItem>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,10 +23,5 @@ class CalendarAdapter(private val onItemClick: (CalendarItem) -> Unit) :
                 holder.bind(getItem(position))
             }
         }
-    }
-
-    class CalendarDiffUtil : BaseDiffUtil<CalendarItem>()
-    companion object {
-        val calendarDiffUtil = CalendarDiffUtil()
     }
 }
