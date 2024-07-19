@@ -1,5 +1,6 @@
 package com.colorpl.reservation.domain;
 
+import com.colorpl.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationDetail {
+public class ReservationDetail extends BaseEntity {
 
     @Id
     @GeneratedValue
