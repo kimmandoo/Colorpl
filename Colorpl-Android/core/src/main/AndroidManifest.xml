@@ -25,6 +25,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Colorpl"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <service
@@ -35,6 +36,15 @@
             </intent-filter>
 
         </service>
+
+
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove"/>
+
+
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

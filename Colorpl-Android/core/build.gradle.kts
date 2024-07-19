@@ -67,12 +67,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.work.runtime.ktx)
 
     // DI
     implementation(libs.hilt.android)
-    androidTestImplementation(libs.hilt.android.testing)
     kapt(libs.hilt.compiler)
-    kaptAndroidTest(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.work)
+
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)

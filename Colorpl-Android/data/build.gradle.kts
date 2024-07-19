@@ -57,6 +57,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     kaptAndroidTest(libs.hilt.compiler)
 
+
     // Network
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.kotlinxSerialization)
