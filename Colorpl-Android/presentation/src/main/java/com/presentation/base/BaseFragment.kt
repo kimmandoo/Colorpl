@@ -40,6 +40,11 @@ abstract class BaseFragment<T : ViewDataBinding>(private val layoutResId: Int) :
         navController.navigate(action)
     }
 
+    //popBackstack
+    fun navigatePopBackStack(navController: NavController){
+        navController.popBackStack()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

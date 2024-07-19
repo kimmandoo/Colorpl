@@ -1,5 +1,6 @@
 package com.presentation.notification
 
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentNotificationBinding
 import com.domain.model.Notification
@@ -16,6 +17,7 @@ class NotificationFragment :
 
     override fun initView() {
         initNotificationAdapter()
+        navigatePop()
     }
 
     private fun initNotificationAdapter() {
@@ -25,4 +27,10 @@ class NotificationFragment :
         notificationAdapter.submitList(Notification.DEFAULT)
     }
 
+
+    private fun navigatePop(){
+        binding.imgBack.setOnClickListener {
+            navigatePopBackStack(findNavController())
+        }
+    }
 }
