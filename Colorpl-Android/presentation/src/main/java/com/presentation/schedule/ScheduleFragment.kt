@@ -7,6 +7,7 @@ import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.CalendarItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
+import com.presentation.util.Calendar
 import com.presentation.util.createCalendar
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,21 +28,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     override fun initView() {
         navigateNotification()
-        binding.apply {
-            rvCalendar.apply {
-                itemAnimator = null
-                adapter = calendarAdapter
-                updateCalendar()
-            }
-            ivPrevMonth.setOnClickListener {
-                selectedDate = selectedDate.minusMonths(1)
-                updateCalendar()
-            }
-            ivNextMonth.setOnClickListener {
-                selectedDate = selectedDate.plusMonths(1)
-                updateCalendar()
-            }
-        }
+        initCalendar()
     }
 
     private fun onDateClick(calendarItem: CalendarItem) {
@@ -50,7 +37,33 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     }
 
-    private fun updateCalendar() {
+    private fun initCalendar(){
+        binding.apply {
+            rvCalendar.apply {
+                itemAnimator = null
+                adapter = calendarAdapter
+                updateCalendar(Calendar.CURRENT)
+            }
+            ivPrevMonth.setOnClickListener {
+                updateCalendar(Calendar.PREVIOUS)
+            }
+            ivNextMonth.setOnClickListener {
+                updateCalendar(Calendar.NEXT)
+            }
+        }
+    }
+
+    private fun updateCalendar(state: Calendar) {
+        when (state) {
+            Calendar.CURRENT -> {}
+            Calendar.NEXT -> {
+                selectedDate = selectedDate.minusMonths(1)
+            }
+
+            Calendar.PREVIOUS -> {
+                selectedDate = selectedDate.plusMonths(1)
+            }
+        }
         val (year, month) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월")).split(" ")
         binding.tvYear.text = year
         binding.tvMonth.text = month
@@ -77,9 +90,12 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         calendarAdapter.submitList(updatedList)
     }
 
-    private fun navigateNotification(){
+    private fun navigateNotification() {
         binding.ivNoti.setOnClickListener {
-            navigateDestination(findNavController(), R.id.action_fragment_schedule_to_fragment_notification)
+            navigateDestination(
+                findNavController(),
+                R.id.action_fragment_schedule_to_fragment_notification
+            )
         }
     }
 }
