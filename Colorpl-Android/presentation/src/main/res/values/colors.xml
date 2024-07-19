@@ -5,5 +5,6 @@
     <color name="cornell_red">#FFA4161A</color>
     <color name="imperial_red">#FFE5383B</color>
     <color name="timber_wolf">#FFD3D3D3</color>
+    <color name="timber_wolf_eighty">#CCD3D3D3</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
