@@ -11,7 +11,9 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     override var mapView: MapView? = null
     private val mainActivity by lazy {
