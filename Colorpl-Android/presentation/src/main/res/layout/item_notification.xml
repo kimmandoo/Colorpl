@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="notificationData"
+            type="com.domain.model.Notification" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_background"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="11dp"
+            android:background="@drawable/rectangle_eerie_black_20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_emoji"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="@+id/tv_title"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="일정 잊지 않으셨죠?"
+                style="@style/suite_bold_17"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="19dp"
+                app:layout_constraintStart_toEndOf="@+id/iv_emoji"
+                android:layout_marginStart="6dp"/>
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="21dp"
+                android:text="17:31"
+                style="@style/suite_medium_12"
+                android:textColor="@color/timber_wolf"/>
+
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/iv_emoji"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                style="@style/suite_medium_13"
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="제목 : 인사이드 아웃\n일시 : 2024년 07월 17일 수요일 20:40\n장소 : 메가박스 구미인동점"
+                android:layout_marginVertical="19dp"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
+        <variable
+            name="bottomVisibility"
+            type="boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,6 +31,7 @@
             android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/eerie_black"
             app:fabAnchorMode="cradle"
@@ -58,6 +62,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
             android:contentDescription="@string/menu_ticket"
             android:focusable="true"
             android:foreground="@drawable/selector_ticket"

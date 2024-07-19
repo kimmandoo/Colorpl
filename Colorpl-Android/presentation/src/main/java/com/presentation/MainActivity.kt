@@ -1,8 +1,7 @@
 package com.presentation
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.colorpl.presentation.R
@@ -22,6 +21,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun init() {
         initBottomNavBar()
         initFCM()
+        setBottomNavHide()
     }
 
     private fun initBottomNavBar() {
@@ -42,6 +42,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
 
+    }
+
+    private fun setBottomNavHide(){ //바텀 네비게이션 숨기는 기능
+        navController.addOnDestinationChangedListener{_, destination, _ ->
+            binding.bottomVisibility = when(destination.id){
+                R.id.fragment_notification -> false
+                else -> true
+            }
+        }
     }
 
     private fun initFCM() {
