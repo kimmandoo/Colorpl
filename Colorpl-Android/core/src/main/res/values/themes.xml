@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/eerie_black</item>
         <item name="android:statusBarColor">@color/eerie_black</item>
         <item name="colorAccent">@color/imperial_red</item>
+        <item name="android:windowBackground">@color/night</item>
     </style>
 
     <style name="Theme.Colorpl" parent="Base.Theme.Colorpl" />
