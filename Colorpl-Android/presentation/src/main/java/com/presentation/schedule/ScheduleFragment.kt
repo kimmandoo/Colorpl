@@ -57,11 +57,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         when (state) {
             Calendar.CURRENT -> {}
             Calendar.NEXT -> {
-                selectedDate = selectedDate.minusMonths(1)
+                selectedDate = selectedDate.plusMonths(1)
             }
 
             Calendar.PREVIOUS -> {
-                selectedDate = selectedDate.plusMonths(1)
+                selectedDate = selectedDate.minusMonths(1)
             }
         }
         val (year, month) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월")).split(" ")
