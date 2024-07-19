@@ -1,6 +1,7 @@
 package com.presentation.schedule
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.CalendarItem
@@ -25,6 +26,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private var selectedDate = LocalDate.now()
 
     override fun initView() {
+        navigateNotification()
         binding.apply {
             rvCalendar.apply {
                 itemAnimator = null
@@ -55,6 +57,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         calendarAdapter.submitList(selectedDate.createCalendar())
     }
 
+
     /**
      * 클릭한 아이템의 상태를 변경하고 나머지 아이템들의 상태를 초기화하는 함수
      * @param calendarAdapter : 업데이트할 어댑터
@@ -72,5 +75,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         }
 
         calendarAdapter.submitList(updatedList)
+    }
+
+    private fun navigateNotification(){
+        binding.imgNotification.setOnClickListener {
+            navigateDestination(findNavController(), R.id.action_fragment_schedule_to_fragment_notification)
+        }
     }
 }

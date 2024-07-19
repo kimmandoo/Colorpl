@@ -15,7 +15,7 @@ fun getApiKey(propertyKey: String): String {
 android {
     namespace = "com.colorpl"
     compileSdk = 34
-
+    val naverMapClientId = getApiKey("NAVER_MAP_CLIENT_ID")
     defaultConfig {
         applicationId = "com.colorpl"
         minSdk = 28
@@ -24,9 +24,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
+        buildConfigField("String", "NAVER_MAP_CLIENT_ID", naverMapClientId)
         buildConfigField("String", "TMAP_APP_KEY", getApiKey("TMAP_APP_KEY"))
-        manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = getApiKey("NAVER_MAP_CLIENT_ID")
+        manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = naverMapClientId
     }
 
     buildTypes {
@@ -88,6 +88,10 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    // Maps
+    implementation(libs.play.services.location)
+    implementation(libs.naver.maps)
 
     // Log
     implementation(libs.timber)

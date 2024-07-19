@@ -1,6 +1,6 @@
 package com.data.model.response
 
-data class ResponseMarkerData(
+data class ResponseMarker(
     val `data`: List<Data>
 ) {
     data class Data(
