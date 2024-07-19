@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.colorpl"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
