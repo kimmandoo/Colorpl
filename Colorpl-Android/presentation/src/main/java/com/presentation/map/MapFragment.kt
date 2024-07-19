@@ -14,9 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     override var mapView: MapView? = null
-    private val mainActivity by lazy {
-        requireContext()
-    }
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
@@ -44,7 +41,7 @@ class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         this@MapFragment.naverMap = naverMap
         naverMap.setup(locationSource)
         this@MapFragment.locationOverlay = this@MapFragment.naverMap.locationOverlay
-        this@MapFragment.locationOverlay.setupOverlay(context = mainActivity, mainIconRes = R.drawable.ic_map_pin_main, subIconRes = null)
+        this@MapFragment.locationOverlay.setupOverlay(context = binding.root.context, mainIconRes = R.drawable.ic_map_pin_main, subIconRes = null)
     }
 
 

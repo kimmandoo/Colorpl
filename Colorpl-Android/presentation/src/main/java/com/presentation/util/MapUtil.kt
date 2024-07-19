@@ -11,13 +11,14 @@ import com.naver.maps.map.util.FusedLocationSource
 
 
 /** Naver map 셋팅 */
-fun NaverMap.setup(locationSource: FusedLocationSource) {
-    this.mapType = NaverMap.MapType.Navi
-    this.isNightModeEnabled = true
-    this.locationSource = locationSource
-    this.locationTrackingMode = LocationTrackingMode.Follow
-    this.uiSettings.isZoomControlEnabled = false // Zoom 컨트롤러 사용유무.
-    this.uiSettings.isLocationButtonEnabled = true // 현재위치 사용유무.
+fun NaverMap.setup(fusedLocationSource: FusedLocationSource) {
+    mapType = NaverMap.MapType.Navi
+    isNightModeEnabled = true
+    locationSource = fusedLocationSource
+    locationTrackingMode = LocationTrackingMode.Follow
+    uiSettings.isZoomControlEnabled = false // Zoom 컨트롤러 사용유무.
+    uiSettings.isLocationButtonEnabled = true // 현재위치 사용유무
+
 }
 
 /**
