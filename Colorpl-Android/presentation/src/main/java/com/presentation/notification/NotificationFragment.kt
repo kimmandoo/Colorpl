@@ -6,7 +6,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentNotificationBinding
 import com.domain.model.Notification
 import com.presentation.base.BaseFragment
-import com.presentation.component.adapter.NotificationAdapter
+import com.presentation.component.adapter.notification.NotificationAdapter
 import com.presentation.component.custom.ItemTouchHelperCallback
 import dagger.hilt.android.AndroidEntryPoint
 

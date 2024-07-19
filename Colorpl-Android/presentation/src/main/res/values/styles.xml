@@ -6,4 +6,5 @@
         <item name="android:textSize">12sp</item>
         <item name="android:lineSpacingExtra">20dp</item>
     </style>
+
 </resources>

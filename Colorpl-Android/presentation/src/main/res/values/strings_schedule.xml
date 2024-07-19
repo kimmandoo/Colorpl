@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <string name="schedule_year">2024년</string>
+    <string name="schedule_month">07월</string>
+    <string name="schedule_mon_day">월</string>
+    <string name="schedule_tues_day">화</string>
+    <string name="schedule_wedns_day">수</string>
+    <string name="schedule_thurs_day">목</string>
+    <string name="schedule_fri_day">금</string>
+    <string name="schedule_satur_day">토</string>
+    <string name="schedule_sun_day">일</string>
+</resources>
