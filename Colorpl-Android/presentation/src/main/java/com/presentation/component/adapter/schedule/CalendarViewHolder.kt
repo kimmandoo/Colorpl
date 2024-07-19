@@ -1,4 +1,4 @@
-package com.presentation.component.adapter
+package com.presentation.component.adapter.schedule
 
 import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -20,7 +20,7 @@ class CalendarViewHolder(
                 }
             )
             tvDate.setOnClickListener {
-                onItemClick(data)
+                if(data.isCurrentMonth) onItemClick(data)
             }
             tvDate.apply {
                 text = data.date.dayOfMonth.toString()

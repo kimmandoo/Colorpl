@@ -1,7 +1,7 @@
 package com.presentation.util
 
 import com.domain.model.CalendarItem
-import com.presentation.component.adapter.CalendarAdapter
+import com.presentation.component.adapter.schedule.CalendarAdapter
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth

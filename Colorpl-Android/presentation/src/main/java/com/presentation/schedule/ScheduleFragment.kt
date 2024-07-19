@@ -6,7 +6,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.CalendarItem
 import com.presentation.base.BaseFragment
-import com.presentation.component.adapter.CalendarAdapter
+import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.util.createCalendar
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint

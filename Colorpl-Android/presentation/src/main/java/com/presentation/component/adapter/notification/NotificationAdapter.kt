@@ -1,4 +1,4 @@
-package com.presentation.component.adapter
+package com.presentation.component.adapter.notification
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
