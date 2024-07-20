@@ -1,6 +1,9 @@
 package com.presentation.schedule
 
+import android.view.Gravity
+import android.view.animation.Animation
 import android.widget.ListPopupWindow
+import android.widget.ListPopupWindow.POSITION_PROMPT_ABOVE
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -119,6 +122,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun initFAB() {
         val listPopupWindow = ListPopupWindow(binding.root.context)
         listPopupWindow.apply {
+            animationStyle = android.R.style.Animation_Toast
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,
