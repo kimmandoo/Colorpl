@@ -6,6 +6,10 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
+enum class Ticket(val state: Int){
+    ISSUED(0),
+    UNISSUED(1)
+}
 enum class Calendar(state: Int){
     CURRENT(0),
     NEXT(1),
