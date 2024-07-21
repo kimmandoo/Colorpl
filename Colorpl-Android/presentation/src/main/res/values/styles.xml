@@ -11,4 +11,8 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/suite_bold</item>
     </style>
+    <style name="FABPopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_fab_open</item>
+        <item name="android:windowExitAnimation">@anim/anim_fab_close</item>
+    </style>
 </resources>

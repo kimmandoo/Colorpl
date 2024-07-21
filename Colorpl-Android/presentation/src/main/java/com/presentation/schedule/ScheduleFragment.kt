@@ -1,5 +1,6 @@
 package com.presentation.schedule
 
+import android.view.animation.Animation
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -145,13 +146,15 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun initFAB() {
         val listPopupWindow = ListPopupWindow(binding.root.context)
         listPopupWindow.apply {
-            animationStyle = android.R.style.Animation_Toast
+            animationStyle = R.style.FABPopupAnimation
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,
                     android.R.color.transparent
                 )
             )
+            horizontalOffset = -binding.fabAddTicket.width / 2
+            verticalOffset = -binding.fabAddTicket.height / 2
             setAdapter(popUpAdapter)
             anchorView = binding.fabAddTicket
             width =
