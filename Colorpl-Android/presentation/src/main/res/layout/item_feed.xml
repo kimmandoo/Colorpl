@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/eerie_black">
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/suite_extra_bold_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="잊혀진 영웅들" />
+
+    <ImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_profile"
+        app:layout_constraintEnd_toStartOf="@+id/tv_profile"
+        app:layout_constraintTop_toTopOf="@+id/tv_profile"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_profile"
+        style="@style/suite_extra_bold_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="kimmandoo"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <ImageView
+        android:id="@+id/iv_emotion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:src="@android:drawable/btn_star_big_on"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_content" />
+
+    <TextView
+        android:id="@+id/tv_emotion"
+        style="@style/suite_extra_bold_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+        app:layout_constraintStart_toEndOf="@id/iv_emotion"
+        app:layout_constraintTop_toTopOf="@id/iv_emotion"
+        tools:text="63" />
+
+    <ImageView
+        android:id="@+id/iv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@android:drawable/ic_dialog_email"
+        app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+        app:layout_constraintStart_toEndOf="@id/tv_emotion"
+        app:layout_constraintTop_toTopOf="@id/iv_emotion" />
+
+    <TextView
+        android:id="@+id/tv_comment_cnt"
+        style="@style/suite_extra_bold_18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/iv_comment"
+        app:layout_constraintStart_toEndOf="@id/iv_comment"
+        app:layout_constraintTop_toTopOf="@id/iv_comment"
+        tools:text="5" />
+
+    <ImageView
+        android:id="@+id/iv_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@android:drawable/ic_popup_reminder"
+        app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+        app:layout_constraintStart_toEndOf="@id/tv_comment_cnt"
+        app:layout_constraintTop_toTopOf="@id/iv_emotion" />
+
+    <TextView
+        android:id="@+id/tv_upload_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="오늘"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_emotion" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        style="@style/suite_regular_14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_emotion"
+        tools:text="배우분들~ 춘선이 하나하나가 정말 세련되었다. 우리의 아픈 역사를 이.." />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
