@@ -1,6 +1,5 @@
 package com.presentation.schedule
 
-import android.view.View
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -60,9 +59,15 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             val yearView = listOf(
                 tvYear, ivYear
             )
-            yearView.forEach { view->
+            yearView.forEach { view ->
                 view.setOnClickListener {
-                    val dialog = CalendarDialog(requireContext())
+                    val dialog = CalendarDialog(requireContext()) { year, month ->
+                        if (year == 0.toLong() && month == 0.toLong()) {
+                            updateCalendar(state = Calendar.CURRENT)
+                        } else {
+                            updateCalendar(state = Calendar.CHANGE, month = month+1, year = year)
+                        }
+                    }
                     dialog.show()
                 }
             }
@@ -81,9 +86,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         }
     }
 
-    private fun updateCalendar(state: Calendar) {
+    private fun updateCalendar(state: Calendar, month: Long = 0, year: Long = 0) {
         when (state) {
-            Calendar.CURRENT -> {}
+            Calendar.CURRENT -> {
+                selectedDate = LocalDate.now()
+            }
             Calendar.NEXT -> {
                 selectedDate = selectedDate.plusMonths(1)
             }
@@ -91,10 +98,18 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             Calendar.PREVIOUS -> {
                 selectedDate = selectedDate.minusMonths(1)
             }
+
+            Calendar.CHANGE -> {
+                val changedYear = year - selectedDate.year
+                val changedMonth = month - selectedDate.monthValue
+
+                selectedDate = selectedDate.plusYears(changedYear).plusMonths(changedMonth)
+            }
         }
-        val (year, month) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월")).split(" ")
-        binding.tvYear.text = year
-        binding.tvMonth.text = month
+        val (currentYear, currentMonth) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))
+            .split(" ")
+        binding.tvYear.text = currentYear
+        binding.tvMonth.text = currentMonth
         calendarAdapter.submitList(selectedDate.createCalendar())
     }
 

@@ -4,21 +4,29 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.view.View
-import android.widget.NumberPicker
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.DialogCalendarBinding
 import com.presentation.base.BaseDialog
-import java.util.Calendar
 
-class CalendarDialog(context: Context) :
+class CalendarDialog(context: Context, private val onConfirmClicked: (Long, Long) -> Unit) :
     BaseDialog<DialogCalendarBinding>(context, R.layout.dialog_calendar) {
-
-    private lateinit var yearPicker: NumberPicker
-    private lateinit var monthPicker: NumberPicker
+    private var year: Int = 0
+    private var month: Int = 0
 
     override fun onCreateDialog() {
         binding.apply {
             hideDaySpinner()
+            tvConfirm.setOnClickListener {
+                onConfirmClicked(year.toLong(), (month).toLong())
+                dismiss()
+            }
+            dpCalendar.setOnDateChangedListener { view, yearValue, monthValue, dayOfMonth ->
+                year = yearValue
+                month = monthValue
+            }
+            tvCancel.setOnClickListener {
+                dismiss()
+            }
         }
     }
 

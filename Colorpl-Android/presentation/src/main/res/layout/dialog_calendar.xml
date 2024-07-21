@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="40dp"
             android:background="@drawable/rectangle_timber_wolf_20"
+            android:paddingBottom="8dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <DatePicker
@@ -28,6 +29,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_confirm"
+                style="@style/suite_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:paddingEnd="40dp"
+                android:text="@string/schedule_confirm"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/dp_calendar"
+                app:layout_constraintTop_toBottomOf="@id/dp_calendar" />
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                style="@style/suite_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@string/schedule_cancel"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_confirm"
+                app:layout_constraintEnd_toStartOf="@+id/tv_confirm"
+                app:layout_constraintTop_toTopOf="@+id/tv_confirm" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -12,4 +12,6 @@
     <string name="schedule_sun_day">일</string>
     <string name="schedule_ticket_issued">발권된 티켓 등록</string>
     <string name="schedule_ticket_unissued">커스텀 티켓 등록</string>
+    <string name="schedule_confirm">확인</string>
+    <string name="schedule_cancel">취소</string>
 </resources>
