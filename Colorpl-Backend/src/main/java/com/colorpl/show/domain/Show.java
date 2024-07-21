@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -16,6 +17,12 @@ public class Show {
     @GeneratedValue
     @Id
     private Integer id;
+
+    @CollectionTable(name = "PRICE_BY_SEAT_CLASS", joinColumns = @JoinColumn(name = "SHOW_ID"))
+    @Column(name = "PBSC_PRICE")
+    @ElementCollection
+    @MapKeyColumn(name = "PBSC_SEAT_CLASS")
+    private Map<String, Integer> priceBySeatClass;
 
     @Column(name = "SHOW_NAME")
     private String name;
