@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="feed_filter_all">전체</string>
+    <string name="feed_filter_movie">영화</string>
+    <string name="feed_filter_performance">공연</string>
+    <string name="feed_filter_concert">콘서트</string>
+    <string name="feed_filter_play">연극</string>
+    <string name="feed_filter_musical">뮤지컬</string>
+    <string name="feed_filter_exhibition">전시회</string>
+
+</resources>
