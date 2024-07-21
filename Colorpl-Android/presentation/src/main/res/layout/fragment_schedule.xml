@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable name="sunDay" type="String" />
+        <variable name="monDay" type="String" />
+        <variable name="tuesDay" type="String" />
+        <variable name="wednsDay" type="String" />
+        <variable name="thursDay" type="String" />
+        <variable name="friDay" type="String" />
+        <variable name="saturDay" type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,68 +124,26 @@
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/tv_month">
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_sun_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{sunDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_mon_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{monDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_tues_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{tuesDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_wedns_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{wednsDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_thurs_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{thursDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_fri_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{friDay}" />
 
-                <TextView
-                    style="@style/suite_bold_16"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/schedule_satur_day"
-                    android:textAlignment="center"
-                    android:textColor="@color/white" />
+                <include layout="@layout/view_day"
+                    app:dayText="@{saturDay}" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
