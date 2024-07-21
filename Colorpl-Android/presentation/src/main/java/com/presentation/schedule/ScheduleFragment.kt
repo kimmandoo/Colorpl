@@ -1,10 +1,7 @@
 package com.presentation.schedule
 
-import android.view.Gravity
-import android.view.animation.Animation
+import android.view.View
 import android.widget.ListPopupWindow
-import android.widget.ListPopupWindow.POSITION_PROMPT_ABOVE
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,6 +11,7 @@ import com.domain.model.CalendarItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.component.adapter.schedule.CustomPopupAdapter
+import com.presentation.component.dialog.CalendarDialog
 import com.presentation.util.Calendar
 import com.presentation.util.Ticket
 import com.presentation.util.createCalendar
@@ -59,6 +57,16 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initCalendar() {
         binding.apply {
+            val yearView = listOf(
+                tvYear, ivYear
+            )
+            yearView.forEach { view->
+                view.setOnClickListener {
+                    val dialog = CalendarDialog(requireContext())
+                    dialog.show()
+                }
+            }
+
             rvCalendar.apply {
                 itemAnimator = null
                 adapter = calendarAdapter
