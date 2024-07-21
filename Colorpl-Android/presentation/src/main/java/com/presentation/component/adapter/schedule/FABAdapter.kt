@@ -12,8 +12,8 @@ class CustomPopupAdapter(private val items: List<String>) : BaseAdapter() {
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val holder: PopUpViewHolder = if (convertView == null) {
-            PopUpViewHolder(
+        val holder: FABViewHolder = if (convertView == null) {
+            FABViewHolder(
                 ItemPopUpBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
@@ -21,7 +21,7 @@ class CustomPopupAdapter(private val items: List<String>) : BaseAdapter() {
                 )
             )
         } else {
-            convertView.tag as PopUpViewHolder
+            convertView.tag as FABViewHolder
         }
 
         return holder.bind(items[position], position)

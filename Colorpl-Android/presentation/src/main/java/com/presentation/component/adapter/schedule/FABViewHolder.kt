@@ -5,7 +5,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemPopUpBinding
 import com.presentation.util.Ticket
 
-class PopUpViewHolder(private val binding: ItemPopUpBinding) {
+class FABViewHolder(private val binding: ItemPopUpBinding) {
     private val itemView: View = binding.root
 
     init {
