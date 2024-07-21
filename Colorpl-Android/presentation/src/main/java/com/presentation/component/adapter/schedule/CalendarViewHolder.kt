@@ -8,7 +8,7 @@ import com.domain.model.CalendarItem
 
 class CalendarViewHolder(
     private val binding: ItemCalendarBinding,
-    private val onItemClick: (CalendarItem) -> Unit
+    private val onItemClick: (CalendarItem) -> Unit,
 ) : ViewHolder(binding.root) {
     fun bind(data: CalendarItem) {
         binding.apply {
@@ -20,11 +20,17 @@ class CalendarViewHolder(
                 }
             )
             tvDate.setOnClickListener {
-                if(data.isCurrentMonth) onItemClick(data)
+                if (data.isCurrentMonth) onItemClick(data)
             }
             tvDate.apply {
                 text = data.date.dayOfMonth.toString()
-                setTextColor(if (data.isSunday) Color.RED else Color.WHITE)
+                setTextColor(
+                    when {
+                        data.isSelected -> Color.WHITE
+                        data.isSunday -> Color.RED
+                        else -> Color.WHITE
+                    }
+                )
                 alpha = if (data.isCurrentMonth) 1f else 0.3f
             }
         }

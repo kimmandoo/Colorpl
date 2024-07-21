@@ -6,11 +6,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
-enum class Calendar(state: Int){
-    CURRENT(0),
-    NEXT(1),
-    PREVIOUS(2)
-}
 /**
  * 선택한 날의 주차 시작점 찾기
  */

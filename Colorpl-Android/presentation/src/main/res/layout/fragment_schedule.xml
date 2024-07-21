@@ -163,6 +163,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:clickable="true"
+            android:focusable="true"
             android:backgroundTint="@color/night"
             android:foreground="@drawable/ic_ticket_plus"
             app:layout_constraintBottom_toBottomOf="parent"
