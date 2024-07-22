@@ -1,5 +1,6 @@
 package com.presentation.feed
 
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
 import com.domain.model.Feed
@@ -82,7 +83,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     }
 
     private fun onFeedContentClickListener() {
-
+        findNavController().navigate(R.id.action_fragment_feed_to_fragment_feed_detail)
     }
 
     private fun onCommentClickListener() {

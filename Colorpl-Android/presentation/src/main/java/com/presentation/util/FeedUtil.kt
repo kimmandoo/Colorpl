@@ -1,6 +1,7 @@
 package com.presentation.util
 
 import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
 import com.domain.model.FilterItem
 
 fun Context.getFilterItems(): List<FilterItem> {

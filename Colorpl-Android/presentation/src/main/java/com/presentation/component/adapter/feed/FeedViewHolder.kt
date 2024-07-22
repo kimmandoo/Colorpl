@@ -14,6 +14,10 @@ class FeedViewHolder(
 ) : ViewHolder(binding.root) {
 
     fun bind(data: Feed) {
-
+        binding.apply {
+            ivContent.setOnClickListener {
+                onFeedContentClickListener()
+            }
+        }
     }
 }
