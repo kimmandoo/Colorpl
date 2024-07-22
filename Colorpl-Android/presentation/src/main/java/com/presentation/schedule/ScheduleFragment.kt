@@ -72,14 +72,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                 }
             }
 
-            sunDay = getString(R.string.schedule_sun_day)
-            monDay = getString(R.string.schedule_mon_day)
-            tuesDay = getString(R.string.schedule_tues_day)
-            wednsDay = getString(R.string.schedule_wedns_day)
-            thursDay = getString(R.string.schedule_thurs_day)
-            friDay = getString(R.string.schedule_fri_day)
-            saturDay = getString(R.string.schedule_satur_day)
-
             rvCalendar.apply {
                 itemAnimator = null
                 adapter = calendarAdapter

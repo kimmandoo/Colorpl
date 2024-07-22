@@ -4,13 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="sunDay" type="String" />
-        <variable name="monDay" type="String" />
-        <variable name="tuesDay" type="String" />
-        <variable name="wednsDay" type="String" />
-        <variable name="thursDay" type="String" />
-        <variable name="friDay" type="String" />
-        <variable name="saturDay" type="String" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -125,25 +119,25 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_month">
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{sunDay}" />
+                    app:dayText="@{@string/schedule_sun_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{monDay}" />
+                    app:dayText="@{@string/schedule_mon_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{tuesDay}" />
+                    app:dayText="@{@string/schedule_tues_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{wednsDay}" />
+                    app:dayText="@{@string/schedule_wedns_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{thursDay}" />
+                    app:dayText="@{@string/schedule_thurs_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{friDay}" />
+                    app:dayText="@{@string/schedule_fri_day}" />
 
                 <include layout="@layout/view_day"
-                    app:dayText="@{saturDay}" />
+                    app:dayText="@{@string/schedule_satur_day}" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
