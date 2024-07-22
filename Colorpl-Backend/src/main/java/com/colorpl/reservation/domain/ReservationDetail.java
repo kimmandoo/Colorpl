@@ -1,6 +1,7 @@
 package com.colorpl.reservation.domain;
 
 import com.colorpl.global.common.BaseEntity;
+import com.colorpl.show.domain.schedule.ShowSchedule;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,6 +39,10 @@ public class ReservationDetail extends BaseEntity {
     private Reservation reservation;
 
     //공연일시Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SHOW_SCHEDULE_ID", nullable = false)
+    private ShowSchedule showSchedule;
+
 
 
 

@@ -1,6 +1,5 @@
 package com.colorpl.review;
 
-import com.colorpl.review.comment.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +35,6 @@ public class Review {
     private  Byte emphathy;
 
     // ?
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
+//    private List<Comment> comments;
 }
