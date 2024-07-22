@@ -27,3 +27,9 @@ enum class FilterType(private val resourceId: Int) {
         return context.getString(resourceId)
     }
 }
+
+enum class Sign{
+    ID,
+    PASSWORD,
+    NICKNAME
+}

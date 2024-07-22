@@ -14,7 +14,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
 
-
     <application
         android:name=".app.ColorplApplication"
         android:allowBackup="true"
@@ -38,12 +37,10 @@
         </service>
 
 
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove"/>
-
+            tools:node="remove" />
 
 
         <meta-data
@@ -52,13 +49,17 @@
 
         <activity
             android:name="com.presentation.MainActivity"
+            android:exported="true" />
+
+
+        <activity
+            android:name="com.presentation.sign.SignActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
     </application>
 
