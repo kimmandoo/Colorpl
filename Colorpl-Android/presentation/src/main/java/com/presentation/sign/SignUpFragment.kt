@@ -18,15 +18,22 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
     private fun observeImeOptions() {
         binding.apply {
             includeId.etContent.imeOptionsActionCheck(requireActivity()) {
+                includeId.etContent.clearFocus()
+                includeId.titleVisible = true
+                includePassword.etContent.requestFocus()
                 clPassword.visibility = View.VISIBLE
             }
             includePassword.etContent.imeOptionsActionCheck(requireActivity()) {
+                includePassword.etContent.clearFocus()
+                includePassword.titleVisible = true
+                includeNickname.etContent.requestFocus()
                 clNickname.visibility = View.VISIBLE
             }
             includeNickname.etContent.imeOptionsActionCheck(requireActivity()) {
+                includeNickname.titleVisible = true
+                includeNickname.etContent.clearFocus()
                 clProfileImage.visibility = View.VISIBLE
             }
         }
     }
-
 }

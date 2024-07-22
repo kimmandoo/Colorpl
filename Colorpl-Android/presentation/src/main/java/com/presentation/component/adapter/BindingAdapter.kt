@@ -3,6 +3,7 @@ package com.presentation.component.adapter
 import android.graphics.drawable.Drawable
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -33,7 +34,25 @@ fun setSignHint(editText : EditText, type : Sign?){
         }
         editText.setHint(text)
     }
+}
 
+@BindingAdapter("setSignTitle")
+fun setSignTitle(textView : TextView, type : Sign?){
+    val context = textView.context
+    type?.run {
+        val text = when(type){
+            Sign.ID -> {
+                context.getString(R.string.sign_up_id)
+            }
+            Sign.PASSWORD -> {
+                context.getString(R.string.sign_up_password)
+            }
+            else -> {
+                context.getString(R.string.sign_up_nickname)
+            }
+        }
+        textView.setText(text)
+    }
 }
 
 @BindingAdapter("setSignMark")

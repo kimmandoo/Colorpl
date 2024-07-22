@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
-            android:text="@string/sign_up_email_hint"
+            android:text="@string/sign_up_id_hint"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="@+id/iv_back"
             app:layout_constraintTop_toBottomOf="@+id/iv_back" />

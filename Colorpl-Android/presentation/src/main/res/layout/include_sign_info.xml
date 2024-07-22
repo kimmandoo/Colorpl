@@ -24,7 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:visibility="@{titleVisible ? View.VISIBLE : View.GONE}"
-            android:text="이메일"
+            app:setSignTitle="@{type}"
+            android:textColor="@color/white"
+            style="@style/suite_semibold_14"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
