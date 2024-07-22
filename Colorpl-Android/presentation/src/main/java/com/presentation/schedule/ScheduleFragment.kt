@@ -1,6 +1,5 @@
 package com.presentation.schedule
 
-import android.view.animation.Animation
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels

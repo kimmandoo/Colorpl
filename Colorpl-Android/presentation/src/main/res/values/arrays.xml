@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter_items">
+        <item>@string/feed_filter_all</item>
+        <item>@string/feed_filter_movie</item>
+        <item>@string/feed_filter_performance</item>
+        <item>@string/feed_filter_concert</item>
+        <item>@string/feed_filter_play</item>
+        <item>@string/feed_filter_musical</item>
+        <item>@string/feed_filter_exhibition</item>
+    </string-array>
+</resources>
