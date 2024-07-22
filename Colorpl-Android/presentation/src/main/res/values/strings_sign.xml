@@ -8,6 +8,7 @@
     <string name="login_find_id">아이디 찾기</string>
     <string name="login_find_password">비밀번호 찾기</string>
     <string name="login">로그인</string>
+    <string name="login_google">Google로 시작하기</string>
 
 
 </resources>
