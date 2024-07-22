@@ -32,7 +32,6 @@
                     app:closeIcon="@drawable/ic_close"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:queryBackground="@color/eerie_black"
                     app:queryHint="@string/feed_search_hint"
                     app:searchHintIcon="@drawable/ic_search"
                     app:searchIcon="@drawable/ic_search" />
