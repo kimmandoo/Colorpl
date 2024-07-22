@@ -56,6 +56,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <!-- Suite SemiBold-->
+    <style name="suite_semibold_15">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <!-- Suite Medium-->
     <style name="suite_medium_20">
         <item name="fontFamily">@font/suite_medium</item>
@@ -99,6 +105,11 @@
     <style name="suite_regular_16">
         <item name="fontFamily">@font/suite_regular</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_regular_15">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="suite_regular_14">
