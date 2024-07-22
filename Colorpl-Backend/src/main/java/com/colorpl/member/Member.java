@@ -3,6 +3,7 @@ package com.colorpl.member;
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.reservation.domain.Reservation;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 
@@ -27,6 +28,23 @@ public class Member extends BaseEntity {
     private String password;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
+
+    // 연관관계 편의 메서드
+    public void addReservation(Reservation reservation) {
+        if (reservations.contains(reservation)) {
+            throw new IllegalArgumentException("이미 추가된 예매입니다.");
+        }
+        reservations.add(reservation);
+        reservation.setMember(this);
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (!reservations.contains(reservation)) {
+            throw new IllegalArgumentException("삭제할 예매가 없습니다.");
+        }
+        reservations.remove(reservation);
+        reservation.setMember(null);
+    }
 
 }

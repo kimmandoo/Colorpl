@@ -44,7 +44,8 @@ public class ReservationDetail extends BaseEntity {
     private ShowSchedule showSchedule;
 
 
-
-
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 
 }

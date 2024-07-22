@@ -52,5 +52,26 @@ public class Reservation extends BaseEntity {
     @Column(name = "IS_REFUNDED")
     private boolean isRefunded;
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    //연관관계 편의 메서드
+    public void addReservationDetail(ReservationDetail reservationDetail) {
+
+        if (reservationDetails.contains(reservationDetail)) {
+            throw new IllegalArgumentException("이미 추가된 항목입니다.");
+        }
+        this.reservationDetails.add(reservationDetail);
+        reservationDetail.setReservation(this);
+    }
+
+    public void removeReservationDetail(ReservationDetail reservationDetail) {
+        if (!reservationDetails.contains(reservationDetail)) {
+            throw new IllegalArgumentException("삭제할 항목이 없습니다.");
+        }
+        this.reservationDetails.remove(reservationDetail);
+        reservationDetail.setReservation(null);
+    }
 
 }
