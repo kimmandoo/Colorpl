@@ -14,7 +14,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(R.layout.frag
     private val feedDetailAdapter by lazy {
         FeedDetailAdapter(
             onEditClickListener = { onEditClickListener() },
-            onDeleteClickListener = { onDeleteClickListener() }
+            onDeleteClickListener = { onDeleteClickListener() },
+            onEmotionClickListener = {},
+            onReportClickListener = {},
+            onUserClickListener = {},
         )
     }
 
