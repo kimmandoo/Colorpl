@@ -3,7 +3,7 @@
     <style name="Base.Theme.Colorpl" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/eerie_black</item>
-        <item name="android:statusBarColor">@color/eerie_black</item>
+        <item name="android:statusBarColor">@color/night</item>
         <item name="colorAccent">@color/imperial_red</item>
         <item name="android:windowBackground">@color/night</item>
     </style>
