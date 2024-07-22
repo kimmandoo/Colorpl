@@ -9,6 +9,11 @@
     <string name="login_find_password">비밀번호 찾기</string>
     <string name="login">로그인</string>
     <string name="login_google">Google로 시작하기</string>
-
     <string name="login_nickname_hint">닉네임을 입력하세요.</string>
+
+
+    <!-- Sign up-->
+    <string name="sign_up_email_hint">이메일을 알려주세요.</string>
+    <string name="sign_up_password_hint">이메일을 알려주세요.</string>
+    <string name="sign_up_nickname_hint">이메일을 알려주세요.</string>
 </resources>

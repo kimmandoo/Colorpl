@@ -16,4 +16,5 @@ class SignActivity : BaseActivity<ActivitySignBinding>(R.layout.activity_sign) {
     override fun init() {
 
     }
+
 }
