@@ -7,5 +7,6 @@
     <string name="feed_filter_play">연극</string>
     <string name="feed_filter_musical">뮤지컬</string>
     <string name="feed_filter_exhibition">전시회</string>
+    <string name="feed_search_hint">검색어를 입력하세요</string>
 
 </resources>

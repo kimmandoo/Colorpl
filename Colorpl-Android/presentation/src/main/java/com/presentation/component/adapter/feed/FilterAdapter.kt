@@ -8,12 +8,12 @@ import com.colorpl.presentation.databinding.ItemFeedFilterBinding
 import com.domain.model.FilterItem
 import com.presentation.base.BaseDiffUtil
 
-class FilterAdapter(private val onItemClick: (FilterItem) -> Unit): ListAdapter<FilterItem, ViewHolder>(BaseDiffUtil<FilterItem>()){
+class FilterAdapter(private val onItemClickListener: (FilterItem) -> Unit): ListAdapter<FilterItem, ViewHolder>(BaseDiffUtil<FilterItem>()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemFeedFilterBinding.inflate(layoutInflater, parent, false)
-        return FilterViewHolder(binding, onItemClick)
+        return FilterViewHolder(binding, onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
