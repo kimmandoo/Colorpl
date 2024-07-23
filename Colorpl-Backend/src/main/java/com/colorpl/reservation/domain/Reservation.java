@@ -54,8 +54,12 @@ public class Reservation extends BaseEntity {
     @Column(name = "IS_REFUNDED")
     private boolean isRefunded;
 
-    public void setMember(Member member) {
+    public void updateMember(Member member) {
         this.member = member;
+    }
+
+    public void updateRefundState(boolean refunded) {
+        isRefunded = refunded;
     }
 
     //연관관계 편의 메서드
@@ -65,7 +69,7 @@ public class Reservation extends BaseEntity {
             throw new IllegalArgumentException("이미 추가된 항목입니다.");
         }
         this.reservationDetails.add(reservationDetail);
-        reservationDetail.setReservation(this);
+        reservationDetail.updateReservation(this);
     }
 
     public void removeReservationDetail(ReservationDetail reservationDetail) {
@@ -73,7 +77,14 @@ public class Reservation extends BaseEntity {
             throw new IllegalArgumentException("삭제할 항목이 없습니다.");
         }
         this.reservationDetails.remove(reservationDetail);
-        reservationDetail.setReservation(null);
+        reservationDetail.updateReservation(null);
+    }
+
+    public void updateReservation(LocalDateTime date, String amount, String comment, boolean refunded) {
+        this.date = date;
+        this.amount = amount;
+        this.comment = comment;
+        isRefunded = refunded;
     }
 
 }

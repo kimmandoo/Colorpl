@@ -3,7 +3,6 @@ package com.colorpl.member;
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.reservation.domain.Reservation;
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 
@@ -36,7 +35,7 @@ public class Member extends BaseEntity {
             throw new IllegalArgumentException("이미 추가된 예매입니다.");
         }
         reservations.add(reservation);
-        reservation.setMember(this);
+        reservation.updateMember(this);
     }
 
     public void removeReservation(Reservation reservation) {
@@ -44,7 +43,7 @@ public class Member extends BaseEntity {
             throw new IllegalArgumentException("삭제할 예매가 없습니다.");
         }
         reservations.remove(reservation);
-        reservation.setMember(null);
+        reservation.updateMember(null);
     }
 
 }

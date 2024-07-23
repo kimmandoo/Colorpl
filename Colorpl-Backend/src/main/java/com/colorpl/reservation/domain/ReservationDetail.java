@@ -50,7 +50,7 @@ public class ReservationDetail extends BaseEntity {
         this.showSchedule = showSchedule;
     }
 
-    public void setReservation(Reservation reservation) {
+    public void updateReservation(Reservation reservation) {
         this.reservation = reservation;
     }
 

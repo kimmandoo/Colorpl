@@ -9,6 +9,7 @@ import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.show.domain.schedule.ShowSchedule;
 import com.colorpl.show.repository.ShowScheduleRepository;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,48 +29,151 @@ public class ReservationService {
     public List<ReservationDTO> getReservationsByMemberId(Integer memberId) {
         return reservationRepository.findByMemberId(memberId)
                 .stream()
-                .map(this::toReservationDTO)
+                .map(ReservationDTO::toReservationDTO)
                 .collect(Collectors.toList());
     }
 
-    //모든 예매 삭제
+    // 모든 예매 삭제
     @Transactional
     public void deleteAllReservationsByMemberId(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다."));
+
         List<Reservation> reservations = reservationRepository.findByMemberId(memberId);
+
+        // 각 예약을 member에서 제거
+        reservations.forEach(member::removeReservation);
+
+        // 모든 예약 삭제
         reservationRepository.deleteAll(reservations);
     }
-
+    //예매 취소
     @Transactional
-    public void deleteReservationById(Long reservationId) {
+    public void cancelReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new IllegalArgumentException("예매 내역이 없습니다."));
 
-        reservationRepository.delete(reservation);
+        reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
+        reservationRepository.save(reservation);  // 변경 사항을 저장
     }
 
-    //특정 멤버의 특정 예약을 삭제
+    //특정 멤버의 특정 예약을 취소
     @Transactional
-    public void deleteReservationByMemberIdAndReservationId(Integer memberId, Long reservationId) {
+    public void cancelReservationByMemberIdAndReservationId(Integer memberId, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
             .orElseThrow(() -> new IllegalArgumentException("예약이 없거나 멤버가 일치하지 않습니다."));
 
-        reservationRepository.delete(reservation);
+        reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
+        reservationRepository.save(reservation);
     }
 
-    @Transactional
-    public void updateReservationDetail(Integer memberId, Long reservationDetailId, ReservationDetailDTO reservationDetailDTO) {
-        ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(reservationDetailId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("예매 상세가 없습니다."));
-        
-        ShowSchedule showSchedule = showScheduleRepository.findById(reservationDetailDTO.getShowScheduleId())
-                .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+//    @Transactional
+//    public void updateReservationDetail(Integer memberId, Long reservationDetailId, ReservationDetailDTO reservationDetailDTO) {
+//        ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(reservationDetailId, memberId)
+//                .orElseThrow(() -> new IllegalArgumentException("예매 상세가 없습니다."));
+//
+//        ShowSchedule showSchedule = showScheduleRepository.findById(reservationDetailDTO.getShowScheduleId())
+//                .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+//
+//        reservationDetail.updateDetail(reservationDetailDTO.getRow(),reservationDetailDTO.getCol(),showSchedule);
+//        reservationRepository.save(reservationDetail);
+//    }
 
-        reservationDetail.updateDetail(reservationDetailDTO.getRow(),reservationDetailDTO.getCol(),showSchedule);
+//    @Transactional
+//    public void updateReservation1(Integer memberId, Long reservationId, ReservationDTO reservationDTO) {
+//        Reservation reservation = reservationRepository.findById(reservationId)
+//            .filter(res -> res.getMember().getId().equals(memberId))
+//            .orElseThrow(() -> new IllegalArgumentException("예약이 없거나 멤버가 일치하지 않습니다."));
+//
+//        // 기존 예약 정보를 업데이트
+//        reservation.updateReservation(reservationDTO.getDate(), reservationDTO.getAmount(), reservationDTO.getComment(), reservationDTO.isRefunded());
+//
+//        // 기존 예약 상세 삭제
+//        reservation.getReservationDetails().clear();
+//
+//        // 새로운 예약 상세 추가
+//        List<ReservationDetail> reservationDetails = reservationDTO.getReservationDetails()
+//            .stream()
+//            .map(detailDTO -> {
+//                ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
+//                    .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+//
+//                return ReservationDetail.builder()
+//                    .row(detailDTO.getRow())
+//                    .col(detailDTO.getCol())
+//                    .showSchedule(showSchedule)
+//                    .reservation(reservation)
+//                    .build();
+//            })
+//            .toList();
+//
+//        reservationDetails.forEach(reservation::addReservationDetail);
+//
+//        // 변경된 예약 저장
+//        reservationRepository.save(reservation);
+//    }
+
+    @Transactional
+    public Reservation updateReservation(Integer memberId, Long reservationId, ReservationDTO reservationDTO) {
+        // 예약을 가져오고 멤버 ID를 확인
+        Reservation reservation = reservationRepository.findById(reservationId)
+            .filter(res -> res.getMember().getId().equals(memberId))
+            .orElseThrow(() -> new IllegalArgumentException("예약이 없거나 멤버가 일치하지 않습니다."));
+
+        // 기존 예약 정보를 업데이트
+        reservation.updateReservation(reservationDTO.getDate(), reservationDTO.getAmount(), reservationDTO.getComment(), reservationDTO.isRefunded());
+
+        // 새로 추가된 예약 상세 정보를 저장
+        Set<Long> newReservationDetailIds = reservationDTO.getReservationDetails().stream()
+            .map(ReservationDetailDTO::getId) // ID를 추출
+            .collect(Collectors.toSet());
+
+        // 기존 예약 상세 항목을 업데이트하거나 삭제
+        reservation.getReservationDetails().forEach(existingDetail -> {
+            if (newReservationDetailIds.contains(existingDetail.getId())) {
+                // 새로 받은 DTO로 업데이트
+                ReservationDetailDTO detailDTO = reservationDTO.getReservationDetails().stream()
+                    .filter(dto -> dto.getId().equals(existingDetail.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("예매 상세가 없습니다."));
+
+                ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
+                    .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+
+                existingDetail.updateDetail(detailDTO.getRow(), detailDTO.getCol(), showSchedule);
+            } else {
+                // 기존 예약 상세가 새 데이터에 없으면 삭제
+                reservation.removeReservationDetail(existingDetail);
+            }
+        });
+
+        // 새로운 예약 상세 항목 추가
+        List<ReservationDetail> newReservationDetails = reservationDTO.getReservationDetails().stream()
+            .filter(detailDTO -> detailDTO.getId() == null) // 새로 추가된 항목 (ID가 없으면 새 항목)
+            .map(detailDTO -> {
+                ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
+                    .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+
+                return ReservationDetail.builder()
+                    .row(detailDTO.getRow())
+                    .col(detailDTO.getCol())
+                    .showSchedule(showSchedule)
+                    .reservation(reservation)
+                    .build();
+            })
+            .toList();
+
+        newReservationDetails.forEach(reservation::addReservationDetail);
+
+        // 변경된 예약 저장 및 반환
+        return reservationRepository.save(reservation);
     }
 
+
+
     @Transactional
-    public void addReservation(Integer memberId, ReservationDTO reservationDTO) {
+    public Reservation createReservation(Integer memberId, ReservationDTO reservationDTO) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다."));
 
@@ -96,32 +200,14 @@ public class ReservationService {
                 })
                 .toList();
 
-        reservation.getReservationDetails().addAll(reservationDetails);
-        reservationRepository.save(reservation);
+        reservationDetails.forEach(reservation::addReservationDetail);
+
+        // Member와 Reservation의 관계 설정
+        member.addReservation(reservation);
+
+        // Reservation 저장
+        return reservationRepository.save(reservation);
     }
 
-    //--DTO로 변환--
-    private ReservationDTO toReservationDTO(Reservation reservation) {
-        return ReservationDTO.builder()
-                .id(reservation.getId())
-                .memberId(reservation.getMember().getId())
-                .date(reservation.getDate())
-                .amount(reservation.getAmount())
-                .comment(reservation.getComment())
-                .isRefunded(reservation.isRefunded())
-                .reservationDetails(reservation.getReservationDetails()
-                        .stream()
-                        .map(this::toReservationDetailDTO)
-                        .collect(Collectors.toList()))
-                .build();
-    }
 
-    private ReservationDetailDTO toReservationDetailDTO(ReservationDetail reservationDetail) {
-        return ReservationDetailDTO.builder()
-                .id(reservationDetail.getId())
-                .row(reservationDetail.getRow())
-                .col(reservationDetail.getCol())
-                .showScheduleId(reservationDetail.getShowSchedule().getId())
-                .build();
-    }
 }
