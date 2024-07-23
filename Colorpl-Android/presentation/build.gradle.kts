@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,11 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
 }
 
-
-
-fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
-}
 
 android {
     namespace = "com.colorpl.presentation"
@@ -25,7 +18,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "GOOGLE_WEB_CLIENT_KEY", getApiKey("GOOGLE_WEB_CLIENT_KEY"))
     }
 
     buildTypes {

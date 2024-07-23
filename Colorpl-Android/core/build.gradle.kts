@@ -26,7 +26,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", naverMapClientId)
         buildConfigField("String", "TMAP_APP_KEY", getApiKey("TMAP_APP_KEY"))
-        buildConfigField("String", "GOOGLE_WEB_CLIENT_KEY", getApiKey("GOOGLE_WEB_CLIENT_KEY"))
         manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = naverMapClientId
     }
 
