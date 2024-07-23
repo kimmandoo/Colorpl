@@ -22,4 +22,12 @@
     <string name="sign_up_nickname_hint">닉네임을 알려주세요.</string>
     <string name="sign_up_profile_image_hint">프로필 이미지를 알려주세요.</string>
     <string name="sign_up_next">다음</string>
+
+    <!-- Sign Up Category -->
+    <string name="sign_up_category_title">좋아하시는 취향을 알려주세요.</string>
+    <string name="sign_up_category_movie">영화</string>
+    <string name="sign_up_category_theater">연극</string>
+    <string name="sign_up_category_musical">뮤지컬</string>
+    <string name="sign_up_category_circus">서커스</string>
+    <string name="sign_up_category_exhibition">전시회</string>
 </resources>

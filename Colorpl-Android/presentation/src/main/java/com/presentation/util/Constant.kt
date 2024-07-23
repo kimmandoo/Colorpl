@@ -34,3 +34,11 @@ enum class Sign{
     NICKNAME,
     PROFILE
 }
+
+enum class Category{
+    MOVIE,
+    THEATRE,
+    MUSICAL,
+    CIRCUS,
+    EXHIBITION
+}

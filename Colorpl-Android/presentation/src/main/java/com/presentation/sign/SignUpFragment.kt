@@ -2,15 +2,11 @@ package com.presentation.sign
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.os.Build
-import android.os.ext.SdkExtensions
-import android.provider.MediaStore
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +24,6 @@ import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
@@ -45,8 +40,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         initClickEvent()
     }
 
-    private fun initSetting(){ //초기 세팅
-        binding.includePassword.etContent.transformationMethod = PasswordTransformationMethod.getInstance()
+    private fun initSetting() { //초기 세팅
+        binding.includePassword.etContent.transformationMethod =
+            PasswordTransformationMethod.getInstance()
+        binding.tvNext.isSelected = true // -> 얘는 로직 짤때 변경할거임
     }
 
     private fun setImeOptions() {
@@ -72,6 +69,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                         Sign.ID -> {
 
                         }
+
                         Sign.PASSWORD -> {
                             includeId.etContent.clearFocus()
                             includeId.titleVisible = true
@@ -99,7 +97,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun observeProfileImage(){ //프로필 이미지
+    private fun observeProfileImage() { //프로필 이미지
         pickImageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
@@ -126,7 +124,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
 
         binding.tvNext.setOnClickListener {
-            
+            navigateDestination(
+                findNavController(),
+                R.id.action_fragment_sign_up_to_fragment_sign_up_preference
+            )
         }
     }
 }

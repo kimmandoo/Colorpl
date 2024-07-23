@@ -17,6 +17,15 @@
     <fragment
         android:id="@+id/fragment_sign_up"
         tools:layout="@layout/fragment_sign_up"
-        android:name="com.presentation.sign.SignUpFragment"/>
+        android:name="com.presentation.sign.SignUpFragment">
+        <action
+            android:id="@+id/action_fragment_sign_up_to_fragment_sign_up_preference"
+            app:destination="@id/fragment_sign_up_preference" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_sign_up_preference"
+        tools:layout="@layout/fragment_sign_up_preference"
+        android:name="com.presentation.sign.SignUpPreferenceFragment"/>
 
 </navigation>
