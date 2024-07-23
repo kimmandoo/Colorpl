@@ -108,7 +108,7 @@
             android:layout_marginHorizontal="70dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
-            android:text="@string/sign_up_next"/>
+            android:text="@string/sign_up_complete"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
