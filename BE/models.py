@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, TEXT, TIMESTAMP, func
-from .database import Base
-from .base import CustomBase
+from sqlalchemy import Column, Integer, String, Boolean
+from database import Base
 
-class Administrator(CustomBase):
+class Administrator(Base):
     __tablename__ = 'Administrators'
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -10,3 +9,4 @@ class Administrator(CustomBase):
     email = Column(String(200), unique=True)
     administrator_name = Column(String(100), unique=True, index=True)
     administrator_grade = Column(Integer, nullable=False)
+    is_approved = Column(Boolean, default=False)

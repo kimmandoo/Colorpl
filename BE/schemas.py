@@ -19,3 +19,11 @@ class AdministratorResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class AdministratorUpdate(BaseModel):
+    is_approved: bool
+    administrator_grade: int
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
