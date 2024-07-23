@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_feed">
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" />
+            app:destination="@id/fragment_feed_detail"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -43,7 +45,8 @@
         android:id="@+id/fragment_notification"
         android:name="com.presentation.notification.NotificationFragment"
         tools:layout="@layout/fragment_notification"/>
-    <fragment
+
+    <dialog
         android:id="@+id/fragment_feed_detail"
         android:name="com.presentation.feed.FeedDetailFragment"
         android:label="FeedDetailFragment" />
