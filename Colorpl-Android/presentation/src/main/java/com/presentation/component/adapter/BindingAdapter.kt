@@ -1,6 +1,7 @@
 package com.presentation.component.adapter
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,9 +12,9 @@ import com.colorpl.presentation.R
 import com.presentation.util.Sign
 
 @BindingAdapter("setImage")
-fun loadImage(imageView: ImageView, Image : Drawable?) {
+fun loadImage(imageView: ImageView, image : Drawable?) {
     Glide.with(imageView.context)
-        .load(Image)
+        .load(image)
         .into(imageView)
 }
 
@@ -96,3 +97,5 @@ fun setSignMark(imageView : ImageView , type : Sign?){
         loadImage(imageView, image)
     }
 }
+
+

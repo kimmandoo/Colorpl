@@ -21,4 +21,5 @@
     <string name="sign_up_password_hint">비밀번호를 알려주세요.</string>
     <string name="sign_up_nickname_hint">닉네임을 알려주세요.</string>
     <string name="sign_up_profile_image_hint">프로필 이미지를 알려주세요.</string>
+    <string name="sign_up_next">다음</string>
 </resources>

@@ -57,6 +57,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
               <ImageView
+                  android:id="@+id/iv_profile"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:background="@drawable/ic_profile_image_mark"
@@ -122,7 +123,21 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/suite_extra_bold_15"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:paddingVertical="12dp"
+            android:layout_marginHorizontal="70dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
+            android:text="@string/sign_up_next"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
