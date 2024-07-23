@@ -36,6 +36,29 @@ fun setSignHint(editText : EditText, type : Sign?){
     }
 }
 
+@BindingAdapter("setSignUpHint")
+fun setSignUpHint(textView: TextView, type : Sign?){
+    val context = textView.context
+    type?.run {
+        val text = when(type){
+            Sign.ID -> {
+                context.getString(R.string.sign_up_id_hint)
+            }
+            Sign.PASSWORD -> {
+                context.getString(R.string.sign_up_password_hint)
+            }
+            Sign.NICKNAME -> {
+                context.getString(R.string.sign_up_nickname_hint)
+            }
+            else ->{
+                context.getString(R.string.sign_up_profile_image_hint)
+            }
+
+        }
+        textView.setText(text)
+    }
+}
+
 @BindingAdapter("setSignTitle")
 fun setSignTitle(textView : TextView, type : Sign?){
     val context = textView.context
