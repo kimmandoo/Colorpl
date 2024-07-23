@@ -47,6 +47,7 @@
                 android:background="@null"
                 android:hint="@string/feed_et_hint"
                 android:inputType="text"
+                android:textColorHint="@color/light_gray"
                 app:layout_constraintBottom_toBottomOf="@id/v_comment"
                 app:layout_constraintEnd_toStartOf="@id/iv_send_comment"
                 app:layout_constraintStart_toStartOf="@id/v_comment"

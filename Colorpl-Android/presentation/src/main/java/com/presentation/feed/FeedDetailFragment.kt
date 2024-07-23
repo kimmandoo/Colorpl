@@ -4,12 +4,13 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
 import com.domain.model.Comment
 import com.domain.model.Feed
+import com.presentation.base.BaseDialogFragment
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedDetail
 import com.presentation.component.adapter.feed.FeedDetailAdapter
 import java.util.Date
 
-class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
+class FeedDetailFragment : BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
 
     private val feedDetailAdapter by lazy {
         FeedDetailAdapter(
