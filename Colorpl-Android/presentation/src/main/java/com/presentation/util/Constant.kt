@@ -31,5 +31,14 @@ enum class FilterType(private val resourceId: Int) {
 enum class Sign{
     ID,
     PASSWORD,
-    NICKNAME
+    NICKNAME,
+    PROFILE
+}
+
+enum class Category{
+    MOVIE,
+    THEATRE,
+    MUSICAL,
+    CIRCUS,
+    EXHIBITION
 }
