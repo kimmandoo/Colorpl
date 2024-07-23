@@ -28,7 +28,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations;
 
     // 연관관계 편의 메서드
     public void addReservation(Reservation reservation) {

@@ -44,6 +44,12 @@ public class ReservationDetail extends BaseEntity {
     private ShowSchedule showSchedule;
 
 
+    public void updateDetail(Byte row,Byte col,ShowSchedule showSchedule){
+        this.row = row;
+        this.col = col;
+        this.showSchedule = showSchedule;
+    }
+
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
     }

@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,8 @@ public class Reservation extends BaseEntity {
 
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<ReservationDetail> reservationDetails;
+    @Builder.Default
+    private List<ReservationDetail> reservationDetails = new ArrayList<>();
 
     @Column(name = "RESERVE_COMMENT")
     private String comment;
