@@ -3,7 +3,7 @@ package com.colorpl.show.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,10 +28,10 @@ public class Show {
     private String name;
 
     @Column(name = "SHOW_START_DATE")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "SHOW_END_DATE")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "SHOW_CAST")
     private String cast;
