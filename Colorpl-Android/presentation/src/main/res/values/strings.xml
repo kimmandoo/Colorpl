@@ -5,7 +5,7 @@
     <string name="menu_feed">피드</string>
     <string name="menu_my_page">내정보</string>
     <string name="menu_ticket">티켓</string>
-
+    <string name="menu_reservation">티켓</string>
 
 
 </resources>

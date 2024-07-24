@@ -1,5 +1,6 @@
 package com.presentation.feed
 
+import android.os.Bundle
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
 import com.domain.model.Comment
@@ -22,7 +23,7 @@ class FeedDetailFragment : BaseDialogFragment<FragmentFeedDetailBinding>(R.layou
         )
     }
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
         binding.apply {
             rvFeedDetail.adapter = feedDetailAdapter
             val testComment = mutableListOf<FeedDetail>()

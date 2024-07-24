@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            style="@style/suite_bold_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tv_title_hint"
+            android:text="제목"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/suite_bold_18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="| 제목입니다"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</layout>

@@ -34,6 +34,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             itemAnimator = null
         }
 
+
         ticketAdapter.submitList(
             listOf( // testcode
                 Ticket(

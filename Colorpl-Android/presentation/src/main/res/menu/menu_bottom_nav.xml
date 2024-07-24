@@ -10,7 +10,7 @@
         android:icon="@drawable/selector_map"
         android:title="@string/menu_map" />
     <item
-        android:id="@+id/fragment_ticket"
+        android:id="@+id/fragment_reservation"
         android:title="예매" />
     <item
         android:id="@+id/fragment_feed"

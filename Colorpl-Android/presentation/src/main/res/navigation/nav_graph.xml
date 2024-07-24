@@ -24,6 +24,7 @@
         android:label="MapFragment"
         tools:layout="@layout/fragment_map"/>
 
+
     <fragment
         android:id="@+id/fragment_schedule"
         android:name="com.presentation.schedule.ScheduleFragment"
@@ -42,17 +43,27 @@
 
     <!-- Ticket -->
     <fragment
+        android:id="@+id/fragment_reservation"
+        android:name="com.presentation.reservation.ReservationFragment"
+        android:label="ReservationFragment"
+        tools:layout="@layout/fragment_reservation" />
+    <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment"
-        tools:layout="@layout/fragment_ticket"/>
+        android:label="TicketFragment" >
+        <action
+            android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </dialog>
+
 
     <!-- Notification -->
 
     <fragment
         android:id="@+id/fragment_notification"
         android:name="com.presentation.notification.NotificationFragment"
-        tools:layout="@layout/fragment_notification"/>
+        tools:layout="@layout/fragment_notification" />
+
 
     <!-- MyPage-->
     <fragment
@@ -66,6 +77,8 @@
             app:popExitAnim="@anim/top_to_down"
             app:destination="@id/fragment_profile_update" />
     </fragment>
+
+
 
     <fragment
         android:id="@+id/fragment_profile_update"

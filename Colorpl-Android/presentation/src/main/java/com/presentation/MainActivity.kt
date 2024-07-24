@@ -31,12 +31,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, arguments ->
-            binding.fabTicket.isSelected = destination.id == R.id.fragment_ticket
+            binding.fabTicket.isSelected = destination.id == R.id.fragment_reservation
         }
         binding.apply {
             fabTicket.setOnClickListener {
                 binding.fabTicket.isSelected = true
-                bottomNavigationBar.selectedItemId = R.id.fragment_ticket
+                bottomNavigationBar.selectedItemId = R.id.fragment_reservation
             }
             bottomNavigationBar.background = null
             bottomNavigationBar.setupWithNavController(navController)
