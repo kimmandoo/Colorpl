@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ReviewServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ReviewServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.colorpl.review.service.html">com.colorpl.review.service</a> &gt; ReviewServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.711s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">deleteById()</td>
+<td class="success">0.711s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>16:24:35.912 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.colorpl.review.service.ReviewServiceTest]: ReviewServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:24:36.002 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.colorpl.ColorplApplication for test class com.colorpl.review.service.ReviewServiceTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.1)
+
+2024-07-24T16:24:36.276+09:00  INFO 4188 --- [colorpl] [    Test worker] c.c.review.service.ReviewServiceTest     : Starting ReviewServiceTest using Java 17.0.12 with PID 4188 (started by SSAFY in C:\Users\SSAFY\Desktop\common\S11P12D109\Colorpl-Backend)
+2024-07-24T16:24:36.276+09:00  INFO 4188 --- [colorpl] [    Test worker] c.c.review.service.ReviewServiceTest     : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-07-24T16:24:36.752+09:00  INFO 4188 --- [colorpl] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-07-24T16:24:36.804+09:00  INFO 4188 --- [colorpl] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 3 JPA repository interfaces.
+2024-07-24T16:24:37.142+09:00  INFO 4188 --- [colorpl] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-07-24T16:24:37.201+09:00  INFO 4188 --- [colorpl] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
+2024-07-24T16:24:37.237+09:00  INFO 4188 --- [colorpl] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-07-24T16:24:37.500+09:00  INFO 4188 --- [colorpl] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-07-24T16:24:37.517+09:00  INFO 4188 --- [colorpl] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-07-24T16:24:37.644+09:00  INFO 4188 --- [colorpl] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2024-07-24T16:24:37.644+09:00  INFO 4188 --- [colorpl] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-07-24T16:24:38.503+09:00  INFO 4188 --- [colorpl] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: drop table if exists comment cascade 
+Hibernate: drop table if exists member cascade 
+Hibernate: drop table if exists price_by_seat_class cascade 
+Hibernate: drop table if exists reservation cascade 
+Hibernate: drop table if exists reservation_detail cascade 
+Hibernate: drop table if exists review cascade 
+Hibernate: drop table if exists seat cascade 
+Hibernate: drop table if exists show cascade 
+Hibernate: drop table if exists show_schedule cascade 
+Hibernate: drop sequence if exists comment_seq
+Hibernate: drop sequence if exists price_by_seat_class_seq
+Hibernate: drop sequence if exists reservation_detail_seq
+Hibernate: drop sequence if exists reservation_seq
+Hibernate: drop sequence if exists review_seq
+Hibernate: drop sequence if exists seat_seq
+Hibernate: drop sequence if exists show_schedule_seq
+Hibernate: drop sequence if exists show_seq
+Hibernate: create sequence comment_seq start with 1 increment by 50
+Hibernate: create sequence price_by_seat_class_seq start with 1 increment by 50
+Hibernate: create sequence reservation_detail_seq start with 1 increment by 50
+Hibernate: create sequence reservation_seq start with 1 increment by 50
+Hibernate: create sequence review_seq start with 1 increment by 50
+Hibernate: create sequence seat_seq start with 1 increment by 50
+Hibernate: create sequence show_schedule_seq start with 1 increment by 50
+Hibernate: create sequence show_seq start with 1 increment by 50
+Hibernate: create table comment (member_id integer, review_id integer, comment_id bigint not null, content varchar(255), primary key (comment_id))
+Hibernate: create table member (is_deleted boolean, member_id integer generated by default as identity, create_date timestamp(6), update_date timestamp(6), email varchar(255) not null, nickname varchar(255), password varchar(255), primary key (member_id))
+Hibernate: create table price_by_seat_class (pbsc_price integer, show_id integer, pbsc_id bigint not null, pbsc_seat_class varchar(255), primary key (pbsc_id))
+Hibernate: create table reservation (is_deleted boolean, is_refunded boolean, create_date timestamp(6), reserve_date timestamp(6), reserve_id bigint not null, update_date timestamp(6), reserve_amount varchar(255), reserve_comment varchar(255), primary key (reserve_id))
+Hibernate: create table reservation_detail (is_deleted boolean, seat_col tinyint, seat_row tinyint, create_date timestamp(6), reserve_detail_id bigint not null, reserve_id bigint not null, update_date timestamp(6), primary key (reserve_detail_id))
+Hibernate: create table review (emphathy_number tinyint, is_spoiler boolean, review_emotion integer, review_id integer not null, review_content varchar(255), primary key (review_id))
+Hibernate: create table seat (seat_col tinyint, seat_row tinyint, show_schedule_id integer, seat_id bigint not null, seat_level varchar(255), primary key (seat_id))
+Hibernate: create table show (show_id integer not null, show_end_date timestamp(6), show_start_date timestamp(6), show_area varchar(255), show_cast varchar(255), show_genre varchar(255), show_name varchar(255), show_poster_image_path varchar(255), show_rating varchar(255), show_runtime varchar(255), show_schedule varchar(255), show_state enum ('COMPLETED','PERFORMING','SCHEDULED'), primary key (show_id))
+Hibernate: create table show_schedule (show_id integer, show_schedule_id integer not null, show_schedule_date timestamp(6), primary key (show_schedule_id))
+Hibernate: alter table if exists comment add constraint FKmrrrpi513ssu63i2783jyiv9m foreign key (member_id) references member
+Hibernate: alter table if exists comment add constraint FKnf4ni761w29tmtgdxymmgvg8r foreign key (review_id) references review
+Hibernate: alter table if exists price_by_seat_class add constraint FK9j3l1r5v5w6hg4janyu1p4xrr foreign key (show_id) references show
+Hibernate: alter table if exists reservation_detail add constraint FKcsu720up4i7ebsv1r7xyo0qfh foreign key (reserve_id) references reservation
+Hibernate: alter table if exists seat add constraint FKo4ic5t5sfv1r8g0voq9bjcwgk foreign key (show_schedule_id) references show_schedule
+Hibernate: alter table if exists show_schedule add constraint FKqnh5j92v612487bcutpyjatw7 foreign key (show_id) references show
+2024-07-24T16:24:38.562+09:00  INFO 4188 --- [colorpl] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-07-24T16:24:38.902+09:00  WARN 4188 --- [colorpl] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-07-24T16:24:38.926+09:00  INFO 4188 --- [colorpl] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-07-24T16:24:39.292+09:00  INFO 4188 --- [colorpl] [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2024-07-24T16:24:39.357+09:00  INFO 4188 --- [colorpl] [    Test worker] c.c.review.service.ReviewServiceTest     : Started ReviewServiceTest in 3.24 seconds (process running for 4.069)
+Hibernate: select next value for review_seq
+Hibernate: insert into review (review_content,review_emotion,emphathy_number,is_spoiler,review_id) values (?,?,?,?,?)
+Hibernate: select count(*) from review r1_0 where r1_0.review_id=?
+Hibernate: delete from review where review_id=?
+Hibernate: select count(*) from review r1_0 where r1_0.review_id=?
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.8</a> at 2024. 7. 24. 오후 4:24:40</p>
+</div>
+</div>
+</body>
+</html>

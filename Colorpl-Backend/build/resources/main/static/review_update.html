@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Review</title>
+</head>
+<body>
+<h1>Update Review</h1>
+<form th:action="@{/reviews/{id}(id=${review.id})}" method="post">
+    <input type="hidden" name="_method" value="put" />
+    <input type="hidden" th:name="*{id}" th:value="${review.id}" />
+
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" th:text="${review.content}"></textarea>
+    <br />
+
+    <label for="spoiler">Spoiler:</label>
+    <input type="checkbox" id="spoiler" name="spoiler" th:checked="${review.spoiler}" />
+    <br />
+
+    <label for="emotion">Emotion:</label>
+    <input type="number" id="emotion" name="emotion" th:value="${review.emotion}" />
+    <br />
+
+    <label for="emphathy">Empathy:</label>
+    <input type="number" id="emphathy" name="emphathy" th:value="${review.emphathy}" />
+    <br />
+
+    <button type="submit">Update Review</button>
+</form>
+<br />
+<a href="#" th:href="@{/reviews}">Back to Review List</a>
+</body>
+</html>
