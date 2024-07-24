@@ -1,6 +1,9 @@
 package com.presentation.util
 
+import android.widget.EdgeEffect
+import androidx.recyclerview.widget.RecyclerView
 import com.domain.model.CalendarItem
+import com.google.android.datatransport.runtime.scheduling.jobscheduling.SchedulerConfig.Flag
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -21,14 +24,14 @@ private fun LocalDate.findStartOfWeek(): LocalDate {
  * 시작점 찾아와서 그 주를 가져오기
  * @param calendarAdapter : 업데이트 할 어댑터
  */
-fun LocalDate.getOnlySelectedWeek(calendarAdapter: CalendarAdapter) {
+fun LocalDate.getOnlySelectedWeek(currentList: List<CalendarItem>): List<CalendarItem> {
     val startOfWeek = findStartOfWeek()
     val endOfWeek = startOfWeek.plusDays(6)
 
-    val updatedList = calendarAdapter.currentList.filter { item ->
+    val updatedList = currentList.filter { item ->
         item.date >= startOfWeek && item.date <= endOfWeek
     }
-    calendarAdapter.submitList(updatedList)
+    return updatedList
 }
 
 /**
@@ -85,5 +88,26 @@ fun LocalDate.createCalendar(): List<CalendarItem> {
     }
 
     return days
+}
+
+fun RecyclerView.overScrollControl(logic: (Int, Float)-> Unit){
+    edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
+        override fun createEdgeEffect(
+            recyclerView: RecyclerView,
+            direction: Int
+        ): EdgeEffect {
+            return object : EdgeEffect(recyclerView.context) {
+                override fun onPull(deltaDistance: Float) {
+                    super.onPull(deltaDistance)
+                    logic(direction, deltaDistance)
+                }
+
+                override fun onPull(deltaDistance: Float, displacement: Float) {
+                    super.onPull(deltaDistance, displacement)
+                    logic(direction, deltaDistance)
+                }
+            }
+        }
+    }
 }
 

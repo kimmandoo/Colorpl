@@ -7,18 +7,28 @@ import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.CalendarItem
+import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.component.adapter.schedule.CustomPopupAdapter
+import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.component.dialog.CalendarDialog
 import com.presentation.util.Calendar
-import com.presentation.util.Ticket
+import com.presentation.util.TicketState
 import com.presentation.util.createCalendar
+import com.presentation.util.getOnlySelectedWeek
+import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.WeekFields
+import java.util.Date
+import java.util.Locale
+import java.util.Locale.KOREA
+import java.util.Locale.KOREAN
+
 
 private const val TAG = "ScheduleFragment"
 
@@ -26,9 +36,11 @@ private const val TAG = "ScheduleFragment"
 class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment_schedule) {
 
     private val viewModel: ScheduleViewModel by viewModels()
+    private lateinit var currentDate: CalendarItem
+    private var handlePullState = 0
     private val calendarAdapter by lazy {
         CalendarAdapter(onItemClick = { calendarItem ->
-            onDateClick(calendarItem)
+            currentDate = calendarItem
             handleItemClick(calendarItem)
         })
     }
@@ -40,18 +52,20 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             )
         )
     }
+    private val ticketAdapter by lazy {
+        TicketAdapter(
+            onTicketClickListener = {
+
+            }
+        )
+    }
     private var selectedDate = LocalDate.now()
 
     override fun initView() {
         navigateNotification()
         initCalendar()
         initFAB()
-    }
-
-    private fun onDateClick(calendarItem: CalendarItem) {
-        // 한 주로 밀어올리는 코드 -> 바텀시트 때 연동 예정입니다.
-//        calendarItem.date.getOnlySelectedWeek(calendarAdapter)
-
+        initTicketView()
     }
 
     private fun initCalendar() {
@@ -65,7 +79,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                         if (year == 0.toLong() && month == 0.toLong()) {
                             updateCalendar(state = Calendar.CURRENT)
                         } else {
-                            updateCalendar(state = Calendar.CHANGE, month = month+1, year = year)
+                            updateCalendar(state = Calendar.CHANGE, month = month + 1, year = year)
                         }
                     }
                     dialog.show()
@@ -73,46 +87,176 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
 
             rvCalendar.apply {
-                itemAnimator = null
                 adapter = calendarAdapter
+                itemAnimator?.apply {
+                    removeDuration = 0
+                    moveDuration = 20
+                }
+
                 updateCalendar(Calendar.CURRENT)
-            }
-            ivPrevMonth.setOnClickListener {
-                updateCalendar(Calendar.PREVIOUS)
-            }
-            ivNextMonth.setOnClickListener {
-                updateCalendar(Calendar.NEXT)
             }
         }
     }
 
-    private fun updateCalendar(state: Calendar, month: Long = 0, year: Long = 0) {
-        when (state) {
-            Calendar.CURRENT -> {
-                selectedDate = LocalDate.now()
+    private fun initTicketView() {
+        binding.apply {
+            rvTicket.adapter = ticketAdapter
+            rvTicket.overScrollControl { direction, deltaDistance ->
+                handlePull(direction, deltaDistance)
             }
+            ticketAdapter.submitList(
+                listOf( // testcode
+                    Ticket(
+                        ticketId = 4706,
+                        name = "Elijah Merritt",
+                        date = Date(),
+                        space = "ignota",
+                        seat = "commune"
+                    )
+                )
+            )
+        }
+    }
+
+    private fun handlePull(direction: Int, deltaDistance: Float) {
+        when (direction) {
+            1 -> {
+                handlePullState++
+            }
+        }
+        if (handlePullState > 5) {
+            if (::currentDate.isInitialized){
+                setMonthMode()
+                updateCalendar(Calendar.RESTORE)
+            }
+            handlePullState = 0
+        }
+    }
+
+    private fun updateCalendarWeekMode(
+        state: Calendar
+    ) {
+        selectedDate = when (state) {
+            Calendar.CURRENT -> {
+                LocalDate.now()
+            }
+
             Calendar.NEXT -> {
-                selectedDate = selectedDate.plusMonths(1)
+                selectedDate.plusWeeks(1)
             }
 
             Calendar.PREVIOUS -> {
-                selectedDate = selectedDate.minusMonths(1)
+                selectedDate.plusWeeks(-1)
+            }
+
+            else -> {
+                null
+            }
+        }
+        val (currentYear, currentMonth) = selectedDate.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy년 M월"
+            )
+        )
+            .split(" ")
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekOfMonth = selectedDate.get(weekFields.weekOfMonth())
+        binding.tvYear.text = currentYear
+        binding.tvMonth.text = buildString {
+            append(currentMonth)
+            append(" ")
+            append(weekOfMonth)
+            append("주")
+        }
+
+        calendarAdapter.submitList(selectedDate.getOnlySelectedWeek(selectedDate.createCalendar()).map { item ->
+            if (item.date == currentDate.date) {
+                item.copy(isSelected = true)
+            } else {
+                item.copy(isSelected = false)
+            }
+        })
+    }
+
+    private fun updateCalendar(
+        state: Calendar,
+        month: Long = 0,
+        year: Long = 0,
+    ) {
+        selectedDate = when (state) {
+            Calendar.CURRENT -> {
+                LocalDate.now()
+            }
+
+            Calendar.NEXT -> {
+                selectedDate.plusMonths(1)
+            }
+
+            Calendar.PREVIOUS -> {
+                selectedDate.minusMonths(1)
             }
 
             Calendar.CHANGE -> {
                 val changedYear = year - selectedDate.year
                 val changedMonth = month - selectedDate.monthValue
 
-                selectedDate = selectedDate.plusYears(changedYear).plusMonths(changedMonth)
+                selectedDate.plusYears(changedYear).plusMonths(changedMonth)
+            }
+
+            Calendar.RESTORE -> {
+                currentDate.date
             }
         }
         val (currentYear, currentMonth) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))
             .split(" ")
         binding.tvYear.text = currentYear
         binding.tvMonth.text = currentMonth
-        calendarAdapter.submitList(selectedDate.createCalendar())
+        val updateList = if (state == Calendar.RESTORE) {
+            selectedDate.createCalendar().map { item ->
+                if (item.date == currentDate.date) {
+                    item.copy(isSelected = true)
+                } else {
+                    item.copy(isSelected = false)
+                }
+            }
+        } else {
+            selectedDate.createCalendar()
+        }
+        calendarAdapter.submitList(updateList)
     }
 
+    private fun setWeekMode(clickedItem: CalendarItem){
+        binding.ivPrevMonth.setOnClickListener {
+            updateCalendarWeekMode(Calendar.PREVIOUS)
+        }
+        binding.ivNextMonth.setOnClickListener {
+            updateCalendarWeekMode(Calendar.NEXT)
+        }
+        val (currentYear, currentMonth) = clickedItem.date.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy년 M월"
+            )
+        )
+            .split(" ")
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekOfMonth = clickedItem.date.get(weekFields.weekOfMonth())
+        binding.tvYear.text = currentYear
+        binding.tvMonth.text = buildString {
+            append(currentMonth)
+            append(" ")
+            append(weekOfMonth)
+            append("주")
+        }
+    }
+
+    private fun setMonthMode(){
+        binding.ivPrevMonth.setOnClickListener {
+            updateCalendar(Calendar.PREVIOUS)
+        }
+        binding.ivNextMonth.setOnClickListener {
+            updateCalendar(Calendar.NEXT)
+        }
+    }
 
     /**
      * 클릭한 아이템의 상태를 변경하고 나머지 아이템들의 상태를 초기화하는 함수
@@ -122,14 +266,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun handleItemClick(
         clickedItem: CalendarItem,
     ) {
-        val updatedList = calendarAdapter.currentList.map { item ->
+        setWeekMode(clickedItem)
+        val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
             if (item.date == clickedItem.date) {
                 item.copy(isSelected = true)
             } else {
                 item.copy(isSelected = false)
             }
         }
-
         calendarAdapter.submitList(updatedList)
     }
 
@@ -152,8 +296,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     android.R.color.transparent
                 )
             )
-            horizontalOffset = -binding.fabAddTicket.width / 2
-            verticalOffset = -binding.fabAddTicket.height / 2
             setAdapter(popUpAdapter)
             anchorView = binding.fabAddTicket
             width =
@@ -162,11 +304,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             isModal = true
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
-                    Ticket.ISSUED.state -> {
+                    TicketState.ISSUED.state -> {
                         Timber.tag("fab").d("issued")
                     }
 
-                    Ticket.UNISSUED.state -> {
+                    TicketState.UNISSUED.state -> {
                         Timber.tag("fab").d("unissued")
                     }
                 }
