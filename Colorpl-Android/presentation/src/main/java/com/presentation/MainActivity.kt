@@ -64,7 +64,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun setBottomNavHide(){
         navController.addOnDestinationChangedListener{_, destination, _ ->
             binding.bottomVisibility = when(destination.id){
-                R.id.fragment_notification, R.id.fragment_feed_detail -> false
+                R.id.fragment_notification, R.id.fragment_feed_detail
+                ,R.id.fragment_profile_update -> false
                 else -> true
             }
         }
@@ -82,7 +83,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     Timber.d("호요요")
                     return@addOnCompleteListener
                 }
-
             }
     }
 

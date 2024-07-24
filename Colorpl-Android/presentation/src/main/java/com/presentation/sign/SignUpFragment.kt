@@ -106,7 +106,6 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                     }
                 }
             }
-
     }
 
 
@@ -120,12 +119,11 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
 
         binding.ivBack.setOnClickListener { //뒤로 가기
-            navigatePopBackStack(findNavController())
+            navigatePopBackStack()
         }
 
         binding.tvNext.setOnClickListener {
             navigateDestination(
-                findNavController(),
                 R.id.action_fragment_sign_up_to_fragment_sign_up_preference
             )
         }

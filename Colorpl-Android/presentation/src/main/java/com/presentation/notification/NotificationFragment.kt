@@ -35,7 +35,7 @@ class NotificationFragment :
 
     private fun navigatePop() {
         binding.imgBack.setOnClickListener {
-            navigatePopBackStack(findNavController())
+            navigatePopBackStack()
         }
     }
 }

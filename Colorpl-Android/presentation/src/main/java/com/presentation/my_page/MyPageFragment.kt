@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
 import com.domain.model.Ticket
@@ -28,7 +29,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     }
 
     private fun initTicket() {
-        binding.rcTicket.adapter = ticketAdapter
+        binding.rcTicket.apply {
+            adapter = ticketAdapter
+            itemAnimator = null
+        }
+
 
         ticketAdapter.submitList(
             listOf( // testcode
@@ -82,6 +87,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             star.isSelected = false
             val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
             binding.indicator.setTransactionX(distance)
+        }
+
+        binding.tvProfileImg.setOnClickListener { //프로필 수정 이동
+            navigateDestination(
+                R.id.action_fragment_my_page_to_fragment_profile_update
+            )
         }
     }
 
