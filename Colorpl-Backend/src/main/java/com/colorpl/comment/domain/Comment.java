@@ -1,4 +1,4 @@
-package com.colorpl.review.domain.comment.domain;
+package com.colorpl.comment.domain;
 
 import com.colorpl.member.Member;
 import com.colorpl.review.domain.Review;
