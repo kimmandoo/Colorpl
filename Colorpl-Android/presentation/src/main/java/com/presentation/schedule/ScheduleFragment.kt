@@ -1,12 +1,9 @@
 package com.presentation.schedule
 
-import android.util.Log
-import android.widget.EdgeEffect
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.CalendarItem
@@ -19,10 +16,11 @@ import com.presentation.component.dialog.CalendarDialog
 import com.presentation.util.Calendar
 import com.presentation.util.TicketState
 import com.presentation.util.createCalendar
+import com.presentation.util.getOnlySelectedWeek
+import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -84,8 +82,12 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
 
             rvCalendar.apply {
-                itemAnimator = null
                 adapter = calendarAdapter
+                itemAnimator?.apply {
+                    removeDuration = 0
+                    moveDuration = 20
+                }
+
                 updateCalendar(Calendar.CURRENT)
             }
             ivPrevMonth.setOnClickListener {
@@ -98,49 +100,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     }
 
     private fun initTicketView() {
-        with(binding) {
+        binding.apply {
             rvTicket.adapter = ticketAdapter
-            rvTicket.edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
-                override fun createEdgeEffect(
-                    recyclerView: RecyclerView,
-                    direction: Int
-                ): EdgeEffect {
-                    return object : EdgeEffect(recyclerView.context) {
-                        override fun onPull(deltaDistance: Float) {
-                            super.onPull(deltaDistance)
-                            handlePull(direction, deltaDistance)
-                        }
-
-                        override fun onPull(deltaDistance: Float, displacement: Float) {
-                            super.onPull(deltaDistance, displacement)
-                            handlePull(direction, deltaDistance)
-                        }
-                    }
-                }
+            rvTicket.overScrollControl { direction, deltaDistance ->
+                handlePull(direction, deltaDistance)
             }
             ticketAdapter.submitList(
                 listOf( // testcode
-                    Ticket(
-                        ticketId = 4706,
-                        name = "Elijah Merritt",
-                        date = Date(),
-                        space = "ignota",
-                        seat = "commune"
-                    ),
-                    Ticket(
-                        ticketId = 4706,
-                        name = "Elijah Merritt",
-                        date = Date(),
-                        space = "ignota",
-                        seat = "commune"
-                    ),
-                    Ticket(
-                        ticketId = 4706,
-                        name = "Elijah Merritt",
-                        date = Date(),
-                        space = "ignota",
-                        seat = "commune"
-                    ),
                     Ticket(
                         ticketId = 4706,
                         name = "Elijah Merritt",
@@ -154,8 +120,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     }
 
     private fun handlePull(direction: Int, deltaDistance: Float) {
-        Log.d(TAG, "deltaDistance: $deltaDistance")
-        Log.d(TAG, "handlePull: $handlePullState")
         when (direction) {
             1 -> {
                 handlePullState++
@@ -167,73 +131,52 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         }
     }
 
-    /**
-     * 선택한 날의 주차 시작점 찾기
-     */
-    private fun findStartOfWeek(): LocalDate {
-        var current = currentDate.date
-        while (current.dayOfWeek != DayOfWeek.SUNDAY) {
-            current = current.minusDays(1)
-        }
-        return current
-    }
-
-    /**
-     * 시작점 찾아와서 그 주를 가져오기
-     * @param calendarAdapter : 업데이트 할 어댑터
-     */
-    private fun getOnlySelectedWeek(): List<CalendarItem> {
-        val startOfWeek = findStartOfWeek()
-        val endOfWeek = startOfWeek.plusDays(6)
-
-        val updatedList = calendarAdapter.currentList.filter { item ->
-            item.date >= startOfWeek && item.date <= endOfWeek
-        }
-        return updatedList
-    }
-
-    private fun updateCalendar(state: Calendar, month: Long = 0, year: Long = 0) {
-        when (state) {
+    private fun updateCalendar(
+        state: Calendar,
+        month: Long = 0,
+        year: Long = 0,
+    ) {
+        selectedDate = when (state) {
             Calendar.CURRENT -> {
-                selectedDate = LocalDate.now()
+                LocalDate.now()
             }
 
             Calendar.NEXT -> {
-                selectedDate = selectedDate.plusMonths(1)
+                selectedDate.plusMonths(1)
             }
 
             Calendar.PREVIOUS -> {
-                selectedDate = selectedDate.minusMonths(1)
+                selectedDate.minusMonths(1)
             }
 
             Calendar.CHANGE -> {
                 val changedYear = year - selectedDate.year
                 val changedMonth = month - selectedDate.monthValue
 
-                selectedDate = selectedDate.plusYears(changedYear).plusMonths(changedMonth)
+                selectedDate.plusYears(changedYear).plusMonths(changedMonth)
             }
 
             Calendar.RESTORE -> {
-                selectedDate = currentDate.date
+                currentDate.date
             }
         }
         val (currentYear, currentMonth) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))
             .split(" ")
         binding.tvYear.text = currentYear
         binding.tvMonth.text = currentMonth
-        if (state == Calendar.RESTORE) {
-            calendarAdapter.submitList(selectedDate.createCalendar().map { item ->
+        val updateList = if (state == Calendar.RESTORE) {
+            selectedDate.createCalendar().map { item ->
                 if (item.date == currentDate.date) {
                     item.copy(isSelected = true)
                 } else {
                     item.copy(isSelected = false)
                 }
-            })
+            }
         } else {
-            calendarAdapter.submitList(selectedDate.createCalendar())
+            selectedDate.createCalendar()
         }
+        calendarAdapter.submitList(updateList)
     }
-
 
     /**
      * 클릭한 아이템의 상태를 변경하고 나머지 아이템들의 상태를 초기화하는 함수
@@ -243,8 +186,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun handleItemClick(
         clickedItem: CalendarItem,
     ) {
-
-        val updatedList = getOnlySelectedWeek().map { item ->
+        val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter).map { item ->
             if (item.date == clickedItem.date) {
                 item.copy(isSelected = true)
             } else {
@@ -273,8 +215,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     android.R.color.transparent
                 )
             )
-            horizontalOffset = -binding.fabAddTicket.width / 2
-            verticalOffset = -binding.fabAddTicket.height / 2
             setAdapter(popUpAdapter)
             anchorView = binding.fabAddTicket
             width =
