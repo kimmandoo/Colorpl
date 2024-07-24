@@ -133,6 +133,31 @@ async def upload_profile_image(token: str = Depends(oauth2_scheme), db: Session 
 
     return {"message": "Profile image uploaded successfully", "image_url": file_path}
 
+@router.put("/profile/update_image")
+async def update_profile_image(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db()), file: UploadFile = File(...)):
+    username = get_current_user(token, db)
+    admin = db.query(Administrator).filter(Administrator.username == username).first()
+    if admin is None:
+        raise HTTPException(status_code=404, detail="Administrator not found")
+
+    save_directory = "profile_images"
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
+    file_path = os.path.join(save_directory, f"{admin.id}_{file.filename}")
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    if admin.profile is None:
+        admin.profile = AdminProfile(admin_id=admin.id, image_url=file_path)
+    else:
+        admin.profile.image_url = file_path
+
+    db.commit()
+
+    return {"message": "Profile image updated successfully", "image_url": file_path}       
+
 @router.get("/administrators/me")
 async def read_administrator_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = verify_token(token)

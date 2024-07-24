@@ -8,3 +8,6 @@ class AdministratorCreate(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class UpdateProfileImage(BaseModel):
+    image_url: str
