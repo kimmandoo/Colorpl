@@ -1,4 +1,4 @@
-package com.colorpl.show.domain.schedule;
+package com.colorpl.show.domain.schedule.domain;
 
 import com.colorpl.show.domain.Show;
 import jakarta.persistence.*;
