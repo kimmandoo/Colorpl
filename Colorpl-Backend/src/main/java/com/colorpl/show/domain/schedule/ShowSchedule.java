@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class ShowSchedule {
 
     @Column(name = "SHOW_SCHEDULE_ID")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
 

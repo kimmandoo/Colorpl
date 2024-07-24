@@ -27,7 +27,7 @@ private LocalDateTime createDate;
 @LastModifiedDate
 private LocalDateTime updateDate;
 
-@Column(name = "IS_DELETED")
-private boolean isDeleted = false;
+//@Column(name = "IS_DELETED", nullable = true)
+//private boolean isDeleted = false; // 기본값 설정
 
 }
