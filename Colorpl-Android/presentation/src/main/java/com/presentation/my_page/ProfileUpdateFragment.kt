@@ -56,11 +56,11 @@ class ProfileUpdateFragment :
 
     private fun initClickEvent() {
         binding.ivBack.setOnClickListener {
-            navigatePopBackStack(findNavController())
+            navigatePopBackStack()
         }
 
         binding.tvComplete.setOnClickListener {
-            navigatePopBackStack(findNavController())
+            navigatePopBackStack()
         }
 
         binding.ivProfileImg.setOnClickListener {

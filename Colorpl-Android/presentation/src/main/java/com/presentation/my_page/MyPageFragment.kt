@@ -91,7 +91,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
         binding.tvProfileImg.setOnClickListener { //프로필 수정 이동
             navigateDestination(
-                findNavController(),
                 R.id.action_fragment_my_page_to_fragment_profile_update
             )
         }

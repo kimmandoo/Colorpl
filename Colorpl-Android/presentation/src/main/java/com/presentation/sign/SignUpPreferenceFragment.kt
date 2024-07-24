@@ -39,7 +39,7 @@ class SignUpPreferenceFragment :
 
 
         binding.ivBack.setOnClickListener {
-            navigatePopBackStack(findNavController())
+            navigatePopBackStack()
         }
 
         binding.tvNext.setOnClickListener {
