@@ -1,49 +1,56 @@
 package com.presentation.viewmodel
 
-import TmapRoute
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.Route
 import com.domain.usecase.TmapRouteUseCase
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class TicketViewModel @Inject constructor(
-    private val tmapRouteUseCase: TmapRouteUseCase
+    private val tmapRouteUseCase: TmapRouteUseCase,
 ) : ViewModel() {
+    private val _routeData = MutableSharedFlow<List<LatLng>>()
+    val routeData: SharedFlow<List<LatLng>> = _routeData.asSharedFlow()
 
-    fun getRoute() {
+    fun getRoute(myLocation: LatLng, destination: LatLng) {
         viewModelScope.launch {
             val routeData = mutableListOf<LatLng>()
             runCatching {
                 tmapRouteUseCase.getRoute(
-                    startX = "127.02550910860451",
-                    startY = "37.63788539420793",
-                    endX = "127.030406594109",
-                    endY = "37.609094989686",
+                    startX =myLocation.longitude.toString(),
+                    startY =myLocation.latitude.toString(),
+                    endX =destination.longitude.toString(),
+                    endY =destination.latitude.toString(),
                 )
-            }.onSuccess { response: TmapRoute ->
+            }.onSuccess { response: Route ->
                 Timber.d("${response}")
-//                for (route in response.legs) {
-//                    when(route.mode){
-//                        Mode.WALK.mode -> {
-//                            for (lineString in route.steps) {
-//                                routeData.addAll(parseLatLng(lineString.lineString))
-//                            }
-//                        }
-//                        else -> {
-//                            route.passShape?.let { lineString ->
-//                                routeData.addAll(parseLatLng(lineString.linestring))
-//                            }
-//                        }
-//                    }
-//                }
-            }.onFailure { e->
+
+                for (route in response.legs) {
+                    when (route.mode) {
+                        Mode.WALK.mode -> {
+                            for (lineString in route.steps!!) {
+                                routeData.addAll(parseLatLng(lineString.linestring))
+                            }
+                        }
+
+                        else -> {
+                            route.passShape?.let { lineString ->
+                                routeData.addAll(parseLatLng(lineString))
+                            }
+                        }
+                    }
+                }
+                _routeData.emit(routeData)
+            }.onFailure { e ->
                 Timber.d("$e")
             }
 

@@ -1,13 +1,14 @@
 package com.domain.mapper
 
-import TmapRoute
 import com.data.model.response.ResponseTmapRoute
+import com.domain.model.Leg
+import com.domain.model.Route
+import com.domain.model.Step
 
 
-fun ResponseTmapRoute.toEntity(): TmapRoute {
-    val itinerary = this.metaData.plan.itineraries.firstOrNull() ?: throw NoSuchElementException("No itinerary found")
-
-    return TmapRoute(
+fun ResponseTmapRoute.toEntity(): Route {
+    val itinerary = this.metaData.plan.itineraries.first()
+    return Route(
         totalDistance = itinerary.totalDistance,
         totalTime = itinerary.totalTime,
         totalWalkDistance = itinerary.totalWalkDistance,
@@ -16,32 +17,21 @@ fun ResponseTmapRoute.toEntity(): TmapRoute {
         totalFare = itinerary.fare.regular.totalFare,
         currency = itinerary.fare.regular.currency.currency,
         legs = itinerary.legs.map { leg ->
-            TmapRoute.Leg(
+            Leg(
                 distance = leg.distance,
                 mode = leg.mode,
                 sectionTime = leg.sectionTime,
                 startName = leg.start.name,
-                startLat = leg.start.lat,
-                startLon = leg.start.lon,
                 endName = leg.end.name,
-                endLat = leg.end.lat,
-                endLon = leg.end.lon,
-                routeColor = leg.routeColor,
-                route = leg.route,
-                passStops = leg.passStopList?.stationList?.map { station ->
-                    TmapRoute.PassStop(
-                        name = station.stationName,
-                        lat = station.lat.toDouble(),
-                        lon = station.lon.toDouble()
-                    )
-                } ?: emptyList(),
+                passShape = leg.passShape?.linestring,
                 steps = leg.steps?.map { step ->
-                    TmapRoute.Step(
+                    Step(
                         description = step.description,
                         distance = step.distance,
+                        linestring = step.linestring,
                         streetName = step.streetName
                     )
-                } ?: emptyList()
+                }
             )
         }
     )
