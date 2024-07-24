@@ -21,7 +21,7 @@ abstract class BaseMapDialogFragment<B : ViewDataBinding>(private val layoutResI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_FRAME, R.style.FullScreenDialog)
+        setStyle(STYLE_NO_FRAME, R.style.FullScreenDialogNoAnim)
     }
 
     override fun onCreateView(

@@ -30,7 +30,7 @@
         <item name="android:fontFamily">@font/suite_medium</item>
     </style>
 
-    <style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
+    <style name="FullScreenDialogSlideLtoR" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowIsFloating">false</item>
@@ -40,8 +40,23 @@
         <item name="android:navigationBarColor">@color/night</item>
     </style>
 
+    <style name="FullScreenDialogNoAnim" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/SlideInOutNoAnimation</item>
+        <item name="android:windowBackground">@color/night</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:navigationBarColor">@color/night</item>
+    </style>
+
     <style name="SlideRightAnimation">
         <item name="android:windowEnterAnimation">@anim/anim_slide_in_right</item>
         <item name="android:windowExitAnimation">@anim/anim_slide_out_right</item>
+    </style>
+
+    <style name="SlideInOutNoAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_slide_in_right</item>
+        <item name="android:windowExitAnimation">@null</item>
     </style>
 </resources>

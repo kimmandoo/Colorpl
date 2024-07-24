@@ -53,7 +53,11 @@
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment" />
+        android:label="TicketFragment" >
+        <action
+            android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </dialog>
 
 
 </navigation>

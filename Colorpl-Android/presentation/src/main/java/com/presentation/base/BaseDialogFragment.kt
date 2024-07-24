@@ -17,7 +17,7 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_FRAME, R.style.FullScreenDialog)
+        setStyle(STYLE_NO_FRAME, R.style.FullScreenDialogSlideLtoR)
     }
 
     override fun onCreateView(
