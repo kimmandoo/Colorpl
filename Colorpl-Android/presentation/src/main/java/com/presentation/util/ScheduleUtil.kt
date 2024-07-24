@@ -24,11 +24,11 @@ private fun LocalDate.findStartOfWeek(): LocalDate {
  * 시작점 찾아와서 그 주를 가져오기
  * @param calendarAdapter : 업데이트 할 어댑터
  */
-fun LocalDate.getOnlySelectedWeek(calendarAdapter: CalendarAdapter): List<CalendarItem> {
+fun LocalDate.getOnlySelectedWeek(currentList: List<CalendarItem>): List<CalendarItem> {
     val startOfWeek = findStartOfWeek()
     val endOfWeek = startOfWeek.plusDays(6)
 
-    val updatedList = calendarAdapter.currentList.filter { item ->
+    val updatedList = currentList.filter { item ->
         item.date >= startOfWeek && item.date <= endOfWeek
     }
     return updatedList

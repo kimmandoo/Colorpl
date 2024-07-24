@@ -23,7 +23,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.WeekFields
 import java.util.Date
+import java.util.Locale
+import java.util.Locale.KOREA
+import java.util.Locale.KOREAN
+
 
 private const val TAG = "ScheduleFragment"
 
@@ -90,12 +95,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
                 updateCalendar(Calendar.CURRENT)
             }
-            ivPrevMonth.setOnClickListener {
-                updateCalendar(Calendar.PREVIOUS)
-            }
-            ivNextMonth.setOnClickListener {
-                updateCalendar(Calendar.NEXT)
-            }
         }
     }
 
@@ -126,9 +125,54 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         }
         if (handlePullState > 5) {
+            setMonthMode()
             updateCalendar(Calendar.RESTORE)
             handlePullState = 0
         }
+    }
+
+    private fun updateCalendarWeekMode(
+        state: Calendar
+    ) {
+        selectedDate = when (state) {
+            Calendar.CURRENT -> {
+                LocalDate.now()
+            }
+
+            Calendar.NEXT -> {
+                selectedDate.plusWeeks(1)
+            }
+
+            Calendar.PREVIOUS -> {
+                selectedDate.plusWeeks(-1)
+            }
+
+            else -> {
+                null
+            }
+        }
+        val (currentYear, currentMonth) = selectedDate.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy년 M월"
+            )
+        )
+            .split(" ")
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekOfMonth = selectedDate.get(weekFields.weekOfMonth())
+        binding.tvYear.text = currentYear
+        binding.tvMonth.text = buildString {
+            append(currentMonth)
+            append(weekOfMonth)
+            append("주")
+        }
+
+        calendarAdapter.submitList(selectedDate.getOnlySelectedWeek(selectedDate.createCalendar()).map { item ->
+            if (item.date == currentDate.date) {
+                item.copy(isSelected = true)
+            } else {
+                item.copy(isSelected = false)
+            }
+        })
     }
 
     private fun updateCalendar(
@@ -178,6 +222,38 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         calendarAdapter.submitList(updateList)
     }
 
+    private fun setWeekMode(){
+        binding.ivPrevMonth.setOnClickListener {
+            updateCalendarWeekMode(Calendar.PREVIOUS)
+        }
+        binding.ivNextMonth.setOnClickListener {
+            updateCalendarWeekMode(Calendar.NEXT)
+        }
+        val (currentYear, currentMonth) = selectedDate.format(
+            DateTimeFormatter.ofPattern(
+                "yyyy년 M월"
+            )
+        )
+            .split(" ")
+        val weekFields = WeekFields.of(Locale.getDefault())
+        val weekOfMonth = selectedDate.get(weekFields.weekOfMonth())
+        binding.tvYear.text = currentYear
+        binding.tvMonth.text = buildString {
+            append(currentMonth)
+            append(weekOfMonth)
+            append("주")
+        }
+    }
+
+    private fun setMonthMode(){
+        binding.ivPrevMonth.setOnClickListener {
+            updateCalendar(Calendar.PREVIOUS)
+        }
+        binding.ivNextMonth.setOnClickListener {
+            updateCalendar(Calendar.NEXT)
+        }
+    }
+
     /**
      * 클릭한 아이템의 상태를 변경하고 나머지 아이템들의 상태를 초기화하는 함수
      * @param calendarAdapter : 업데이트할 어댑터
@@ -186,7 +262,8 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun handleItemClick(
         clickedItem: CalendarItem,
     ) {
-        val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter).map { item ->
+        setWeekMode()
+        val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
             if (item.date == clickedItem.date) {
                 item.copy(isSelected = true)
             } else {
