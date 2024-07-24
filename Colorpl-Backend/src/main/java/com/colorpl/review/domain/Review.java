@@ -36,7 +36,6 @@ public class Review {
     @Column(name = "EMPHATHY_NUMBER")
     private  Byte emphathy;
 
-    // ?
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
