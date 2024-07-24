@@ -3,7 +3,7 @@ package com.presentation.util
 import android.content.Context
 import com.colorpl.presentation.R
 
-enum class Ticket(val state: Int){
+enum class TicketState(val state: Int){
     ISSUED(0),
     UNISSUED(1)
 }
@@ -11,7 +11,8 @@ enum class Calendar{
     CURRENT,
     NEXT,
     PREVIOUS,
-    CHANGE
+    CHANGE,
+    RESTORE
 }
 
 enum class FilterType(private val resourceId: Int) {
