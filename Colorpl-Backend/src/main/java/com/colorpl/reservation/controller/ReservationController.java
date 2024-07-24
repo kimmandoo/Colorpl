@@ -17,28 +17,28 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // 특정 멤버의 모든 예약 조회
+    // 특정 멤버의 모든 예약 조회(테스트 완료)
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<ReservationDTO>> getReservationsByMemberId(@PathVariable Integer memberId) {
         List<ReservationDTO> reservations = reservationService.getReservationsByMemberId(memberId);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
-    // 모든 예약 삭제
+    // 모든 예약 삭제(테스트 완료)
     @DeleteMapping("/member/{memberId}")
     public ResponseEntity<Void> deleteAllReservationsByMemberId(@PathVariable Integer memberId) {
         reservationService.deleteAllReservationsByMemberId(memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // 특정 예약 취소
+    // 특정 예약 취소(테스트 완료)
     @PostMapping("/cancel/{reservationId}")
     public ResponseEntity<Void> cancelReservationById(@PathVariable Long reservationId) {
         reservationService.cancelReservationById(reservationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 특정 멤버의 특정 예약 취소
+    // 특정 멤버의 특정 예약 취소(테스트 완료)
     @PostMapping("/cancel/member/{memberId}/reservation/{reservationId}")
     public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(@PathVariable Integer memberId, @PathVariable Long reservationId) {
         reservationService.cancelReservationByMemberIdAndReservationId(memberId, reservationId);
@@ -58,18 +58,16 @@ public class ReservationController {
 //        Reservation createdReservation = reservationService.createReservation(memberId, reservationDTO);
 //        return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
 //    }
-
+    // 특정 예약 업데이트(테스트 완료)
     @PutMapping("/member/{memberId}/reservation/{reservationId}")
     public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Integer memberId, @PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
-        Reservation updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
-        ReservationDTO responseDTO = ReservationDTO.toReservationDTO(updatedReservation);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        ReservationDTO updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
+        return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
     }
-
+    // 예약 생성(테스트 완료)
     @PostMapping("/member/{memberId}")
     public ResponseEntity<ReservationDTO> createReservation(@PathVariable Integer memberId, @RequestBody ReservationDTO reservationDTO) {
-        Reservation createdReservation = reservationService.createReservation(memberId, reservationDTO);
-        ReservationDTO responseDTO = ReservationDTO.toReservationDTO(createdReservation);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        ReservationDTO createdReservation = reservationService.createReservation(memberId, reservationDTO);
+        return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
 }

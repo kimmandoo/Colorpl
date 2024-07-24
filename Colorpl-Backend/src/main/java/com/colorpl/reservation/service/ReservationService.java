@@ -115,7 +115,7 @@ public class ReservationService {
 //    }
 
     @Transactional
-    public Reservation updateReservation(Integer memberId, Long reservationId, ReservationDTO reservationDTO) {
+    public ReservationDTO updateReservation(Integer memberId, Long reservationId, ReservationDTO reservationDTO) {
         // 예약을 가져오고 멤버 ID를 확인
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
@@ -166,14 +166,17 @@ public class ReservationService {
 
         newReservationDetails.forEach(reservation::addReservationDetail);
 
+        Reservation updatedReservation = reservationRepository.save(reservation);
+
         // 변경된 예약 저장 및 반환
-        return reservationRepository.save(reservation);
+
+        return ReservationDTO.toReservationDTO(updatedReservation);
     }
 
 
 
     @Transactional
-    public Reservation createReservation(Integer memberId, ReservationDTO reservationDTO) {
+    public ReservationDTO createReservation(Integer memberId, ReservationDTO reservationDTO) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다."));
 
@@ -204,9 +207,10 @@ public class ReservationService {
 
         // Member와 Reservation의 관계 설정
         member.addReservation(reservation);
+        Reservation createdReservation = reservationRepository.save(reservation);
 
         // Reservation 저장
-        return reservationRepository.save(reservation);
+        return ReservationDTO.toReservationDTO(createdReservation);
     }
 
 

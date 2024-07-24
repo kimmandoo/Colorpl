@@ -134,7 +134,7 @@ public class ReservationServiceTest {
         when(showScheduleRepository.findById(anyInt())).thenReturn(Optional.of(ShowSchedule.builder().id(1).build()));
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Reservation updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
+        ReservationDTO updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
 
         verify(reservationRepository, times(1)).findById(reservationId);
         verify(reservationRepository, times(1)).save(any(Reservation.class));
@@ -162,7 +162,7 @@ public class ReservationServiceTest {
         when(showScheduleRepository.findById(anyInt())).thenReturn(Optional.of(ShowSchedule.builder().id(1).build()));
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Reservation newReservation = reservationService.createReservation(memberId, reservationDTO);
+        ReservationDTO newReservation = reservationService.createReservation(memberId, reservationDTO);
 
         verify(memberRepository, times(1)).findById(memberId);
         verify(reservationRepository, times(1)).save(any(Reservation.class));
