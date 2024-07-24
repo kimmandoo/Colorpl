@@ -162,6 +162,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         binding.tvYear.text = currentYear
         binding.tvMonth.text = buildString {
             append(currentMonth)
+            append(" ")
             append(weekOfMonth)
             append("주")
         }
@@ -240,6 +241,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         binding.tvYear.text = currentYear
         binding.tvMonth.text = buildString {
             append(currentMonth)
+            append(" ")
             append(weekOfMonth)
             append("주")
         }
