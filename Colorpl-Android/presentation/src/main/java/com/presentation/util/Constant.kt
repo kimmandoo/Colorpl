@@ -3,6 +3,16 @@ package com.presentation.util
 import android.content.Context
 import com.colorpl.presentation.R
 
+enum class Mode(val mode: String) {
+    WALK("WALK"),
+    BUS("BUS"),
+    SUBWAY("SUBWAY"),
+    EXPRESS_BUS("EXPRESS BUS"),
+    TRAIN("TRAIN"),
+    AIRPLANE("AIRPLANE"),
+    FERRY("FERRY"),
+}
+
 enum class TicketState(val state: Int){
     ISSUED(0),
     UNISSUED(1)
