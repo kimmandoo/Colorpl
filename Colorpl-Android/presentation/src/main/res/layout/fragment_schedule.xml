@@ -119,31 +119,31 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_month">
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_sun_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_mon_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_tues_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_wedns_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_thurs_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_fri_day}" />
 
                 <include
-                    layout="@layout/view_day"
+                    layout="@layout/include_view_day"
                     app:dayText="@{@string/schedule_satur_day}" />
             </LinearLayout>
 

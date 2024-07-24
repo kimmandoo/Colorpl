@@ -55,7 +55,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private val ticketAdapter by lazy {
         TicketAdapter(
             onTicketClickListener = {
-
+                findNavController().navigate(R.id.fragment_ticket)
             }
         )
     }
@@ -185,6 +185,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     ) {
         selectedDate = when (state) {
             Calendar.CURRENT -> {
+                setMonthMode()
                 LocalDate.now()
             }
 

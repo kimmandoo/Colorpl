@@ -20,12 +20,12 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/fragment_my_page"
         android:name="com.presentation.my_page.MyPageFragment"
         android:label="MyPageFragment"
-        tools:layout="@layout/fragment_my_page"/>
+        tools:layout="@layout/fragment_my_page" />
     <fragment
         android:id="@+id/fragment_schedule"
         android:name="com.presentation.schedule.ScheduleFragment"
@@ -36,20 +36,28 @@
             app:destination="@id/fragment_notification" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_ticket"
-        android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment"
-        tools:layout="@layout/fragment_ticket"/>
+        android:id="@+id/fragment_reservation"
+        android:name="com.presentation.reservation.ReservationFragment"
+        android:label="ReservationFragment"
+        tools:layout="@layout/fragment_reservation" />
 
     <fragment
         android:id="@+id/fragment_notification"
         android:name="com.presentation.notification.NotificationFragment"
-        tools:layout="@layout/fragment_notification"/>
+        tools:layout="@layout/fragment_notification" />
 
     <dialog
         android:id="@+id/fragment_feed_detail"
         android:name="com.presentation.feed.FeedDetailFragment"
         android:label="FeedDetailFragment" />
+    <dialog
+        android:id="@+id/fragment_ticket"
+        android:name="com.presentation.ticket.TicketFragment"
+        android:label="TicketFragment" >
+        <action
+            android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </dialog>
 
 
 </navigation>
