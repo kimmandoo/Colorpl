@@ -8,4 +8,9 @@
     <string name="menu_reservation">티켓</string>
 
 
+    <string name="permission_denied_message">권한이 없습니다.</string>
+    <string name="permission_denied_closed_button_message">닫기</string>
+    <string name="permission_go_to_setting_button_message">확인</string>
+
+
 </resources>

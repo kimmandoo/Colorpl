@@ -2,11 +2,16 @@ package com.presentation.map
 
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMapBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapFragment
+import com.presentation.util.LocationHelper
+import com.presentation.util.checkLocationPermission
 import com.presentation.util.setup
 import com.presentation.util.setupOverlay
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,12 +22,14 @@ class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
+
     override fun initOnCreateView() {
         initNaverMap()
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
         connectNaverMap(naverMap)
+
     }
 
     override fun iniViewCreated() {
@@ -32,8 +39,8 @@ class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     /** Naver map 초기 셋팅. */
     private fun initNaverMap(){
         mapView = binding.mvNaverMap
+        locationSource = LocationHelper.getInstance().getFusedLocationSource()
         mapView?.getMapAsync(this)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     /** Naver map 연결. */
@@ -42,12 +49,16 @@ class MapFragment: BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         naverMap.setup(locationSource)
         this@MapFragment.locationOverlay = this@MapFragment.naverMap.locationOverlay
         this@MapFragment.locationOverlay.setupOverlay(context = binding.root.context, mainIconRes = R.drawable.ic_map_pin_main, subIconRes = null)
+        checkLocationPermission(requireActivity())
+        LocationHelper.getInstance().getClient().lastLocation.addOnSuccessListener { location ->
+            this@MapFragment.naverMap.cameraPosition = CameraPosition(LatLng(location.latitude, location.longitude), DEFAULT_ZOOM)
+        }
+
     }
 
 
-
-
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+        private const val DEFAULT_ZOOM = 15.0
     }
 }
