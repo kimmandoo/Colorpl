@@ -11,6 +11,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import timber.log.Timber
 
 
 /** Naver map 셋팅 */
@@ -73,3 +74,4 @@ fun MapView.ignoreParentScroll() {
         false
     }
 }
+
