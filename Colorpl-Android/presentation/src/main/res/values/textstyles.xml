@@ -7,6 +7,11 @@
         <item name="android:textSize">36sp</item>
     </style>
 
+    <style name="suite_extra_bold_25">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
     <style name="suite_extra_bold_20">
         <item name="fontFamily">@font/suite_extra_bold</item>
         <item name="android:textSize">20sp</item>
