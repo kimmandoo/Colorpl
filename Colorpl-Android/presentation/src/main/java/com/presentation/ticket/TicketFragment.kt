@@ -6,10 +6,13 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketBinding
+import com.naver.maps.map.MapFragment
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapDialogFragment
 import com.presentation.util.ignoreParentScroll
+import com.presentation.util.setup
 
 class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fragment_ticket) {
 
@@ -43,5 +46,9 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     override fun onMapReady(map: NaverMap) {
         val initMapView = mapView!!
         initMapView.ignoreParentScroll()
+        map.apply {
+            mapType = NaverMap.MapType.Navi
+            isNightModeEnabled = true
+        }
     }
 }

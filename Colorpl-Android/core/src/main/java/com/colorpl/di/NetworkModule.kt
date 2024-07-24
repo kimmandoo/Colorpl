@@ -1,6 +1,7 @@
 package com.colorpl.di
 
 import android.content.Context
+import com.colorpl.BuildConfig
 import com.colorpl.R
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.gson.GsonBuilder
@@ -22,10 +23,12 @@ object NetworkModule {
 
     //local property로 따로 빼기
     val baseUrl = "http://192.168.100.142:8080/"
+    val tmapUrl = "https://apis.openapi.sk.com/"
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @NormalRetrofit
+    fun provideRetrofit(@NormalOkHttp okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .baseUrl(baseUrl)
@@ -35,8 +38,39 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @NormalOkHttp
     fun provideOkHttpClient() = OkHttpClient.Builder().run {
         addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        connectTimeout(120, TimeUnit.SECONDS)
+        readTimeout(120, TimeUnit.SECONDS)
+        writeTimeout(120, TimeUnit.SECONDS)
+        build()
+    }
+
+    @Singleton
+    @Provides
+    @TmapRetrofit
+    fun provideTmapRetrofit(@TmapOkHttp okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .baseUrl(tmapUrl)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    @TmapOkHttp
+    fun provideTmapOkHttpClient() = OkHttpClient.Builder().run {
+        addInterceptor { chain ->
+            val original = chain.request()
+            val request = original.newBuilder().header("Content-Type", "application/json")
+                .header("appKey", BuildConfig.TMAP_APP_KEY)
+                .method(original.method, original.body)
+                .build()
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            chain.proceed(request = request)
+        }
         connectTimeout(120, TimeUnit.SECONDS)
         readTimeout(120, TimeUnit.SECONDS)
         writeTimeout(120, TimeUnit.SECONDS)
