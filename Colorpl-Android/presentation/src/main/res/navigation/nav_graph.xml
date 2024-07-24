@@ -36,10 +36,10 @@
             app:destination="@id/fragment_notification" />
     </fragment>
     <fragment
-        android:id="@+id/fragment_ticket"
-        android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment"
-        tools:layout="@layout/fragment_ticket"/>
+        android:id="@+id/fragment_reservation"
+        android:name="com.presentation.reservation.ReservationFragment"
+        android:label="ReservationFragment"
+        tools:layout="@layout/fragment_reservation"/>
 
     <fragment
         android:id="@+id/fragment_notification"
