@@ -1,6 +1,6 @@
 package com.domain.usecase
 
-import com.data.model.response.ResponseTmapRoute
+import TmapRoute
 
 interface TmapRouteUseCase {
     suspend fun getRoute(
@@ -8,5 +8,5 @@ interface TmapRouteUseCase {
         startY: String,
         endX: String,
         endY: String
-    ): ResponseTmapRoute
+    ): TmapRoute
 }

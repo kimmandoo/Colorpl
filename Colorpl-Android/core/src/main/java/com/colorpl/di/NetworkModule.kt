@@ -64,11 +64,12 @@ object NetworkModule {
     fun provideTmapOkHttpClient() = OkHttpClient.Builder().run {
         addInterceptor { chain ->
             val original = chain.request()
-            val request = original.newBuilder().header("Content-Type", "application/json")
+            val request = original.newBuilder()
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
                 .header("appKey", BuildConfig.TMAP_APP_KEY)
                 .method(original.method, original.body)
                 .build()
-            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             chain.proceed(request = request)
         }
         connectTimeout(120, TimeUnit.SECONDS)

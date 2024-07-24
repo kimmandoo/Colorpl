@@ -1,7 +1,8 @@
 package com.domain.usecaseimpl.tmap
 
-import com.data.model.response.ResponseTmapRoute
+import TmapRoute
 import com.data.repository.TmapRouteRepository
+import com.domain.mapper.toEntity
 import com.domain.usecase.TmapRouteUseCase
 import javax.inject.Inject
 
@@ -13,13 +14,13 @@ class TmapRouteUseCaseImpl @Inject constructor(
         startY: String,
         endX: String,
         endY: String
-    ): ResponseTmapRoute {
+    ): TmapRoute {
         return tmapRouteRepository.getRoute(
             startX = startX,
             startY = startY,
             endX = endX,
             endY = endY
-        )
+        ).toEntity()
     }
 
 }

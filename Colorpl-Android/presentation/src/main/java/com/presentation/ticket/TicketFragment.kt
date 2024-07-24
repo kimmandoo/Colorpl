@@ -3,19 +3,21 @@ package com.presentation.ticket
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketBinding
-import com.naver.maps.map.MapFragment
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapDialogFragment
 import com.presentation.util.ignoreParentScroll
-import com.presentation.util.setup
+import com.presentation.viewmodel.TicketViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fragment_ticket) {
 
+    private val viewModel: TicketViewModel by viewModels()
     override var mapView: MapView? = null
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -34,6 +36,9 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             }
             includeMyReview.clFeedDetail.setOnClickListener {
                 findNavController().navigate(R.id.fragment_feed_detail)
+            }
+            tvFindRoad.setOnClickListener {
+                viewModel.getRoute()
             }
         }
 
