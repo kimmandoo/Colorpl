@@ -223,21 +223,21 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         calendarAdapter.submitList(updateList)
     }
 
-    private fun setWeekMode(){
+    private fun setWeekMode(clickedItem: CalendarItem){
         binding.ivPrevMonth.setOnClickListener {
             updateCalendarWeekMode(Calendar.PREVIOUS)
         }
         binding.ivNextMonth.setOnClickListener {
             updateCalendarWeekMode(Calendar.NEXT)
         }
-        val (currentYear, currentMonth) = selectedDate.format(
+        val (currentYear, currentMonth) = clickedItem.date.format(
             DateTimeFormatter.ofPattern(
                 "yyyy년 M월"
             )
         )
             .split(" ")
         val weekFields = WeekFields.of(Locale.getDefault())
-        val weekOfMonth = selectedDate.get(weekFields.weekOfMonth())
+        val weekOfMonth = clickedItem.date.get(weekFields.weekOfMonth())
         binding.tvYear.text = currentYear
         binding.tvMonth.text = buildString {
             append(currentMonth)
@@ -264,7 +264,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private fun handleItemClick(
         clickedItem: CalendarItem,
     ) {
-        setWeekMode()
+        setWeekMode(clickedItem)
         val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
             if (item.date == clickedItem.date) {
                 item.copy(isSelected = true)
