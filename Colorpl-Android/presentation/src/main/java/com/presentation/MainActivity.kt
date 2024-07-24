@@ -68,7 +68,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     Timber.d("호요요")
                     return@addOnCompleteListener
                 }
-
             }
     }
 }

@@ -82,15 +82,33 @@
                     style="@style/suite_regular_15"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="12dp"
-                    android:paddingStart="12dp"
-                    android:paddingVertical="15dp"
-                    android:drawablePadding="12dp"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
                     android:drawableStart="@drawable/ic_nickname_mark"
+                    android:drawablePadding="12dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="15dp"
+                    android:paddingStart="12dp"
                     android:textColor="@color/night" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_complete"
+            style="@style/suite_semibold_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_rectangle_eerie_black_5_to_rectangle_imperial_red_5"
+            android:text="@string/my_page_update_complete"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="45dp"
+            android:layout_marginBottom="120dp"
+            android:textColor="@color/selector_timber_wolf_to_white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

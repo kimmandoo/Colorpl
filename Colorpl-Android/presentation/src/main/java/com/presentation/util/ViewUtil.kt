@@ -18,7 +18,7 @@ fun EditText.imeOptionsActionCheck(action: () -> Unit) {
         when (actionId) {
             IME_ACTION_DONE -> {
                 action()
-                return@setOnEditorActionListener true
+                return@setOnEditorActionListener false
             }
 
             IME_ACTION_NEXT -> {
