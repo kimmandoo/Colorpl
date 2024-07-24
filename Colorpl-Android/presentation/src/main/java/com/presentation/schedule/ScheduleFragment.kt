@@ -125,8 +125,10 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         }
         if (handlePullState > 5) {
-            setMonthMode()
-            updateCalendar(Calendar.RESTORE)
+            if (::currentDate.isInitialized){
+                setMonthMode()
+                updateCalendar(Calendar.RESTORE)
+            }
             handlePullState = 0
         }
     }
