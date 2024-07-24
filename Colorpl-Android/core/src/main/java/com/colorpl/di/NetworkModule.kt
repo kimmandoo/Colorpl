@@ -1,9 +1,13 @@
 package com.colorpl.di
 
+import android.content.Context
+import com.colorpl.R
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,5 +41,17 @@ object NetworkModule {
         readTimeout(120, TimeUnit.SECONDS)
         writeTimeout(120, TimeUnit.SECONDS)
         build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetSignInWithGoogleOption(
+        @ApplicationContext context: Context
+    ): GetSignInWithGoogleOption {
+        return GetSignInWithGoogleOption.Builder(
+            context.getString(R.string.default_web_client_id)
+        )
+            .build()
+
     }
 }

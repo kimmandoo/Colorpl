@@ -2,6 +2,11 @@
 <resources>
 
     <!-- Suite Extra Bold -->
+    <style name="suite_extra_bold_36">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
     <style name="suite_extra_bold_20">
         <item name="fontFamily">@font/suite_extra_bold</item>
         <item name="android:textSize">20sp</item>
@@ -15,6 +20,11 @@
     <style name="suite_extra_bold_16">
         <item name="fontFamily">@font/suite_extra_bold</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_extra_bold_15">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="suite_extra_bold_14">
@@ -59,6 +69,11 @@
     <style name="suite_semibold_15">
         <item name="fontFamily">@font/suite_semibold</item>
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="suite_semibold_14">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 
