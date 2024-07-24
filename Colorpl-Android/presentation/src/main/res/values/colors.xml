@@ -8,6 +8,7 @@
     <color name="timber_wolf_eighty">#CCD3D3D3</color>
     <color name="calendar_temp">#FF3b414a</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_fifty">#80FFFFFF</color>
     <color name="light_gray">#FFAAAAAA</color>
 
 </resources>

@@ -1,12 +1,11 @@
 package com.presentation.my_page
 
-import android.animation.ObjectAnimator
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
 import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
-import com.presentation.util.dpToPxF
 import com.presentation.util.setDistanceX
 import com.presentation.util.setTransactionX
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +14,7 @@ import java.util.Date
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
 
-    private val ticketAdapter : TicketAdapter by lazy {
+    private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
             onTicketClickListener = {
 
@@ -29,8 +28,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         initClickEvent()
     }
 
-    private fun initTicket(){
-        binding.rcTicket.adapter = ticketAdapter
+    private fun initTicket() {
+        binding.rcTicket.apply {
+            adapter = ticketAdapter
+            itemAnimator = null
+        }
 
         ticketAdapter.submitList(
             listOf( // testcode
@@ -84,6 +86,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             star.isSelected = false
             val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
             binding.indicator.setTransactionX(distance)
+        }
+
+        binding.tvProfileImg.setOnClickListener { //프로필 수정 이동
+            navigateDestination(
+                findNavController(),
+                R.id.action_fragment_my_page_to_fragment_profile_update
+            )
         }
     }
 

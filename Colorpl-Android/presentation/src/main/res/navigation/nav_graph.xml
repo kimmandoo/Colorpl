@@ -62,8 +62,8 @@
         tools:layout="@layout/fragment_my_page">
         <action
             android:id="@+id/action_fragment_my_page_to_fragment_profile_update"
-            app:enterAnim="@anim/anim_slide_in_right"
-            app:exitAnim="@anim/anim_slide_out_right"
+            app:enterAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down"
             app:destination="@id/fragment_profile_update" />
     </fragment>
 
