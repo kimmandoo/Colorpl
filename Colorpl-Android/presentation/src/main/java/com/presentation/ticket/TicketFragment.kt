@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketBinding
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.PathOverlay
@@ -67,6 +69,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         observePath(map)
         map.apply {
             mapType = NaverMap.MapType.Navi
+            setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRANSIT, true)
             isNightModeEnabled = true
         }
     }
@@ -79,9 +82,10 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                     routeOverlay.apply {
                         coords = routeData
                         color = ContextCompat.getColor(binding.root.context, R.color.imperial_red)
-                        outlineWidth = 1
+                        outlineWidth = 4
                         map = naverMap
                     }
+                    naverMap.cameraPosition = CameraPosition(routeData.first(),16.0)
                 }
             }
         }
