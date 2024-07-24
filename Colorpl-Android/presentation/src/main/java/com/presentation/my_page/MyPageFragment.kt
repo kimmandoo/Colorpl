@@ -1,12 +1,10 @@
 package com.presentation.my_page
 
-import android.animation.ObjectAnimator
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
 import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
-import com.presentation.util.dpToPxF
 import com.presentation.util.setDistanceX
 import com.presentation.util.setTransactionX
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +13,7 @@ import java.util.Date
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
 
-    private val ticketAdapter : TicketAdapter by lazy {
+    private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
             onTicketClickListener = {
 
@@ -29,7 +27,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         initClickEvent()
     }
 
-    private fun initTicket(){
+    private fun initTicket() {
         binding.rcTicket.adapter = ticketAdapter
 
         ticketAdapter.submitList(
