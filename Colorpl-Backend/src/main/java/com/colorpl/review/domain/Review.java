@@ -1,6 +1,6 @@
 package com.colorpl.review.domain;
 
-import com.colorpl.review.domain.comment.domain.Comment;
+import com.colorpl.comment.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +10,8 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Review {
 
     @Column(name = "REVIEW_ID")
@@ -38,4 +39,5 @@ public class Review {
     // ?
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
     private List<Comment> comments;
+
 }
