@@ -10,11 +10,14 @@ android {
     namespace = "com.colorpl.presentation"
     compileSdk = 34
 
+
+
+
     defaultConfig {
         minSdk = 28
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
     }
 
     buildTypes {
@@ -47,6 +50,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.google.googleid)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.navigation.ui.ktx)
@@ -87,4 +91,8 @@ dependencies {
     // Firebase
     implementation(libs.firebase.cloud.messaging)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
 }

@@ -78,6 +78,10 @@ dependencies {
     // Firebase
     implementation(libs.firebase.cloud.messaging)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
 
     // Network
     implementation(libs.retrofit)
