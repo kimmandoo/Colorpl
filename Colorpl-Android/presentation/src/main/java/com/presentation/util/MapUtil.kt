@@ -1,9 +1,12 @@
 package com.presentation.util
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.colorpl.presentation.R
 import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.OverlayImage
@@ -27,7 +30,7 @@ fun NaverMap.setup(fusedLocationSource: FusedLocationSource) {
  * @param subIconRes 서브 아이콘 이미지
  * */
 fun LocationOverlay.setupOverlay(
-    context : Context,
+    context: Context,
     mainIconRes: Int,
     mainIconWidth: Int = 40,
     mainIconHeight: Int = 40,
@@ -52,3 +55,21 @@ fun LocationOverlay.setupOverlay(
     }
 }
 
+/**
+ * 지도 스크롤이 부모 뷰의 스크롤에 영향 주지 않게 하는 메서드
+ */
+@SuppressLint("ClickableViewAccessibility")
+fun MapView.ignoreParentScroll() {
+    this.setOnTouchListener { v, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                this.parent.requestDisallowInterceptTouchEvent(true)
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                this.parent.requestDisallowInterceptTouchEvent(false)
+            }
+        }
+        false
+    }
+}

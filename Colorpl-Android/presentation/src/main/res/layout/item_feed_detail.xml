@@ -9,9 +9,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:paddingBottom="10dp"
+        android:layout_height="wrap_content"
         android:background="@color/eerie_black"
-        android:layout_height="wrap_content">
+        android:paddingBottom="10dp">
 
         <View
             android:layout_width="match_parent"
@@ -51,8 +51,9 @@
             android:layout_margin="12dp"
             android:text="타이타닉호택"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/tv_title" />
 
         <ImageView
             android:id="@+id/iv_content"

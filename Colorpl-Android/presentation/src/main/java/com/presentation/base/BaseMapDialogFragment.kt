@@ -8,12 +8,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import com.colorpl.presentation.R
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 
-abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: Int) :
-    DialogFragment() {
+abstract class BaseMapDialogFragment<B : ViewDataBinding>(private val layoutResId: Int) :
+    DialogFragment(), OnMapReadyCallback {
 
     private var _binding: B? = null
     protected val binding get() = _binding!!
+    abstract var mapView: MapView?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +34,10 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
         return binding.root
     }
 
+    override fun onMapReady(map: NaverMap) {
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(savedInstanceState)
@@ -39,6 +47,38 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapView?.onDestroy()
         _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView?.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView?.onResume()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        mapView?.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView?.onLowMemory()
     }
 }
