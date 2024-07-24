@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentProfileUpdateBinding
@@ -12,6 +13,15 @@ class ProfileUpdateFragment : BaseFragment<FragmentProfileUpdateBinding>(R.layou
 
     override fun initView() {
         initClickEvent()
+        observeNickName()
+    }
+
+    private fun observeNickName(){
+        binding.tiEtNickName.addTextChangedListener {
+            if(it?.isNotEmpty() == true){
+                binding.tilNickName.error = "워닝워닝워닝"
+            }
+        }
     }
 
     private fun initClickEvent(){

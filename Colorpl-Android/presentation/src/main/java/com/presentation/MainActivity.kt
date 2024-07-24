@@ -49,7 +49,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun setBottomNavHide(){ //바텀 네비게이션 숨기는 기능
         navController.addOnDestinationChangedListener{_, destination, _ ->
             binding.bottomVisibility = when(destination.id){
-                R.id.fragment_notification, R.id.fragment_feed_detail -> false
+                R.id.fragment_notification, R.id.fragment_feed_detail
+                ,R.id.fragment_profile_update -> false
                 else -> true
             }
         }

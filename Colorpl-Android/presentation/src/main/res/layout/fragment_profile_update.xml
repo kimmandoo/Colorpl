@@ -66,13 +66,28 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_nick_name"
-                android:layout_width="match_parent"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                app:errorEnabled="true"
+                android:layout_marginTop="6dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_nick_name_title">
 
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ti_et_nick_name"
+                    style="@style/suite_regular_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingVertical="15dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@drawable/ic_nickname_mark"
+                    android:textColor="@color/night" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
