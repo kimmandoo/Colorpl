@@ -134,7 +134,7 @@ async def upload_profile_image(token: str = Depends(oauth2_scheme), db: Session 
     return {"message": "Profile image uploaded successfully", "image_url": file_path}
 
 @router.put("/profile/update_image")
-async def update_profile_image(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db()), file: UploadFile = File(...)):
+async def update_profile_image(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db), file: UploadFile = File(...)):
     username = get_current_user(token, db)
     admin = db.query(Administrator).filter(Administrator.username == username).first()
     if admin is None:
