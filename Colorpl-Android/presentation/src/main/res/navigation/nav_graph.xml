@@ -5,6 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/fragment_schedule">
 
+    <!-- Main-->
+
     <fragment
         android:id="@+id/fragment_feed"
         android:name="com.presentation.feed.FeedFragment"
@@ -20,12 +22,9 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map" />
-    <fragment
-        android:id="@+id/fragment_my_page"
-        android:name="com.presentation.my_page.MyPageFragment"
-        android:label="MyPageFragment"
-        tools:layout="@layout/fragment_my_page" />
+        tools:layout="@layout/fragment_map"/>
+
+
     <fragment
         android:id="@+id/fragment_schedule"
         android:name="com.presentation.schedule.ScheduleFragment"
@@ -35,21 +34,19 @@
             android:id="@+id/action_fragment_schedule_to_fragment_notification"
             app:destination="@id/fragment_notification" />
     </fragment>
+
+    <!-- Feed -->
+    <dialog
+        android:id="@+id/fragment_feed_detail"
+        android:name="com.presentation.feed.FeedDetailFragment"
+        android:label="FeedDetailFragment" />
+
+    <!-- Ticket -->
     <fragment
         android:id="@+id/fragment_reservation"
         android:name="com.presentation.reservation.ReservationFragment"
         android:label="ReservationFragment"
         tools:layout="@layout/fragment_reservation" />
-
-    <fragment
-        android:id="@+id/fragment_notification"
-        android:name="com.presentation.notification.NotificationFragment"
-        tools:layout="@layout/fragment_notification" />
-
-    <dialog
-        android:id="@+id/fragment_feed_detail"
-        android:name="com.presentation.feed.FeedDetailFragment"
-        android:label="FeedDetailFragment" />
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
@@ -59,5 +56,33 @@
             app:destination="@id/fragment_feed_detail" />
     </dialog>
 
+
+    <!-- Notification -->
+
+    <fragment
+        android:id="@+id/fragment_notification"
+        android:name="com.presentation.notification.NotificationFragment"
+        tools:layout="@layout/fragment_notification" />
+
+
+    <!-- MyPage-->
+    <fragment
+        android:id="@+id/fragment_my_page"
+        android:name="com.presentation.my_page.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page">
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_profile_update"
+            app:enterAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down"
+            app:destination="@id/fragment_profile_update" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/fragment_profile_update"
+        android:name="com.presentation.my_page.ProfileUpdateFragment"
+        tools:layout="@layout/fragment_profile_update"/>
 
 </navigation>

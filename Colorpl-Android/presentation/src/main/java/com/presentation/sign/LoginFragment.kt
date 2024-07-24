@@ -70,7 +70,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
             }
             tvSignUp.setOnClickListener {
                 navigateDestination(
-                    findNavController(),
                     R.id.action_fragment_login_to_fragment_sign_up
                 )
             }
