@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="ticket_place">장소</string>
+    <string name="ticket_date">일시</string>
+    <string name="ticket_seat">좌석</string>
+</resources>

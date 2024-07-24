@@ -65,7 +65,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
-            android:contentDescription="@string/menu_ticket"
+            android:contentDescription="@string/menu_reservation"
             android:focusable="true"
             android:foreground="@drawable/selector_ticket"
             android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
