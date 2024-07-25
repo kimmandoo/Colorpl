@@ -1,4 +1,4 @@
-package com.colorpl.show.application;
+package com.colorpl.show.domain.show.application;
 
 import lombok.*;
 

@@ -1,8 +1,8 @@
-package com.colorpl.show.application;
+package com.colorpl.show.domain.show.application;
 
-import com.colorpl.show.domain.Show;
-import com.colorpl.show.domain.ShowRepository;
-import com.colorpl.show.domain.ShowState;
+import com.colorpl.show.domain.show.domain.Show;
+import com.colorpl.show.domain.show.domain.ShowRepository;
+import com.colorpl.show.domain.show.domain.ShowState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;

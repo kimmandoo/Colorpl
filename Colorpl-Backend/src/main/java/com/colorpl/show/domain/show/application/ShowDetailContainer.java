@@ -1,4 +1,4 @@
-package com.colorpl.show.application;
+package com.colorpl.show.domain.show.application;
 
 import lombok.*;
 
@@ -6,9 +6,8 @@ import lombok.*;
 @Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Relate {
+public class ShowDetailContainer {
 
-    private String relatenm;
-    private String relateurl;
+    private ShowDetail db;
 
 }

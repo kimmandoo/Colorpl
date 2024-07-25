@@ -1,6 +1,6 @@
 package com.colorpl.show.domain.schedule.application;
 
-import com.colorpl.show.domain.Show;
+import com.colorpl.show.domain.show.domain.Show;
 import com.colorpl.show.domain.schedule.domain.ShowSchedule;
 import com.colorpl.show.domain.schedule.domain.ShowScheduleRepository;
 import lombok.RequiredArgsConstructor;

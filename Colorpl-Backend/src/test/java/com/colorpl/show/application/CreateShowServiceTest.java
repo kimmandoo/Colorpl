@@ -1,7 +1,8 @@
 package com.colorpl.show.application;
 
-import com.colorpl.show.domain.Show;
-import com.colorpl.show.domain.ShowRepository;
+import com.colorpl.show.domain.show.application.CreateShowService;
+import com.colorpl.show.domain.show.domain.Show;
+import com.colorpl.show.domain.show.domain.ShowRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

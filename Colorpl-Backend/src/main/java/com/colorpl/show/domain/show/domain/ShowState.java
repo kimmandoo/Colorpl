@@ -1,4 +1,4 @@
-package com.colorpl.show.domain;
+package com.colorpl.show.domain.show.domain;
 
 public enum ShowState {
     SCHEDULED, PERFORMING, COMPLETED;

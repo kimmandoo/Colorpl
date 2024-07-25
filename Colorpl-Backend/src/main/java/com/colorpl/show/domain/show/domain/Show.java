@@ -1,4 +1,4 @@
-package com.colorpl.show.domain;
+package com.colorpl.show.domain.show.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

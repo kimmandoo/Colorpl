@@ -1,6 +1,6 @@
 package com.colorpl.show.domain.schedule.domain;
 
-import com.colorpl.show.domain.Show;
+import com.colorpl.show.domain.show.domain.Show;
 import jakarta.persistence.*;
 import lombok.*;
 
