@@ -1,6 +1,5 @@
 package com.presentation.my_page
 
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
 import com.domain.model.Ticket
@@ -93,6 +92,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             navigateDestination(
                 R.id.action_fragment_my_page_to_fragment_profile_update
             )
+        }
+
+        binding.includeSearchUser.clMenu.setOnClickListener {
+            navigateDestination(R.id.action_fragment_my_page_to_fragment_user_search)
         }
     }
 

@@ -22,7 +22,7 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map" />
 
 
     <fragment
@@ -50,7 +50,7 @@
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment" >
+        android:label="TicketFragment">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail" />
@@ -73,16 +73,24 @@
         tools:layout="@layout/fragment_my_page">
         <action
             android:id="@+id/action_fragment_my_page_to_fragment_profile_update"
+            app:destination="@id/fragment_profile_update"
             app:enterAnim="@anim/down_to_top"
-            app:popExitAnim="@anim/top_to_down"
-            app:destination="@id/fragment_profile_update" />
+            app:popExitAnim="@anim/top_to_down" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_user_search"
+            app:destination="@id/fragment_user_search"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
     </fragment>
-
 
 
     <fragment
         android:id="@+id/fragment_profile_update"
         android:name="com.presentation.my_page.ProfileUpdateFragment"
-        tools:layout="@layout/fragment_profile_update"/>
+        tools:layout="@layout/fragment_profile_update" />
+
+    <fragment
+        android:id="@+id/fragment_user_search"
+        android:name="com.presentation.my_page.UserSearchFragment"
+        tools:layout="@layout/fragment_user_search" />
 
 </navigation>
