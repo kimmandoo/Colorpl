@@ -1,7 +1,9 @@
 package com.colorpl.di
 
 import com.domain.usecase.NotificationUseCase
+import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.notification.NotificationUseCaseImpl
+import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,5 +21,10 @@ interface UseCaseModule {
         notificationUseCaseImpl: NotificationUseCaseImpl
     ): NotificationUseCase
 
+    @Binds
+    @Singleton
+    fun provideTmapRouteUseCase(
+        tmapRouteUseCaseImpl: TmapRouteUseCaseImpl
+    ): TmapRouteUseCase
 
 }

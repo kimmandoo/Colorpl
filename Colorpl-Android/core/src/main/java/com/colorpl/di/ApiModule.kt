@@ -1,6 +1,7 @@
 package com.colorpl.di
 
 import com.data.api.NotificationApi
+import com.data.api.TmapRouteApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,6 +18,14 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideNotificationApi(
+        @NormalRetrofit
         retrofit: Retrofit
     ): NotificationApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideTmapApi(
+        @TmapRetrofit
+        retrofit: Retrofit
+    ): TmapRouteApi = retrofit.create()
 }
