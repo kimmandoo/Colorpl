@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.domain.usecase.TmapRouteUseCase
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
+import com.presentation.util.onFailure
+import com.presentation.util.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,16 +26,14 @@ class TicketViewModel @Inject constructor(
     fun getRoute(myLocation: LatLng, destination: LatLng) {
         viewModelScope.launch {
             val routeData = mutableListOf<LatLng>()
-            runCatching {
-                tmapRouteUseCase(
-                    startX = myLocation.longitude.toString(),
-                    startY = myLocation.latitude.toString(),
-                    endX = destination.longitude.toString(),
-                    endY = destination.latitude.toString(),
-                )
-            }.onSuccess { response ->
-                response.collectLatest { routes ->
-                    for (route in routes.legs) {
+            tmapRouteUseCase(
+                startX = myLocation.longitude.toString(),
+                startY = myLocation.latitude.toString(),
+                endX = destination.longitude.toString(),
+                endY = destination.latitude.toString(),
+            ).collectLatest { response ->
+                response.onSuccess { data ->
+                    for (route in data.legs) {
                         when (route.mode) {
                             Mode.WALK.mode -> {
                                 for (lineString in route.steps!!) {
@@ -49,9 +49,9 @@ class TicketViewModel @Inject constructor(
                         }
                     }
                     _routeData.emit(routeData)
+                }.onFailure { error ->
+                    Timber.tag("error").e(error)
                 }
-            }.onFailure { e: Throwable ->
-                Timber.tag("error").e(e)
             }
         }
     }

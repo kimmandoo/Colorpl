@@ -2,6 +2,7 @@ package com.domain.usecase
 
 import com.data.util.ApiResult
 import com.domain.model.Route
+import com.domain.util.RepoResult
 import kotlinx.coroutines.flow.Flow
 
 interface TmapRouteUseCase {
@@ -10,5 +11,5 @@ interface TmapRouteUseCase {
         startY: String,
         endX: String,
         endY: String
-    ): Flow<Route>
+    ): Flow<RepoResult<Route>>
 }

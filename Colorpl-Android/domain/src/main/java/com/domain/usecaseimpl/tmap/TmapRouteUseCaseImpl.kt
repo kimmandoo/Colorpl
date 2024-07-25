@@ -5,6 +5,7 @@ import com.data.util.ApiResult
 import com.domain.mapper.toEntity
 import com.domain.model.Route
 import com.domain.usecase.TmapRouteUseCase
+import com.domain.util.RepoResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -18,16 +19,16 @@ class TmapRouteUseCaseImpl @Inject constructor(
         startY: String,
         endX: String,
         endY: String
-    ): Flow<Route> = flow {
+    ): Flow<RepoResult<Route>> = flow {
         tmapRouteRepository.getRoute(startX, startY, endX, endY).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
                     val route = result.data.toEntity()
-                    emit(route)
+                    emit(RepoResult.success(route))
                 }
 
                 is ApiResult.Error -> {
-                    throw result.exception
+                    emit(RepoResult.error(result.exception))
                 }
             }
         }

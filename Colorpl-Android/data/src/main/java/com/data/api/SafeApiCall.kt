@@ -22,7 +22,7 @@ suspend fun <T> safeApiCall(
                 is HttpException -> {
                     val code = throwable.code()
                     val errorResponse = throwable.response()?.errorBody()?.string()
-                    Timber.d("에러 바디 데이터 확인 ${throwable.message()}")
+                    Timber.d("에러 바디 데이터 확인 ${throwable.message}")
                     ApiResult.error(Exception("HTTP 에러 $code: $errorResponse"))
                 }
 
