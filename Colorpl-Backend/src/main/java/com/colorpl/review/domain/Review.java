@@ -10,8 +10,8 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+//@Setter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Review {
 
     @Column(name = "REVIEW_ID")

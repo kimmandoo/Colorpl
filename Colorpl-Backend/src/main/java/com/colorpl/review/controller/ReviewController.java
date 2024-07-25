@@ -33,7 +33,8 @@ public class ReviewController {
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("review", new Review());
+        Review review = Review.builder().build();
+        model.addAttribute("review", review);
         return "review_form";
     }
 

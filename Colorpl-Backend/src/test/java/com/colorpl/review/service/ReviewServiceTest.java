@@ -1,6 +1,7 @@
 package com.colorpl.review.service;
 
 
+import com.colorpl.comment.domain.Comment;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.repository.ReviewRepository;
 import org.junit.jupiter.api.Test;
@@ -29,13 +30,13 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void findAll() {
-        Review review1 = new Review();
+        Review review1 = Review.builder().build();
         review1.setContent("Great movie!");
         review1.setSpoiler(false);
         review1.setEmotion(5);
         review1.setEmphathy((byte) 10);
 
-        Review review2 = new Review();
+        Review review2 = Review.builder().build();
         review2.setContent("Not bad");
         review2.setSpoiler(false);
         review2.setEmotion(3);
@@ -52,7 +53,7 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void findById() {
-        Review review = new Review();
+        Review review = Review.builder().build();
         review.setContent("Great movie!");
         review.setSpoiler(false);
         review.setEmotion(5);
@@ -73,7 +74,7 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void save() {
-        Review review = new Review();
+        Review review = Review.builder().build();
         review.setContent("Amazing film!");
         review.setSpoiler(false);
         review.setEmotion(5);
@@ -92,7 +93,7 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void deleteById() {
-        Review review = new Review();
+        Review review = Review.builder().build();
         review.setContent("Great movie!");
         review.setSpoiler(false);
         review.setEmotion(5);
@@ -115,7 +116,7 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void updateReview() {
-        Review review = new Review();
+        Review review = Review.builder().build();
         review.setContent("Good movie!");
         review.setSpoiler(false);
         review.setEmotion(4);
@@ -135,7 +136,7 @@ class ReviewServiceTest {
     @Test
     @Transactional
     void findByIdMismatch() {
-        Review review = new Review();
+        Review review = Review.builder().build();
         review.setContent("Good movie!");
         review.setSpoiler(false);
         review.setEmotion(4);
