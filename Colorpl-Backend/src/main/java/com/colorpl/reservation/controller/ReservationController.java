@@ -1,6 +1,6 @@
 package com.colorpl.reservation.controller;
 
-import com.colorpl.reservation.domain.Reservation;
+
 import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -45,19 +45,6 @@ public class ReservationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    // 특정 예약 업데이트
-//    @PutMapping("/member/{memberId}/reservation/{reservationId}")
-//    public ResponseEntity<Reservation> updateReservation(@PathVariable Integer memberId, @PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
-//        Reservation updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
-//        return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
-//    }
-//
-//    // 예약 생성
-//    @PostMapping("/member/{memberId}")
-//    public ResponseEntity<Reservation> createReservation(@PathVariable Integer memberId, @RequestBody ReservationDTO reservationDTO) {
-//        Reservation createdReservation = reservationService.createReservation(memberId, reservationDTO);
-//        return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
-//    }
     // 특정 예약 업데이트(테스트 완료)
     @PutMapping("/member/{memberId}/reservation/{reservationId}")
     public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Integer memberId, @PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {

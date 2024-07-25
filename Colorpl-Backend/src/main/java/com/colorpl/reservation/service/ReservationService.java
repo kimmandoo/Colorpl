@@ -1,5 +1,10 @@
 package com.colorpl.reservation.service;
 
+import com.colorpl.global.common.exception.MemberMismatchException;
+import com.colorpl.global.common.exception.MemberNotFoundException;
+import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
+import com.colorpl.global.common.exception.ReservationNotFoundException;
+import com.colorpl.global.common.exception.ShowScheduleNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.reservation.domain.ReservationDetail;
@@ -29,17 +34,22 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public List<ReservationDTO> getReservationsByMemberId(Integer memberId) {
-        return reservationRepository.findByMemberId(memberId)
-                .stream()
-                .map(ReservationDTO::toReservationDTO)
-                .collect(Collectors.toList());
+        List<Reservation> reservations = reservationRepository.findByMemberId(memberId);
+
+        if (reservations.isEmpty()) {
+            throw new ReservationNotFoundException();
+        }
+
+        return reservations.stream()
+            .map(ReservationDTO::toReservationDTO)
+            .collect(Collectors.toList());
     }
 
     // 모든 예매 삭제
     @Transactional
     public void deleteAllReservationsByMemberId(Integer memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다."));
+            .orElseThrow(MemberNotFoundException::new);
 
         List<Reservation> reservations = reservationRepository.findByMemberId(memberId);
 
@@ -53,7 +63,7 @@ public class ReservationService {
     @Transactional
     public void cancelReservationById(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new IllegalArgumentException("예매 내역이 없습니다."));
+                .orElseThrow(ReservationNotFoundException::new);
 
         reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
         reservationRepository.save(reservation);  // 변경 사항을 저장
@@ -64,7 +74,7 @@ public class ReservationService {
     public void cancelReservationByMemberIdAndReservationId(Integer memberId, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
-            .orElseThrow(() -> new IllegalArgumentException("예약이 없거나 멤버가 일치하지 않습니다."));
+                .orElseThrow(MemberMismatchException::new);
 
         reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
         reservationRepository.save(reservation);
@@ -75,7 +85,7 @@ public class ReservationService {
         // 예약을 가져오고 멤버 ID를 확인
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
-            .orElseThrow(() -> new IllegalArgumentException("예약이 없거나 멤버가 일치하지 않습니다."));
+            .orElseThrow(MemberMismatchException::new);
 
         // 기존 예약 정보를 업데이트
         reservation.updateReservation(reservationDTO.getDate(), reservationDTO.getAmount(), reservationDTO.getComment(), reservationDTO.isRefunded());
@@ -96,10 +106,10 @@ public class ReservationService {
                 ReservationDetailDTO detailDTO = reservationDTO.getReservationDetails().stream()
                     .filter(dto -> dto.getId().equals(existingDetail.getId()))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("예매 상세가 없습니다."));
+                    .orElseThrow(ReservationDetailNotFoundException::new);
 
                 ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
-                    .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+                    .orElseThrow(ShowScheduleNotFoundException::new);
 
                 existingDetail.updateDetail(detailDTO.getRow(), detailDTO.getCol(), showSchedule);
             } else {
@@ -113,7 +123,7 @@ public class ReservationService {
             .filter(detailDTO -> detailDTO.getId() == null) // ID가 없는 항목은 새 항목
             .map(detailDTO -> {
                 ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
-                    .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+                    .orElseThrow(ShowScheduleNotFoundException::new);
 
                 return ReservationDetail.builder()
                     .row(detailDTO.getRow())
@@ -137,7 +147,7 @@ public class ReservationService {
     @Transactional
     public ReservationDTO createReservation(Integer memberId, ReservationDTO reservationDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 없습니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         Reservation reservation = Reservation.builder()
                 .member(member)
@@ -151,7 +161,7 @@ public class ReservationService {
                 .stream()
                 .map(detailDTO -> {
                     ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
-                            .orElseThrow(() -> new IllegalArgumentException("공연 일정이 없습니다."));
+                            .orElseThrow(ShowScheduleNotFoundException::new);
 
                     return ReservationDetail.builder()
                             .row(detailDTO.getRow())
