@@ -1,6 +1,6 @@
 package com.colorpl.review.domain;
 
-import com.colorpl.comment.Comment;
+import com.colorpl.comment.domain.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
