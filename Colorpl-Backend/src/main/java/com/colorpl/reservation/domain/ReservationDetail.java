@@ -2,6 +2,7 @@ package com.colorpl.reservation.domain;
 
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.show.domain.schedule.ShowSchedule;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,12 +37,12 @@ public class ReservationDetail extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RESERVE_ID", nullable = false)
+    @JoinColumn(name = "RESERVE_ID")
     private Reservation reservation;
 
     //공연일시Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SHOW_SCHEDULE_ID", nullable = false)
+    @JoinColumn(name = "SHOW_SCHEDULE_ID")
     private ShowSchedule showSchedule;
 
 
