@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.presentation.util.Category
+import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
 
 @BindingAdapter("setImage")
@@ -161,6 +162,29 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
 
             Category.EXHIBITION -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
+            }
+        }
+        loadImage(imageView, image)
+    }
+}
+
+
+@BindingAdapter("setPaymentBackground")
+fun setPaymentBackground(imageView: ImageView, paymentResult: PaymentResult?) {
+    val context = imageView.context
+    paymentResult?.run {
+        val image = when (paymentResult) {
+            PaymentResult.COMPLETE -> {
+
+                ContextCompat.getDrawable(context, R.color.transparent)
+            }
+
+            PaymentResult.REFUND -> {
+                ContextCompat.getDrawable(context, R.drawable.rectangle_eerie_black_fifty_10)
+            }
+
+            PaymentResult.USE -> {
+                ContextCompat.getDrawable(context, R.drawable.rectangle_white_twenty_10)
             }
         }
         loadImage(imageView, image)

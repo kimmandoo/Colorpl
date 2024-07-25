@@ -53,3 +53,9 @@ enum class Category{
     CIRCUS,
     EXHIBITION
 }
+
+enum class PaymentResult{
+    COMPLETE,
+    REFUND,
+    USE
+}

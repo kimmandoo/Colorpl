@@ -103,6 +103,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         binding.includeNotice.clMenu.setOnClickListener { //공지사항 이동
             navigateDestination(R.id.action_fragment_my_page_to_fragment_notice)
         }
+
+        binding.includePayment.clMenu.setOnClickListener { //결제 내역 이동
+            navigateDestination(R.id.action_fragment_my_page_to_fragment_payment_history)
+        }
     }
 
 }

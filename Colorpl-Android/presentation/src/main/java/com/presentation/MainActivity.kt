@@ -64,7 +64,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomVisibility = when (destination.id) {
                 R.id.fragment_notification, R.id.fragment_feed_detail,
-                R.id.fragment_profile_update, R.id.fragment_user_search, R.id.fragment_my_review -> false
+                R.id.fragment_profile_update, R.id.fragment_user_search, R.id.fragment_my_review,
+                R.id.fragment_payment_history , R.id.fragment_notice -> false
                 else -> true
             }
         }
