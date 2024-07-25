@@ -26,6 +26,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", naverMapClientId)
         buildConfigField("String", "TMAP_APP_KEY", getApiKey("TMAP_APP_KEY"))
+        buildConfigField("String", "BOOT_PAY_KEY", getApiKey("BOOT_PAY_KEY"))
         manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = naverMapClientId
     }
 
@@ -99,5 +100,8 @@ dependencies {
 
     // Log
     implementation(libs.timber)
+
+    // BootPay
+    implementation(libs.bootpay)
 
 }
