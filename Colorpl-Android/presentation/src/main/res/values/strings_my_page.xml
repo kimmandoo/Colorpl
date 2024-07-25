@@ -5,12 +5,15 @@
     <string name="my_page_following">팔로잉</string>
     <string name="my_page_notice">공지사항</string>
     <string name="my_page_payment">결제내역</string>
-    <string name="my_page_my_review">나의 리뷰</string>
+    <string name="my_page_my_review">나의리뷰</string>
     <string name="my_page_search_user">유저찾기</string>
 
     <string name="my_page_nick_name">닉네임</string>
     <string name="my_page_update_complete">수정 완료</string>
     <string name="my_page_user_search">유저찾기</string>
     <string name="my_page_review_count">리뷰수</string>
+    <string name="my_page_un_review_count">미등록 리뷰 : </string>
+    <string name="my_page_use_review_count">등록 리뷰 : </string>
+
 
 </resources>

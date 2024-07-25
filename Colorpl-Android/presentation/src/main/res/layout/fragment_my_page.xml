@@ -9,12 +9,14 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/night">
+        android:background="@color/night"
+        >
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_feed_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/night"
             android:fitsSystemWindows="true">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -272,6 +274,7 @@
             android:layout_marginTop="14dp"
             android:clipToPadding="false"
             android:orientation="vertical"
+            android:paddingBottom="80dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
