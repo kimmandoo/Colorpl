@@ -95,4 +95,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    // BootPay
+    implementation(libs.bootpay)
 }
