@@ -97,8 +97,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         binding.includeSearchUser.clMenu.setOnClickListener { // 유저 찾기 이동
             navigateDestination(R.id.action_fragment_my_page_to_fragment_user_search)
         }
-        binding.includeMyReview.clMenu.setOnClickListener {
+        binding.includeMyReview.clMenu.setOnClickListener { // 나의 리뷰 이동
             navigateDestination(R.id.action_fragment_my_page_to_fragment_my_review)
+        }
+        binding.includeNotice.clMenu.setOnClickListener { //공지사항 이동
+            navigateDestination(R.id.action_fragment_my_page_to_fragment_notice)
         }
     }
 

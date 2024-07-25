@@ -84,6 +84,10 @@
             android:id="@+id/action_fragment_my_page_to_fragment_my_review"
             app:destination="@id/fragment_my_review"
             app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_notice"
+            app:destination="@id/fragment_notice"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
     </fragment>
 
 
@@ -101,5 +105,10 @@
         android:id="@+id/fragment_my_review"
         android:name="com.presentation.my_page.MyReviewFragment"
         tools:layout="@layout/fragment_my_review" />
+
+    <fragment
+        android:id="@+id/fragment_notice"
+        android:name="com.presentation.my_page.NoticeFragment"
+        tools:layout="@layout/fragment_notice" />
 
 </navigation>

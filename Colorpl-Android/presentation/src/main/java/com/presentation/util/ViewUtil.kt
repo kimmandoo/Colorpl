@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
 
 
@@ -68,4 +69,17 @@ fun setDistanceX(viewOne: View, viewTwo: View): Float { // 두 View 사이의 �
 fun View.setTransactionX(distance: Float) {
     val anim = ObjectAnimator.ofFloat(this, "translationX", distance)
     anim.start()
+}
+
+//TextView
+ fun TextView.addOnMore(origin : String, addText : String) {
+    var isEllipsize = layout.getEllipsisCount(maxLines - 1)
+
+    if (isEllipsize > 0) {
+        val ellips = text.substring(
+            0,
+            origin.length - isEllipsize - addText.length - 3)
+
+        text = "$ellips ... ${addText}"
+    }
 }
