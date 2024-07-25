@@ -13,7 +13,7 @@ import javax.inject.Inject
 class TmapRouteUseCaseImpl @Inject constructor(
     private val tmapRouteRepository: TmapRouteRepository,
 ) : TmapRouteUseCase {
-    override suspend fun invoke(
+    override suspend operator fun invoke(
         startX: String,
         startY: String,
         endX: String,
