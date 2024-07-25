@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface TmapRouteApi {
     @POST("transit/routes")
-    suspend fun getMarkers(
+    suspend fun getRoute(
         @Body requestTmapRoute: RequestTmapRoute
     ): ResponseTmapRoute
 }

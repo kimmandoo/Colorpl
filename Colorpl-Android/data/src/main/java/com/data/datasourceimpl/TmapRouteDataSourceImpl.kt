@@ -16,7 +16,7 @@ class TmapRouteDataSourceImpl @Inject constructor(
         endX: String,
         endY: String,
     ): ResponseTmapRoute {
-        return tmapRouteApi.getMarkers(
+        return tmapRouteApi.getRoute(
             RequestTmapRoute(
                 startX = startX,
                 startY = startY,
