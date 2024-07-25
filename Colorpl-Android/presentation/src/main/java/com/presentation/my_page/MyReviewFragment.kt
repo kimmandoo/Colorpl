@@ -1,7 +1,7 @@
 package com.presentation.my_page
 
 import com.colorpl.presentation.R
-import com.colorpl.presentation.databinding.FragmentMyPageBinding
+import com.colorpl.presentation.databinding.FragmentMyReviewBinding
 import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 
 @AndroidEntryPoint
-class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
+class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment_my_review) {
 
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
@@ -21,14 +21,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         )
     }
 
-
     override fun initView() {
         initTicket()
         initClickEvent()
     }
 
     private fun initTicket() {
-        binding.rcTicket.apply {
+        binding.rcReview.apply {
             adapter = ticketAdapter
             itemAnimator = null
         }
@@ -69,37 +68,28 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
     }
 
-
     private fun initClickEvent() {
-        val star = binding.ivTicketStar
-        val expire = binding.ivTicketExpire
-        star.isSelected = true
+        val unUse = binding.ivUnUseTicket
+        val use = binding.ivUseTicket
+        unUse.isSelected = true
 
-        binding.ivTicketStar.setOnClickListener {
+        binding.ivUnUseTicket.setOnClickListener {
             it.isSelected = !it.isSelected
-            expire.isSelected = false
+            use.isSelected = false
+            binding.type = true
             binding.indicator.setTransactionX(0f)
         }
 
-        binding.ivTicketExpire.setOnClickListener {
+        binding.ivUseTicket.setOnClickListener {
             it.isSelected = !it.isSelected
-            star.isSelected = false
-            val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
+            unUse.isSelected = false
+            binding.type = false
+            val distance = setDistanceX(unUse, use)
             binding.indicator.setTransactionX(distance)
         }
 
-        binding.tvProfileImg.setOnClickListener { //프로필 수정 이동
-            navigateDestination(
-                R.id.action_fragment_my_page_to_fragment_profile_update
-            )
-        }
-
-        binding.includeSearchUser.clMenu.setOnClickListener { // 유저 찾기 이동
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_user_search)
-        }
-        binding.includeMyReview.clMenu.setOnClickListener {
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_my_review)
+        binding.includeTop.ivBack.setOnClickListener {
+            navigatePopBackStack()
         }
     }
-
 }

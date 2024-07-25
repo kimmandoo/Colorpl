@@ -80,6 +80,10 @@
             android:id="@+id/action_fragment_my_page_to_fragment_user_search"
             app:destination="@id/fragment_user_search"
             app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_my_review"
+            app:destination="@id/fragment_my_review"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
     </fragment>
 
 
@@ -92,5 +96,10 @@
         android:id="@+id/fragment_user_search"
         android:name="com.presentation.my_page.UserSearchFragment"
         tools:layout="@layout/fragment_user_search" />
+
+    <fragment
+        android:id="@+id/fragment_my_review"
+        android:name="com.presentation.my_page.MyReviewFragment"
+        tools:layout="@layout/fragment_my_review" />
 
 </navigation>
