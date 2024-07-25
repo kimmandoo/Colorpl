@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.domain.usecase.TmapRouteUseCase
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
-import com.presentation.util.onFailure
-import com.presentation.util.onSuccess
+import com.domain.util.onFailure
+import com.domain.util.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

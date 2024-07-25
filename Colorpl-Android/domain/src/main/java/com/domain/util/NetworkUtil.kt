@@ -1,6 +1,4 @@
-package com.presentation.util
-
-import com.domain.util.RepoResult
+package com.domain.util
 
 suspend fun <T> RepoResult<T>.onSuccess(block: suspend (T) -> Unit): RepoResult<T> {
     if (this is RepoResult.Success) {
