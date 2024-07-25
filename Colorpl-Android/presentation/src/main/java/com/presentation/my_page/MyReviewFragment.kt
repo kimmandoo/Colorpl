@@ -76,14 +76,14 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
         binding.ivUnUseTicket.setOnClickListener {
             it.isSelected = !it.isSelected
             use.isSelected = false
-            binding.type = true
+            binding.type = false
             binding.indicator.setTransactionX(0f)
         }
 
         binding.ivUseTicket.setOnClickListener {
             it.isSelected = !it.isSelected
             unUse.isSelected = false
-            binding.type = false
+            binding.type = true
             val distance = setDistanceX(unUse, use)
             binding.indicator.setTransactionX(distance)
         }

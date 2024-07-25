@@ -93,7 +93,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="14dp"
             android:includeFontPadding="false"
-            android:text="@{type ? @string/my_page_un_review_count : @string/my_page_use_review_count, default=@string/my_page_un_review_count}"
+            android:text="@{type ? @string/my_page_use_review_count : @string/my_page_un_review_count}"
             android:textColor="@color/timber_wolf"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cl_tab" />
