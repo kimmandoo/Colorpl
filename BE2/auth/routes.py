@@ -14,7 +14,7 @@ from .utils import (
     verify_token, 
     TOKEN_BLACKLIST
 )
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta, datetime
 from common.security import security_settings
 import shutil, os
@@ -23,7 +23,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = security_settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
-@router.post("/signup")
+@router.post("/admin/signup")
 async def signup(signup_data: AdministratorCreate, db: Session = Depends(get_db)):
     existing_admin = db.query(Administrator).filter(Administrator.username == signup_data.username).first()
     if existing_admin:
@@ -65,6 +65,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if not verify_password(form_data.password, admin.hashed_password):
+        print("Invalid password")
+        raise HTTPException(
+            status_code=401,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     if not admin.status.approved:
         raise HTTPException(status_code=403, detail="Administrator not approved")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -73,7 +80,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/delete_request")
+# admin
+
+@router.post("/admin/delete_request")
 async def request_delete_account(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = get_current_user(token, db)
     admin = db.query(Administrator).filter(Administrator.username == username).first()
@@ -107,6 +116,8 @@ async def approve_delete_account(admin_id: str, token: str = Depends(oauth2_sche
     db.commit()
 
     return {"message": f"Administrator {admin_id} has been deleted"}    
+
+# /profile
 
 @router.post("/profile/upload_image")
 async def upload_profile_image(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db), file: UploadFile = File(...)):
@@ -158,6 +169,8 @@ async def update_profile_image(token: str = Depends(oauth2_scheme), db: Session 
 
     return {"message": "Profile image updated successfully", "image_url": file_path}       
 
+# /administrators
+
 @router.get("/administrators/me")
 async def read_administrator_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = verify_token(token)
@@ -171,18 +184,29 @@ async def list_administrators(db: Session = Depends(get_db)):
     admins = db.query(Administrator).all()
     return admins
 
-@router.post("/admin/administrators/{admin_id}/approve", dependencies=[Depends(super_admin_required)])
-async def approve_administrator(admin_id: str, role: int, db: Session = Depends(get_db)):
+@router.put("/admin/administrators/{admin_id}/approve", dependencies=[Depends(super_admin_required)])
+async def approve_administrator(admin_id: str, db: Session = Depends(get_db)):
     admin = db.query(Administrator).filter(Administrator.id == admin_id).first()
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     
     admin.status.approved = True
     admin.status.approved_at = datetime.utcnow()
+    db.commit()
+
+    return {"message": f"Administrator {admin.username} approved"}
+
+@router.put("/admin/administrators/{admin_id}/role", dependencies=[Depends(super_admin_required)])
+async def approve_administrator(admin_id: str, role: int, db: Session = Depends(get_db)):
+    admin = db.query(Administrator).filter(Administrator.id == admin_id).first()
+    if admin is None:
+        raise HTTPException(status_code=404, detail="Administrator not found")
+    
     admin.role = role
     db.commit()
 
-    return {"message": f"Administrator {admin.username} approved and assigned role {role}"}
+    return {"message": f"Administrator {admin.username} approved assigned role {role}"}
+
 
 @router.get("/admin/administrators/{admin_id}", dependencies=[Depends(super_admin_required)])
 async def get_administrator(admin_id: str, db: Session = Depends(get_db)):
@@ -190,6 +214,9 @@ async def get_administrator(admin_id: str, db: Session = Depends(get_db)):
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     return admin
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 @router.post("/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
