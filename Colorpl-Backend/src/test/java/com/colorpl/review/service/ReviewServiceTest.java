@@ -1,154 +1,153 @@
 package com.colorpl.review.service;
 
-
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class ReviewServiceTest {
 
-    @Autowired
+    @Mock
     private ReviewRepository reviewRepository;
 
-    @Autowired
+    @InjectMocks
     private ReviewService reviewService;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    @Transactional
     void findAll() {
-        Review review1 = Review.builder().build();
-        review1.setContent("Great movie!");
-        review1.setSpoiler(false);
-        review1.setEmotion(5);
-        review1.setEmphathy((byte) 10);
+        Comment comment = Comment.builder()
+                .id(1L)
+                .review(Review.builder().id(1).build())
+                .member(null) // Use appropriate Member instance if needed
+                .content("Test Comment")
+                .build();
 
-        Review review2 = Review.builder().build();
-        review2.setContent("Not bad");
-        review2.setSpoiler(false);
-        review2.setEmotion(3);
-        review2.setEmphathy((byte) 5);
+        Review review = Review.builder()
+                .id(1)
+                .content("Test Review")
+                .spoiler(false)
+                .emotion(5)
+                .emphathy((byte) 3)
+                .comments(Collections.singletonList(comment))
+                .build();
 
-        reviewRepository.save(review1);
-        reviewRepository.save(review2);
+        List<Review> reviews = Collections.singletonList(review);
 
-        List<Review> reviews = reviewService.findAll();
-        assertThat(reviews).isNotNull();
-        assertThat(reviews.size()).isEqualTo(2);
+        when(reviewRepository.findAll()).thenReturn(reviews);
+
+        List<ReviewDTO> result = reviewService.findAll();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Test Review", result.get(0).getContent());
     }
 
     @Test
-    @Transactional
     void findById() {
-        Review review = Review.builder().build();
-        review.setContent("Great movie!");
-        review.setSpoiler(false);
-        review.setEmotion(5);
-        review.setEmphathy((byte) 10);
+        Comment comment = Comment.builder()
+                .id(1L)
+                .review(Review.builder().id(1).build())
+                .member(null)
+                .content("Test Comment")
+                .build();
 
-        reviewRepository.save(review);
-        Review foundReview = reviewService.findById(review.getId());
+        Review review = Review.builder()
+                .id(1)
+                .content("Test Review")
+                .spoiler(false)
+                .emotion(5)
+                .emphathy((byte) 3)
+                .comments(Collections.singletonList(comment))
+                .build();
 
-        assertThat(foundReview).isNotNull();
-        assertThat(foundReview.getId()).isEqualTo(review.getId());
-        assertThat(foundReview.getContent()).isEqualTo(review.getContent());
+        when(reviewRepository.findById(1)).thenReturn(Optional.of(review));
 
-        // Checking for a non-existent ID
-        Review notFoundReview = reviewService.findById(999);
-        assertThat(notFoundReview).isNull();
+        ReviewDTO result = reviewService.findById(1);
+
+        assertNotNull(result);
+        assertEquals("Test Review", result.getContent());
     }
 
     @Test
-    @Transactional
+    void findById_NotFound() {
+        when(reviewRepository.findById(1)).thenReturn(Optional.empty());
+
+        ReviewDTO result = reviewService.findById(1);
+
+        assertNull(result);
+    }
+
+    @Test
     void save() {
-        Review review = Review.builder().build();
-        review.setContent("Amazing film!");
-        review.setSpoiler(false);
-        review.setEmotion(5);
-        review.setEmphathy((byte) 20);
+        CommentDTO commentDTO = CommentDTO.builder()
+                .id(1L)
+                .review(ReviewDTO.builder().id(1).build())
+                .member(null)
+                .content("Test Comment")
+                .build();
 
-        Review savedReview = reviewService.save(review);
+        ReviewDTO reviewDTO = ReviewDTO.builder()
+                .id(1)
+                .content("Test Review")
+                .spoiler(false)
+                .emotion(5)
+                .empathy((byte) 3)
+                .comments(Collections.singletonList(commentDTO))
+                .build();
 
-        assertThat(savedReview).isNotNull();
-        assertThat(savedReview.getId()).isNotNull();
-        assertThat(savedReview.getContent()).isEqualTo(review.getContent());
+        Review review = Review.builder()
+                .id(1)
+                .content("Test Review")
+                .spoiler(false)
+                .emotion(5)
+                .emphathy((byte) 3)
+                .comments(Collections.singletonList(Comment.builder().id(1L).content("Test Comment").build()))
+                .build();
 
-        // Checking for mismatched content after saving
-        assertNotEquals("Different content", savedReview.getContent());
+
+        when(reviewRepository.save(any(Review.class))).thenReturn(review);
+
+        ReviewDTO result = reviewService.save(reviewDTO);
+
+        assertNotNull(result);
+        assertEquals("Test Review", result.getContent());
     }
 
     @Test
-    @Transactional
     void deleteById() {
-        Review review = Review.builder().build();
-        review.setContent("Great movie!");
-        review.setSpoiler(false);
-        review.setEmotion(5);
-        review.setEmphathy((byte) 10);
+        when(reviewRepository.existsById(1)).thenReturn(true);
 
-        reviewRepository.save(review);
-        Integer reviewId = review.getId();
+        assertDoesNotThrow(() -> reviewService.deleteById(1));
 
-        reviewService.deleteById(reviewId);
-        Review deletedReview = reviewRepository.findById(reviewId).orElse(null);
-
-        assertThat(deletedReview).isNull();
-
-        // Trying to delete a non-existent review
-        assertThrows(Exception.class, () -> {
-            reviewService.deleteById(999);
-        });
+        verify(reviewRepository, times(1)).deleteById(1);
     }
 
     @Test
-    @Transactional
-    void updateReview() {
-        Review review = Review.builder().build();
-        review.setContent("Good movie!");
-        review.setSpoiler(false);
-        review.setEmotion(4);
-        review.setEmphathy((byte) 8);
+    void deleteById_NotFound() {
+        when(reviewRepository.existsById(1)).thenReturn(false);
 
-        Review savedReview = reviewService.save(review);
-        savedReview.setContent("Updated content");
-        savedReview.setEmotion(5);
-        Review updatedReview = reviewService.save(savedReview);
-
-        assertThat(updatedReview).isNotNull();
-        assertThat(updatedReview.getId()).isEqualTo(savedReview.getId());
-        assertThat(updatedReview.getContent()).isEqualTo("Updated content");
-        assertThat(updatedReview.getEmotion()).isEqualTo(5);
-    }
-
-    @Test
-    @Transactional
-    void findByIdMismatch() {
-        Review review = Review.builder().build();
-        review.setContent("Good movie!");
-        review.setSpoiler(false);
-        review.setEmotion(4);
-        review.setEmphathy((byte) 8);
-
-        reviewRepository.save(review);
-        Review foundReview = reviewService.findById(review.getId());
-
-        assertThat(foundReview).isNotNull();
-        assertThat(foundReview.getId()).isEqualTo(review.getId());
-
-        // Checking for mismatched content
-        assertNotEquals("Bad movie", foundReview.getContent());
+        assertThrows(NoSuchElementException.class, () -> reviewService.deleteById(1));
     }
 }

@@ -1,17 +1,33 @@
 package com.colorpl.comment.service;
 
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
+import com.colorpl.member.Member;
+import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.member.service.MemberService;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.review.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
+
+    private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
+
+    @Autowired
+    public CommentService(ReviewRepository reviewRepository, MemberRepository memberRepository) {
+        this.reviewRepository = reviewRepository;
+        this.memberRepository = memberRepository;
+    }
 
     @Autowired
     private CommentRepository commentRepository;
@@ -19,47 +35,51 @@ public class CommentService {
     @Autowired
     private ReviewService reviewService;
 
-    public Comment findByCommentId(Long commentId) {
-        return commentRepository.findById(commentId).orElse(null);
+    @Autowired
+    private MemberService memberService;
+
+    public List<CommentDTO> findAll() {
+        return commentRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Comment> findByReviewId(Integer reviewId) {
-        return CommentRepository.findByReviewId(reviewId);
+    public CommentDTO findById(Long id) {
+        return commentRepository.findById(id).map(this::toDTO).orElse(null);
     }
 
-    public Comment save(Integer reviewId, Comment comment) {
-        Review review = reviewService.findById(reviewId);
-        if (review == null) {
-            throw new NoSuchElementException("Review with ID " + reviewId + " does not exist.");
+    public CommentDTO save(CommentDTO commentDTO) {
+        Comment comment = toEntity(commentDTO);
+        Comment savedComment = commentRepository.save(comment);
+        return toDTO(savedComment);
+    }
+
+    public void deleteById(Long id) {
+        if (!commentRepository.existsById(id)) {
+            throw new NoSuchElementException("Comment with ID " + id + " does not exist.");
         }
-        // save comment's reviewid with given review
-        return commentRepository.save(comment);
+        commentRepository.deleteById(id);
     }
 
-    public void deleteComment(Long commentId) {
-        if (!commentRepository.existsById(commentId)) {
-            throw new NoSuchElementException("Comment with ID " + commentId + " does not exist.");
-        }
-        commentRepository.deleteById(commentId);
+    private CommentDTO toDTO(Comment comment) {
+        return CommentDTO.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .build();
     }
 
-    public Comment updateComment(Long commentId, Comment updatedComment) {
-        Comment existingComment = commentRepository.findById(commentId).orElseThrow(() ->
-                new NoSuchElementException("Comment with ID " + commentId + " does not exist."));
+    private Comment toEntity(CommentDTO commentDTO) {
+        // Extract IDs from DTO if Review and Member are embedded objects
+        Integer reviewId = commentDTO.getReview() != null ? commentDTO.getReview().getId() : null;
+        Integer memberId = commentDTO.getMember() != null ? commentDTO.getMember().getId() : null;
 
-        existingComment.setContent(updatedComment.getContent());
-        existingComment.setMember(updatedComment.getMember());
+        // Assuming you have some service or repository to fetch the entities
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        Member member = memberRepository.findById(memberId).orElse(null);
 
-        // Updating the review if necessary
-        if (updatedComment.getReview() != null) {
-            Review review = reviewService.findById(updatedComment.getReview().getId());
-            if (review != null) {
-                existingComment.setReview(review);
-            } else {
-                throw new NoSuchElementException("Review with ID " + updatedComment.getReview().getId() + " does not exist.");
-            }
-        }
-
-        return commentRepository.save(existingComment);
+        return Comment.builder()
+                .id(commentDTO.getId())
+                .content(commentDTO.getContent())
+                .review(review)  // Set the Review entity
+                .member(member)  // Set the Member entity
+                .build();
     }
 }
