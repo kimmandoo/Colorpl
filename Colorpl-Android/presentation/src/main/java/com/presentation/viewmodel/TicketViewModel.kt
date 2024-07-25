@@ -29,26 +29,22 @@ class TicketViewModel @Inject constructor(
                 endX = destination.longitude.toString(),
                 endY = destination.latitude.toString(),
             ).collect { result ->
-                try {
-                    for (route in result.legs) {
-                        when (route.mode) {
-                            Mode.WALK.mode -> {
-                                for (lineString in route.steps!!) {
-                                    routeData.addAll(parseLatLng(lineString.linestring))
-                                }
+                for (route in result.legs) {
+                    when (route.mode) {
+                        Mode.WALK.mode -> {
+                            for (lineString in route.steps!!) {
+                                routeData.addAll(parseLatLng(lineString.linestring))
                             }
+                        }
 
-                            else -> {
-                                route.passShape?.let { lineString ->
-                                    routeData.addAll(parseLatLng(lineString))
-                                }
+                        else -> {
+                            route.passShape?.let { lineString ->
+                                routeData.addAll(parseLatLng(lineString))
                             }
                         }
                     }
-                    _routeData.emit(routeData)
-                } catch (e: Exception) {
-
                 }
+                _routeData.emit(routeData)
             }
         }
     }

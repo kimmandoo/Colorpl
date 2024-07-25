@@ -7,6 +7,7 @@ import com.domain.model.Route
 import com.domain.usecase.TmapRouteUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class TmapRouteUseCaseImpl @Inject constructor(
@@ -25,7 +26,9 @@ class TmapRouteUseCaseImpl @Inject constructor(
                     emit(route)
                 }
 
-                is ApiResult.Error -> throw result.exception
+                is ApiResult.Error -> {
+                    Timber.tag("error").e(result.exception)
+                }
             }
         }
     }
