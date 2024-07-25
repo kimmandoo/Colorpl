@@ -1,6 +1,8 @@
 package com.data.repository
 
 import com.data.model.response.ResponseTmapRoute
+import com.data.util.ApiResult
+import kotlinx.coroutines.flow.Flow
 
 interface TmapRouteRepository {
     suspend fun getRoute(
@@ -8,5 +10,5 @@ interface TmapRouteRepository {
         startY: String,
         endX: String,
         endY: String,
-    ) : ResponseTmapRoute
+    ) : Flow<ApiResult<ResponseTmapRoute>>
 }

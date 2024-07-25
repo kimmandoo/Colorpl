@@ -2,7 +2,6 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.domain.model.Route
 import com.domain.usecase.TmapRouteUseCase
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
@@ -24,36 +23,33 @@ class TicketViewModel @Inject constructor(
     fun getRoute(myLocation: LatLng, destination: LatLng) {
         viewModelScope.launch {
             val routeData = mutableListOf<LatLng>()
-            runCatching {
-                tmapRouteUseCase.getRoute(
-                    startX =myLocation.longitude.toString(),
-                    startY =myLocation.latitude.toString(),
-                    endX =destination.longitude.toString(),
-                    endY =destination.latitude.toString(),
-                )
-            }.onSuccess { response: Route ->
-                Timber.d("${response}")
-
-                for (route in response.legs) {
-                    when (route.mode) {
-                        Mode.WALK.mode -> {
-                            for (lineString in route.steps!!) {
-                                routeData.addAll(parseLatLng(lineString.linestring))
+            tmapRouteUseCase(
+                startX = myLocation.longitude.toString(),
+                startY = myLocation.latitude.toString(),
+                endX = destination.longitude.toString(),
+                endY = destination.latitude.toString(),
+            ).collect { result ->
+                try {
+                    for (route in result.legs) {
+                        when (route.mode) {
+                            Mode.WALK.mode -> {
+                                for (lineString in route.steps!!) {
+                                    routeData.addAll(parseLatLng(lineString.linestring))
+                                }
                             }
-                        }
 
-                        else -> {
-                            route.passShape?.let { lineString ->
-                                routeData.addAll(parseLatLng(lineString))
+                            else -> {
+                                route.passShape?.let { lineString ->
+                                    routeData.addAll(parseLatLng(lineString))
+                                }
                             }
                         }
                     }
-                }
-                _routeData.emit(routeData)
-            }.onFailure { e ->
-                Timber.d("$e")
-            }
+                    _routeData.emit(routeData)
+                } catch (e: Exception) {
 
+                }
+            }
         }
     }
 
