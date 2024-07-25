@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
 
 class AdministratorCreate(BaseModel):
     username: str
@@ -11,3 +13,31 @@ class Token(BaseModel):
 
 class UpdateProfileImage(BaseModel):
     image_url: str
+
+class AdminProfile(BaseModel):
+    image_url: str
+
+    class Config:
+        from_attributes = True
+
+class AdministratorStatus(BaseModel):
+    approved: bool
+    approval_requested_at: Optional[datetime]
+    approved_at: Optional[datetime]
+    deleted: bool
+    delete_requested_at: Optional[datetime]
+    deleted_at: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+
+class Administrator(BaseModel):
+    id: str
+    username: str
+    email: str
+    role: int
+    profile: Optional[AdminProfile]
+    status: Optional[AdministratorStatus]
+
+    class Config:
+        from_attributes = True

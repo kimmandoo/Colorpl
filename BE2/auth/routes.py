@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from .database import get_db
 from .models import Administrator, AdministratorStatus, AdminProfile
 from .schemas import AdministratorCreate, Token
+from .schemas import Administrator as AdministratorSchema
 from .utils import (
     create_access_token,
     get_password_hash, 
@@ -17,7 +18,7 @@ from .utils import (
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta, datetime
 from common.security import security_settings
-import shutil, os
+import shutil, os, re, hashlib
 
 ACCESS_TOKEN_EXPIRE_MINUTES = security_settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -128,12 +129,25 @@ async def upload_profile_image(token: str = Depends(oauth2_scheme), db: Session 
     
     save_directory = "profile_images"
     if not os.path.exists(save_directory):
-        os.makedirs(save_directory)
-    
-    file_path = os.path.join(save_directory, f"{admin.id}_{file.filename}")
+        try:
+            os.makedirs(save_directory)
+        except OSError as e:
+            raise HTTPException(status_code=500, detail=f"Failed to create directory: {e}")
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    original_filename = file.filename
+    safe_filename = re.sub(r'[^\w\-_\. ]', '_', original_filename)
+    
+    if len(safe_filename) > 100: 
+        hash_object = hashlib.md5(safe_filename.encode())
+        safe_filename = hash_object.hexdigest() + os.path.splitext(safe_filename)[1]
+
+    file_path = os.path.join(save_directory, f"{admin.id}_{safe_filename}")
+
+    try:
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
     
     if admin.profile is None:
         admin.profile = AdminProfile(admin_id=admin.id, image_url=file_path)
@@ -150,30 +164,47 @@ async def update_profile_image(token: str = Depends(oauth2_scheme), db: Session 
     admin = db.query(Administrator).filter(Administrator.username == username).first()
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
-
+    
     save_directory = "profile_images"
     if not os.path.exists(save_directory):
-        os.makedirs(save_directory)
+        try:
+            os.makedirs(save_directory)
+        except OSError as e:
+            raise HTTPException(status_code=500, detail=f"Failed to create directory: {e}")
+    
+    original_filename = file.filename
+    safe_filename = re.sub(r'[^\w\-_\. ]', '_', original_filename)
+    
+    if len(safe_filename) > 100: 
+        hash_object = hashlib.md5(safe_filename.encode())
+        safe_filename = hash_object.hexdigest() + os.path.splitext(safe_filename)[1]
 
-    file_path = os.path.join(save_directory, f"{admin.id}_{file.filename}")
+    file_path = os.path.join(save_directory, f"{admin.id}_{safe_filename}")
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    try:
+        if admin.profile and admin.profile.image_url:
+            if os.path.exists(admin.profile.image_url):
+                os.remove(admin.profile.image_url)
 
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
+    
     if admin.profile is None:
         admin.profile = AdminProfile(admin_id=admin.id, image_url=file_path)
     else:
         admin.profile.image_url = file_path
-
+    
     db.commit()
 
-    return {"message": "Profile image updated successfully", "image_url": file_path}       
+    return {"message": "Profile image updated successfully", "image_url": file_path}
 
 # /administrators
 
-@router.get("/administrators/me")
+@router.get("/administrators/me", response_model=AdministratorSchema)
 async def read_administrator_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    username = verify_token(token)
+    username = get_current_user(token, db)
     admin = db.query(Administrator).filter(Administrator.username == username).first()
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
@@ -214,7 +245,6 @@ async def get_administrator(admin_id: str, db: Session = Depends(get_db)):
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     return admin
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
