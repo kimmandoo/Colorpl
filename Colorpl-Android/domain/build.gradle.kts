@@ -43,6 +43,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.timber)
+
     // DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
