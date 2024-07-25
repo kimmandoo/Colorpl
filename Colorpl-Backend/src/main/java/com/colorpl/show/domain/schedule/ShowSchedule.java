@@ -1,7 +1,9 @@
 package com.colorpl.show.domain.schedule;
 
+import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.show.domain.Show;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 public class ShowSchedule {
 
     @Column(name = "SHOW_SCHEDULE_ID")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
 
@@ -24,5 +26,8 @@ public class ShowSchedule {
 
     @Column(name = "SHOW_SCHEDULE_DATE")
     private LocalDateTime date;
+
+    @OneToMany(mappedBy = "showSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservationDetail> reservationDetails;
 
 }

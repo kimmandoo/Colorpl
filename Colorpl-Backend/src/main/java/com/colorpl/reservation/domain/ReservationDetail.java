@@ -1,10 +1,13 @@
 package com.colorpl.reservation.domain;
 
 import com.colorpl.global.common.BaseEntity;
+import com.colorpl.show.domain.schedule.ShowSchedule;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class ReservationDetail extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RESERVE_DETAIL_ID")
     private Long id;
 
@@ -34,12 +37,23 @@ public class ReservationDetail extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RESERVE_ID", nullable = false)
+    @JoinColumn(name = "RESERVE_ID")
     private Reservation reservation;
 
     //공연일시Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SHOW_SCHEDULE_ID")
+    private ShowSchedule showSchedule;
 
 
+    public void updateDetail(Byte row,Byte col,ShowSchedule showSchedule){
+        this.row = row;
+        this.col = col;
+        this.showSchedule = showSchedule;
+    }
 
+    public void updateReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 
 }

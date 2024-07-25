@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Show {
 
-    @Column(name = "SHOW_ID")
-    @GeneratedValue
+
     @Id
+    @Column(name = "SHOW_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "SHOW_NAME")
