@@ -16,7 +16,6 @@ class PaymentHistoryViewHolder(
                 1 -> PaymentResult.REFUND
                 else -> PaymentResult.USE
             }
-
         }
     }
 }

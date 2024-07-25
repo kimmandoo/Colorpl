@@ -11,8 +11,10 @@
     <string name="permission_denied_message">권한이 없습니다.</string>
     <string name="permission_denied_closed_button_message">닫기</string>
     <string name="permission_go_to_setting_button_message">확인</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="drop_down_menu_refund">환불하기</string>
+    <string name="drop_down_menu_delete">삭제하기</string>
 
 
 </resources>
