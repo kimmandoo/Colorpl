@@ -15,6 +15,12 @@ class NoticeAdapter : ListAdapter<String, NoticeViewHolder>(
     }
 
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(getItem(position))
+        holder.binding.tvContent.setOnClickListener {
+            if (holder.binding.tvContent.isTextTrimmed()) {
+                holder.binding.tvContent.toggleExpand()
+                notifyItemChanged(position)
+            }
+        }
     }
 }

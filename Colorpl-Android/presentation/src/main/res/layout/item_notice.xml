@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="content"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
-        android:background="@drawable/rectangle_eerie_black_10"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rectangle_eerie_black_10">
 
         <TextView
             android:id="@+id/tv_title"
@@ -39,16 +43,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.presentation.component.custom.ExpandableTextView
             android:id="@+id/tv_content"
             style="@style/suite_regular_12"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
             android:layout_marginBottom="20dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="ajdklfjaklsdjkfl\nadjklfajdklf\nasdfasdfa"
+            android:text="@{content}"
             android:textColor="@color/timber_wolf"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_date"
