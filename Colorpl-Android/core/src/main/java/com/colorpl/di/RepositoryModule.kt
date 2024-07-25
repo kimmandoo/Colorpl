@@ -1,7 +1,9 @@
 package com.colorpl.di
 
 import com.data.repository.NotificationRepository
+import com.data.repository.TmapRouteRepository
 import com.data.repositoryimpl.NotificationRepositoryImpl
+import com.data.repositoryimpl.TmapRouteRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,10 @@ interface RepositoryModule {
     fun provideNotificationRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
     ) : NotificationRepository
+
+    @Singleton
+    @Binds
+    fun provideTmapRouteRepository(
+        tmapRouteRepositoryImpl: TmapRouteRepositoryImpl
+    ) : TmapRouteRepository
 }
