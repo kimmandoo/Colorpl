@@ -1,7 +1,6 @@
 package com.presentation
 
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.colorpl.presentation.R
@@ -61,11 +60,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     /** 바텀 네비게이션 숨기는 기능 */
-    private fun setBottomNavHide(){
-        navController.addOnDestinationChangedListener{_, destination, _ ->
-            binding.bottomVisibility = when(destination.id){
-                R.id.fragment_notification, R.id.fragment_feed_detail
-                ,R.id.fragment_profile_update -> false
+    private fun setBottomNavHide() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomVisibility = when (destination.id) {
+                R.id.fragment_notification, R.id.fragment_feed_detail, R.id.fragment_profile_update, R.id.fragment_user_search -> false
                 else -> true
             }
         }

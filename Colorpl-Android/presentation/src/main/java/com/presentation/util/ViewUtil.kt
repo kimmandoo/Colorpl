@@ -1,11 +1,11 @@
 package com.presentation.util
 
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
 import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
+import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.EditText
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 
 fun EditText.imeOptionsActionCheck(action: () -> Unit) {
     this.setOnEditorActionListener { textView, actionId, keyEvent ->
+        textView.context.hideKeyboard(textView)
         when (actionId) {
             IME_ACTION_DONE -> {
                 action()
@@ -25,21 +26,27 @@ fun EditText.imeOptionsActionCheck(action: () -> Unit) {
                 action()
                 return@setOnEditorActionListener true
             }
+
+            IME_ACTION_SEARCH -> {
+                action()
+                return@setOnEditorActionListener true
+            }
+
         }
         return@setOnEditorActionListener false
     }
 }
 
-fun EditText.setPasswordTransformation(){
-    if(this.transformationMethod == null){
+fun EditText.setPasswordTransformation() {
+    if (this.transformationMethod == null) {
         this.transformationMethod = PasswordTransformationMethod.getInstance()
-    }else{
+    } else {
         this.transformationMethod = null
     }
 }
 
 // ImageView
-fun ImageView.setImage(image : Any){
+fun ImageView.setImage(image: Any) {
     Glide.with(this)
         .load(image)
         .circleCrop()
@@ -48,8 +55,8 @@ fun ImageView.setImage(image : Any){
 
 // View
 
-fun setDistanceX(viewOne : View, viewTwo : View) : Float{ // 두 View 사이의 거리 구하기
-    val viewOneValue =IntArray(2)
+fun setDistanceX(viewOne: View, viewTwo: View): Float { // 두 View 사이의 거리 구하기
+    val viewOneValue = IntArray(2)
     val viewTwoValue = IntArray(2)
 
     viewOne.getLocationOnScreen(viewOneValue)
@@ -58,7 +65,7 @@ fun setDistanceX(viewOne : View, viewTwo : View) : Float{ // 두 View 사이의 
     return Math.abs(viewOneValue[0] - viewTwoValue[0]).toFloat()
 }
 
-fun View.setTransactionX(distance : Float){
+fun View.setTransactionX(distance: Float) {
     val anim = ObjectAnimator.ofFloat(this, "translationX", distance)
     anim.start()
 }

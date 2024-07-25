@@ -1,0 +1,78 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.my_page.UserSearchFragment">
+
+        <include
+            android:id="@+id/include_top"
+            layout="@layout/include_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{@string/my_page_user_search}" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/rectangle_timber_wolf_5"
+            app:layout_constraintTop_toBottomOf="@+id/include_top">
+
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="13dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/ic_search"
+                android:backgroundTint="@color/eerie_black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/et_search"
+                style="@style/suite_semibold_16"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingStart="28dp"
+                android:textColor="@color/eerie_black"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_search"
+                app:layout_constraintTop_toTopOf="@+id/iv_search" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_search"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="36dp"
+            android:paddingBottom="40dp"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_search" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
