@@ -20,8 +20,11 @@
 
             <ImageView
                 android:id="@+id/iv_ticket"
-                android:layout_width="0dp"
-                android:layout_height="200dp" />
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/dummy_ticket"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

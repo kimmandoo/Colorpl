@@ -27,7 +27,7 @@ class TmapRouteUseCaseImpl @Inject constructor(
                 }
 
                 is ApiResult.Error -> {
-                    Timber.tag("error").e(result.exception)
+                    throw result.exception
                 }
             }
         }
