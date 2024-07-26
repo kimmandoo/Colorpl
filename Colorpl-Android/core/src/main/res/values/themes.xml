@@ -11,7 +11,5 @@
 
     <style name="Theme.Colorpl" parent="Base.Theme.Colorpl" />
 
-    <style name="Theme.Colorpl.No">
 
-    </style>
 </resources>
