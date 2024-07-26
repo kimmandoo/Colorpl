@@ -30,7 +30,7 @@ public class CreateShowService {
     @Value("${show.api.key}")
     private String showApiKey;
 
-    public Integer createShow(String mt20id) {
+    public Show createShow(String mt20id) {
 
         String xml = retrieveShowDetail(mt20id);
         ShowDetail showDetail = deserializeShowDetail(xml);
@@ -52,7 +52,7 @@ public class CreateShowService {
                 .build();
 
         showRepository.save(show);
-        return show.getId();
+        return show;
     }
 
     private String retrieveShowDetail(String mt20id) {
