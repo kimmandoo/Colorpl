@@ -12,6 +12,9 @@ import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import timber.log.Timber
 import com.naver.maps.map.NaverMapSdk
+import kr.co.bootpay.android.Bootpay
+import kr.co.bootpay.android.constants.BootpayBuildConfig
+import kr.co.bootpay.android.constants.BootpayConstant
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -36,7 +39,6 @@ class ColorplApplication : Application(), Configuration.Provider {
         // NaverMapSdk
         NaverMapSdk.getInstance(this).client =
             NaverMapSdk.NaverCloudPlatformClient(BuildConfig.NAVER_MAP_CLIENT_ID)
-
 
         WorkManager.initialize(this, workManagerConfiguration)
     }
