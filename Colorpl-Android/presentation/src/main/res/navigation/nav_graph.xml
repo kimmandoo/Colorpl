@@ -88,6 +88,10 @@
             android:id="@+id/action_fragment_my_page_to_fragment_notice"
             app:destination="@id/fragment_notice"
             app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_payment_history"
+            app:destination="@id/fragment_payment_history"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
     </fragment>
 
 
@@ -110,5 +114,10 @@
         android:id="@+id/fragment_notice"
         android:name="com.presentation.my_page.NoticeFragment"
         tools:layout="@layout/fragment_notice" />
+
+    <fragment
+        android:id="@+id/fragment_payment_history"
+        android:name="com.presentation.my_page.PaymentHistoryFragment"
+        tools:layout="@layout/fragment_payment_history" />
 
 </navigation>

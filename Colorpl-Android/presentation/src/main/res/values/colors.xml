@@ -2,6 +2,7 @@
 <resources>
     <color name="night">#FF0B090A</color>
     <color name="eerie_black">#FF161A1D</color>
+    <color name="eerie_black_fifty">#80161A1D</color>
     <color name="cornell_red">#FFA4161A</color>
     <color name="imperial_red">#FFE5383B</color>
     <color name="timber_wolf">#FFD3D3D3</color>
@@ -9,6 +10,8 @@
     <color name="calendar_temp">#FF3b414a</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_fifty">#80FFFFFF</color>
+    <color name="white_twenty">#33FFFFFF</color>
     <color name="light_gray">#FFAAAAAA</color>
+    <color name="transparent">#00FFFFFF</color>
 
 </resources>

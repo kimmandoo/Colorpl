@@ -68,7 +68,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val channelId = "fcm_default_channel"
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(com.naver.maps.map.R.drawable.navermap_default_marker_icon_lightblue)
+            .setSmallIcon(R.drawable.ic_send)
             .setContentTitle(remoteMessage.data.get("title"))
             .setContentText(remoteMessage.data.get("body"))
             .setAutoCancel(true)

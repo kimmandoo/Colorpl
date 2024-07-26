@@ -6,9 +6,14 @@ import androidx.recyclerview.widget.ListAdapter
 import com.colorpl.presentation.databinding.ItemNoticeBinding
 import com.presentation.base.BaseDiffUtil
 
-class NoticeAdapter : ListAdapter<String, NoticeViewHolder>(
+class NoticeAdapter(
+
+) : ListAdapter<String, NoticeViewHolder>(
     BaseDiffUtil<String>()
 ) {
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoticeViewHolder {
         val binding = ItemNoticeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return NoticeViewHolder(binding)
@@ -23,4 +28,6 @@ class NoticeAdapter : ListAdapter<String, NoticeViewHolder>(
             }
         }
     }
+
+
 }
