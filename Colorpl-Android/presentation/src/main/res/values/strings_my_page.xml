@@ -21,4 +21,17 @@
     <string name="my_page_payment_location">장소</string>
     <string name="my_page_payment_date">일시</string>
 
+    <string name="my_page_setting">환경설정</string>
+    <string name="my_page_account">계정</string>
+    <string name="my_page_log_out">로그아웃</string>
+    <string name="my_page_password_change">비밀번호 변경</string>
+    <string name="my_page_sign_out">회원탈퇴</string>
+    <string name="my_page_notification">알림</string>
+    <string name="my_page_notification_send">알림 받기</string>
+    <string name="my_page_notification_sound">소리</string>
+    <string name="my_page_notification_vibrate">진동</string>
+    <string name="my_page_etc">기타</string>
+    <string name="my_page_version">앱 버전</string>
+    <string name="my_page_version_value">1.0.0</string>
+    <string name="my_page_inquire">문의하기</string>
 </resources>
