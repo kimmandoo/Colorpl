@@ -307,13 +307,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                             action = { mode ->
                                 val action = when (mode) {
                                     TicketType.CAMERA -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicketCreate(
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
                                             TicketType.CAMERA
                                         )
                                     }
 
                                     TicketType.GALLERY -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicketCreate(
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
                                             TicketType.GALLERY
                                         )
                                     }
@@ -330,13 +330,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                             action = { mode ->
                                 val action = when (mode) {
                                     TicketType.CAMERA -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicketCreate(
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
                                             TicketType.CAMERA
                                         )
                                     }
 
                                     TicketType.GALLERY -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicketCreate(
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
                                             TicketType.GALLERY
                                         )
                                     }

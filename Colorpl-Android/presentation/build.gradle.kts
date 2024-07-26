@@ -89,6 +89,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.fragment)
+
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)

@@ -6,5 +6,5 @@ import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
 
 interface OpenAiRepository {
-    suspend fun getChatCompletion(requestVision: RequestVision): Flow<ApiResult<ResponseVision>>
+    suspend fun getChatCompletion(base64String: String): Flow<ApiResult<ResponseVision>>
 }
