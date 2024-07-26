@@ -19,6 +19,11 @@ enum class TicketState(val state: Int) {
     UNISSUED(1)
 }
 
+enum class TicketType(){
+    CAMERA,
+    GALLERY
+}
+
 enum class Calendar {
     CURRENT,
     NEXT,

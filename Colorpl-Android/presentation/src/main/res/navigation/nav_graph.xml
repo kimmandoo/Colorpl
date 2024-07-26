@@ -34,8 +34,12 @@
             android:id="@+id/action_fragment_schedule_to_fragment_notification"
             app:destination="@id/fragment_notification" />
         <action
-            android:id="@+id/action_fragment_schedule_to_ticketCreateFragment"
-            app:destination="@id/fragment_ticket_create" />
+            android:id="@+id/action_fragment_schedule_to_fragment_ticket_create"
+            app:destination="@id/fragment_ticket_create">
+            <argument
+                android:name="photoType"
+                app:argType="com.presentation.util.TicketType" />
+        </action>
     </fragment>
 
     <!-- Feed -->
@@ -131,9 +135,13 @@
         android:id="@+id/fragment_setting"
         android:name="com.presentation.my_page.SettingFragment"
         tools:layout="@layout/fragment_setting" />
-    <dialog
+    <fragment
         android:id="@+id/fragment_ticket_create"
         android:name="com.presentation.ticket.TicketCreateFragment"
-        android:label="TicketCreateFragment" />
+        android:label="TicketCreateFragment">
+        <argument
+            android:name="photoType"
+            app:argType="com.presentation.util.TicketType" />
+    </fragment>
 
 </navigation>
