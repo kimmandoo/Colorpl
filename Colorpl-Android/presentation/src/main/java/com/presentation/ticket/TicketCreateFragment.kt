@@ -46,7 +46,7 @@ class TicketCreateFragment :
     private lateinit var photoUri: Uri
 
     override fun initView() {
-//        observeDescription()
+        observeDescription()
         initGalleryPhoto()
         initCamera()
         initUi()
@@ -103,9 +103,9 @@ class TicketCreateFragment :
     }
 
     private fun describeImage(uri: Uri) {
-//        ImageProcessingUtil(requireContext()).uriToBase64(uri)?.let { base64String ->
-//            viewModel.getDescription(base64String)
-//        }
+        ImageProcessingUtil(requireContext()).uriToBase64(uri)?.let { base64String ->
+            viewModel.getDescription(base64String)
+        }
         Glide.with(binding.root.context).load(uri.toString()).centerCrop().into(binding.ivPoster)
     }
 
