@@ -24,6 +24,7 @@ import com.gun0912.tedpermission.normal.TedPermission
 import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
+import com.presentation.util.checkCameraPermission
 import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +53,9 @@ class TicketCreateFragment :
     private fun initUi() {
         when (args.photoType) {
             TicketType.CAMERA -> {
-                checkCameraPermission()
+                checkCameraPermission {
+                    openCamera()
+                }
             }
 
             TicketType.GALLERY -> {
@@ -65,9 +68,9 @@ class TicketCreateFragment :
     }
 
     private fun observeDescription() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             binding.pbProgress.isVisible = true
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.description.collectLatest { data ->
                     data?.let {
                         binding.pbProgress.isVisible = false
@@ -114,24 +117,6 @@ class TicketCreateFragment :
                     }
                 }
             }
-    }
-
-
-    private fun checkCameraPermission() {
-        TedPermission.create().setPermissionListener(object : PermissionListener {
-            override fun onPermissionGranted() {
-                openCamera()
-            }
-
-            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-            }
-        }).setDeniedMessage("앱을 사용하려면 권한이 필요합니다. [설정] > [권한]에서 권한을 허용해 주세요.")
-            .setPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            .check()
     }
 
     private fun openCamera() {
