@@ -152,13 +152,28 @@
                 app:argType="com.presentation.util.TicketType" />
             <action
                 android:id="@+id/action_fragment_ticket_create_to_fragment_ticket_finish"
-                app:destination="@id/fragment_ticket_finish" />
+                app:destination="@id/fragment_ticket_finish">
+                <argument
+                    android:name="imageUrl"
+                    app:argType="string" />
+            </action>
 
         </fragment>
         <fragment
             android:id="@+id/fragment_ticket_finish"
             android:name="com.presentation.ticket.TicketFinishFragment"
-            android:label="TicketFinishFragment" />
+            android:label="TicketFinishFragment">
+            <argument
+                android:name="imageUrl"
+                app:argType="string" />
+            <action
+                android:id="@+id/action_fragment_ticket_finish_to_fragment_schedule"
+                app:destination="@id/fragment_schedule"
+                app:enterAnim="@anim/anim_slide_in_right"
+                app:popEnterAnim="@anim/anim_slide_in_right"
+                app:popUpTo="@id/fragment_schedule"
+                app:popUpToInclusive="true" />
+        </fragment>
     </navigation>
 
     <include app:graph="@navigation/nav_sign_graph" />
