@@ -155,7 +155,8 @@
                 app:destination="@id/fragment_ticket_finish">
                 <argument
                     android:name="imageUrl"
-                    app:argType="string" />
+                    app:argType="android.net.Uri"
+                    app:nullable="true" />
             </action>
 
         </fragment>
@@ -165,7 +166,8 @@
             android:label="TicketFinishFragment">
             <argument
                 android:name="imageUrl"
-                app:argType="string" />
+                app:argType="android.net.Uri"
+                app:nullable="true" />
             <action
                 android:id="@+id/action_fragment_ticket_finish_to_fragment_schedule"
                 app:destination="@id/fragment_schedule"

@@ -1,11 +1,9 @@
 package com.presentation.ticket
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketFinishBinding
@@ -13,7 +11,6 @@ import com.presentation.base.BaseFragment
 import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class TicketFinishFragment :

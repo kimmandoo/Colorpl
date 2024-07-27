@@ -75,7 +75,7 @@ class TicketCreateFragment :
             )
             val action =
                 TicketCreateFragmentDirections.actionFragmentTicketCreateToFragmentTicketFinish(
-                    photoUri.toString()
+                    photoUri
                 )
             findNavController().navigate(action)
         }
