@@ -13,3 +13,10 @@ annotation class TmapOkHttp
 
 @Qualifier
 annotation class TmapRetrofit
+
+@Qualifier
+annotation class GptOkHttp
+
+@Qualifier
+annotation class GptRetrofit
+

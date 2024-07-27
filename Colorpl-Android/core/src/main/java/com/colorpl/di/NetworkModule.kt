@@ -24,6 +24,7 @@ object NetworkModule {
     //local property로 따로 빼기
     val baseUrl = "http://192.168.100.142:8080/"
     val tmapUrl = "https://apis.openapi.sk.com/"
+    val gptUrl = "https://api.openai.com/"
 
     @Singleton
     @Provides
@@ -68,6 +69,38 @@ object NetworkModule {
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .header("appKey", BuildConfig.TMAP_APP_KEY)
+                .method(original.method, original.body)
+                .build()
+            chain.proceed(request = request)
+        }
+        connectTimeout(120, TimeUnit.SECONDS)
+        readTimeout(120, TimeUnit.SECONDS)
+        writeTimeout(120, TimeUnit.SECONDS)
+        build()
+    }
+
+    @Singleton
+    @Provides
+    @GptRetrofit
+    fun provideGptRetrofit(@GptOkHttp okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .baseUrl(gptUrl)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    @GptOkHttp
+    fun provideGptOkHttpClient() = OkHttpClient.Builder().run {
+        addInterceptor { chain ->
+            val original = chain.request()
+            val bearer = "Bearer ${BuildConfig.OPEN_API_KEY}"
+            val request = original.newBuilder()
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .header("Authorization", bearer)
                 .method(original.method, original.body)
                 .build()
             chain.proceed(request = request)

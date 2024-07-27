@@ -15,19 +15,17 @@ import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.component.dialog.CalendarDialog
 import com.presentation.util.Calendar
 import com.presentation.util.TicketState
+import com.presentation.util.TicketType
 import com.presentation.util.createCalendar
 import com.presentation.util.getOnlySelectedWeek
 import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.Date
 import java.util.Locale
-import java.util.Locale.KOREA
-import java.util.Locale.KOREAN
 
 
 private const val TAG = "ScheduleFragment"
@@ -88,10 +86,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
             rvCalendar.apply {
                 adapter = calendarAdapter
-                itemAnimator?.apply {
-                    removeDuration = 0
-                    moveDuration = 20
-                }
+                itemAnimator = null
 
                 updateCalendar(Calendar.CURRENT)
             }
@@ -125,7 +120,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         }
         if (handlePullState > 5) {
-            if (::currentDate.isInitialized){
+            if (::currentDate.isInitialized) {
                 setMonthMode()
                 updateCalendar(Calendar.RESTORE)
             }
@@ -169,13 +164,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             append("주")
         }
 
-        calendarAdapter.submitList(selectedDate.getOnlySelectedWeek(selectedDate.createCalendar()).map { item ->
-            if (item.date == currentDate.date) {
-                item.copy(isSelected = true)
-            } else {
-                item.copy(isSelected = false)
-            }
-        })
+        calendarAdapter.submitList(
+            selectedDate.getOnlySelectedWeek(selectedDate.createCalendar()).map { item ->
+                if (item.date == currentDate.date) {
+                    item.copy(isSelected = true)
+                } else {
+                    item.copy(isSelected = false)
+                }
+            })
     }
 
     private fun updateCalendar(
@@ -226,7 +222,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         calendarAdapter.submitList(updateList)
     }
 
-    private fun setWeekMode(clickedItem: CalendarItem){
+    private fun setWeekMode(clickedItem: CalendarItem) {
         binding.ivPrevMonth.setOnClickListener {
             updateCalendarWeekMode(Calendar.PREVIOUS)
         }
@@ -250,7 +246,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         }
     }
 
-    private fun setMonthMode(){
+    private fun setMonthMode() {
         binding.ivPrevMonth.setOnClickListener {
             updateCalendar(Calendar.PREVIOUS)
         }
@@ -268,13 +264,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         clickedItem: CalendarItem,
     ) {
         setWeekMode(clickedItem)
-        val updatedList = clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
-            if (item.date == clickedItem.date) {
-                item.copy(isSelected = true)
-            } else {
-                item.copy(isSelected = false)
+        val updatedList =
+            clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
+                if (item.date == clickedItem.date) {
+                    item.copy(isSelected = true)
+                } else {
+                    item.copy(isSelected = false)
+                }
             }
-        }
         calendarAdapter.submitList(updatedList)
     }
 
@@ -305,13 +302,52 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
                     TicketState.ISSUED.state -> {
-                        Timber.tag("fab").d("issued")
+                        val dialog = TicketCreateDialog(requireContext(),
+                            type = TicketState.ISSUED,
+                            action = { mode ->
+                                val action = when (mode) {
+                                    TicketType.CAMERA -> {
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
+                                            TicketType.CAMERA
+                                        )
+                                    }
+
+                                    TicketType.GALLERY -> {
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
+                                            TicketType.GALLERY
+                                        )
+                                    }
+                                }
+                                navigateDestination(action)
+                            })
+                        dialog.show()
                     }
 
                     TicketState.UNISSUED.state -> {
-                        Timber.tag("fab").d("unissued")
+                        val dialog = TicketCreateDialog(
+                            requireContext(),
+                            type = TicketState.UNISSUED,
+                            action = { mode ->
+                                val action = when (mode) {
+                                    TicketType.CAMERA -> {
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
+                                            TicketType.CAMERA
+                                        )
+                                    }
+
+                                    TicketType.GALLERY -> {
+                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
+                                            TicketType.GALLERY
+                                        )
+                                    }
+                                }
+                                navigateDestination(action)
+                            }
+                        )
+                        dialog.show()
                     }
                 }
+
                 listPopupWindow.dismiss()
             }
         }

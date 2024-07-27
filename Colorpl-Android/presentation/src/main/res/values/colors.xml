@@ -13,5 +13,6 @@
     <color name="white_twenty">#33FFFFFF</color>
     <color name="light_gray">#FFAAAAAA</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="black_fifty">#80000000</color>
 
 </resources>

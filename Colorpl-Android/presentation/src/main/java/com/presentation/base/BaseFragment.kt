@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 
 abstract class BaseFragment<T : ViewDataBinding>(private val layoutResId: Int) : Fragment() {
@@ -36,6 +37,11 @@ abstract class BaseFragment<T : ViewDataBinding>(private val layoutResId: Int) :
 
     //Navigation 이동
     fun navigateDestination(@IdRes action: Int) {
+        findNavController().navigate(action)
+    }
+
+    //Navigation safe args 이동
+    fun navigateDestination(action: NavDirections) {
         findNavController().navigate(action)
     }
 

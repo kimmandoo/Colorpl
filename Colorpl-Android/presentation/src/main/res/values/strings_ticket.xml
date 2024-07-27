@@ -3,4 +3,8 @@
     <string name="ticket_place">장소</string>
     <string name="ticket_date">일시</string>
     <string name="ticket_seat">좌석</string>
+    <string name="ticket_seat_hint">좌석을 입력해주세요(선택사항)</string>
+    <string name="ticket_schedule_hint">일정을 입력해주세요</string>
+    <string name="ticket_detail_hint">내용을 입력해주세요</string>
+    <string name="ticket_title_hint">제목을 입력해주세요</string>
 </resources>

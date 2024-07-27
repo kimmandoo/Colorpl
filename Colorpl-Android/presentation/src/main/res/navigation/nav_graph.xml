@@ -33,6 +33,14 @@
         <action
             android:id="@+id/action_fragment_schedule_to_fragment_notification"
             app:destination="@id/fragment_notification" />
+        <action
+            android:id="@+id/action_fragment_schedule_to_nav_ticket_graph"
+            app:destination="@id/nav_ticket_graph">
+            <argument
+                android:name="photoType"
+                app:argType="com.presentation.util.TicketType" />
+        </action>
+
     </fragment>
 
     <!-- Feed -->
@@ -128,5 +136,31 @@
         android:id="@+id/fragment_setting"
         android:name="com.presentation.my_page.SettingFragment"
         tools:layout="@layout/fragment_setting" />
+
+    <navigation
+        android:id="@+id/nav_ticket_graph"
+        app:startDestination="@id/fragment_ticket_create">
+        <argument
+            android:name="photoType"
+            app:argType="com.presentation.util.TicketType" />
+        <fragment
+            android:id="@+id/fragment_ticket_create"
+            android:name="com.presentation.ticket.TicketCreateFragment"
+            android:label="TicketCreateFragment">
+            <argument
+                android:name="photoType"
+                app:argType="com.presentation.util.TicketType" />
+            <action
+                android:id="@+id/action_fragment_ticket_create_to_fragment_ticket_finish"
+                app:destination="@id/fragment_ticket_finish" />
+
+        </fragment>
+        <fragment
+            android:id="@+id/fragment_ticket_finish"
+            android:name="com.presentation.ticket.TicketFinishFragment"
+            android:label="TicketFinishFragment" />
+    </navigation>
+
+    <include app:graph="@navigation/nav_sign_graph" />
 
 </navigation>

@@ -14,6 +14,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.presentation.base.BaseActivity
 import com.presentation.util.LocationHelper
+import com.presentation.util.Page
 import com.presentation.util.checkLocationPermission
 import com.presentation.util.locationPermission
 import com.presentation.util.requestMapPermission
@@ -62,12 +63,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     /** 바텀 네비게이션 숨기는 기능 */
     private fun setBottomNavHide() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomVisibility = when (destination.id) {
-                R.id.fragment_notification, R.id.fragment_feed_detail,
-                R.id.fragment_profile_update, R.id.fragment_user_search, R.id.fragment_my_review,
-                R.id.fragment_payment_history , R.id.fragment_notice -> false
-                else -> true
-            }
+            val page = Page.fromId(destination.id)
+            binding.bottomVisibility = page?.hideBottomNav != true
         }
     }
 

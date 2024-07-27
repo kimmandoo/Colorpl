@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.gradle.plugin)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 
@@ -88,6 +89,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.fragment)
+
 
     // Firebase
     implementation(libs.firebase.cloud.messaging)

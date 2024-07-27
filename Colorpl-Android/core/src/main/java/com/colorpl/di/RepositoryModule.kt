@@ -1,8 +1,10 @@
 package com.colorpl.di
 
 import com.data.repository.NotificationRepository
+import com.data.repository.OpenAiRepository
 import com.data.repository.TmapRouteRepository
 import com.data.repositoryimpl.NotificationRepositoryImpl
+import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -19,11 +21,17 @@ interface RepositoryModule {
     @Binds
     fun provideNotificationRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
-    ) : NotificationRepository
+    ): NotificationRepository
 
     @Singleton
     @Binds
     fun provideTmapRouteRepository(
         tmapRouteRepositoryImpl: TmapRouteRepositoryImpl
-    ) : TmapRouteRepository
+    ): TmapRouteRepository
+
+    @Singleton
+    @Binds
+    fun provideOpenAiRepository(
+        openAiRepositoryImpl: OpenAiRepositoryImpl
+    ): OpenAiRepository
 }

@@ -27,6 +27,7 @@ android {
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", naverMapClientId)
         buildConfigField("String", "TMAP_APP_KEY", getApiKey("TMAP_APP_KEY"))
         buildConfigField("String", "BOOT_PAY_KEY", getApiKey("BOOT_PAY_KEY"))
+        buildConfigField("String", "OPEN_API_KEY", getApiKey("OPEN_API_KEY"))
         manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = naverMapClientId
     }
 
