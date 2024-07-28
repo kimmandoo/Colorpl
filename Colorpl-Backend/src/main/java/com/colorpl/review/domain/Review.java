@@ -4,6 +4,7 @@ import com.colorpl.comment.domain.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,7 +38,7 @@ public class Review {
     private  Byte emphathy;
 
     // ?
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 
 }

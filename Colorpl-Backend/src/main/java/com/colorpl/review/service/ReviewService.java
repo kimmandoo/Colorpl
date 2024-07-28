@@ -40,7 +40,7 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    private ReviewDTO toDTO(Review review) {
+    public ReviewDTO toDTO(Review review) {
         return ReviewDTO.builder()
                 .id(review.getId())
                 .content(review.getContent())

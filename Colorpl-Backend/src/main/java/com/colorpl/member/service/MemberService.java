@@ -38,7 +38,7 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    private MemberDTO toDTO(Member member) {
+    public MemberDTO toDTO(Member member) {
         return MemberDTO.builder()
                 .id(member.getId())
                 .email(member.getEmail())
