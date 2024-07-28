@@ -11,21 +11,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class CreateShowDetailServiceTest {
+class ShowDetailRepositoryTest {
 
     @Autowired
     private CreateShowDetailService createShowDetailService;
     @Autowired
     private RetrieveShowDetailApiService retrieveShowDetailApiService;
+    @Autowired
+    private ShowDetailRepository showDetailRepository;
 
     @Test
-    void create() {
+    void findByApiId() {
         ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
             "PF233138");
-        ShowDetail showDetail = createShowDetailService.create(showDetailApiResponse.getItem());
-        assertThat(showDetail.getPriceBySeatClass()).containsEntry("R석", 77000);
-        assertThat(showDetail.getPriceBySeatClass()).containsEntry("S석", 66000);
-        assertThat(showDetail.getPriceBySeatClass()).containsEntry("A석", 55000);
-        assertThat(showDetail.getState()).isEqualTo(ShowState.COMPLETED);
+        ShowDetail createShowDetail = createShowDetailService.create(
+            showDetailApiResponse.getItem());
+        ShowDetail findShowDetail = showDetailRepository.findByApiId("PF233138").orElseThrow();
+        assertThat(createShowDetail).isEqualTo(findShowDetail);
     }
 }

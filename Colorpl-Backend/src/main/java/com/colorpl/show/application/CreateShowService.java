@@ -1,11 +1,10 @@
 package com.colorpl.show.application;
 
+import com.colorpl.show.application.ShowListApiResponse.Item;
 import com.colorpl.show.domain.detail.CreateShowDetailService;
 import com.colorpl.show.domain.detail.ShowDetail;
+import com.colorpl.show.domain.detail.ShowDetailRepository;
 import com.colorpl.show.domain.schedule.CreateShowScheduleService;
-import com.colorpl.show.infra.ShowDetailApiResponse;
-import com.colorpl.show.infra.ShowListApiResponse;
-import com.colorpl.show.infra.ShowListApiResponse.Item;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ public class CreateShowService {
     private final CreateShowScheduleService createShowScheduleService;
     private final RetrieveShowDetailApiService retrieveShowDetailApiService;
     private final RetrieveShowListApiService retrieveShowListApiService;
+    private final ShowDetailRepository showDetailRepository;
 
     @Value("${days.to.add}")
     private Long daysToAdd;
@@ -38,14 +38,16 @@ public class CreateShowService {
                 break;
             }
             for (Item item : showListApiResponse.getItems()) {
-                ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
-                    item.getApiId());
-                ShowDetail showDetail = createShowDetailService.create(
-                    showDetailApiResponse.getItem());
-                createShowScheduleService.create(showDetail,
-                    LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
-                    LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
-                    showDetailApiResponse.getItem().getSchedule());
+                if (showDetailRepository.findByApiId(item.getApiId()).isEmpty()) {
+                    ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
+                        item.getApiId());
+                    ShowDetail showDetail = createShowDetailService.create(
+                        showDetailApiResponse.getItem());
+                    createShowScheduleService.create(showDetail,
+                        LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
+                        LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
+                        showDetailApiResponse.getItem().getSchedule());
+                }
             }
         }
     }

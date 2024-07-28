@@ -1,6 +1,6 @@
 package com.colorpl.show.domain.detail;
 
-import com.colorpl.show.infra.ShowDetailApiResponse.Item;
+import com.colorpl.show.application.ShowDetailApiResponse.Item;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

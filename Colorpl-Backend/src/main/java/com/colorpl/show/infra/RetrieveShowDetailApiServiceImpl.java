@@ -1,6 +1,7 @@
 package com.colorpl.show.infra;
 
 import com.colorpl.show.application.RetrieveShowDetailApiService;
+import com.colorpl.show.application.ShowDetailApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.net.URI;
