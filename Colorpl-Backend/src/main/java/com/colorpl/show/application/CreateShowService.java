@@ -9,6 +9,8 @@ import com.colorpl.show.infra.ShowListApiResponse.Item;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,16 @@ public class CreateShowService {
     private final RetrieveShowDetailApiService retrieveShowDetailApiService;
     private final RetrieveShowListApiService retrieveShowListApiService;
 
-    public void create(LocalDate from, LocalDate to) {
+    @Value("${days.to.add}")
+    private Long daysToAdd;
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void create() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         int page = 1;
         while (true) {
-            ShowListApiResponse showListApiResponse = retrieveShowListApiService.retrieve(from, to,
-                page++);
+            ShowListApiResponse showListApiResponse = retrieveShowListApiService.retrieve(
+                LocalDate.now(), LocalDate.now().plusDays(daysToAdd), page++);
             if (showListApiResponse.getItems().isEmpty()) {
                 break;
             }

@@ -1,6 +1,5 @@
 package com.colorpl.show.application;
 
-import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,6 @@ class CreateShowServiceTest {
 
     @Test
     void create() {
-        createShowService.create(LocalDate.now(), LocalDate.now().plusDays(1));
+        createShowService.create();
     }
 }
