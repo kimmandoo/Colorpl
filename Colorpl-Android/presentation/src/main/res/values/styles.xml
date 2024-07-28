@@ -30,6 +30,18 @@
         <item name="android:fontFamily">@font/suite_medium</item>
     </style>
 
+    <style name="CustomSearchViewReservation" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColor">@color/night</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="queryBackground">@null</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:editTextColor">@color/night</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_semibold</item>
+    </style>
+
 
 
     <style name="FullScreenDialogSlideLtoR" parent="Theme.AppCompat.Dialog">
