@@ -209,6 +209,7 @@ async def read_administrator_me(token: str = Depends(oauth2_scheme), db: Session
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     return admin
+    # return AdministratorSchema.from_orm(admin)
 
 @router.get("/admin/administrators", dependencies=[Depends(super_admin_required)])
 async def list_administrators(db: Session = Depends(get_db)):

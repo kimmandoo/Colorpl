@@ -12,10 +12,10 @@ class Token(BaseModel):
     token_type: str
 
 class UpdateProfileImage(BaseModel):
-    image_url: str
+    image_url: Optional[str]
 
 class AdminProfile(BaseModel):
-    image_url: str
+    image_url: Optional[str]
 
     class Config:
         from_attributes = True
