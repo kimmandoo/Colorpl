@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends BaseEntity{
 
     @Id
     @Column(name = "MEMBER_ID")
@@ -76,12 +76,8 @@ public class Member extends BaseEntity implements UserDetails {
         this.type = member.getType();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(type.name()));
-    }
 
-    @Override
+
     public String getUsername() {
         return email;
     }

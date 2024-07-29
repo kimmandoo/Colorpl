@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class SignInResponse {
         private String email;
         private MemberType type;
-        private String token;
+        private String accessToken;	// token -> accessToken으로 액세스 토큰임을 명시
+        private String refreshToken;
 }
