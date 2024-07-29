@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
-    Optional<Object> findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 }
 

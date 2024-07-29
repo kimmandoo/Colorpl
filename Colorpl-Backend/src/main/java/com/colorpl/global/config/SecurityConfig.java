@@ -23,7 +23,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private final String[] allowedUrls = {"/", "/swagger-ui/**", "/v3/**", "/sign-up", "/sign-in","/members/**"};
 
@@ -33,15 +33,15 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(requests ->
-                        requests.anyRequest().permitAll()
-//                        requests.requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
-//                                .requestMatchers(PathRequest.toH2Console()).permitAll()
-//                                .anyRequest().authenticated()
+//                        requests.anyRequest().permitAll()
+                        requests.requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
+                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-//                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .build();
     }
     
