@@ -42,6 +42,7 @@ enum class Page(val hideBottomNav: Boolean) {
     NOTICE(true),
     TICKET_CREATE(true),
     TICKET_FINISH(true),
+    RESERVATION_DETAIL(true),
     MAP(false),
     FEED(false),
     LOGIN(false),
@@ -49,6 +50,7 @@ enum class Page(val hideBottomNav: Boolean) {
     SETTING(false),
     TICKET(false),
     SCHEDULE(false),
+
     ;
 
     companion object {
@@ -73,6 +75,7 @@ enum class Page(val hideBottomNav: Boolean) {
             TICKET -> R.id.fragment_ticket
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
+            RESERVATION_DETAIL -> R.id.fragment_reservation_detail
         }
 }
 

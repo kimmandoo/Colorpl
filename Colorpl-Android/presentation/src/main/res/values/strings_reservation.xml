@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 예매 시작-->
+    <string name="reservation_detail_category">카테고리</string>
+    <string name="reservation_detail_genre">장르</string>
+    <string name="reservation_detail_cast">출연</string>
+    <string name="reservation_detail_content">내용</string>
+    <string name="reservation_detail_price_by_seat">좌석별 가격</string>
+    <string name="reservation_detail_next">예매하기</string>
+    
+
     <string name="reservation_info_value">결제하기 (3/4)</string>
     <string name="reservation_info">예매정보</string>
     <string name="reservation_discount">할인적용</string>

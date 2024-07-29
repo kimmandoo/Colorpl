@@ -102,6 +102,7 @@ class ReservationFragment :
 
     private fun onClickListener() {
         Toast.makeText(binding.root.context, "힝힝힝", Toast.LENGTH_SHORT).show()
+        navigateDestination(R.id.action_fragment_reservation_to_fragment_reservation_detail)
     }
 
     /** 날짜 선택 캘린더 Dialog */

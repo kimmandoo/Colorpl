@@ -1,0 +1,236 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="reservationInfo"
+            type="com.domain.model.ReservationInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.reservation.ReservationDetailFragment">
+
+        <include
+            android:id="@+id/include_top_center"
+            layout="@layout/include_top_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="신과함께 : 죄와벌" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/include_top_center"
+            app:layout_constraintBottom_toTopOf="@id/tv_complete"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/eerie_black"
+                >
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/test_reservation_info"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars" />
+
+                <View
+                    android:id="@+id/v_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/iv_image" />
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_category"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_1" />
+                <TextView
+                    android:id="@+id/tv_category_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@{reservationInfo.category}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category"
+                    tools:text="영화"
+                    />
+
+                <View
+                    android:id="@+id/v_line_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_info" />
+                <TextView
+                    android:id="@+id/tv_genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_genre"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_2" />
+                <TextView
+                    android:id="@+id/tv_genre_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="판타지, 드라마, 액션"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_genre"
+                    tools:text="판타지, 드라마, 액션"
+                    />
+
+                <View
+                    android:id="@+id/v_line_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_genre_info" />
+                <TextView
+                    android:id="@+id/tv_cast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_cast"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_3" />
+                <TextView
+                    android:id="@+id/tv_cast_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="하정우, 차태현, 주지훈, 김향기 외"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_cast"
+                    tools:text="하정우, 차태현, 주지훈, 김향기 외"
+                    />
+
+                <View
+                    android:id="@+id/v_line_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_cast_info" />
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_content"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_4" />
+                <TextView
+                    android:id="@+id/tv_content_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓"
+                    style="@style/suite_semibold_14"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_content"
+                    tools:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓"
+                    />
+
+
+                <View
+                    android:id="@+id/v_line_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_content_info" />
+                <TextView
+                    android:id="@+id/tv_price_by_seat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_price_by_seat"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_5" />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_s"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    android:text="@{`S석 : ` + reservationInfo.price + `원`}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat"
+                    tools:text="S석 : 14,000원"
+                    />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    android:text="@{`R석 : ` + reservationInfo.price + `원`}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_s"
+                    tools:text="R석 : 14,000원"
+                    />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    android:text="@{`A석 : ` + reservationInfo.price + `원`}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_r"
+                    tools:text="A석 : 14,000원"
+                    />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <TextView
+            android:id="@+id/tv_complete"
+            style="@style/suite_semibold_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/imperial_red"
+            android:gravity="center"
+            android:paddingVertical="13dp"
+            android:text="@string/reservation_detail_next"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
