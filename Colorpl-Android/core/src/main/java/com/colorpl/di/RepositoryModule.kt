@@ -1,8 +1,10 @@
 package com.colorpl.di
 
+import com.data.repository.FeedRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
 import com.data.repository.TmapRouteRepository
+import com.data.repositoryimpl.FeedRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
@@ -34,4 +36,10 @@ interface RepositoryModule {
     fun provideOpenAiRepository(
         openAiRepositoryImpl: OpenAiRepositoryImpl
     ): OpenAiRepository
+
+    @Singleton
+    @Binds
+    fun provideFeedPagingRepository(
+        feedPagingRepositoryImpl: FeedRepositoryImpl
+    ): FeedRepository
 }

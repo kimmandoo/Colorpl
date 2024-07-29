@@ -1,21 +1,26 @@
 package com.presentation.feed
 
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
-import com.domain.model.Feed
 import com.domain.model.FilterItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.adapter.feed.FilterAdapter
 import com.presentation.util.getFilterItems
+import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Date
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
+    private val viewModel: FeedViewModel by viewModels()
     private val filterAdapter by lazy {
         FilterAdapter(onItemClickListener = { filterItem ->
             onFilterClickListener(filterItem)
@@ -51,23 +56,13 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             adapter = feedAdapter
             itemAnimator = null
         }
-        val testFeed = mutableListOf<Feed>()
-        repeat(10) {
-            testFeed.add(
-                Feed(
-                    feedId = 7932,
-                    title = "invenire",
-                    userName = "Krista Crawford",
-                    userProfileImg = null,
-                    contentImg = null,
-                    emotionMode = "discere",
-                    emotionTotal = 4013,
-                    commentTotal = 7193,
-                    uploadedDate = Date()
-                )
-            )
+        Timber.d("${viewModel.pagedFeed}")
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagedFeed.collectLatest { pagingData ->
+                Timber.d("pagedFeed call")
+                feedAdapter.submitData(pagingData)
+            }
         }
-        feedAdapter.submitList(testFeed)
     }
 
     private fun onFilterClickListener(clickedItem: FilterItem) {
