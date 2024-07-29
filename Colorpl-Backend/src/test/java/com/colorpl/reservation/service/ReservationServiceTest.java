@@ -1,32 +1,31 @@
 package com.colorpl.reservation.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.colorpl.member.Member;
+import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.reservation.domain.Reservation;
-import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationRepository;
-import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.show.domain.schedule.ShowSchedule;
-import com.colorpl.show.repository.ShowScheduleRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-
+import com.colorpl.show.domain.schedule.ShowScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
@@ -117,7 +116,8 @@ public class ReservationServiceTest {
             .amount("100")
             .comment("Updated")
             .isRefunded(false)
-            .reservationDetails(List.of(ReservationDetailDTO.builder().id(null).showScheduleId(1).build()))
+            .reservationDetails(
+                List.of(ReservationDetailDTO.builder().id(null).showScheduleId(1).build()))
             .build();
 
         Member member = Member.builder()
@@ -131,10 +131,13 @@ public class ReservationServiceTest {
             .build();
 
         when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(showScheduleRepository.findById(anyInt())).thenReturn(Optional.of(ShowSchedule.builder().id(1).build()));
-        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(showScheduleRepository.findById(anyInt())).thenReturn(
+            Optional.of(ShowSchedule.builder().id(1).build()));
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(
+            invocation -> invocation.getArgument(0));
 
-        ReservationDTO updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
+        ReservationDTO updatedReservation = reservationService.updateReservation(memberId,
+            reservationId, reservationDTO);
 
         verify(reservationRepository, times(1)).findById(reservationId);
         verify(reservationRepository, times(1)).save(any(Reservation.class));
@@ -150,7 +153,8 @@ public class ReservationServiceTest {
             .amount("100")
             .comment("New Reservation")
             .isRefunded(false)
-            .reservationDetails(List.of(ReservationDetailDTO.builder().id(null).showScheduleId(1).build()))
+            .reservationDetails(
+                List.of(ReservationDetailDTO.builder().id(null).showScheduleId(1).build()))
             .build();
 
         Member member = Member.builder()
@@ -159,10 +163,13 @@ public class ReservationServiceTest {
             .build();
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(showScheduleRepository.findById(anyInt())).thenReturn(Optional.of(ShowSchedule.builder().id(1).build()));
-        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(showScheduleRepository.findById(anyInt())).thenReturn(
+            Optional.of(ShowSchedule.builder().id(1).build()));
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(
+            invocation -> invocation.getArgument(0));
 
-        ReservationDTO newReservation = reservationService.createReservation(memberId, reservationDTO);
+        ReservationDTO newReservation = reservationService.createReservation(memberId,
+            reservationDTO);
 
         verify(memberRepository, times(1)).findById(memberId);
         verify(reservationRepository, times(1)).save(any(Reservation.class));
