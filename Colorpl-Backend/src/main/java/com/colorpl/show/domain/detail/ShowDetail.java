@@ -10,6 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -56,4 +59,8 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_STATE")
     @Enumerated(EnumType.STRING)
     private ShowState state;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "showDetail")
+    private List<Seat> seats = new ArrayList<>();
 }

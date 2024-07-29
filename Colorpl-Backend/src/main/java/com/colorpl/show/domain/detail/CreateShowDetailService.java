@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 @Transactional
 public class CreateShowDetailService {
 
+    private final CreateSeatService createSeatService;
     private final ShowDetailRepository showDetailRepository;
 
     public ShowDetail create(Item item) {
@@ -27,6 +28,7 @@ public class CreateShowDetailService {
             .area(item.getArea())
             .state(ShowState.from(item.getState()))
             .build();
+        createSeatService.create(showDetail);
         showDetailRepository.save(showDetail);
         return showDetail;
     }
