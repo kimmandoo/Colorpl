@@ -13,6 +13,21 @@
         <item name="android:fontFamily">@font/suite_bold</item>
     </style>
 
+    <style name="CustomDateRangePicker" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_bold</item>
+        <item name="backgroundColor">@color/imperial_red</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/imperial_red</item>
+        <item name="colorControlHighlight">@color/timber_wolf</item>
+    </style>
+
+    <style name="CustomAlertDialogListItem" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/timber_wolf</item>
+        <item name="android:background">@color/eerie_black</item>
+        <item name="fontFamily">@font/suite_bold</item>
+    </style>
+
     <style name="FABPopupAnimation">
         <item name="android:windowEnterAnimation">@anim/anim_fab_open</item>
         <item name="android:windowExitAnimation">@anim/anim_fab_close</item>
@@ -28,6 +43,18 @@
         <item name="android:editTextColor">@color/white</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/suite_medium</item>
+    </style>
+
+    <style name="CustomSearchViewReservation" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColor">@color/night</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="queryBackground">@null</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:editTextColor">@color/night</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_semibold</item>
     </style>
 
 

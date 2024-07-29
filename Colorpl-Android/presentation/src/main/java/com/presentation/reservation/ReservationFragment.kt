@@ -1,13 +1,20 @@
 package com.presentation.reservation
 
 import android.view.View
+import android.widget.Toast
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
+import com.domain.model.FilterItem
+import com.domain.model.ReservationInfo
 import com.presentation.base.BaseFragment
+import com.presentation.component.adapter.feed.FilterAdapter
+import com.presentation.component.adapter.reservation.ReservationInfoAdapter
+import com.presentation.component.dialog.DateRangePickerDialog
+import com.presentation.component.dialog.LocationPickerDialog
+import com.presentation.util.getFilterItems
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.bootpay.android.Bootpay
 import kr.co.bootpay.android.events.BootpayEventListener
-import kr.co.bootpay.android.models.BootExtra
 import kr.co.bootpay.android.models.BootItem
 import kr.co.bootpay.android.models.BootUser
 import kr.co.bootpay.android.models.Payload
@@ -23,9 +30,101 @@ class ReservationFragment :
     @Named("bootpay")
     lateinit var applicationId: String
 
-    override fun initView() {
-
+    private val filterAdapter by lazy {
+        FilterAdapter(onItemClickListener = { filterItem ->
+            onFilterClickListener(filterItem)
+        })
     }
+
+    private val reservationInfoAdapter by lazy {
+        ReservationInfoAdapter(
+            onClickListener = { onClickListener() },
+        )
+    }
+
+    override fun initView() {
+        initFilter()
+        initReservationInfo()
+        initClickListener()
+    }
+
+    private fun initFilter() {
+        binding.rvFilter.apply {
+            adapter = filterAdapter
+            itemAnimator = null
+        }
+        filterAdapter.submitList(binding.root.context.getFilterItems())
+    }
+
+    private fun initReservationInfo() {
+        binding.rvReservationInfo.apply {
+            adapter = reservationInfoAdapter
+            itemAnimator = null
+        }
+        val testReservationInfo = mutableListOf<ReservationInfo>()
+        repeat(10) {
+            testReservationInfo.add(
+                ReservationInfo(
+                    reservationInfoId = 1230,
+                    contentImg = null,
+                    title = "신과함께 : 리움차콜",
+                    category = "사극",
+                    runtime = "2시간 00분",
+                    price = "12,000원~"
+                )
+            )
+        }
+        reservationInfoAdapter.submitList(testReservationInfo)
+    }
+
+    private fun initClickListener() {
+        binding.apply {
+            clSelectDate.setOnClickListener {
+                showDateRangePickerDialog()
+            }
+            clSelectLocation.setOnClickListener {
+                showLocationPickerDialog()
+            }
+        }
+    }
+
+    private fun onFilterClickListener(clickedItem: FilterItem) {
+        val updatedList = filterAdapter.currentList.map { item ->
+            if (item.name == clickedItem.name) {
+                item.copy(isSelected = true)
+            } else {
+                item.copy(isSelected = false)
+            }
+        }
+
+        filterAdapter.submitList(updatedList)
+    }
+
+    private fun onClickListener() {
+        Toast.makeText(binding.root.context, "힝힝힝", Toast.LENGTH_SHORT).show()
+    }
+
+    /** 날짜 선택 캘린더 Dialog */
+    private fun showDateRangePickerDialog() {
+        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+        val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
+            // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
+            Toast.makeText(binding.root.context, "년: $year, 월: ${month+1}, 일: $day", Toast.LENGTH_SHORT).show()
+            binding.tvSelectDate.text = "$year.${month+1}.$day"
+        }
+        dateRangePickerDialog.show()
+    }
+
+    /** 지역 선택 리스트 Dialog */
+    private fun showLocationPickerDialog() {
+        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+        val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
+        val locationPickerDialog = LocationPickerDialog(requireContext(), locationList) { selectedCity ->
+            binding.tvSelectLocation.text = selectedCity
+        }
+        locationPickerDialog.show()
+    }
+
 
     /**
      * 결제할 아이템 하나에 대한 return

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -7,10 +9,148 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
+        android:layout_height="match_parent"
+        android:layout_marginBottom="72dp">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ab_filter"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/menu_reservation"/>
+            android:layout_height="wrap_content"
+            android:background="@color/night"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/sv_search"
+                    android:layout_width="360dp"
+                    android:layout_height="48dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:theme="@style/CustomSearchViewReservation"
+                    android:background="@color/night"
+                    app:closeIcon="@drawable/ic_close_night"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:queryHint="@string/feed_search_hint"
+                    app:searchHintIcon="@drawable/ic_search"
+                    app:searchIcon="@drawable/ic_search"
+                    app:iconifiedByDefault="false"
+                    app:queryBackground="@drawable/rectangle_timber_wolf_5"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_filter"
+                    app:layout_constraintBottom_toBottomOf="@+id/sv_search"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/sv_search" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_select_date_and_location"
+                    app:layout_constraintTop_toBottomOf="@id/sv_search"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_select_date"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/cl_select_location"
+                        android:background="@drawable/rectangle_night_5_stroke_timber_wolf_1"
+                        android:layout_marginRight="5dp"
+                        android:padding="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/iv_icon_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tv_select_date"
+                            android:src="@drawable/ic_reservation_date"/>
+                        <TextView
+                            android:id="@+id/tv_select_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:text="날짜"
+                            android:textColor="@color/white"
+                            app:layout_constraintTop_toTopOf="@id/iv_icon_date"
+                            app:layout_constraintBottom_toBottomOf="@id/iv_icon_date"
+                            app:layout_constraintStart_toEndOf="@id/iv_icon_date"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_select_location"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/cl_select_date"
+                        android:background="@drawable/rectangle_night_5_stroke_timber_wolf_1"
+                        android:padding="8dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/iv_icon_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tv_select_location"
+                            android:src="@drawable/ic_reservation_location"/>
+                        <TextView
+                            android:id="@+id/tv_select_location"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:text="장소"
+                            android:textColor="@color/white"
+                            app:layout_constraintTop_toTopOf="@id/iv_icon_location"
+                            app:layout_constraintBottom_toBottomOf="@id/iv_icon_location"
+                            app:layout_constraintStart_toEndOf="@id/iv_icon_location"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/cl_select_date_and_location"
+                    app:layout_constraintTop_toBottomOf="@id/cl_select_date_and_location"
+                    tools:listitem="@layout/item_feed_filter" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_reservation_info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/ab_filter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/item_reservation_info"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

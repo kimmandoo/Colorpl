@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tv_filter"
-            style="@style/suite_extra_bold_18"
+            style="@style/suite_extra_bold_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/selector_timber_wolf_to_imperial_red"
