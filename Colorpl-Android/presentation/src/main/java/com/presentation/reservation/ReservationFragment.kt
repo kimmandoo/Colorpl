@@ -9,11 +9,12 @@ import com.domain.model.ReservationInfo
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FilterAdapter
 import com.presentation.component.adapter.reservation.ReservationInfoAdapter
+import com.presentation.component.dialog.DateRangePickerDialog
+import com.presentation.component.dialog.LocationPickerDialog
 import com.presentation.util.getFilterItems
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.bootpay.android.Bootpay
 import kr.co.bootpay.android.events.BootpayEventListener
-import kr.co.bootpay.android.models.BootExtra
 import kr.co.bootpay.android.models.BootItem
 import kr.co.bootpay.android.models.BootUser
 import kr.co.bootpay.android.models.Payload
@@ -45,6 +46,7 @@ class ReservationFragment :
         binding.apply {
             initFilter()
             initReservationInfo()
+            initClickListener()
         }
     }
 
@@ -75,6 +77,28 @@ class ReservationFragment :
             )
         }
         reservationInfoAdapter.submitList(testReservationInfo)
+    }
+
+    private fun initClickListener() {
+        binding.apply {
+            clSelectDate.setOnClickListener {
+                Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+                val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
+                    // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
+                    Toast.makeText(binding.root.context, "년: $year, 월: ${month+1}, 일: $day", Toast.LENGTH_SHORT).show()
+                    binding.tvSelectDate.text = "$year.${month+1}.$day"
+                }
+                dateRangePickerDialog.show()
+            }
+            clSelectLocation.setOnClickListener {
+                Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+                val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
+                val locationPickerDialog = LocationPickerDialog(requireContext(), locationList) { selectedCity ->
+                    binding.tvSelectLocation.text = selectedCity
+                }
+                locationPickerDialog.show()
+            }
+        }
     }
 
     private fun onFilterClickListener(clickedItem: FilterItem) {

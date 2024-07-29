@@ -84,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             android:text="날짜"
-                            android:textColor="@color/timber_wolf"
+                            android:textColor="@color/white"
                             app:layout_constraintTop_toTopOf="@id/iv_icon_date"
                             app:layout_constraintBottom_toBottomOf="@id/iv_icon_date"
                             app:layout_constraintStart_toEndOf="@id/iv_icon_date"/>
@@ -117,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
                             android:text="장소"
-                            android:textColor="@color/timber_wolf"
+                            android:textColor="@color/white"
                             app:layout_constraintTop_toTopOf="@id/iv_icon_location"
                             app:layout_constraintBottom_toBottomOf="@id/iv_icon_location"
                             app:layout_constraintStart_toEndOf="@id/iv_icon_location"/>
