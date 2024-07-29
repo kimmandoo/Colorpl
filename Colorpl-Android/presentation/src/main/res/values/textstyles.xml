@@ -71,6 +71,10 @@
         <item name="android:textSize">12sp</item>
     </style>
     <!-- Suite Semibold-->
+    <style name="suite_semibold_20">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
     <style name="suite_semibold_16">
         <item name="fontFamily">@font/suite_semibold</item>
         <item name="android:textSize">16sp</item>
