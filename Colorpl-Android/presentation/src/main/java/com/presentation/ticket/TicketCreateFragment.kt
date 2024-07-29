@@ -19,6 +19,8 @@ import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
+import com.domain.model.Description
+import com.domain.model.Ticket
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.presentation.base.BaseFragment
@@ -63,7 +65,19 @@ class TicketCreateFragment :
             }
         }
         binding.tvConfirm.setOnClickListener {
-//            findNavController().navigate(R.id.action_fragment_ticket_create_to_fragment_ticket_finish)
+            viewModel.setTicketInfo(
+                Description(
+                    title = binding.etTitle.text.toString(),
+                    detail = binding.etDetail.text.toString(),
+                    schedule = binding.etSchedule.text.toString(),
+                    seat = binding.etSeat.text.toString()
+                )
+            )
+            val action =
+                TicketCreateFragmentDirections.actionFragmentTicketCreateToFragmentTicketFinish(
+                    photoUri
+                )
+            findNavController().navigate(action)
         }
     }
 
@@ -92,7 +106,7 @@ class TicketCreateFragment :
         ImageProcessingUtil(requireContext()).uriToBase64(uri)?.let { base64String ->
             viewModel.getDescription(base64String)
         }
-        Glide.with(binding.root.context).load(uri).centerCrop().into(binding.ivPoster)
+        Glide.with(binding.root.context).load(uri.toString()).centerCrop().into(binding.ivPoster)
     }
 
     private fun initGalleryPhoto() { //프로필 이미지
@@ -100,6 +114,7 @@ class TicketCreateFragment :
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
+                        photoUri = uri
                         describeImage(uri)
                     }
                 } else {

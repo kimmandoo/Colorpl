@@ -35,5 +35,12 @@ class TicketCreateViewModel @Inject constructor(
         }
     }
 
+    // view에서 viewmodel로 주는 방향은 안좋은 걸로 알고있는데, 일단 이렇게 해둠
+    // domain 모듈에서 serializable 어노테이션 사용가능하면 safe args로 처리할 것임
+    // string 5개를 넘기는 건 좀 아닌 것 같아서 일단 이렇게
+    fun setTicketInfo(description: Description){
+        _description.value = description
+    }
+
 
 }

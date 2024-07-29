@@ -7,4 +7,6 @@
     <string name="ticket_schedule_hint">일정을 입력해주세요</string>
     <string name="ticket_detail_hint">내용을 입력해주세요</string>
     <string name="ticket_title_hint">제목을 입력해주세요</string>
+    <string name="ticket_created">티켓이 생성되었습니다</string>
+    <string name="ticket_save">저장</string>
 </resources>
