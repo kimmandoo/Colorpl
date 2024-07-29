@@ -1,10 +1,12 @@
 package com.colorpl.review.service;
 
+import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
+import com.colorpl.review.service.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -74,6 +76,7 @@ public class ReviewServiceTest {
     void testUpdateReview() {
         Integer memberId = 1;
         Integer reviewId = 2;
+        Integer scheduleId = 3;
         ReviewDTO reviewDTO = ReviewDTO.builder()
                 .content("Updated Review")
                 .spoiler(true)
@@ -85,7 +88,7 @@ public class ReviewServiceTest {
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, reviewDTO);
+        ReviewDTO updatedReview = reviewService.updateReview(memberId, scheduleId, reviewId, reviewDTO);
 
         verify(reviewRepository, times(1)).findById(reviewId);
         verify(reviewRepository, times(1)).save(any(Review.class));
@@ -111,7 +114,7 @@ public class ReviewServiceTest {
 
         when(reviewRepository.existsById(reviewId)).thenReturn(false);
 
-        assertThrows(NoSuchElementException.class, () -> reviewService.deleteById(reviewId.intValue())); // Assuming deleteById takes int
+        assertThrows(ReviewNotFoundException.class, () -> reviewService.deleteById(reviewId.intValue())); // Assuming deleteById takes int
 
         verify(reviewRepository, times(1)).existsById(reviewId);
         verify(reviewRepository, never()).deleteById(reviewId);

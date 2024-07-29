@@ -1,6 +1,7 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.schedule.domain.Schedule;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,9 +23,9 @@ public class Review {
     private Integer id;
 
     // schdule 아직 없음
-//    @JoinColumn(name = "SCHEDULE_ID")
-//    @OneToOne(mappedBy = "SCHEDULE_ID")
-//    private Schedule schedule;
+    @JoinColumn(name = "SCHEDULE_ID")
+    @OneToOne(mappedBy = "SCHEDULE_ID")
+    private Integer schedule;
 
     @Column(name = "REVIEW_CONTENT")
     private  String content;
@@ -43,7 +44,8 @@ public class Review {
     private List<Comment> comments = new ArrayList<>();
 
 
-    public void updateReview(String content, Boolean spoiler, Integer emotion) {
+    public void updateReview(Integer schedule, String content, Boolean spoiler, Integer emotion) {
+        this.schedule = schedule;
         this.content = content;
         this.spoiler = spoiler;
         this.emotion = emotion;

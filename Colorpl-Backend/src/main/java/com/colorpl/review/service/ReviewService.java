@@ -1,17 +1,12 @@
 package com.colorpl.review.service;
 
 import com.colorpl.comment.domain.Comment;
-import com.colorpl.comment.dto.CommentDTO;
-import com.colorpl.global.common.exception.MemberMismatchException;
-import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
-import com.colorpl.global.common.exception.ReviewNotFoundException;
+import com.colorpl.global.common.exception.*;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
-import com.colorpl.review.dto.ReviewUpdateDTO;
 import com.colorpl.review.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +35,6 @@ public class ReviewService {
     }
 
 
-
     @Transactional
     public ReviewDTO createReview(Integer memberId, ReviewDTO reviewDTO) {
         // 멤버 정보 가져오기
@@ -61,11 +55,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDTO updateReview(Integer memberId, Integer reviewId, ReviewDTO reviewDTO) {
+    public ReviewDTO updateReview(Integer memberId,Integer schedule, Integer reviewId, ReviewDTO reviewDTO) {
         // 리뷰 가져오기
-        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);;
+        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
+        ;
         // 리뷰 업데이트
-        review.updateReview(reviewDTO.getContent(), reviewDTO.getSpoiler(), reviewDTO.getEmotion());
+        review.updateReview(reviewDTO.getSchedule(),reviewDTO.getContent(), reviewDTO.getSpoiler(), reviewDTO.getEmotion());
         Review updatedReview = reviewRepository.save(review);
         return reviewDTO.toReviewDTO(updatedReview);
     }
@@ -75,11 +70,10 @@ public class ReviewService {
     public void deleteById(Integer id) {
         // 리뷰 찾기, 못찾으면 NoSuchElementException
         if (!reviewRepository.existsById(id)) {
-            throw new NoSuchElementException("Review with ID " + id + " does not exist.");
+            throw new ReviewNotFoundException();
         }
         // 삭제
         reviewRepository.deleteById(id);
     }
-
 
 }

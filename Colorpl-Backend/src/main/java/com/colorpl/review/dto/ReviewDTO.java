@@ -3,6 +3,7 @@ package com.colorpl.review.dto;
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.review.domain.Review;
+import com.colorpl.schedule.domain.Schedule;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 public class ReviewDTO {
     //    private Integer id;
+    private Integer schedule;
     private String content;
     private Boolean spoiler;
     private Integer emotion;
@@ -21,6 +23,7 @@ public class ReviewDTO {
 
     public static ReviewDTO toReviewDTO(Review review) {
         return ReviewDTO.builder()
+                .schedule(review.getSchedule())
                 .content(review.getContent())
                 .spoiler(review.getSpoiler())
                 .emotion(review.getEmotion())

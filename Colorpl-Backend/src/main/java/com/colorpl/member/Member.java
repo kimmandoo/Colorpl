@@ -2,6 +2,7 @@ package com.colorpl.member;
 
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.reservation.domain.Reservation;
+import com.colorpl.schedule.domain.Schedule;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
@@ -25,6 +26,9 @@ public class Member extends BaseEntity {
     private String nickname;
 
     private String password;
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
