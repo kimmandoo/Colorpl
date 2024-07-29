@@ -27,22 +27,7 @@ class FeedDetailFragment : BaseDialogFragment<FragmentFeedDetailBinding>(R.layou
         binding.apply {
             rvFeedDetail.adapter = feedDetailAdapter
             val testComment = mutableListOf<FeedDetail>()
-            testComment.add(
-                FeedDetail.HEADER(
-                    Feed(
-                        feedId = 1138,
-                        title = "sed",
-                        userName = "George Foster",
-                        userProfileImg = null,
-                        contentImg = null,
-                        emotionMode = "definitionem",
-                        emotionTotal = 1729,
-                        commentTotal = 8645,
-                        uploadedDate = Date()
-                    )
-                )
-            )
-            repeat(10) {
+            repeat(15) {
                 testComment.add(
                     FeedDetail.BODY(
                         Comment(
