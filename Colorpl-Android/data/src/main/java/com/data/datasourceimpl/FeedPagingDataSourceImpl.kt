@@ -3,7 +3,9 @@ package com.data.datasourceimpl
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.data.api.FeedApi
+import com.data.api.safeApiCall
 import com.data.model.paging.Feed
+import com.data.util.ApiResult
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,19 +19,24 @@ class FeedPagingDataSourceImpl @Inject constructor(private val api: FeedApi) :
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Feed> {
-        return try {
-            val nextPage = params.key ?: 1
-            val response = api.getFeedData(nextPage, params.loadSize)
-            Timber.tag("pager").d("${response.items.first().feedId}")
+        val nextPage = params.key ?: 1
 
-            LoadResult.Page(
-                data = response.items,
-                prevKey = if (nextPage == 1) null else nextPage - 1,
-                nextKey = if (response.items.isEmpty() || nextPage >= response.totalPages) null else nextPage + 1
-            )
-        } catch (e: Exception) {
-            Timber.e(e, "Error loading feed data for page ${params.key}")
-            LoadResult.Error(e)
+        return when (val result = safeApiCall { api.getFeedData(nextPage, params.loadSize) }) {
+            is ApiResult.Success -> {
+                val response = result.data
+                Timber.tag("pager").d("${response.items.firstOrNull()?.feedId}")
+
+                LoadResult.Page(
+                    data = response.items,
+                    prevKey = if (nextPage == 1) null else nextPage - 1,
+                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPages) null else nextPage + 1
+                )
+            }
+
+            is ApiResult.Error -> {
+                Timber.e(result.exception, "Error loading feed data for page $nextPage")
+                LoadResult.Error(result.exception)
+            }
         }
     }
 }
