@@ -1,5 +1,6 @@
 package com.colorpl.ticket.domain;
 
+import com.colorpl.show.domain.detail.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class Ticket {
     private Long id;
 
     @Column(name = "TICKET_CATEGORY")
-    private String category;
+    private Category category;
 
     @Column(name = "TICKET_NAME")
     private String name;
