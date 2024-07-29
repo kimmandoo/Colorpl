@@ -11,7 +11,7 @@ class BaseEntity(Base):
 
 class Member(BaseEntity):
     __tablename__ = 'member'
-    member_id = Column(Integer, primary_key=True, index=True)
+    member_id = Column(BigInteger, primary_key=True, index=True)
     email = Column(String(255), unique=True, nullable=False)
     nickname = Column(String(100), nullable=False)
     schedules = relationship("Schedule", back_populates="member")
@@ -54,7 +54,7 @@ class Category(Base):
 
 class UserCategory(Base):
     __tablename__ = 'user_category'
-    member_id = Column(Integer, ForeignKey('member.member_id'), primary_key=True, nullable=False)
+    member_id = Column(BigInteger, ForeignKey('member.member_id'), primary_key=True, nullable=False)
     category_id = Column(Integer, ForeignKey('category.category_id'), primary_key=True, nullable=False)
     member = relationship("Member", back_populates="categories")
     category = relationship("Category", back_populates="users")
@@ -64,7 +64,7 @@ class ManagementLog(Base):
     id = Column(Integer, primary_key=True, index=True)
     management_category = Column(SMALLINT, nullable=False)
     # 1. 사용자, 2. 리뷰, 3. 댓글
-    member_id = Column(Integer, nullable=False)
+    member_id = Column(BigInteger, nullable=False)
     management_action = Column(SMALLINT, nullable=False)
     # 1. 삭제, 2. 수정
     management_by = Column(String(200), nullable=False)

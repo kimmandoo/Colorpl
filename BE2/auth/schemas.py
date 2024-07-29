@@ -11,6 +11,9 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class TokenData(BaseModel):
+    username: str
+
 class UpdateProfileImage(BaseModel):
     image_url: Optional[str]
 

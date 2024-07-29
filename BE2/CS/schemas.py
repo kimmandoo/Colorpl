@@ -21,7 +21,7 @@ class Member(MemberBase):
 class ReviewBase(BaseModel):
     schedule_id: int
     member_id: int
-    content: int
+    content: str
     is_spoiler: bool
 
 class ReviewUpdate(BaseModel):
@@ -39,7 +39,7 @@ class Review(ReviewBase):
 # Comment
 class CommentBase(BaseModel):
     review_id: int
-    memeber_id: int
+    member_id: int
     content: str
 
 class CommentUpdate(BaseModel):

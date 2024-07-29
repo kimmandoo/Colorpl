@@ -5,6 +5,7 @@ from auth.routes import router as auth_router
 from common.security import security_settings
 from auth.database import Base, engine
 from auth.utils import create_super_admin
+from cs.routes import router as cs_router
 
 app = FastAPI()
 
@@ -24,6 +25,7 @@ def on_startup():
 
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(cs_router, prefix="/cs", tags=["cs"])
 
 @app.get("/")
 async def read_root(request: Request):

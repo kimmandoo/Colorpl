@@ -1,18 +1,25 @@
 from fastapi import Depends, HTTPException
-from fastapi_jwt_auth import AuthJWT
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .database import get_db
 from .models import Administrator
+from common.security import security_settings
+from jose import JWTError, jwt
+from .schemas import TokenData
 
-def get_current_administrator(Authorize: AuthJWT = Depends(), db: Session = Depends(get_db)):
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+
+def get_current_administrator(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
-        Authorize.jwt_required()
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid authorization")
-    
-    admin_id = Authorize.get_jwt_subject()
-    admin = db.query(Administrator).filter(Administrator.admin_id == admin_id).first()
+        payload = jwt.decode(token, security_settings.SECRET_KEY, algorithms=[security_settings.ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
+    admin = db.query(Administrator).filter(Administrator.username == token_data.username).first()
     if admin is None:
         raise HTTPException(status_code=401, detail="Administrator not found")
     return admin
