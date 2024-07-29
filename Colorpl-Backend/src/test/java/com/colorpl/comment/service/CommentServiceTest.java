@@ -3,7 +3,7 @@ package com.colorpl.comment.service;
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.member.Member;
-import com.colorpl.member.MemberRepository;
+import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
