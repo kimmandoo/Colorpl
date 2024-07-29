@@ -198,7 +198,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="14dp"
                         android:layout_marginTop="9dp"
-                        android:text="@string/reservation_pay_info"
+                        android:text="@string/reservation_pay_how"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
