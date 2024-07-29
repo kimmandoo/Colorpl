@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -25,30 +24,27 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationEntryPoint entryPoint;
 
-    private final String[] allowedUrls = {"/", "/swagger-ui/**", "/v3/**", "/members/register","/members/sign-in"};
+    private final String[] allowedUrls = {"/", "/swagger-ui/**", "/v3/**", "/sign-up", "/sign-in","/members/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-            .csrf(CsrfConfigurer<HttpSecurity>::disable)
-            .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
-            .authorizeHttpRequests(requests ->
+                .csrf(CsrfConfigurer<HttpSecurity>::disable)
+                .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
+                .authorizeHttpRequests(requests ->
 //                        requests.anyRequest().permitAll()
-                    requests
-                        .requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .anyRequest().authenticated()
-            )
-            .sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
-            .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint))
-            .build();
+                        requests.requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
+                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .anyRequest().authenticated()
+                )
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
+                .build();
     }
-
+    
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

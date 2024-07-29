@@ -34,7 +34,13 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 =======
 	implementation "org.springframework.boot:spring-boot-starter-security"
+<<<<<<< HEAD
 >>>>>>> 9fe9284 (feat(#S11P12D109-236) : Spring Security Config 및 기본 설정 적용)
+=======
+	implementation "io.jsonwebtoken:jjwt-api:0.11.5"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:0.11.5"
+	runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.11.5"
+>>>>>>> a8c4a73 (feat(#S11P12D109-235) : 사용자 로그인 기능에 JWT Filter 적용)
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
