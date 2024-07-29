@@ -43,11 +43,9 @@ class ReservationFragment :
     }
 
     override fun initView() {
-        binding.apply {
-            initFilter()
-            initReservationInfo()
-            initClickListener()
-        }
+        initFilter()
+        initReservationInfo()
+        initClickListener()
     }
 
     private fun initFilter() {
@@ -82,21 +80,10 @@ class ReservationFragment :
     private fun initClickListener() {
         binding.apply {
             clSelectDate.setOnClickListener {
-                Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-                val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
-                    // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-                    Toast.makeText(binding.root.context, "년: $year, 월: ${month+1}, 일: $day", Toast.LENGTH_SHORT).show()
-                    binding.tvSelectDate.text = "$year.${month+1}.$day"
-                }
-                dateRangePickerDialog.show()
+                showDateRangePickerDialog()
             }
             clSelectLocation.setOnClickListener {
-                Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-                val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
-                val locationPickerDialog = LocationPickerDialog(requireContext(), locationList) { selectedCity ->
-                    binding.tvSelectLocation.text = selectedCity
-                }
-                locationPickerDialog.show()
+                showLocationPickerDialog()
             }
         }
     }
@@ -116,6 +103,28 @@ class ReservationFragment :
     private fun onClickListener() {
         Toast.makeText(binding.root.context, "힝힝힝", Toast.LENGTH_SHORT).show()
     }
+
+    /** 날짜 선택 캘린더 Dialog */
+    private fun showDateRangePickerDialog() {
+        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+        val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
+            // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
+            Toast.makeText(binding.root.context, "년: $year, 월: ${month+1}, 일: $day", Toast.LENGTH_SHORT).show()
+            binding.tvSelectDate.text = "$year.${month+1}.$day"
+        }
+        dateRangePickerDialog.show()
+    }
+
+    /** 지역 선택 리스트 Dialog */
+    private fun showLocationPickerDialog() {
+        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
+        val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
+        val locationPickerDialog = LocationPickerDialog(requireContext(), locationList) { selectedCity ->
+            binding.tvSelectLocation.text = selectedCity
+        }
+        locationPickerDialog.show()
+    }
+
 
     /**
      * 결제할 아이템 하나에 대한 return
