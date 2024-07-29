@@ -4,14 +4,16 @@ import com.colorpl.comment.domain.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+//@Setter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Review {
 
     @Column(name = "REVIEW_ID")
@@ -37,7 +39,14 @@ public class Review {
     private  Byte emphathy;
 
     // ?
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
+
+
+    public void updateReview(String content, Boolean spoiler, Integer emotion) {
+        this.content = content;
+        this.spoiler = spoiler;
+        this.emotion = emotion;
+    }
 
 }
