@@ -3,18 +3,19 @@ package com.presentation.feed
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
 import com.domain.model.FilterItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.adapter.feed.FilterAdapter
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.getFilterItems
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -56,11 +57,19 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             adapter = feedAdapter
             itemAnimator = null
         }
-        Timber.d("${viewModel.pagedFeed}")
+        val loading = LoadingDialog(requireContext())
+        viewModel.getFeed()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagedFeed.collectLatest { pagingData ->
-                Timber.d("pagedFeed call")
-                feedAdapter.submitData(pagingData)
+                pagingData?.let { feed ->
+                    feedAdapter.submitData(feed)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            feedAdapter.loadStateFlow.collectLatest { loadStates ->
+                val isLoading = loadStates.source.refresh is LoadState.Loading
+                if(!isLoading) loading.dismiss() else loading.show()
             }
         }
     }
