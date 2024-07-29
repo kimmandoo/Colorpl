@@ -23,7 +23,7 @@ def on_startup():
     create_super_admin()
 
 
-app.include_router(auth_router, prefix="/auth")
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 @app.get("/")
 async def read_root(request: Request):
