@@ -76,6 +76,5 @@
             app:layout_constraintTop_toBottomOf="@+id/ab_filter"
             tools:listitem="@layout/item_feed" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

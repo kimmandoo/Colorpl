@@ -1,5 +1,6 @@
 package com.colorpl.di
 
+import com.data.api.FeedApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
 import com.data.api.TmapRouteApi
@@ -36,4 +37,11 @@ object ApiModule {
         @GptRetrofit
         retrofit: Retrofit
     ): OpenAiApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideFeedApi(
+        @NormalRetrofit
+        retrofit: Retrofit
+    ): FeedApi = retrofit.create()
 }

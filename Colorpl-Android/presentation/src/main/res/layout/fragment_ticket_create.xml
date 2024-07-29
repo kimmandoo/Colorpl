@@ -101,7 +101,7 @@
             android:id="@+id/cl_progress"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80000000">
+            android:background="@color/black_fifty">
 
             <ProgressBar
                 android:id="@+id/pb_progress"

@@ -1,21 +1,28 @@
 package com.presentation.feed
 
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
-import com.domain.model.Feed
 import com.domain.model.FilterItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.adapter.feed.FilterAdapter
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.getFilterItems
+import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Date
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
+    private val viewModel: FeedViewModel by viewModels()
     private val filterAdapter by lazy {
         FilterAdapter(onItemClickListener = { filterItem ->
             onFilterClickListener(filterItem)
@@ -51,23 +58,19 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             adapter = feedAdapter
             itemAnimator = null
         }
-        val testFeed = mutableListOf<Feed>()
-        repeat(10) {
-            testFeed.add(
-                Feed(
-                    feedId = 7932,
-                    title = "invenire",
-                    userName = "Krista Crawford",
-                    userProfileImg = null,
-                    contentImg = null,
-                    emotionMode = "discere",
-                    emotionTotal = 4013,
-                    commentTotal = 7193,
-                    uploadedDate = Date()
-                )
-            )
-        }
-        feedAdapter.submitList(testFeed)
+        val loading = LoadingDialog(requireContext())
+        viewModel.getFeed()
+        viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
+            pagingData?.let { feed ->
+                feedAdapter.submitData(feed)
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        feedAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { loadStates ->
+                val isLoading = loadStates.source.refresh is LoadState.Loading
+                if (!isLoading) loading.dismiss() else loading.show()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun onFilterClickListener(clickedItem: FilterItem) {

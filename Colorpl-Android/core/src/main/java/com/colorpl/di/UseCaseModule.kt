@@ -1,8 +1,10 @@
 package com.colorpl.di
 
+import com.domain.usecase.FeedUseCase
 import com.domain.usecase.NotificationUseCase
 import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TmapRouteUseCase
+import com.domain.usecaseimpl.feed.FeedUseCaseImpl
 import com.domain.usecaseimpl.notification.NotificationUseCaseImpl
 import com.domain.usecaseimpl.openai.OpenAiUseCaseImpl
 import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
@@ -35,5 +37,10 @@ interface UseCaseModule {
         openAiUseCaseImpl: OpenAiUseCaseImpl
     ): OpenAiUseCase
 
+    @Binds
+    @Singleton
+    fun provideFeedUseCase(
+        feedUseCaseImpl: FeedUseCaseImpl
+    ): FeedUseCase
 
 }

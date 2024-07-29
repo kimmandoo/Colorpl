@@ -1,4 +1,4 @@
-package com.presentation.schedule
+package com.presentation.component.dialog
 
 import android.content.Context
 import com.colorpl.presentation.R

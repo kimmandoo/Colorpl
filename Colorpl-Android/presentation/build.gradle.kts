@@ -61,6 +61,7 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.paging.runtime.ktx)
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
