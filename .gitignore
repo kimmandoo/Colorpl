@@ -207,4 +207,6 @@ sketch
 .history
 .ionide
 
+profile_images/
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,react
