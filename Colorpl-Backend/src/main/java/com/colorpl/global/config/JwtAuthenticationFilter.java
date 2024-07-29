@@ -27,15 +27,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = parseBearerToken(request);
-        if (token != null && !token.isEmpty()) {
-            Member member = parseMemberSpecification(token);
-            if (member != null) {
-                AbstractAuthenticationToken authenticated = new UsernamePasswordAuthenticationToken(
+        try {
+            String token = parseBearerToken(request);
+            if (token != null && !token.isEmpty()) {
+                Member member = parseMemberSpecification(token);
+                if (member != null) {
+                    AbstractAuthenticationToken authenticated = new UsernamePasswordAuthenticationToken(
                         member, token, member.getAuthorities());
-                authenticated.setDetails(new WebAuthenticationDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticated);
+                    authenticated.setDetails(new WebAuthenticationDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticated);
+                }
             }
+        } catch (Exception e) {
+            request.setAttribute("exception", e); // Exception is detected and added to the request attribute
         }
 
         filterChain.doFilter(request, response);
