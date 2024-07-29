@@ -1,6 +1,7 @@
 package com.presentation.feed
 
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -14,8 +15,8 @@ import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.getFilterItems
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 
 @AndroidEntryPoint
@@ -59,19 +60,17 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         }
         val loading = LoadingDialog(requireContext())
         viewModel.getFeed()
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pagedFeed.collectLatest { pagingData ->
-                pagingData?.let { feed ->
-                    feedAdapter.submitData(feed)
-                }
+        viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
+            pagingData?.let { feed ->
+                feedAdapter.submitData(feed)
             }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            feedAdapter.loadStateFlow.collectLatest { loadStates ->
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        feedAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { loadStates ->
                 val isLoading = loadStates.source.refresh is LoadState.Loading
-                if(!isLoading) loading.dismiss() else loading.show()
-            }
-        }
+                if (!isLoading) loading.dismiss() else loading.show()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun onFilterClickListener(clickedItem: FilterItem) {
