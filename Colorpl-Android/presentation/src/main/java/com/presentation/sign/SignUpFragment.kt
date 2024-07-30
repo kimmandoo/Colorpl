@@ -7,10 +7,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpBinding
 import com.presentation.base.BaseFragment
@@ -24,11 +25,12 @@ import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
 
-    private val signUpViewModel: SignUpViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel by hiltNavGraphViewModels(R.id.sign_nav_graph)
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
@@ -37,6 +39,8 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         setImeOptions()
         observeSignType()
         observeProfileImage()
+        observeEditText()
+        observeNextButton()
         initClickEvent()
     }
 
@@ -58,6 +62,31 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                 signUpViewModel.setTypeEvent(Sign.PROFILE)
             }
         }
+    }
+
+    private fun observeEditText() { // 텍스트 삽입
+        binding.includeId.etContent.addTextChangedListener {
+            signUpViewModel.setUserEmail(it.toString())
+        }
+
+        binding.includePassword.etContent.addTextChangedListener {
+            signUpViewModel.setPassWord(it.toString())
+        }
+
+        binding.includeNickname.etContent.addTextChangedListener {
+            signUpViewModel.setUserNickName(it.toString())
+        }
+    }
+
+    private fun observeNextButton() { //다음 버튼 활성화
+        signUpViewModel.nextButton.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                Timber.d("확인이여 $it")
+                binding.tvNext.apply {
+                    isSelected = it
+                    isEnabled = it
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun observeSignType() { //Type 감지
@@ -102,6 +131,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
+                        signUpViewModel.setUserImage(uri.toString())
                         binding.ivProfile.setImage(uri)
                     }
                 }

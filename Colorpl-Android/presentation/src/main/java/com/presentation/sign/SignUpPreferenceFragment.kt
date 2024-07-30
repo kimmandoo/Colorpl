@@ -1,18 +1,22 @@
 package com.presentation.sign
 
 import android.content.Intent
-import androidx.navigation.fragment.findNavController
+import android.os.Bundle
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpPreferenceBinding
 import com.presentation.MainActivity
-import com.presentation.base.BaseFragment
+import com.presentation.base.BaseDialogFragment
+import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignUpPreferenceFragment :
-    BaseFragment<FragmentSignUpPreferenceBinding>(R.layout.fragment_sign_up_preference) {
+    BaseDialogFragment<FragmentSignUpPreferenceBinding>(R.layout.fragment_sign_up_preference) {
 
-    override fun initView() {
+    private val signUpViewModel: SignUpViewModel by hiltNavGraphViewModels(R.id.sign_nav_graph)
+
+    override fun initView(savedInstanceState: Bundle?) {
         initClickEvent()
     }
 
@@ -39,8 +43,11 @@ class SignUpPreferenceFragment :
 
 
         binding.ivBack.setOnClickListener {
+            signUpViewModel.clearData()
             navigatePopBackStack()
         }
+
+        
 
         binding.tvNext.setOnClickListener {
             //회원 가입 로직 및 성공시 Main 이동
