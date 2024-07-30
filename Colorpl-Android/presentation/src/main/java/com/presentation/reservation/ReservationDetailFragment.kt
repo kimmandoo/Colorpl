@@ -1,11 +1,12 @@
 package com.presentation.reservation
 
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
 import com.presentation.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>(R.layout.fragment_reservation_detail) {
     private val args: ReservationDetailFragmentArgs by navArgs()
 
