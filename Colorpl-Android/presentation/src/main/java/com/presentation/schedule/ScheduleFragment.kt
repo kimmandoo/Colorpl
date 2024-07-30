@@ -3,10 +3,10 @@ package com.presentation.schedule
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
-import com.domain.model.CalendarItem
 import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
@@ -15,18 +15,15 @@ import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.component.dialog.CalendarDialog
 import com.presentation.component.dialog.TicketCreateDialog
 import com.presentation.util.Calendar
+import com.presentation.util.CalendarMode
 import com.presentation.util.TicketState
 import com.presentation.util.TicketType
-import com.presentation.util.createCalendar
-import com.presentation.util.getOnlySelectedWeek
 import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.WeekFields
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Date
-import java.util.Locale
 
 
 private const val TAG = "ScheduleFragment"
@@ -35,12 +32,11 @@ private const val TAG = "ScheduleFragment"
 class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment_schedule) {
 
     private val viewModel: ScheduleViewModel by viewModels()
-    private lateinit var currentDate: CalendarItem
     private var handlePullState = 0
     private val calendarAdapter by lazy {
         CalendarAdapter(onItemClick = { calendarItem ->
-            currentDate = calendarItem
-            handleItemClick(calendarItem)
+            viewModel.setClickedDate(calendarItem)
+            viewModel.handleItemClick(calendarItem)
         })
     }
     private val popUpAdapter by lazy {
@@ -58,13 +54,42 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         )
     }
-    private var selectedDate = LocalDate.now()
 
     override fun initView() {
+        observeViewModel()
         navigateNotification()
         initCalendar()
         initFAB()
         initTicketView()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                viewModel.calendarItems.collectLatest { calendarList ->
+                    calendarAdapter.submitList(calendarList)
+                }
+            }
+            launch {
+                viewModel.calendarMode.collectLatest { mode ->
+                    when (mode) {
+                        CalendarMode.MONTH -> {
+                            setMonthMode()
+                        }
+
+                        CalendarMode.WEEK -> {
+                            setWeekMode()
+                        }
+                    }
+                }
+            }
+            launch {
+                viewModel.displayDate.collect { date ->
+                    binding.tvYear.text = date.split(" ").first()
+                    binding.tvMonth.text = date.split(" ").drop(1).joinToString(" ")
+                }
+            }
+        }
     }
 
     private fun initCalendar() {
@@ -74,22 +99,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             )
             yearView.forEach { view ->
                 view.setOnClickListener {
-                    val dialog = CalendarDialog(requireContext()) { year, month ->
-                        if (year == 0.toLong() && month == 0.toLong()) {
-                            updateCalendar(state = Calendar.CURRENT)
-                        } else {
-                            updateCalendar(state = Calendar.CHANGE, month = month + 1, year = year)
-                        }
-                    }
-                    dialog.show()
+                    showYearMonthDialog()
                 }
             }
 
             rvCalendar.apply {
                 adapter = calendarAdapter
                 itemAnimator = null
-
-                updateCalendar(Calendar.CURRENT)
             }
         }
     }
@@ -98,7 +114,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         binding.apply {
             rvTicket.adapter = ticketAdapter
             rvTicket.overScrollControl { direction, deltaDistance ->
-                handlePull(direction, deltaDistance)
+                handlePull(direction)
             }
             ticketAdapter.submitList(
                 listOf( // testcode
@@ -114,166 +130,34 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         }
     }
 
-    private fun handlePull(direction: Int, deltaDistance: Float) {
+    private fun handlePull(direction: Int) {
         when (direction) {
             1 -> {
                 handlePullState++
             }
         }
         if (handlePullState > 5) {
-            if (::currentDate.isInitialized) {
-                setMonthMode()
-                updateCalendar(Calendar.RESTORE)
-            }
+            viewModel.updateCalendar(Calendar.RESTORE)
             handlePullState = 0
         }
     }
 
-    private fun updateCalendarWeekMode(
-        state: Calendar
-    ) {
-        selectedDate = when (state) {
-            Calendar.CURRENT -> {
-                LocalDate.now()
-            }
-
-            Calendar.NEXT -> {
-                selectedDate.plusWeeks(1)
-            }
-
-            Calendar.PREVIOUS -> {
-                selectedDate.plusWeeks(-1)
-            }
-
-            else -> {
-                null
-            }
-        }
-        val (currentYear, currentMonth) = selectedDate.format(
-            DateTimeFormatter.ofPattern(
-                "yyyy년 M월"
-            )
-        )
-            .split(" ")
-        val weekFields = WeekFields.of(Locale.getDefault())
-        val weekOfMonth = selectedDate.get(weekFields.weekOfMonth())
-        binding.tvYear.text = currentYear
-        binding.tvMonth.text = buildString {
-            append(currentMonth)
-            append(" ")
-            append(weekOfMonth)
-            append("주")
-        }
-
-        calendarAdapter.submitList(
-            selectedDate.getOnlySelectedWeek(selectedDate.createCalendar()).map { item ->
-                if (item.date == currentDate.date) {
-                    item.copy(isSelected = true)
-                } else {
-                    item.copy(isSelected = false)
-                }
-            })
-    }
-
-    private fun updateCalendar(
-        state: Calendar,
-        month: Long = 0,
-        year: Long = 0,
-    ) {
-        selectedDate = when (state) {
-            Calendar.CURRENT -> {
-                setMonthMode()
-                LocalDate.now()
-            }
-
-            Calendar.NEXT -> {
-                selectedDate.plusMonths(1)
-            }
-
-            Calendar.PREVIOUS -> {
-                selectedDate.minusMonths(1)
-            }
-
-            Calendar.CHANGE -> {
-                val changedYear = year - selectedDate.year
-                val changedMonth = month - selectedDate.monthValue
-
-                selectedDate.plusYears(changedYear).plusMonths(changedMonth)
-            }
-
-            Calendar.RESTORE -> {
-                currentDate.date
-            }
-        }
-        val (currentYear, currentMonth) = selectedDate.format(DateTimeFormatter.ofPattern("yyyy년 M월"))
-            .split(" ")
-        binding.tvYear.text = currentYear
-        binding.tvMonth.text = currentMonth
-        val updateList = if (state == Calendar.RESTORE) {
-            selectedDate.createCalendar().map { item ->
-                if (item.date == currentDate.date) {
-                    item.copy(isSelected = true)
-                } else {
-                    item.copy(isSelected = false)
-                }
-            }
-        } else {
-            selectedDate.createCalendar()
-        }
-        calendarAdapter.submitList(updateList)
-    }
-
-    private fun setWeekMode(clickedItem: CalendarItem) {
+    private fun setWeekMode() {
         binding.ivPrevMonth.setOnClickListener {
-            updateCalendarWeekMode(Calendar.PREVIOUS)
+            viewModel.updateCalendarWeekMode(Calendar.PREVIOUS)
         }
         binding.ivNextMonth.setOnClickListener {
-            updateCalendarWeekMode(Calendar.NEXT)
-        }
-        val (currentYear, currentMonth) = clickedItem.date.format(
-            DateTimeFormatter.ofPattern(
-                "yyyy년 M월"
-            )
-        )
-            .split(" ")
-        val weekFields = WeekFields.of(Locale.getDefault())
-        val weekOfMonth = clickedItem.date.get(weekFields.weekOfMonth())
-        binding.tvYear.text = currentYear
-        binding.tvMonth.text = buildString {
-            append(currentMonth)
-            append(" ")
-            append(weekOfMonth)
-            append("주")
+            viewModel.updateCalendarWeekMode(Calendar.NEXT)
         }
     }
 
     private fun setMonthMode() {
         binding.ivPrevMonth.setOnClickListener {
-            updateCalendar(Calendar.PREVIOUS)
+            viewModel.updateCalendar(Calendar.PREVIOUS)
         }
         binding.ivNextMonth.setOnClickListener {
-            updateCalendar(Calendar.NEXT)
+            viewModel.updateCalendar(Calendar.NEXT)
         }
-    }
-
-    /**
-     * 클릭한 아이템의 상태를 변경하고 나머지 아이템들의 상태를 초기화하는 함수
-     * @param calendarAdapter : 업데이트할 어댑터
-     * @param clickedItem : 클릭된 CalendarItem
-     */
-    private fun handleItemClick(
-        clickedItem: CalendarItem,
-    ) {
-        setWeekMode(clickedItem)
-        val updatedList =
-            clickedItem.date.getOnlySelectedWeek(calendarAdapter.currentList).map { item ->
-                if (item.date == clickedItem.date) {
-                    item.copy(isSelected = true)
-                } else {
-                    item.copy(isSelected = false)
-                }
-            }
-        calendarAdapter.submitList(updatedList)
     }
 
     private fun navigateNotification() {
@@ -303,49 +187,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
                     TicketState.ISSUED.state -> {
-                        val dialog = TicketCreateDialog(requireContext(),
-                            type = TicketState.ISSUED,
-                            action = { mode ->
-                                val action = when (mode) {
-                                    TicketType.CAMERA -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
-                                            TicketType.CAMERA
-                                        )
-                                    }
-
-                                    TicketType.GALLERY -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
-                                            TicketType.GALLERY
-                                        )
-                                    }
-                                }
-                                navigateDestination(action)
-                            })
-                        dialog.show()
+                        showTicketCreateDialog(TicketState.ISSUED)
                     }
 
                     TicketState.UNISSUED.state -> {
-                        val dialog = TicketCreateDialog(
-                            requireContext(),
-                            type = TicketState.UNISSUED,
-                            action = { mode ->
-                                val action = when (mode) {
-                                    TicketType.CAMERA -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
-                                            TicketType.CAMERA
-                                        )
-                                    }
-
-                                    TicketType.GALLERY -> {
-                                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(
-                                            TicketType.GALLERY
-                                        )
-                                    }
-                                }
-                                navigateDestination(action)
-                            }
-                        )
-                        dialog.show()
+                        showTicketCreateDialog(TicketState.UNISSUED)
                     }
                 }
 
@@ -356,5 +202,36 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         binding.fabAddTicket.setOnClickListener {
             listPopupWindow.show()
         }
+    }
+
+    private fun showYearMonthDialog() {
+        val dialog = CalendarDialog(requireContext()) { year, month ->
+            if (year == 0.toLong() && month == 0.toLong()) {
+                viewModel.updateCalendar(state = Calendar.CURRENT)
+            } else {
+                viewModel.updateCalendar(state = Calendar.CHANGE, month = month + 1, year = year)
+            }
+        }
+        dialog.show()
+    }
+
+    private fun showTicketCreateDialog(ticketState: TicketState) {
+        val dialog = TicketCreateDialog(
+            requireContext(),
+            type = ticketState,
+            action = { ticketType ->
+                val action = when (ticketType) {
+                    TicketType.CAMERA -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA)
+                    }
+
+                    TicketType.GALLERY -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY)
+                    }
+                }
+                navigateDestination(action)
+            }
+        )
+        dialog.show()
     }
 }

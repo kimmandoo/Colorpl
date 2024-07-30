@@ -32,6 +32,10 @@ enum class Calendar {
     RESTORE
 }
 
+enum class CalendarMode {
+    MONTH, WEEK
+}
+
 enum class Page(val hideBottomNav: Boolean) {
     NOTIFICATION(true),
     FEED_DETAIL(true),
