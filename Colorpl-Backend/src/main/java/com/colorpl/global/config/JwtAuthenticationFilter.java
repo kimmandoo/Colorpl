@@ -41,6 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             reissueAccessToken(request, response, e);
         } catch (Exception e) {
             request.setAttribute("exception", e);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            return;
         }
 
         filterChain.doFilter(request, response);

@@ -77,7 +77,6 @@ public class Member extends BaseEntity{
     }
 
 
-
     public String getUsername() {
         return email;
     }

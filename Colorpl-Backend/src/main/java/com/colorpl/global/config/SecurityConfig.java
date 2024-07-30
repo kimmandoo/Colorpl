@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(requests ->
 //                        requests.anyRequest().permitAll()
-                        requests.requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
+                        requests
+                            .requestMatchers(allowedUrls).permitAll()  // 허용할 URL 목록을 배열로 분리했다
                                 .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 )
