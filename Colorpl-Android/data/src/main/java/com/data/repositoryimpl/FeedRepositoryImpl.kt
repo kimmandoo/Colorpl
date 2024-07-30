@@ -3,15 +3,15 @@ package com.data.repositoryimpl
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.data.datasourceimpl.CommentPagingDataSourceImpl
-import com.data.datasourceimpl.FeedPagingDataSourceImpl
+import com.data.datasource.FeedDataSource
 import com.data.model.paging.Feed
+import com.data.pagingsource.FeedPagingSource
 import com.data.repository.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FeedRepositoryImpl @Inject constructor(
-    private val feedPagingDataSource: FeedPagingDataSourceImpl,
+    private val feedDataSource: FeedDataSource
 ) : FeedRepository {
     override fun getPagedFeed(): Flow<PagingData<Feed>> {
         return Pager(
@@ -20,7 +20,7 @@ class FeedRepositoryImpl @Inject constructor(
                 enablePlaceholders = false,
                 initialLoadSize = PAGE_SIZE
             ),
-            pagingSourceFactory = { feedPagingDataSource },
+            pagingSourceFactory = { FeedPagingSource(feedDataSource) },
         ).flow
     }
 

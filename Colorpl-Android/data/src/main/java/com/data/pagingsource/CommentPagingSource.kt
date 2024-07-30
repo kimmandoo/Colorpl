@@ -1,30 +1,33 @@
-package com.data.datasourceimpl
+package com.data.pagingsource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.data.api.FeedApi
 import com.data.api.safeApiCall
-import com.data.model.paging.Feed
+import com.data.datasource.CommentDataSource
+import com.data.model.paging.Comment
 import com.data.util.ApiResult
 import timber.log.Timber
-import javax.inject.Inject
 
-class FeedPagingDataSourceImpl @Inject constructor(private val api: FeedApi) :
-    PagingSource<Int, Feed>() {
-    override fun getRefreshKey(state: PagingState<Int, Feed>): Int? {
+class CommentPagingSource (
+    private val feedId: Int,
+    private val commentDataSource: CommentDataSource
+) :
+    PagingSource<Int, Comment>() {
+    override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Feed> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
         val nextPage = params.key ?: 1
 
-        return when (val result = safeApiCall { api.getFeedData(nextPage, params.loadSize) }) {
+        return when (val result =
+            safeApiCall { commentDataSource.getComment(feedId, nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
-                Timber.tag("pager").d("${response.items.firstOrNull()?.feedId}")
+                Timber.tag("pager").d("${response.items.firstOrNull()?.commentId}")
 
                 LoadResult.Page(
                     data = response.items,
