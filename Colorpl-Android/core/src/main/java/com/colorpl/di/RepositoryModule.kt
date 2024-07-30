@@ -61,6 +61,8 @@ interface RepositoryModule {
         tokenRepositoryImpl: TokenRepositoryImpl
     ): TokenRepository
 
+    @Singleton
+    @Binds
     fun provideCommentPagingRepository(
         commentPagingRepositoryImpl: CommentRepositoryImpl
     ): CommentRepository
