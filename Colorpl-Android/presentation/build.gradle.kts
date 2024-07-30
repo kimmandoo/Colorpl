@@ -103,4 +103,6 @@ dependencies {
 
     // BootPay
     implementation(libs.bootpay)
+    // DotsIndicator
+    implementation(libs.dotsindicator)
 }

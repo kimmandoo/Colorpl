@@ -44,6 +44,7 @@ enum class Page(val hideBottomNav: Boolean) {
     TICKET_CREATE(true),
     TICKET_FINISH(true),
     RESERVATION_DETAIL(true),
+    RESERVATION_PROGRESS(true),
     MAP(false),
     FEED(false),
     LOGIN(false),
@@ -68,6 +69,8 @@ enum class Page(val hideBottomNav: Boolean) {
             PAYMENT_HISTORY -> R.id.fragment_payment_history
             NOTICE -> R.id.fragment_notice
             TICKET_CREATE -> R.id.fragment_ticket_create
+            RESERVATION_DETAIL -> R.id.fragment_reservation_detail
+            RESERVATION_PROGRESS -> R.id.fragment_reservation_progress
             MAP -> R.id.fragment_map
             FEED -> R.id.fragment_feed
             LOGIN -> R.id.fragment_login
@@ -76,7 +79,7 @@ enum class Page(val hideBottomNav: Boolean) {
             TICKET -> R.id.fragment_ticket
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
-            RESERVATION_DETAIL -> R.id.fragment_reservation_detail
+
         }
 }
 
