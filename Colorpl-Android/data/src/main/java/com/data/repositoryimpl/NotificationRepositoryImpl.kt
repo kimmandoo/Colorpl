@@ -1,6 +1,6 @@
 package com.data.repositoryimpl
 
-import com.data.datasource.NotificationDataSource
+import com.data.datasource.remote.NotificationDataSource
 import com.data.model.response.ResponseMarker
 import com.data.repository.NotificationRepository
 import javax.inject.Inject

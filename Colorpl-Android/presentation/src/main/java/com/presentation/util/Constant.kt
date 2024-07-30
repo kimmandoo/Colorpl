@@ -1,6 +1,7 @@
 package com.presentation.util
 
 import android.content.Context
+import android.view.View
 import com.colorpl.presentation.R
 import com.presentation.component.custom.DropDownData
 
@@ -46,6 +47,7 @@ enum class Page(val hideBottomNav: Boolean) {
     NOTICE(true),
     TICKET_CREATE(true),
     TICKET_FINISH(true),
+    RESERVATION_DETAIL(true),
     MAP(false),
     FEED(false),
     LOGIN(false),
@@ -53,6 +55,7 @@ enum class Page(val hideBottomNav: Boolean) {
     SETTING(false),
     TICKET(false),
     SCHEDULE(false),
+
     ;
 
     companion object {
@@ -77,6 +80,7 @@ enum class Page(val hideBottomNav: Boolean) {
             TICKET -> R.id.fragment_ticket
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
+            RESERVATION_DETAIL -> R.id.fragment_reservation_detail
         }
 }
 
@@ -152,4 +156,20 @@ enum class DropDownMenu(private val value: Int, private val resourceId: Int) {
 
     }
 
+}
+
+/**
+ * 상단 버튼들 표시 여부 상태 타입.
+ *
+ * @property back 뒤로가기 버튼 활성화 유무.
+ * @property exit 나가기 버튼 활성화 유무.
+ */
+enum class TopButtonsStatus(private val back: Int, private val exit: Int) {
+    BOTH(View.VISIBLE, View.VISIBLE),
+    BACK(View.VISIBLE, View.INVISIBLE),
+    EXIT(View.INVISIBLE, View.VISIBLE),
+    NONE(View.INVISIBLE, View.INVISIBLE);
+
+    fun getBackVisibility() = back
+    fun getExitVisibility() = exit
 }

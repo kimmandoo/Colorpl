@@ -9,7 +9,7 @@ import com.domain.model.ReservationInfo
 import com.presentation.base.BaseDiffUtil
 
 class ReservationInfoAdapter (
-    private val onClickListener: () -> Unit,
+    private val onClickListener: (ReservationInfo) -> Unit,
 ) : ListAdapter<ReservationInfo, ViewHolder>(BaseDiffUtil<ReservationInfo>()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

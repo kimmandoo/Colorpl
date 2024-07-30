@@ -1,6 +1,5 @@
-package com.data.datasource
+package com.data.datasource.remote
 
-import com.data.model.request.RequestTmapRoute
 import com.data.model.response.ResponseTmapRoute
 
 interface TmapRouteDataSource {

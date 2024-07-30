@@ -2,9 +2,11 @@ package com.colorpl.di
 
 import com.data.datasource.CommentDataSource
 import com.data.datasource.FeedDataSource
-import com.data.datasource.NotificationDataSource
-import com.data.datasource.OpenAiDataSource
-import com.data.datasource.TmapRouteDataSource
+import com.data.datasource.local.TokenDataSource
+import com.data.datasource.local.TokenDataSourceImpl
+import com.data.datasource.remote.NotificationDataSource
+import com.data.datasource.remote.OpenAiDataSource
+import com.data.datasource.remote.TmapRouteDataSource
 import com.data.datasourceimpl.CommentDataSourceImpl
 import com.data.datasourceimpl.FeedDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
@@ -19,6 +21,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataSourceModule {
+
+    @Singleton
+    @Binds
+    fun provideTokenDataSource(
+        tokenDataSourceImpl: TokenDataSourceImpl
+    ): TokenDataSource
 
 
     @Singleton

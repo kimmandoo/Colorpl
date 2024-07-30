@@ -1,7 +1,7 @@
 package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
-import com.data.datasource.TmapRouteDataSource
+import com.data.datasource.remote.TmapRouteDataSource
 import com.data.model.response.ResponseTmapRoute
 import com.data.repository.TmapRouteRepository
 import com.data.util.ApiResult
