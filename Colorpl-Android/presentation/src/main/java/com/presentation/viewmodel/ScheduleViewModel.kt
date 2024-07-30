@@ -48,19 +48,17 @@ class ScheduleViewModel @Inject constructor(
     fun handleItemClick(
         clickedItem: CalendarItem,
     ) {
-        _calendarMode.value = when (_calendarMode.value) {
-            CalendarMode.WEEK -> CalendarMode.WEEK
-            CalendarMode.MONTH -> CalendarMode.WEEK
-        }
+        _calendarMode.value = CalendarMode.WEEK
         val updatedList =
             getOnlySelectedWeek(clickedItem.date, _calendarItems.value).map { item ->
-                if (item.date == clickedItem.date) {
-                    item.copy(isSelected = true)
-                } else {
-                    item.copy(isSelected = false)
-                }
+                item.copy(
+                    isSelected = item.date == clickedItem.date,
+                    isWeek = true
+                )
             }
         _calendarItems.value = updatedList
+        _selectedDate.value = clickedItem.date
+        _clickedDate.value = clickedItem.copy(isSelected = true, isWeek = true)
         updateDisplayDate()
     }
 
@@ -97,16 +95,16 @@ class ScheduleViewModel @Inject constructor(
 
         val updateList = if (state == Calendar.RESTORE) {
             createCalendar(_selectedDate.value).map { item ->
-                if (item.date == _selectedDate.value) {
-                    item.copy(isSelected = true)
-                } else {
-                    item.copy(isSelected = false)
-                }
+                item.copy(
+                    isSelected = item.date == _selectedDate.value,
+                    isWeek = false  // 월 모드로 돌아갈 때 isWeek를 false로 설정
+                )
             }
         } else {
             createCalendar(_selectedDate.value)
         }
         _calendarItems.value = updateList
+        _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
     }
 
@@ -135,11 +133,10 @@ class ScheduleViewModel @Inject constructor(
             _selectedDate.value,
             createCalendar(_selectedDate.value)
         ).map { item ->
-            if (item.date == _clickedDate.value?.date) {
-                item.copy(isSelected = true)
-            } else {
-                item.copy(isSelected = false)
-            }
+            item.copy(
+                isSelected = item.date == _clickedDate.value?.date,
+                isWeek = true  // 주간 모드에서는 모든 아이템의 isWeek를 true로 설정
+            )
         }
         updateDisplayDate()
     }

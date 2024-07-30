@@ -99,4 +99,11 @@
         <item name="android:windowEnterAnimation">@anim/anim_slide_in_right</item>
         <item name="android:windowExitAnimation">@null</item>
     </style>
+
+    <style name="SeparateCornerRadius" parent="">
+        <item name="cornerSizeBottomRight">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+    </style>
 </resources>

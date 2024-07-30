@@ -1,6 +1,7 @@
 package com.presentation.component.adapter.schedule
 
 import android.graphics.Color
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemCalendarBinding
@@ -12,6 +13,11 @@ class CalendarViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(data: CalendarItem) {
         binding.apply {
+            ivTicket.visibility = if(data.isWeek){
+                View.VISIBLE
+            }else{
+                View.GONE
+            }
             clItem.setBackgroundResource(
                 when {
                     data.isSelected -> R.drawable.rectangle_imperial_red_8
