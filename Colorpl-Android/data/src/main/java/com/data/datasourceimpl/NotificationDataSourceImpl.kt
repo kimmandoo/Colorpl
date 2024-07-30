@@ -1,7 +1,7 @@
 package com.data.datasourceimpl
 
 import com.data.api.NotificationApi
-import com.data.datasource.NotificationDataSource
+import com.data.datasource.remote.NotificationDataSource
 import com.data.model.response.ResponseMarker
 import javax.inject.Inject
 

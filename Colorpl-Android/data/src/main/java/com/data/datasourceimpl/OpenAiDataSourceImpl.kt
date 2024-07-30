@@ -1,7 +1,7 @@
 package com.data.datasourceimpl
 
 import com.data.api.OpenAiApi
-import com.data.datasource.OpenAiDataSource
+import com.data.datasource.remote.OpenAiDataSource
 import com.data.model.request.RequestVision
 import com.data.model.response.ResponseVision
 import javax.inject.Inject

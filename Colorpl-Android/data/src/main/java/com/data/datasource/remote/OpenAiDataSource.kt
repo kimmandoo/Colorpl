@@ -1,4 +1,4 @@
-package com.data.datasource
+package com.data.datasource.remote
 
 import com.data.model.request.RequestVision
 import com.data.model.response.ResponseVision
