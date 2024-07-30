@@ -4,14 +4,15 @@ import com.colorpl.comment.domain.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+//@Setter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Review {
 
     @Column(name = "REVIEW_ID")
@@ -20,9 +21,9 @@ public class Review {
     private Integer id;
 
     // schdule 아직 없음
-//    @JoinColumn(name = "SCHEDULE_ID")
-//    @OneToOne(mappedBy = "SCHEDULE_ID")
-//    private Schedule schedule;
+    @JoinColumn(name = "SCHEDULE_ID")
+    @OneToOne(mappedBy = "SCHEDULE_ID")
+    private Integer schedule;
 
     @Column(name = "REVIEW_CONTENT")
     private  String content;
@@ -37,7 +38,15 @@ public class Review {
     private  Byte emphathy;
 
     // ?
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+
+    public void updateReview(Integer schedule, String content, Boolean spoiler, Integer emotion) {
+        this.schedule = schedule;
+        this.content = content;
+        this.spoiler = spoiler;
+        this.emotion = emotion;
+    }
 
 }
