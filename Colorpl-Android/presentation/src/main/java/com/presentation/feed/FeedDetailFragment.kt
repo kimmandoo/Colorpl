@@ -1,20 +1,30 @@
 package com.presentation.feed
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
-import com.domain.model.Comment
-import com.domain.model.Feed
 import com.presentation.base.BaseDialogFragment
-import com.presentation.base.BaseFragment
-import com.presentation.component.adapter.feed.FeedDetail
-import com.presentation.component.adapter.feed.FeedDetailAdapter
-import java.util.Date
+import com.presentation.component.adapter.feed.CommentAdapter
+import com.presentation.component.dialog.LoadingDialog
+import com.presentation.viewmodel.FeedViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class FeedDetailFragment : BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
+@AndroidEntryPoint
+class FeedDetailFragment :
+    BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
 
-    private val feedDetailAdapter by lazy {
-        FeedDetailAdapter(
+    private val viewModel: FeedViewModel by viewModels()
+
+    private val commentAdapter by lazy {
+        CommentAdapter(
             onEditClickListener = { onEditClickListener() },
             onDeleteClickListener = { onDeleteClickListener() },
             onEmotionClickListener = {},
@@ -25,37 +35,21 @@ class FeedDetailFragment : BaseDialogFragment<FragmentFeedDetailBinding>(R.layou
 
     override fun initView(savedInstanceState: Bundle?) {
         binding.apply {
-            rvFeedDetail.adapter = feedDetailAdapter
-            val testComment = mutableListOf<FeedDetail>()
-            testComment.add(
-                FeedDetail.HEADER(
-                    Feed(
-                        feedId = 1138,
-                        title = "sed",
-                        userName = "George Foster",
-                        userProfileImg = null,
-                        contentImg = null,
-                        emotionMode = "definitionem",
-                        emotionTotal = 1729,
-                        commentTotal = 8645,
-                        uploadedDate = Date()
-                    )
-                )
-            )
-            repeat(10) {
-                testComment.add(
-                    FeedDetail.BODY(
-                        Comment(
-                            commentId = 5906,
-                            name = "Roscoe Bowman",
-                            uploadDate = Date(),
-                            lastEditDate = null,
-                            content = "eruditi"
-                        )
-                    )
-                )
-            }
-            feedDetailAdapter.submitList(testComment)
+            val loading = LoadingDialog(requireContext())
+            viewModel.getComment(feedId = 1)
+            rvComment.adapter = commentAdapter
+            viewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .onEach { pagingData ->
+                    pagingData?.let { comment ->
+                        commentAdapter.submitData(comment)
+                    }
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+            commentAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .onEach { loadStates ->
+                    val isLoading = loadStates.source.refresh is LoadState.Loading
+                    if (!isLoading) loading.dismiss() else loading.show()
+                }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
 

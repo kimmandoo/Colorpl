@@ -3,24 +3,25 @@ package com.data.repositoryimpl
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.data.datasource.FeedDataSource
-import com.data.model.paging.Feed
-import com.data.pagingsource.FeedPagingSource
-import com.data.repository.FeedRepository
+import com.data.datasource.CommentDataSource
+import com.data.model.paging.Comment
+import com.data.pagingsource.CommentPagingSource
+import com.data.repository.CommentRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class FeedRepositoryImpl @Inject constructor(
-    private val feedDataSource: FeedDataSource
-) : FeedRepository {
-    override fun getPagedFeed(): Flow<PagingData<Feed>> {
+class CommentRepositoryImpl @Inject constructor(
+    private val commentDataSource: CommentDataSource
+) : CommentRepository {
+
+    override fun getPagedComment(feedId: Int): Flow<PagingData<Comment>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 1,
                 enablePlaceholders = false,
                 initialLoadSize = PAGE_SIZE
             ),
-            pagingSourceFactory = { FeedPagingSource(feedDataSource) },
+            pagingSourceFactory = { CommentPagingSource(feedId, commentDataSource) },
         ).flow
     }
 
