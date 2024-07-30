@@ -7,16 +7,168 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/night">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_feed_detail"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_feed_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/eerie_black"
+                android:paddingBottom="10dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/eerie_black"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_content"
+                    app:layout_constraintTop_toTopOf="@id/iv_content" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/suite_extra_bold_18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="타이타닉 좋아요"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="잊혀진 영웅들" />
+
+
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_google_logo"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_profile"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_profile"
+                    app:layout_constraintTop_toTopOf="@+id/tv_profile" />
+
+                <TextView
+                    android:id="@+id/tv_profile"
+                    style="@style/suite_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="타이타닉호택"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_title" />
+
+                <ImageView
+                    android:id="@+id/iv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/test_feed"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_upload_date" />
+
+                <ImageView
+                    android:id="@+id/iv_emotion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_selected_excited"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_content" />
+
+                <TextView
+                    android:id="@+id/tv_emotion"
+                    style="@style/suite_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="63"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+                    app:layout_constraintStart_toEndOf="@id/iv_emotion"
+                    app:layout_constraintTop_toTopOf="@id/iv_emotion" />
+
+                <ImageView
+                    android:id="@+id/iv_report"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:src="@drawable/ic_report"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_emotion" />
+
+                <TextView
+                    android:id="@+id/tv_upload_date"
+                    style="@style/suite_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="07/02 20:12"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintBottom_toTopOf="@id/iv_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile" />
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    style="@style/suite_regular_14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:padding="8dp"
+                    android:text="배우분들~ 배우분들~ 춤선이 하나하나가 정말 세련되었다. 우리의 아픈 역사를 이배우분들~ 춤선이 하나하나가 정말 세련되었다. 우리의 아픈 역사를 이배우분들~ 춤선이 하나하나가 정말 세련되었다. 우리의 아픈 역사를 이춤선이 하나하나가 정말 세련되었다. 우리의 아픈 역사를 이"
+                    android:textColor="@android:color/darker_gray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_emotion" />
+
+                <ImageView
+                    android:id="@+id/iv_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/ic_comment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_content" />
+
+                <TextView
+                    android:id="@+id/tv_comment_cnt"
+                    style="@style/suite_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="50"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_comment"
+                    app:layout_constraintStart_toEndOf="@id/iv_comment"
+                    app:layout_constraintTop_toTopOf="@id/iv_comment" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toTopOf="@id/cl_comment"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_comment" />
@@ -25,7 +177,7 @@
             android:id="@+id/cl_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_gravity="bottom">
 
             <View
                 android:id="@+id/v_comment"
@@ -66,5 +218,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

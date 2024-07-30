@@ -1,10 +1,14 @@
 package com.colorpl.di
 
+import com.data.datasource.CommentDataSource
+import com.data.datasource.FeedDataSource
 import com.data.datasource.local.TokenDataSource
 import com.data.datasource.local.TokenDataSourceImpl
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
 import com.data.datasource.remote.TmapRouteDataSource
+import com.data.datasourceimpl.CommentDataSourceImpl
+import com.data.datasourceimpl.FeedDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
@@ -20,7 +24,7 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun provideLocalDataSource(
+    fun provideTokenDataSource(
         tokenDataSourceImpl: TokenDataSourceImpl
     ): TokenDataSource
 
@@ -42,5 +46,17 @@ interface DataSourceModule {
     fun provideOpenAiDataSource(
         openAiDataSourceImpl: OpenAiDataSourceImpl
     ): OpenAiDataSource
+
+    @Singleton
+    @Binds
+    fun provideFeedDataSource(
+        feedDataSourceImpl: FeedDataSourceImpl
+    ): FeedDataSource
+
+    @Singleton
+    @Binds
+    fun provideCommentDataSource(
+        commentDataSourceImpl: CommentDataSourceImpl
+    ): CommentDataSource
 
 }
