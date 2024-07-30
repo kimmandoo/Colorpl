@@ -1,6 +1,7 @@
 package com.presentation.util
 
 import android.content.Context
+import android.view.View
 import com.colorpl.presentation.R
 import com.presentation.component.custom.DropDownData
 
@@ -151,4 +152,20 @@ enum class DropDownMenu(private val value: Int, private val resourceId: Int) {
 
     }
 
+}
+
+/**
+ * 상단 버튼들 표시 여부 상태 타입.
+ *
+ * @property back 뒤로가기 버튼 활성화 유무.
+ * @property exit 나가기 버튼 활성화 유무.
+ */
+enum class TopButtonsStatus(private val back: Int, private val exit: Int) {
+    BOTH(View.VISIBLE, View.VISIBLE),
+    BACK(View.VISIBLE, View.INVISIBLE),
+    EXIT(View.INVISIBLE, View.VISIBLE),
+    NONE(View.INVISIBLE, View.INVISIBLE);
+
+    fun getBackVisibility() = back
+    fun getExitVisibility() = exit
 }
