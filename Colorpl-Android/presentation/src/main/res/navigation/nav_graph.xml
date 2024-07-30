@@ -47,7 +47,8 @@
     <dialog
         android:id="@+id/fragment_feed_detail"
         android:name="com.presentation.feed.FeedDetailFragment"
-        android:label="FeedDetailFragment" />
+        android:label="FeedDetailFragment"
+        tools:layout="@layout/fragment_feed_detail" />
 
     <!-- Ticket -->
     <fragment
@@ -58,7 +59,8 @@
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
-        android:label="TicketFragment">
+        android:label="TicketFragment"
+        tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail" />
@@ -137,46 +139,7 @@
         android:name="com.presentation.my_page.SettingFragment"
         tools:layout="@layout/fragment_setting" />
 
-    <navigation
-        android:id="@+id/nav_ticket_graph"
-        app:startDestination="@id/fragment_ticket_create">
-        <argument
-            android:name="photoType"
-            app:argType="com.presentation.util.TicketType" />
-        <fragment
-            android:id="@+id/fragment_ticket_create"
-            android:name="com.presentation.ticket.TicketCreateFragment"
-            android:label="TicketCreateFragment">
-            <argument
-                android:name="photoType"
-                app:argType="com.presentation.util.TicketType" />
-            <action
-                android:id="@+id/action_fragment_ticket_create_to_fragment_ticket_finish"
-                app:destination="@id/fragment_ticket_finish">
-                <argument
-                    android:name="imageUrl"
-                    app:argType="android.net.Uri"
-                    app:nullable="true" />
-            </action>
-
-        </fragment>
-        <fragment
-            android:id="@+id/fragment_ticket_finish"
-            android:name="com.presentation.ticket.TicketFinishFragment"
-            android:label="TicketFinishFragment">
-            <argument
-                android:name="imageUrl"
-                app:argType="android.net.Uri"
-                app:nullable="true" />
-            <action
-                android:id="@+id/action_fragment_ticket_finish_to_fragment_schedule"
-                app:destination="@id/fragment_schedule"
-                app:enterAnim="@anim/anim_slide_in_right"
-                app:popEnterAnim="@anim/anim_slide_in_right"
-                app:popUpTo="@id/fragment_schedule"
-                app:popUpToInclusive="true" />
-        </fragment>
-    </navigation>
+    <include app:graph="@navigation/nav_ticket_graph" />
 
     <include app:graph="@navigation/nav_sign_graph" />
 
