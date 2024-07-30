@@ -3,7 +3,6 @@ package com.colorpl.di
 import com.data.datasource.NotificationDataSource
 import com.data.datasource.OpenAiDataSource
 import com.data.datasource.TmapRouteDataSource
-import com.data.datasourceimpl.FeedPagingDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
