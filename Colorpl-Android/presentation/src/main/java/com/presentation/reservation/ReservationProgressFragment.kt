@@ -21,22 +21,27 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
         // ViewPager 설정
         val viewPager = binding.vpScreen
         viewPager.adapter = ViewPagerAdapter(this)
+        viewPager.isUserInputEnabled = false
 
         // WormDotsIndicator와 ViewPager 연결
         val wormDotsIndicator = binding.wdiProgress
         wormDotsIndicator.setViewPager2(viewPager)
+        wormDotsIndicator.type
+        wormDotsIndicator.dotsClickable = false
+
     }
 
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int {
-            return 3 // 페이지 수 (예: 3개의 페이지)
+            return 4
         }
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> ReservationFragment()
                 1 -> ReservationFragment()
-                2 -> ReservationFragment()
+                2 -> ReservationInfoFragment()
+                3 -> ReservationCompleteFragment()
                 else -> throw IllegalStateException("Unexpected position $position")
             }
         }

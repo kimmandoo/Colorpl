@@ -90,6 +90,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="suite_semibold_12">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
     <!-- Suite Regular-->
     <style name="suite_regular_15">
