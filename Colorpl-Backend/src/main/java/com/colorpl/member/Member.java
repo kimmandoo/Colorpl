@@ -1,18 +1,24 @@
 package com.colorpl.member;
 
 import com.colorpl.global.common.BaseEntity;
+import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
-import com.colorpl.schedule.domain.Schedule;
 import jakarta.persistence.*;
+
+import java.util.Collection;
 import java.util.List;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity{
 
     @Id
     @Column(name = "MEMBER_ID")
@@ -27,8 +33,8 @@ public class Member extends BaseEntity {
 
     private String password;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Schedule> schedules;
+    @Enumerated(EnumType.STRING)
+    private MemberType type;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
@@ -50,4 +56,28 @@ public class Member extends BaseEntity {
         reservation.updateMember(null);
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public static Member toMember(MemberDTO memberDTO, PasswordEncoder encoder) {
+        return Member.builder()
+            .email(memberDTO.getEmail())
+            .password(encoder.encode(memberDTO.getPassword()))
+            .nickname(memberDTO.getNickname())
+            .type(MemberType.USER)  // 기본 값으로 USER 설정
+            .build();
+    }
+
+    public void updateMember(Member member, PasswordEncoder encoder) {
+        this.email = member.getEmail();
+        this.password = encoder.encode(member.getPassword());
+        this.nickname = member.getNickname();
+        this.type = member.getType();
+    }
+
+
+    public String getUsername() {
+        return email;
+    }
 }
