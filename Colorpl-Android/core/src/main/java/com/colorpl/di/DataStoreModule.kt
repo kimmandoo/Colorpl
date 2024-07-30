@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.colorpl.BuildConfig
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -16,11 +17,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface DataStoreModule {
+object DataStoreModule {
 
     @Singleton
-    @Binds
-    private fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
             context.preferencesDataStoreFile(BuildConfig.DATASTORE_NAME)
         }

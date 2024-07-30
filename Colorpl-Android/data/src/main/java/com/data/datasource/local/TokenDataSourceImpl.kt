@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
-class LocalDataSourceImpl @Inject constructor(
+class TokenDataSourceImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
-) : LocalDataSource {
+) : TokenDataSource {
 
 
     override suspend fun getAccessToken(): String = dataStore.data.map { prefs ->

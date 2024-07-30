@@ -1,7 +1,7 @@
 package com.colorpl.di
 
-import com.data.datasource.local.LocalDataSource
-import com.data.datasource.local.LocalDataSourceImpl
+import com.data.datasource.local.TokenDataSource
+import com.data.datasource.local.TokenDataSourceImpl
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
 import com.data.datasource.remote.TmapRouteDataSource
@@ -21,8 +21,8 @@ interface DataSourceModule {
     @Singleton
     @Binds
     fun provideLocalDataSource(
-        localDataSourceImpl: LocalDataSourceImpl
-    ): LocalDataSource
+        tokenDataSourceImpl: TokenDataSourceImpl
+    ): TokenDataSource
 
 
     @Singleton
