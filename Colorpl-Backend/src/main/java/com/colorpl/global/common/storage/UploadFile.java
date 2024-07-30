@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class UploadFile {
 
-    private String uploadFileName;
-    private String storeFileName;
+    private String uploadFilename;
+    private String storeFilename;
 }

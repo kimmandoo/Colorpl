@@ -36,6 +36,6 @@ public class Ticket {
     @Column(name = "TICKET_THEATER")
     private String theater;
 
-    @Column(name = "TICKET_IMAGE_PATH")
-    private String imagePath;
+    @Column(name = "TICKET_FILENAME")
+    private String filename;
 }
