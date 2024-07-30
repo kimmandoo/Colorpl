@@ -54,7 +54,22 @@
         android:id="@+id/fragment_reservation"
         android:name="com.presentation.reservation.ReservationFragment"
         android:label="ReservationFragment"
-        tools:layout="@layout/fragment_reservation" />
+        tools:layout="@layout/fragment_reservation" >
+        <action
+            android:id="@+id/action_fragment_reservation_to_fragment_reservation_detail"
+            app:destination="@+id/fragment_reservation_detail"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reservation_detail"
+        android:name="com.presentation.reservation.ReservationDetailFragment"
+        tools:layout="@layout/fragment_reservation_detail">
+        <argument
+            android:name="reservationDetail"
+            app:argType="com.domain.model.ReservationInfo" />
+    </fragment>
+
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
