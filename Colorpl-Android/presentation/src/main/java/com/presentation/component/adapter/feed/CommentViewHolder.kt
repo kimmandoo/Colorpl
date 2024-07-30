@@ -10,6 +10,9 @@ class CommentViewHolder(
     private val onDeleteClickListener: () -> Unit
 ) : ViewHolder(binding.root) {
     fun bind(data: Comment) {
-
+        binding.apply {
+            tvContent.text = data.content
+            tvName.text = data.name
+        }
     }
 }

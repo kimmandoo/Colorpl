@@ -1,15 +1,20 @@
 package com.colorpl.di
 
+import com.data.api.FeedApi
+import com.data.datasourceimpl.CommentPagingDataSourceImpl
+import com.data.repository.CommentRepository
 import com.data.repository.FeedRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
 import com.data.repository.TmapRouteRepository
+import com.data.repositoryimpl.CommentRepositoryImpl
 import com.data.repositoryimpl.FeedRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -42,4 +47,10 @@ interface RepositoryModule {
     fun provideFeedPagingRepository(
         feedPagingRepositoryImpl: FeedRepositoryImpl
     ): FeedRepository
+
+    @Singleton
+    @Binds
+    fun provideCommentPagingRepository(
+        commentPagingRepositoryImpl: CommentRepositoryImpl
+    ): CommentRepository
 }

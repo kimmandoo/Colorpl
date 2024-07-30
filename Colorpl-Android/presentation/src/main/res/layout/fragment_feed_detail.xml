@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/eerie_black"
                 android:paddingBottom="10dp"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <View
                     android:layout_width="match_parent"
@@ -163,7 +163,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_feed_detail"
+            android:id="@+id/rv_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="60dp"
