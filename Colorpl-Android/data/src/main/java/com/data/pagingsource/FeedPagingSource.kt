@@ -1,33 +1,29 @@
-package com.data.datasourceimpl
+package com.data.pagingsource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.data.api.FeedApi
 import com.data.api.safeApiCall
-import com.data.model.paging.Comment
+import com.data.datasource.FeedDataSource
+import com.data.model.paging.Feed
 import com.data.util.ApiResult
 import timber.log.Timber
 
-class CommentPagingDataSourceImpl private constructor(
-    private val api: FeedApi,
-    private val feedId: Int
-) :
-    PagingSource<Int, Comment>() {
-    override fun getRefreshKey(state: PagingState<Int, Comment>): Int? {
+class FeedPagingSource(private val feedDataSource: FeedDataSource) :
+    PagingSource<Int, Feed>() {
+    override fun getRefreshKey(state: PagingState<Int, Feed>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Feed> {
         val nextPage = params.key ?: 1
 
-        return when (val result =
-            safeApiCall { api.getCommentData(feedId, nextPage, params.loadSize) }) {
+        return when (val result = safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
-                Timber.tag("pager").d("${response.items.firstOrNull()?.commentId}")
+                Timber.tag("pager").d("${response.items.firstOrNull()?.feedId}")
 
                 LoadResult.Page(
                     data = response.items,
@@ -40,12 +36,6 @@ class CommentPagingDataSourceImpl private constructor(
                 Timber.e(result.exception, "Error loading feed data for page $nextPage")
                 LoadResult.Error(result.exception)
             }
-        }
-    }
-
-    companion object {
-        fun create(api: FeedApi, feedId: Int): CommentPagingDataSourceImpl {
-            return CommentPagingDataSourceImpl(api, feedId)
         }
     }
 }
