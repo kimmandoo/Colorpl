@@ -1,6 +1,7 @@
 package com.colorpl.global.config;
 
 import com.colorpl.member.MemberRefreshToken;
+import com.colorpl.member.repository.BlackListRepository;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ public class TokenProvider {
     private final String issuer;
     private final long reissueLimit;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
+    private final BlackListRepository blackListRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public TokenProvider(
@@ -40,13 +42,15 @@ public class TokenProvider {
             @Value("${jwt.expiration-minutes}") long expirationMinutes,
             @Value("${refresh-expiration-hours}") long refreshExpirationHours,	// 추가
             @Value("${jwt.issuer}") String issuer,
-            MemberRefreshTokenRepository memberRefreshTokenRepository
+            MemberRefreshTokenRepository memberRefreshTokenRepository,
+            BlackListRepository blackListRepository
     ) {
         this.secretKey = secretKey;
         this.expirationMinutes = expirationMinutes;
         this.refreshExpirationHours = refreshExpirationHours;	//추가
         this.issuer = issuer;
         this.memberRefreshTokenRepository = memberRefreshTokenRepository;	// 추가
+        this.blackListRepository = blackListRepository;
         reissueLimit = refreshExpirationHours * 60 / expirationMinutes;
     }
 
@@ -111,6 +115,10 @@ public class TokenProvider {
     @Transactional(readOnly = true)
     public void validateRefreshToken(String refreshToken, String oldAccessToken) throws JsonProcessingException {
         // refreshToken의 유효성을 검사
+
+        if (blackListRepository.existsByInvalidRefreshToken(refreshToken)) {
+            throw new ExpiredJwtException(null, null, "Refresh token is blacklisted.");
+        }
         validateAndParseToken(refreshToken);
 
         // oldAccessToken에서 memberId 추출
@@ -124,7 +132,7 @@ public class TokenProvider {
     }
 
 
-    private Jws<Claims> validateAndParseToken(String token) {	// validateTokenAndGetSubject에서 따로 분리
+    public Jws<Claims> validateAndParseToken(String token) {	// validateTokenAndGetSubject에서 따로 분리
         return Jwts.parserBuilder()
             .setSigningKey(secretKey.getBytes())
             .build()
