@@ -3,8 +3,7 @@ package com.data.repositoryimpl
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.data.datasourceimpl.CommentPagingDataSourceFactory
-import com.data.datasourceimpl.CommentPagingDataSourceImpl
+import com.data.factory.CommentPagingDataSourceFactory
 import com.data.model.paging.Comment
 import com.data.repository.CommentRepository
 import kotlinx.coroutines.flow.Flow

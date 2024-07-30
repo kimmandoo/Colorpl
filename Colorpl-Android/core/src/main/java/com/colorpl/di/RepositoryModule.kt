@@ -1,7 +1,5 @@
 package com.colorpl.di
 
-import com.data.api.FeedApi
-import com.data.datasourceimpl.CommentPagingDataSourceImpl
 import com.data.repository.CommentRepository
 import com.data.repository.FeedRepository
 import com.data.repository.NotificationRepository
@@ -14,7 +12,6 @@ import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton

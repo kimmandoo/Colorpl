@@ -1,17 +1,13 @@
 package com.colorpl.di
 
-import com.data.api.FeedApi
 import com.data.datasource.NotificationDataSource
 import com.data.datasource.OpenAiDataSource
 import com.data.datasource.TmapRouteDataSource
-import com.data.datasourceimpl.CommentPagingDataSourceFactory
-import com.data.datasourceimpl.FeedPagingDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton

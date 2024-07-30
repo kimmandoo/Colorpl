@@ -1,7 +1,7 @@
 package com.colorpl.di
 
 import com.data.api.FeedApi
-import com.data.datasourceimpl.CommentPagingDataSourceFactory
+import com.data.factory.CommentPagingDataSourceFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

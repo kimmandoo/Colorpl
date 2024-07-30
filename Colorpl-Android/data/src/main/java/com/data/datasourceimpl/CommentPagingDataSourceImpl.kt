@@ -7,7 +7,6 @@ import com.data.api.safeApiCall
 import com.data.model.paging.Comment
 import com.data.util.ApiResult
 import timber.log.Timber
-import javax.inject.Inject
 
 class CommentPagingDataSourceImpl private constructor(
     private val api: FeedApi,
