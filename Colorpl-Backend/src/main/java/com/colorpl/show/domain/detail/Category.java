@@ -1,20 +1,36 @@
 package com.colorpl.show.domain.detail;
 
-public enum Category {
-    PLAY, DANCE, PUBLIC_DANCE, WESTERN_MUSIC, KOREAN_MUSIC, POPULAR_MUSIC, COMPLEX, CIRCUS_MAGIC, MUSICAL;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-    public static Category fromString(String category) {
-        return switch (category) {
-            case "연극" -> PLAY;
-            case "무용(서양/한국무용)" -> DANCE;
-            case "대중무용" -> PUBLIC_DANCE;
-            case "서양음악(클래식)" -> WESTERN_MUSIC;
-            case "한국음악(국악)" -> KOREAN_MUSIC;
-            case "대중음악" -> POPULAR_MUSIC;
-            case "복합" -> COMPLEX;
-            case "서커스/마술" -> CIRCUS_MAGIC;
-            case "뮤지컬" -> MUSICAL;
-            default -> throw new IllegalArgumentException(category);
-        };
+public enum Category {
+    PLAY("연극"),
+    DANCE("무용(서양/한국무용)"),
+    PUBLIC_DANCE("대중무용"),
+    WESTERN_MUSIC("서양음악(클래식)"),
+    KOREAN_MUSIC("한국음악(국악)"),
+    POPULAR_MUSIC("대중음악"),
+    COMPLEX("복합"),
+    CIRCUS_MAGIC("서커스/마술"),
+    MUSICAL("뮤지컬");
+
+    private final String name;
+
+    Category(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    private static final Map<String, Category> stringToEnum = Stream.of(values()).collect(
+        Collectors.toMap(Category::toString, e -> e));
+
+    public static Optional<Category> fromString(String name) {
+        return Optional.ofNullable(stringToEnum.get(name));
     }
 }

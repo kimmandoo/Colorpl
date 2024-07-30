@@ -19,15 +19,15 @@ public class CreateUnformattedTicketService {
     private final StorageService storageService;
     private final TicketRepository ticketRepository;
 
-    public Ticket create(CreateUnformattedTicketRequest request, MultipartFile attachFile) {
+    public Long create(CreateUnformattedTicketRequest request, MultipartFile attachFile) {
         UploadFile uploadFile = storageService.storeFile(attachFile);
         Ticket ticket = Ticket.builder()
-            .category(Category.fromString(request.getCategory()))
+            .category(Category.fromString(request.getCategory()).orElseThrow())
             .name(request.getName())
             .dateTime(LocalDateTime.parse(request.getDateTime()))
             .theater(request.getTheater())
-            .filename(uploadFile.getUploadFilename())
+            .filename(uploadFile.getStoreFilename())
             .build();
-        return ticketRepository.save(ticket);
+        return ticketRepository.save(ticket).getId();
     }
 }

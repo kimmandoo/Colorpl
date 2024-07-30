@@ -8,10 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class CreateUnformattedTicketRequest {
+public class FindTicketDetailResponse {
 
     private String category;
     private String name;
     private String dateTime;
     private String theater;
+    private String filepath;
 }
