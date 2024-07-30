@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="신과함께 : 죄와벌" />
+            app:title="@{reservationInfo.title}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nsv_content"
@@ -34,12 +34,13 @@
                 android:id="@+id/cl_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingBottom="40dp"
                 android:background="@color/eerie_black"
                 >
                 <ImageView
                     android:id="@+id/iv_image"
                     android:layout_width="match_parent"
-                    android:layout_height="500dp"
+                    android:layout_height="600dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/test_reservation_info"
                     app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +140,34 @@
                     android:background="#80D3D3D3"
                     app:layout_constraintTop_toBottomOf="@id/tv_cast_info" />
                 <TextView
+                    android:id="@+id/tv_runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_runtime"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_4" />
+                <TextView
+                    android:id="@+id/tv_runtime_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="2시간 00분"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime"
+                    tools:text="2시간 00분"
+                    />
+
+                <View
+                    android:id="@+id/v_line_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime_info" />
+                <TextView
                     android:id="@+id/tv_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,22 +175,22 @@
                     android:text="@string/reservation_detail_content"
                     style="@style/suite_regular_16"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintTop_toBottomOf="@id/v_line_4" />
+                    app:layout_constraintTop_toBottomOf="@id/v_line_5" />
                 <TextView
                     android:id="@+id/tv_content_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓"
+                    android:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓 상처를 치료해줄 사람 어디 없나 가만히 놔두다간 끊임없이 덧나"
                     style="@style/suite_semibold_14"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_content"
-                    tools:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓"
+                    tools:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓 상처를 치료해줄 사람 어디 없나 가만히 놔두다간 끊임없이 덧나"
                     />
 
 
                 <View
-                    android:id="@+id/v_line_5"
+                    android:id="@+id/v_line_6"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
@@ -175,7 +204,7 @@
                     android:text="@string/reservation_detail_price_by_seat"
                     style="@style/suite_regular_16"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintTop_toBottomOf="@id/v_line_5" />
+                    app:layout_constraintTop_toBottomOf="@id/v_line_6" />
                 <TextView
                     android:id="@+id/tv_price_by_seat_info_s"
                     android:layout_width="match_parent"
@@ -212,8 +241,6 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_r"
                     tools:text="A석 : 14,000원"
                     />
-
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

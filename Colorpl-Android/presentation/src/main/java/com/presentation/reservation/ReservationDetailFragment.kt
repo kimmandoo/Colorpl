@@ -1,13 +1,26 @@
 package com.presentation.reservation
 
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
 import com.presentation.base.BaseFragment
 
 class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>(R.layout.fragment_reservation_detail) {
-    override fun initView() {
+    private val args: ReservationDetailFragmentArgs by navArgs()
 
+    override fun initView() {
+        initClickEvent()
+        initUi()
     }
 
+    private fun initUi() {
+        binding.reservationInfo = args.reservationDetail
+    }
+
+    private fun initClickEvent() {
+        binding.includeTopCenter.ivBack.setOnClickListener {
+            navigatePopBackStack()
+        }
+    }
 }

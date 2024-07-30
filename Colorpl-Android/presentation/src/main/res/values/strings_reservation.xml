@@ -4,6 +4,7 @@
     <string name="reservation_detail_category">카테고리</string>
     <string name="reservation_detail_genre">장르</string>
     <string name="reservation_detail_cast">출연</string>
+    <string name="reservation_detail_runtime">러닝타임</string>
     <string name="reservation_detail_content">내용</string>
     <string name="reservation_detail_price_by_seat">좌석별 가격</string>
     <string name="reservation_detail_next">예매하기</string>

@@ -2,6 +2,7 @@ package com.presentation.reservation
 
 import android.view.View
 import android.widget.Toast
+import androidx.navigation.Navigation
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
 import com.domain.model.FilterItem
@@ -38,7 +39,9 @@ class ReservationFragment :
 
     private val reservationInfoAdapter by lazy {
         ReservationInfoAdapter(
-            onClickListener = { onClickListener() },
+            onClickListener = { reservationInfo ->
+                onClickListener(reservationInfo)
+            },
         )
     }
 
@@ -67,10 +70,10 @@ class ReservationFragment :
                 ReservationInfo(
                     reservationInfoId = 1230,
                     contentImg = null,
-                    title = "신과함께 : 리움차콜",
+                    title = "님과함께 : 테스트",
                     category = "사극",
-                    runtime = "2시간 00분",
-                    price = "12,000원~"
+                    runtime = "3시간 00분",
+                    price = "13,000"
                 )
             )
         }
@@ -100,9 +103,10 @@ class ReservationFragment :
         filterAdapter.submitList(updatedList)
     }
 
-    private fun onClickListener() {
-        Toast.makeText(binding.root.context, "힝힝힝", Toast.LENGTH_SHORT).show()
-        navigateDestination(R.id.action_fragment_reservation_to_fragment_reservation_detail)
+    private fun onClickListener(data: ReservationInfo) {
+        val action =
+            ReservationFragmentDirections.actionFragmentReservationToFragmentReservationDetail(data)
+        Navigation.findNavController(binding.root).navigate(action)
     }
 
     /** 날짜 선택 캘린더 Dialog */
@@ -110,8 +114,12 @@ class ReservationFragment :
         Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
         val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
             // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-            Toast.makeText(binding.root.context, "년: $year, 월: ${month+1}, 일: $day", Toast.LENGTH_SHORT).show()
-            binding.tvSelectDate.text = "$year.${month+1}.$day"
+            Toast.makeText(
+                binding.root.context,
+                "년: $year, 월: ${month + 1}, 일: $day",
+                Toast.LENGTH_SHORT
+            ).show()
+            binding.tvSelectDate.text = "$year.${month + 1}.$day"
         }
         dateRangePickerDialog.show()
     }
@@ -120,9 +128,10 @@ class ReservationFragment :
     private fun showLocationPickerDialog() {
         Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
         val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
-        val locationPickerDialog = LocationPickerDialog(requireContext(), locationList) { selectedCity ->
-            binding.tvSelectLocation.text = selectedCity
-        }
+        val locationPickerDialog =
+            LocationPickerDialog(requireContext(), locationList) { selectedCity ->
+                binding.tvSelectLocation.text = selectedCity
+            }
         locationPickerDialog.show()
     }
 
