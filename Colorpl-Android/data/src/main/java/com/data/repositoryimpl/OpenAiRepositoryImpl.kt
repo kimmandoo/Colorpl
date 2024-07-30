@@ -1,7 +1,7 @@
 package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
-import com.data.datasource.OpenAiDataSource
+import com.data.datasource.remote.OpenAiDataSource
 import com.data.model.request.Content
 import com.data.model.request.ImageUrl
 import com.data.model.request.Message
