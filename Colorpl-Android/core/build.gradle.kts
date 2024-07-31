@@ -110,5 +110,4 @@ dependencies {
     // DataStore
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
-
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="reservation">예매하기</string>
+
     <!-- 예매 시작-->
     <string name="reservation_detail_category">카테고리</string>
     <string name="reservation_detail_genre">장르</string>
@@ -8,7 +10,10 @@
     <string name="reservation_detail_content">내용</string>
     <string name="reservation_detail_price_by_seat">좌석별 가격</string>
     <string name="reservation_detail_next">예매하기</string>
-    
+
+    <string name="reservation_time_table_value">극장 및 시간 선택 (1/4)</string>
+
+    <string name="reservation_seat_value">좌석 선택 (2/4)</string>
 
     <string name="reservation_info_value">결제하기 (3/4)</string>
     <string name="reservation_info">예매정보</string>
@@ -31,4 +36,6 @@
     <string name="reservation_pay_date">결제일시</string>
     <string name="reservation_pay_value">결제금액</string>
     <string name="reservation_complete">완료</string>
+    <string name="reservation_seat_cnt">x%d</string>
+    <string name="reservation_seat_price">%d원</string>
 </resources>

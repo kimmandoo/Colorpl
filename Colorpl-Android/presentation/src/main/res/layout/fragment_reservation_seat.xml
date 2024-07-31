@@ -1,0 +1,142 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.reservation.ReservationSeatFragment">
+
+        <TextView
+            android:id="@+id/tv_reservation_seat_value"
+            style="@style/suite_bold_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/reservation_seat_value"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/reservation_seat_value" />
+
+        <HorizontalScrollView
+            android:id="@+id/hs_seat"
+            android:layout_width="match_parent"
+            android:layout_height="480dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reservation_seat_value">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_theater"
+                    style="@style/suite_bold_20"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/rectangle_timber_wolf_10"
+                    android:gravity="center"
+                    android:text="SCREEN"
+                    android:textColor="@color/eerie_black" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_seats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    tools:listitem="@layout/item_seat" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_next">
+
+            <include
+                android:id="@+id/tv_grade_r"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                layout="@layout/include_seat_grade"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/tv_grade_s"
+                layout="@layout/include_seat_grade"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_grade_r"
+                app:layout_constraintStart_toEndOf="@id/tv_grade_r"
+                app:layout_constraintTop_toTopOf="@id/tv_grade_r" />
+
+            <include
+                android:id="@+id/tv_grade_a"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                layout="@layout/include_seat_grade"
+                app:layout_constraintStart_toStartOf="@id/tv_grade_r"
+                app:layout_constraintTop_toBottomOf="@id/tv_grade_r" />
+
+            <include
+                android:id="@+id/tv_grade_b"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                layout="@layout/include_seat_grade"
+                app:layout_constraintBottom_toBottomOf="@id/tv_grade_a"
+                app:layout_constraintStart_toEndOf="@id/tv_grade_a"
+                app:layout_constraintTop_toTopOf="@id/tv_grade_a" />
+
+            <TextView
+                android:id="@+id/tv_person_change"
+                style="@style/suite_extra_bold_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle_eerie_black_5_stoke_2_white"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="인원 변경"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                style="@style/suite_extra_bold_20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="28000원"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_person_change" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/tv_next"
+            style="@style/suite_semibold_20"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/selector_timber_wolf_to_imperial_red"
+            android:gravity="center"
+            android:text="선택"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

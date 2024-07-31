@@ -25,5 +25,8 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
         binding.includeTopCenter.ivBack.setOnClickListener {
             navigatePopBackStack()
         }
+        binding.tvReservationNext.setOnClickListener {
+            navigateDestination(R.id.action_fragment_reservation_detail_to_fragment_reservation_progress)
+        }
     }
 }

@@ -50,7 +50,7 @@
         android:label="FeedDetailFragment"
         tools:layout="@layout/fragment_feed_detail" />
 
-    <!-- Ticket -->
+    <!-- Reservation -->
     <fragment
         android:id="@+id/fragment_reservation"
         android:name="com.presentation.reservation.ReservationFragment"
@@ -69,8 +69,19 @@
         <argument
             android:name="reservationDetail"
             app:argType="com.domain.model.ReservationInfo" />
+        <action
+            android:id="@+id/action_fragment_reservation_detail_to_fragment_reservation_progress"
+            app:destination="@id/fragment_reservation_progress" />
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_reservation_progress"
+        android:name="com.presentation.reservation.ReservationProgressFragment"
+        tools:layout="@layout/fragment_reservation_progress">
+
+    </fragment>
+
+    <!-- Ticket -->
     <dialog
         android:id="@+id/fragment_ticket"
         android:name="com.presentation.ticket.TicketFragment"
