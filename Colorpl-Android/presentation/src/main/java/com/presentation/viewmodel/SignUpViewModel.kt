@@ -2,22 +2,26 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.presentation.component.custom.ListStateFlow
+import com.presentation.util.Category
 import com.presentation.util.Sign
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
 
 ) : ViewModel() {
-
 
 
     private val _typeEvent = MutableSharedFlow<Sign>()
@@ -56,11 +60,17 @@ class SignUpViewModel @Inject constructor(
     val nextButton: SharedFlow<Boolean> get() = _nextButton
 
 
+    val userPreference = ListStateFlow<Category>()
+
+    private val _completeButton = MutableSharedFlow<Boolean>(1)
+    val completeButton: SharedFlow<Boolean> get() = _completeButton
+
     init {
         checkSignNext()
+        checkCompleteNext()
     }
 
-    fun checkSignNext() {
+    private fun checkSignNext() {
         combine(
             _userEmail,
             _userNickName,
@@ -73,10 +83,23 @@ class SignUpViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun clearData(){
+    private fun checkCompleteNext() {
+        viewModelScope.launch {
+            userPreference.items.collectLatest{ item ->
+                Timber.d("체크 아이템 확인 $item")
+                _completeButton.emit(item.isNotEmpty())
+            }
+        }
+    }
+
+
+    fun clearData() {
+        Timber.d("삭제가 왜 호출됨")
         setUserImage("")
         setUserEmail("")
         setUserNickName("")
+        setPassWord("")
+        userPreference.clear()
     }
 
 }
