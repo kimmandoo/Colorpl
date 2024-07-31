@@ -7,6 +7,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationProgressBinding
 import com.presentation.base.BaseFragment
 import com.presentation.util.TopButtonsStatus
+import com.presentation.util.ViewPagerManager
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +30,8 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
         wormDotsIndicator.type
         wormDotsIndicator.dotsClickable = true
 
+        // ViewPagerManager에 ViewPager 인스턴스 설정
+        ViewPagerManager.setViewPager(viewPager)
     }
 
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
