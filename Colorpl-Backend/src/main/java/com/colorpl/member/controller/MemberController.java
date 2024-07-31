@@ -1,5 +1,8 @@
 package com.colorpl.member.controller;
 
+import com.colorpl.global.common.exception.BusinessException;
+import com.colorpl.global.common.exception.EmailNotFoundException;
+import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInRequest;
@@ -10,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,11 +50,42 @@ public class MemberController {
         return ResponseEntity.ok(memberDTO);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer id, @RequestBody MemberDTO memberDTO) {
-        Member updatedMember = memberService.updateMemberInfo(id, memberDTO);
+    @PutMapping("/{memberId}")
+    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
+        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
     }
+    // ID로 멤버 조회
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberDTO> findMemberById(@PathVariable Integer memberId) {
+        try {
+            MemberDTO memberDTO = memberService.findMemberById(memberId);
+            return ResponseEntity.ok(memberDTO);
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    // 이메일로 멤버 조회
+    @GetMapping("/email/{email}")
+    public ResponseEntity<MemberDTO> findMemberByEmail(@PathVariable String email) {
+        try {
+            MemberDTO memberDTO = memberService.findMemberByEmail(email);
+            return ResponseEntity.ok(memberDTO);
+        } catch (EmailNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (BusinessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+
+//    // 나의 리뷰 조회
+//    @GetMapping("/{memberId}/reviews")
+//    public ResponseEntity<List<Review>> getMyReviews(@PathVariable Integer memberId) {
+//        List<Review> reviews = memberService.getMyReviews(memberId);
+//        return new ResponseEntity<>(reviews, HttpStatus.OK);
+//    }
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('USER')")
