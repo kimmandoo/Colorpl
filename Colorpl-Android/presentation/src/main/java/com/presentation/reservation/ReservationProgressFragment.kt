@@ -17,22 +17,31 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
     }
 
     private fun initUi() {
-        binding.type = TopButtonsStatus.BOTH
-
-        // ViewPager 설정
-        val viewPager = binding.vpScreen
-        viewPager.adapter = ViewPagerAdapter(this)
-        viewPager.isUserInputEnabled = false
-
-        // WormDotsIndicator와 ViewPager 연결
-        val wormDotsIndicator = binding.wdiProgress
-        wormDotsIndicator.setViewPager2(viewPager)
-        wormDotsIndicator.type
-        wormDotsIndicator.dotsClickable = true
-
-        // ViewPagerManager에 ViewPager 인스턴스 설정
-        ViewPagerManager.setViewPager(viewPager)
+        initViewPager()
+        initWormDotsIndicator()
+        binding.apply {
+            type = TopButtonsStatus.BOTH
+            // ViewPagerManager에 ViewPager 인스턴스 설정
+            ViewPagerManager.setViewPager(this@apply.vpScreen)
+        }
     }
+
+    /** ViewPager 설정 */
+    private fun initViewPager() {
+        binding.vpScreen.apply {
+            this@apply.adapter = ViewPagerAdapter(this@ReservationProgressFragment)
+            this@apply.isUserInputEnabled = false
+        }
+
+    }
+    /** WormDotsIndicator 설정 */
+    private fun initWormDotsIndicator() {
+        binding.wdiProgress.apply {
+            this@apply.setViewPager2(binding.vpScreen)
+            this@apply.dotsClickable = true // 추후 false 처리.
+        }
+    }
+
 
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int {
