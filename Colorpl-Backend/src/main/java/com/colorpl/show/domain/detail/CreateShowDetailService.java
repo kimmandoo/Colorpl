@@ -7,6 +7,7 @@ import com.colorpl.theater.domain.TheaterRepository;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +26,10 @@ public class CreateShowDetailService {
     public ShowDetail create(Item item) {
         int pos = item.getHall().lastIndexOf('(');
         String hall = item.getHall().substring(pos + 1, item.getHall().length() - 1);
-        Theater theater = theaterRepository.findByApiId(item.getTheaterApiId())
-            .orElse(createTheaterService.create(item.getTheaterApiId()));
+        Optional<Theater> optional = theaterRepository.findByApiId(item.getTheaterApiId());
+        Theater theater = optional.isPresent() ? optional.get()
+            : createTheaterService.create(item.getTheaterApiId());
+
         ShowDetail showDetail = ShowDetail.builder()
             .apiId(item.getShowApiId())
             .name(item.getName())

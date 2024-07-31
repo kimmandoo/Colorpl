@@ -14,7 +14,7 @@ public class FindShowDetailController {
 
     private final ShowDetailRepository showDetailRepository;
 
-    @GetMapping("shows/{id}")
+    @GetMapping("/shows/{id}")
     public ResponseEntity<ShowDetail> findShowDetail(@PathVariable Long id) {
         return ResponseEntity.ok(showDetailRepository.findById(id).orElseThrow());
     }

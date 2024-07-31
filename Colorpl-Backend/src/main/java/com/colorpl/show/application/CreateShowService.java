@@ -27,7 +27,7 @@ public class CreateShowService {
     @Value("${days.to.add}")
     private Long daysToAdd;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 27 17 * * *")
     public void create() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         int page = 1;
