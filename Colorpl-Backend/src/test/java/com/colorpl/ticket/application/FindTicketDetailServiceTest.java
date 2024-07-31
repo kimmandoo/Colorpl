@@ -2,7 +2,6 @@ package com.colorpl.ticket.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.colorpl.ticket.domain.Ticket;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,9 @@ class FindTicketDetailServiceTest {
             "test.jpg",
             "image/jpeg",
             "test".getBytes());
-        Ticket ticket = createUnformattedTicketService.create(request, file);
+        Long ticketId = createUnformattedTicketService.create(request, file);
         FindTicketDetailResponse response = findTicketDetailService.findTicketDetail(
-            ticket.getId());
+            ticketId);
         assertThat(response).isNotNull();
         assertThat(response.getCategory()).isEqualTo("연극");
         assertThat(response.getName()).isEqualTo("test");
