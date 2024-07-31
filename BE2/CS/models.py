@@ -71,3 +71,4 @@ class ManagementLog(Base):
     # 관리자 이메일
     management_reason = Column(String(255), nullable=True)
     managed_at = Column(DateTime, default=func.now())
+    ban_until = Column(DateTime, nullable=True)

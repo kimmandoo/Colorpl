@@ -20,15 +20,15 @@ def read_members(skip: int = 0, limit: int = 100, nickname: Optional[str] = Quer
         raise HTTPException(status_code=404, detail="Users not found")
     return {"data": db_members, "total": total_count}
 
-@router.delete('/members/{member_id}', response_model=schemas.Member)
-def delete_member(member_id: int, delete_reason: str, db: Session = Depends(get_db), current_administrator: Administrator = Depends(super_admin_only)):
-    db_member = crud.manage_member(db, member_id, management_by=current_administrator.email, management_reason=delete_reason)
+@router.put('/members/{member_id}/status', response_model=schemas.Member)
+def update_member_status(member_id: int, is_deleted: bool, management_reason: str, ban_duration: Optional[int] = None, db: Session = Depends(get_db), current_administrator: Administrator = Depends(super_admin_only)):
+    db_member = crud.manage_member(db, member_id, is_deleted=is_deleted, management_by=current_administrator.email, management_reason=management_reason, ban_duration=ban_duration)
     if db_member is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_member
 
 # review
-@router.get('/reciews/{review_id}', response_model=schemas.Review)
+@router.get('/reviews/{review_id}', response_model=schemas.Review)
 def read_review(review_id: int, db: Session = Depends(get_db), current_administrator: Administrator = Depends(chief_or_super_admin)):
     db_review = crud.get_review(db, review_id)
     if db_review is None:

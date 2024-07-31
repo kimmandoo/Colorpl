@@ -83,6 +83,7 @@ class ManagementLogBase(BaseModel):
     # 1. 삭제, 2. 수정
     management_by: str
     management_reason: Optional[str] = None
+    ban_until: Optional[datetime] = None
 
 class ManagementLog(ManagementLogBase):
     id: int

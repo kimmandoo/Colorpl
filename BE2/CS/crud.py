@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import Optional, List, Tuple
+from datetime import datetime, timedelta
 from . import models, schemas
 
 # Members
@@ -12,22 +13,22 @@ def get_members(db: Session, skip: int = 0, limit: int = 100) -> Tuple[List[sche
     total_count = db.query(models.Member).count()
     return [schemas.Member.model_validate(member, from_attributes=True) for member in members], total_count
 
-def manage_member(db: Session, member_id: int, management_by: str, management_reason: str) -> Optional[schemas.Member]:
+def manage_member(db: Session, member_id: int, is_deleted: bool, management_by: str, management_reason: str, ban_duration: Optional[int] = None) -> Optional[schemas.Member]:
     member = db.query(models.Member).filter(models.Member.member_id == member_id).first()
     if member:
-        # 먼저 UserCategory 항목을 삭제합니다.
-        db.query(models.UserCategory).filter(models.UserCategory.member_id == member_id).delete()
+        member.is_deleted = is_deleted
         db.commit()
 
-        db.delete(member)
-        db.commit()
-        
+        action = 1 if is_deleted else 2
+        ban_until = datetime.utcnow() + timedelta(days=ban_duration) if is_deleted and ban_duration else None
+
         log = models.ManagementLog(
             management_category=1,
             member_id=member_id,
-            management_action=1,
+            management_action=action,
             management_by=management_by,
             management_reason=management_reason,
+            ban_until=ban_until,
         )
         db.add(log)
         db.commit()

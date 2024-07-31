@@ -31,6 +31,6 @@ app.include_router(cs_router, prefix="/cs", tags=["cs"])
 async def read_root(request: Request):
     return {"message": "Hello"}
 
-# if __name__ == "__main__":
-#     from fastapi.testclient import TestClient
-#     client = TestClient(app)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=80)

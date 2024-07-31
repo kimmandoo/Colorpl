@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from datetime import datetime, timedelta
 from cs import models
 from cs.database import SessionLocal, engine
 
@@ -7,8 +8,8 @@ models.Base.metadata.create_all(bind=engine)
 
 def create_mock_data(db: Session):
     # 목업 데이터 생성
-    member1 = models.Member(email="user1@example.com", nickname="user1")
-    member2 = models.Member(email="user2@example.com", nickname="user2")
+    member1 = models.Member(email="user1@example.com", nickname="user1", is_deleted=False)
+    member2 = models.Member(email="user2@example.com", nickname="user2", is_deleted=False)
 
     category1 = models.Category(category_name="Category1")
     category2 = models.Category(category_name="Category2")
@@ -53,6 +54,33 @@ def create_mock_data(db: Session):
 
     db.add(user_category1)
     db.add(user_category2)
+
+    db.commit()
+
+    # ManagementLog 데이터를 삽입
+    ban_duration = 7  # 차단 기간을 7일로 설정
+    ban_until = datetime.utcnow() + timedelta(days=ban_duration)
+
+    log1 = models.ManagementLog(
+        management_category=1,
+        member_id=member1.member_id,
+        management_action=1,
+        management_by="admin@example.com",
+        management_reason="Violation of terms",
+        ban_until=ban_until
+    )
+    
+    log2 = models.ManagementLog(
+        management_category=1,
+        member_id=member2.member_id,
+        management_action=1,
+        management_by="admin@example.com",
+        management_reason="Violation of terms",
+        ban_until=ban_until
+    )
+
+    db.add(log1)
+    db.add(log2)
 
     db.commit()
 
