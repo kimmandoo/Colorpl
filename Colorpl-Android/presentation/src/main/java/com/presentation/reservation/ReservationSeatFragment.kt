@@ -3,12 +3,11 @@ package com.presentation.reservation
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.GridLayoutManager
 import com.colorpl.presentation.R
-import com.colorpl.presentation.databinding.DialogSeatPersonBinding
 import com.colorpl.presentation.databinding.FragmentReservationSeatBinding
 import com.domain.model.Seat
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.reservation.SeatAdapter
+import com.presentation.component.dialog.SeatDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +37,7 @@ class ReservationSeatFragment :
                 layoutManager = GridLayoutManager(requireContext(), COL_SIZE)
             }
 
-            binding.tvPersonChange.setOnClickListener {
+            tvPersonChange.setOnClickListener {
                 showPeopleCountBottomSheet()
             }
         }
@@ -48,66 +47,47 @@ class ReservationSeatFragment :
                 this.tvGrade.text = "A"
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_blue_8_stroke_4_blue)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString (R.string.reservation_seat_price, 0)
+                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0)
             }
 
             tvGradeB.apply {
                 this.tvGrade.text = "B"
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_purple_8_stroke_4_purple)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString (R.string.reservation_seat_price, 0)
+                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0)
             }
 
             tvGradeR.apply {
                 this.tvGrade.text = "R"
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_imperial_red_8_stroke_4_imperial_red)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString (R.string.reservation_seat_price, 0)
+                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0)
             }
 
             tvGradeS.apply {
                 this.tvGrade.text = "S"
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_green_8_stroke_4_green)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString (R.string.reservation_seat_price, 0)
+                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0)
             }
         }
 
     }
 
     private fun showPeopleCountBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val bottomSheetBinding = DialogSeatPersonBinding.inflate(layoutInflater)
-
-        bottomSheetDialog.setContentView(bottomSheetBinding.root)
-        bottomSheetDialog.setCancelable(false)
-        bottomSheetBinding.apply {
-            tvCount.text = peopleCount.toString()
-
-            tvDecrease.setOnClickListener {
-                if (peopleCount > 1) {
-                    peopleCount--
-                    tvCount.text = peopleCount.toString()
-                }
-            }
-
-            tvIncrease.setOnClickListener {
-                if (peopleCount < 8) {
-                    peopleCount++
-                    tvCount.text = peopleCount.toString()
-                }
-            }
-            tvConfirmPersonCount.setOnClickListener {
-                // 여기서 좌석 선택에 필요한 데이터 넘기기
-                selectedSeats.clear()
-                seatAdapter.submitList(createSeats(ROW_SIZE, COL_SIZE))
-                findCenterPosition()
-                binding.tvPrice.text = "${selectedSeats.sumOf { it.price }}원"
-                bottomSheetDialog.dismiss()
-            }
+        val dialog = SeatDialog(requireContext()) { cnt ->
+            bottomSheetClickListener(cnt)
         }
+        dialog.show()
+    }
 
-        bottomSheetDialog.show()
+    private fun bottomSheetClickListener(count: Int) {
+        peopleCount = count
+        selectedSeats.clear()
+        seatAdapter.submitList(createSeats(ROW_SIZE, COL_SIZE))
+        findCenterPosition()
+        binding.tvPrice.text =
+            getString(R.string.reservation_seat_price, selectedSeats.sumOf { it.price })
     }
 
     private fun createSeats(rowSize: Int, colSize: Int): List<Seat> {
@@ -148,34 +128,39 @@ class ReservationSeatFragment :
             binding.apply {
                 tvGradeB.apply {
                     gradeCount[1]?.let { b ->
-                        this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt,b)
-                        this.tvGradePrice.text = getString (R.string.reservation_seat_price, b*10000)
+                        this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, b)
+                        this.tvGradePrice.text =
+                            getString(R.string.reservation_seat_price, b * 10000)
                     }
                 }
                 tvGradeA.apply {
                     gradeCount[2]?.let { a ->
                         this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, a)
-                        this.tvGradePrice.text = getString (R.string.reservation_seat_price, a*12000)
+                        this.tvGradePrice.text =
+                            getString(R.string.reservation_seat_price, a * 12000)
                     }
                 }
 
                 tvGradeS.apply {
                     gradeCount[3]?.let { s ->
                         this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, s)
-                        this.tvGradePrice.text = getString (R.string.reservation_seat_price, s*15000)
+                        this.tvGradePrice.text =
+                            getString(R.string.reservation_seat_price, s * 15000)
                     }
                 }
 
                 tvGradeR.apply {
                     gradeCount[4]?.let { r ->
                         this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, r)
-                        this.tvGradePrice.text = getString (R.string.reservation_seat_price, r*20000)
+                        this.tvGradePrice.text =
+                            getString(R.string.reservation_seat_price, r * 20000)
                     }
                 }
 
 
             }
-            binding.tvPrice.text = getString (R.string.reservation_seat_price, selectedSeats.sumOf { it.price })
+            binding.tvPrice.text =
+                getString(R.string.reservation_seat_price, selectedSeats.sumOf { it.price })
 
             updateConfirmState()
         }
