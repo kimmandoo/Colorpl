@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "stylishy62/fastapi-app"
+        DOCKER_IMAGE = "stylishy62/BE2"
         GIT_CREDENTIALS_ID = 'ymj'
         DOCKER_CREDENTIALS_ID = 'admin_docker'
     }

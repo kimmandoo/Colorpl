@@ -2,16 +2,16 @@
 FROM python:3.10.14-slim
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /BE2
 
 # Copy the requirements file into the container at /app
-COPY requirements.txt requirements.txt
+COPY requirements.txt /BE2/requirements.txt
 
 # Install any dependencies specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /BE2/requirements.txt
 
 # Copy the rest of the working directory contents into the container at /app
-COPY . .
+COPY ./BE2 /BE2
 
 # Run tests
 RUN pytest
