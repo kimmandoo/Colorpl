@@ -1,7 +1,7 @@
 package com.data.datasourceimpl
 
 import com.data.api.TmapRouteApi
-import com.data.datasource.TmapRouteDataSource
+import com.data.datasource.remote.TmapRouteDataSource
 import com.data.model.request.RequestTmapRoute
 import com.data.model.response.ResponseTmapRoute
 import javax.inject.Inject

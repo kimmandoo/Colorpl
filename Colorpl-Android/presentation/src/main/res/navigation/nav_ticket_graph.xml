@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/nav_ticket_graph"
+    app:startDestination="@id/fragment_ticket_create"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <argument
+        android:name="photoType"
+        app:argType="com.presentation.util.TicketType" />
+    <fragment
+        android:id="@+id/fragment_ticket_create"
+        android:name="com.presentation.ticket.TicketCreateFragment"
+        tools:layout="@layout/fragment_ticket_create"
+        android:label="TicketCreateFragment">
+        <argument
+            android:name="photoType"
+            app:argType="com.presentation.util.TicketType" />
+        <action
+            android:id="@+id/action_fragment_ticket_create_to_fragment_ticket_finish"
+            app:destination="@id/fragment_ticket_finish">
+            <argument
+                android:name="imageUrl"
+                app:argType="android.net.Uri"
+                app:nullable="true" />
+        </action>
+
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_ticket_finish"
+        android:name="com.presentation.ticket.TicketFinishFragment"
+        tools:layout="@layout/fragment_ticket_finish"
+        android:label="TicketFinishFragment">
+        <argument
+            android:name="imageUrl"
+            app:argType="android.net.Uri"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_fragment_ticket_finish_to_fragment_schedule"
+            app:destination="@id/fragment_schedule"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:popEnterAnim="@anim/anim_slide_in_right"
+            app:popUpTo="@id/fragment_schedule"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

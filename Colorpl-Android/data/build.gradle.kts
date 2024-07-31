@@ -64,4 +64,8 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinxSerialization)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    // DataStore
+    implementation(libs.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences.core)
 }
