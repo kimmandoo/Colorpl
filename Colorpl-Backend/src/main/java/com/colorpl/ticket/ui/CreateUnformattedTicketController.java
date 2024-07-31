@@ -15,11 +15,11 @@ public class CreateUnformattedTicketController {
 
     private final CreateUnformattedTicketService createUnformattedTicketService;
 
-    @PostMapping("tickets")
+    @PostMapping("tickets/unformatted")
     public ResponseEntity<?> create(
         @RequestPart CreateUnformattedTicketRequest request,
         @RequestPart(required = false) MultipartFile file) {
-        Long ticketId = createUnformattedTicketService.create(request, file);
+        Long ticketId = createUnformattedTicketService.create(request, file).getId();
         return ResponseEntity.ok(ticketId);
     }
 }

@@ -1,6 +1,9 @@
 package com.colorpl.show.domain.detail;
 
 import com.colorpl.show.application.ShowDetailApiResponse.Item;
+import com.colorpl.theater.domain.CreateTheaterService;
+import com.colorpl.theater.domain.Theater;
+import com.colorpl.theater.domain.TheaterRepository;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +18,17 @@ import org.springframework.util.StringUtils;
 public class CreateShowDetailService {
 
     private final CreateSeatService createSeatService;
+    private final CreateTheaterService createTheaterService;
     private final ShowDetailRepository showDetailRepository;
+    private final TheaterRepository theaterRepository;
 
     public ShowDetail create(Item item) {
+        int pos = item.getHall().lastIndexOf('(');
+        String hall = item.getHall().substring(pos + 1, item.getHall().length() - 1);
+        Theater theater = theaterRepository.findByApiId(item.getTheaterApiId())
+            .orElse(createTheaterService.create(item.getTheaterApiId()));
         ShowDetail showDetail = ShowDetail.builder()
-            .apiId(item.getApiId())
+            .apiId(item.getShowApiId())
             .name(item.getName())
             .cast(item.getCast())
             .runtime(item.getRuntime())
@@ -27,6 +36,8 @@ public class CreateShowDetailService {
             .posterImagePath(item.getPosterImagePath())
             .area(item.getArea())
             .state(ShowState.from(item.getState()))
+            .theater(theater)
+            .hall(hall)
             .build();
         createSeatService.create(showDetail);
         showDetailRepository.save(showDetail);
