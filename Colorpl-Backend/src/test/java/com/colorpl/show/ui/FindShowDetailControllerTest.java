@@ -25,6 +25,5 @@ class FindShowDetailControllerTest {
         ShowDetail showDetail = createShowDetailService.create(response.getItem());
         ResponseEntity<ShowDetail> detail = findShowDetailController.findShowDetail(
             showDetail.getId());
-        System.out.println(detail.getBody().getHall());
     }
 }
