@@ -2,6 +2,7 @@ package com.presentation.sign
 
 import android.content.Intent
 import android.text.method.PasswordTransformationMethod
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -18,6 +19,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.presentation.MainActivity
 import com.presentation.base.BaseFragment
+import com.presentation.util.Sign
 import com.presentation.util.setPasswordTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -56,9 +58,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun initIncludeView() {
-        binding.includePassword.etContent.apply {
-            transformationMethod = PasswordTransformationMethod.getInstance()
-            imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.apply {
+            with(includePassword.etContent){
+                transformationMethod = PasswordTransformationMethod.getInstance()
+                imeOptions = EditorInfo.IME_ACTION_DONE
+            }
         }
     }
 

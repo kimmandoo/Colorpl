@@ -15,6 +15,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpBinding
 import com.presentation.base.BaseFragment
 import com.presentation.util.Sign
+import com.presentation.util.emailCheck
 import com.presentation.util.getPhotoGallery
 import com.presentation.util.hideKeyboard
 import com.presentation.util.imeOptionsActionCheck
@@ -25,7 +26,6 @@ import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
@@ -66,9 +66,14 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
     }
 
+
+
     private fun observeEditText() { // 텍스트 삽입
         binding.includeId.etContent.addTextChangedListener {
             signUpViewModel.setUserEmail(it.toString())
+            binding.includeId.apply {
+                tvError.isSelected = !it.toString().emailCheck()
+            }
         }
 
         binding.includePassword.etContent.addTextChangedListener {
@@ -96,10 +101,6 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                 binding.apply {
                     type = it
                     when (it) {
-                        Sign.ID -> {
-
-                        }
-
                         Sign.PASSWORD -> {
                             includeId.etContent.clearFocus()
                             includeId.titleVisible = true
@@ -120,6 +121,9 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                             includeNickname.etContent.clearFocus()
                             clProfileImage.visibility = View.VISIBLE
                             requireActivity().hideKeyboard(clProfileImage)
+                        }
+                        else -> {
+
                         }
                     }
                 }

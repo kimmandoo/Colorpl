@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.presentation.component.custom.ListStateFlow
 import com.presentation.util.Category
 import com.presentation.util.Sign
+import com.presentation.util.emailCheck
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -36,6 +37,8 @@ class SignUpViewModel @Inject constructor(
 
 
     private val _userEmail = MutableStateFlow("")
+    val userEmail: StateFlow<String> get() = _userEmail
+
     private val _userNickName = MutableStateFlow("")
     private val _userPassWord = MutableStateFlow("")
     private val _userImage = MutableStateFlow("")
@@ -77,7 +80,7 @@ class SignUpViewModel @Inject constructor(
             _userImage,
             _userPassWord
         ) { email, nickname, image, password ->
-            email.isNotEmpty() && nickname.isNotEmpty() && image.isNotEmpty() && password.isNotEmpty()
+            email.isNotEmpty() && email.emailCheck() && nickname.isNotEmpty() && image.isNotEmpty() && password.isNotEmpty()
         }.onEach { isEnabled ->
             _nextButton.emit(isEnabled)
         }.launchIn(viewModelScope)
@@ -85,7 +88,7 @@ class SignUpViewModel @Inject constructor(
 
     private fun checkCompleteNext() {
         viewModelScope.launch {
-            userPreference.items.collectLatest{ item ->
+            userPreference.items.collectLatest { item ->
                 Timber.d("체크 아이템 확인 $item")
                 _completeButton.emit(item.isNotEmpty())
             }
