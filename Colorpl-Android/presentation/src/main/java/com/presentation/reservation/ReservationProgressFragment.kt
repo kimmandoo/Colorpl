@@ -27,7 +27,7 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
         val wormDotsIndicator = binding.wdiProgress
         wormDotsIndicator.setViewPager2(viewPager)
         wormDotsIndicator.type
-        wormDotsIndicator.dotsClickable = false
+        wormDotsIndicator.dotsClickable = true
 
     }
 
@@ -38,8 +38,8 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> ReservationFragment()
-                1 -> ReservationFragment()
+                0 -> ReservationTimeTableFragment()
+                1 -> ReservationSeatFragment()
                 2 -> ReservationInfoFragment()
                 3 -> ReservationCompleteFragment()
                 else -> throw IllegalStateException("Unexpected position $position")
