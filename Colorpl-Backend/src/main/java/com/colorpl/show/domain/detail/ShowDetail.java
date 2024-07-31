@@ -57,6 +57,9 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_AREA")
     private String area;
 
+    @Column(name = "SHOW_DETAIL_CATEGORY")
+    private Category category;
+
     @Column(name = "SHOW_DETAIL_STATE")
     @Enumerated(EnumType.STRING)
     private ShowState state;

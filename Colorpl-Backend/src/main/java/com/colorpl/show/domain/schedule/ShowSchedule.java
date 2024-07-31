@@ -26,7 +26,7 @@ public class ShowSchedule {
     @Column(name = "SHOW_SCHEDULE_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Long id;
 
     @JoinColumn(name = "SHOW_DETAIL_ID")
     @ManyToOne(fetch = FetchType.LAZY)
