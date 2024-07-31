@@ -15,5 +15,8 @@
     <color name="light_gray">#FFAAAAAA</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="black_fifty">#80000000</color>
+    <color name="purple">#9A10B2</color>
+    <color name="green">#18B20A</color>
+    <color name="blue">#386BF6</color>
 
 </resources>

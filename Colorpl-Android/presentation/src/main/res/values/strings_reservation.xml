@@ -36,4 +36,6 @@
     <string name="reservation_pay_date">결제일시</string>
     <string name="reservation_pay_value">결제금액</string>
     <string name="reservation_complete">완료</string>
+    <string name="reservation_seat_cnt">x%d</string>
+    <string name="reservation_seat_price">%d원</string>
 </resources>
