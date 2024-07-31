@@ -61,21 +61,6 @@ public class MemberController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(memberDTOs);
     }
-//    @PostMapping("/sign-out")
-//    public ResponseEntity<String> signOut(@RequestHeader("Authorization") String accessToken,
-//        @RequestBody String refreshToken) {
-//        try {
-//            // Bearer 토큰 앞부분 제거
-//            String token = accessToken.replace("Bearer ", "");
-//
-//            // 로그아웃 처리
-//            blackListService.signOut(refreshToken, token);
-//
-//            return ResponseEntity.ok("로그아웃 되었습니다.");
-//        } catch (JsonProcessingException e) {
-//            return ResponseEntity.badRequest().body("Invalid token");
-//        }
-//    }
     @PostMapping("/sign-out")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> signOut(@RequestHeader("Refresh") String refreshToken) {

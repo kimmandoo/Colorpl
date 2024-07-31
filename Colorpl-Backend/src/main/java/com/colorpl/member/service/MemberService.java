@@ -49,6 +49,7 @@ public class MemberService {
             );
         return new SignInResponse(member.getEmail(), member.getType(), accessToken, refreshToken);
     }
+    //멤버 정보 업데이트
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
         Member existingMember = memberRepository.findById(memberId)
@@ -57,8 +58,10 @@ public class MemberService {
         existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
         return memberRepository.save(existingMember);
     }
+    //모든 멤버 조회
     @Transactional
     public List<Member> getAllUsers() {
         return memberRepository.findAll();
     }
+
 }
