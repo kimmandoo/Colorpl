@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyReviewBinding
 import com.domain.model.Ticket
@@ -16,7 +17,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
             onTicketClickListener = {
-
+                findNavController().navigate(R.id.action_fragment_my_review_to_fragment_review)
             }
         )
     }
