@@ -7,6 +7,7 @@ import com.domain.mapper.toParam
 import com.domain.model.User
 import com.domain.util.RepoResult
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class SignInUseCase @Inject constructor(
@@ -16,6 +17,7 @@ class SignInUseCase @Inject constructor(
 
     suspend fun signIn(user: User) = flow {
         signRepository.signIn(user.toParam()).collect { result ->
+            Timber.d("로그인 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
                     val data = RepoResult.success(result.data)
