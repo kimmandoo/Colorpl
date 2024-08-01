@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "stylishy62/BE2"
-        GIT_CREDENTIALS_ID = 'ymj'
-        DOCKER_CREDENTIALS_ID = 'admin_docker'
+        DOCKER_IMAGE = "stylishy62/colorpl_admin" // Docker Hub 사용자 이름과 이미지 이름
+        GIT_CREDENTIALS_ID = '0d1b1d1e-4f09-42a0-9c09-519c062b3fb5' // GitLab 자격 증명 ID
+        DOCKER_CREDENTIALS_ID = 'docker_jenkins' // Docker 자격 증명 ID
     }
 
     stages {
