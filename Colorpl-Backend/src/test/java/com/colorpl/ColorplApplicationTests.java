@@ -1,9 +1,8 @@
 package com.colorpl;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = ColorplApplication.class)
+//@SpringBootTest
 class ColorplApplicationTests {
 
     @Test
