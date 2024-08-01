@@ -22,6 +22,7 @@ class FeedTicketSelectFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         initAdapter()
+        initClickEvent()
     }
 
 
@@ -38,5 +39,16 @@ class FeedTicketSelectFragment :
             })
         }
         feedTicketSelectAdapter.submitList(listOf("", "", "", "", ""))
+    }
+
+    private fun initClickEvent() {
+        binding.apply {
+            tvSelect.setOnClickListener {
+                navigateDestination(R.id.action_fragment_feed_ticket_select_to_fragment_review)
+            }
+            ivBack.setOnClickListener {
+                navigatePopBackStack()
+            }
+        }
     }
 }
