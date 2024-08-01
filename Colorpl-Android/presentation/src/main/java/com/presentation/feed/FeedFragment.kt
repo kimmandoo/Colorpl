@@ -39,10 +39,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     }
 
     override fun initView() {
-        binding.apply {
-            initFilter()
-            initFeed()
-        }
+        initFilter()
+        initFeed()
+        onFeedRegisterClickListener()
     }
 
     private fun initFilter() {
@@ -103,5 +102,11 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
     private fun onUserClickListener() {
 
+    }
+
+    private fun onFeedRegisterClickListener() {
+        binding.imgFeedRegister.setOnClickListener {
+            navigateDestination(R.id.action_fragment_feed_to_fragment_feed_ticket_select)
+        }
     }
 }
