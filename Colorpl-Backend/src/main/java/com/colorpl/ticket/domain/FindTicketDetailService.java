@@ -1,7 +1,5 @@
-package com.colorpl.ticket.application;
+package com.colorpl.ticket.domain;
 
-import com.colorpl.ticket.domain.Ticket;
-import com.colorpl.ticket.domain.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +13,22 @@ public class FindTicketDetailService {
     private final TicketRepository ticketRepository;
 
     @Transactional(readOnly = true)
-    public FindTicketDetailResponse findTicketDetail(Long ticketId) {
-        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow();
+    public FindTicketDetailResponse find(Long id) {
+
+        Ticket ticket = ticketRepository.findById(id).orElseThrow();
+        String filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("images/")
+            .path(ticket.getFilename())
+            .build()
+            .toUriString();
+
         return FindTicketDetailResponse.builder()
-            .category(ticket.getCategory().toString())
+            .filepath(filepath)
             .name(ticket.getName())
-            .dateTime(ticket.getDateTime().toString())
             .theater(ticket.getTheater())
-            .filepath(baseUrl + "/images/" + ticket.getFilename())
+            .dateTime(ticket.getDateTime().toString())
+            .seat(ticket.getSeat())
+            .category(ticket.getCategory().toString())
             .build();
     }
 }

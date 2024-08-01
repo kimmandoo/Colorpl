@@ -1,6 +1,5 @@
-package com.colorpl.ticket.application;
+package com.colorpl.ticket.domain;
 
-import com.colorpl.member.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class CreateUnformattedTicketRequest {
+public class FindTicketDetailResponse {
 
-    private String category;
+    private String filepath;
     private String name;
-    private String dateTime;
     private String theater;
-    private Member member;
+    private String dateTime;
+    private String seat;
+    private String category;
 }

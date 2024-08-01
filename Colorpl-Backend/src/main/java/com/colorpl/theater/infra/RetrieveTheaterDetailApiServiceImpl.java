@@ -1,7 +1,7 @@
-package com.colorpl.show.infra;
+package com.colorpl.theater.infra;
 
-import com.colorpl.show.application.RetrieveShowDetailApiService;
-import com.colorpl.show.application.ShowDetailApiResponse;
+import com.colorpl.theater.domain.RetrieveTheaterDetailApiService;
+import com.colorpl.theater.domain.TheaterDetailApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.net.URI;
@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class RetrieveShowDetailApiServiceImpl implements RetrieveShowDetailApiService {
+public class RetrieveTheaterDetailApiServiceImpl implements RetrieveTheaterDetailApiService {
 
     private final WebClient webClient = WebClient.builder().build();
 
@@ -25,25 +25,16 @@ public class RetrieveShowDetailApiServiceImpl implements RetrieveShowDetailApiSe
     private String showApiUrl;
 
     @Override
-    public ShowDetailApiResponse retrieve(String apiId) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(showApiUrl)
-            .path("pblprfr/")
-            .path(apiId)
-            .queryParam("service", showApiKey)
-            .queryParam("newsql", "Y")
-            .build()
-            .toUri();
-        String xml = webClient.get()
-            .uri(uri)
-            .retrieve()
-            .bodyToMono(String.class)
-            .block();
+    public TheaterDetailApiResponse retrieve(String apiId) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(showApiUrl).path("prfplc/").path(apiId)
+            .queryParam("service", showApiKey).build().toUri();
+        String xml = webClient.get().uri(uri).retrieve().bodyToMono(String.class).block();
         return deserialize(xml);
     }
 
-    private ShowDetailApiResponse deserialize(String xml) {
+    private TheaterDetailApiResponse deserialize(String xml) {
         try {
-            return new XmlMapper().readValue(xml, ShowDetailApiResponse.class);
+            return new XmlMapper().readValue(xml, TheaterDetailApiResponse.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

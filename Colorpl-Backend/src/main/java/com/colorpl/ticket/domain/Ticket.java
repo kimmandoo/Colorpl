@@ -7,6 +7,8 @@ import com.colorpl.show.domain.detail.Category;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -39,9 +41,6 @@ public class Ticket {
     @Column(name = "TICKET_NAME")
     private String name;
 
-    @Column(name = "TICKET_DATE_TIME")
-    private LocalDateTime dateTime;
-
     @Column(name = "TICKET_THEATER")
     private String theater;
 
@@ -56,4 +55,13 @@ public class Ticket {
         this.member = member;
     }
 
+    @Column(name = "TICKET_DATE_TIME")
+    private LocalDateTime dateTime;
+
+    @Column(name = "TICKET_SEAT")
+    private String seat;
+
+    @Column(name = "TICKET_CATEGORY")
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }
