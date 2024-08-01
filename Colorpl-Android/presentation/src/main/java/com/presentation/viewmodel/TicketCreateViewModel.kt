@@ -39,11 +39,11 @@ class TicketCreateViewModel @Inject constructor(
             ).collectLatest { response ->
                 when (response) {
                     is RepoResult.Success -> {
-                        Timber.d("$response")
+                        Timber.d("success $response")
                     }
 
                     is RepoResult.Error -> {
-                        Timber.d("$response")
+                        Timber.d("error $response")
                     }
                 }
             }

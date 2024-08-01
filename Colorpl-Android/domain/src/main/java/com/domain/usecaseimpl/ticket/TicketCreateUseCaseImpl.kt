@@ -9,6 +9,7 @@ import com.domain.usecase.TicketCreateUseCase
 import com.domain.util.RepoResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class TicketCreateUseCaseImpl @Inject constructor(
             when (result) {
                 is ApiResult.Success -> {
                     val description = result.data.toEntity()
+                    Timber.d("$description")
                     emit(RepoResult.success(description))
                 }
 
