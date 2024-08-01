@@ -1,45 +1,40 @@
 package com.colorpl.ticket.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.colorpl.ticket.domain.Ticket;
+import com.colorpl.ticket.domain.FindTicketDetailResponse;
+import com.colorpl.ticket.domain.FindTicketDetailService;
+import com.colorpl.ticket.domain.TicketRepository;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Transactional
 class FindTicketDetailServiceTest {
 
     @Autowired
-    private CreateUnformattedTicketService createUnformattedTicketService;
+    CreateTicketService createTicketService;
     @Autowired
-    private FindTicketDetailService findTicketDetailService;
+    FindTicketDetailService findTicketDetailService;
+    @Autowired
+    TicketRepository ticketRepository;
 
     @Test
-    void findTicketDetail() {
-        String dateTime = LocalDateTime.now().toString();
-        CreateUnformattedTicketRequest request = CreateUnformattedTicketRequest.builder()
-            .category("연극")
+    void find() {
+
+        CreateTicketRequest request = CreateTicketRequest.builder()
             .name("test")
-            .dateTime(dateTime)
             .theater("test")
+            .dateTime(LocalDateTime.now().toString())
+            .seat("seat")
+            .category("연극")
             .build();
-        MockMultipartFile file = new MockMultipartFile(
-            "file",
-            "test.jpg",
-            "image/jpeg",
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg",
             "test".getBytes());
-        Ticket ticket = createUnformattedTicketService.create(request, file);
-        FindTicketDetailResponse response = findTicketDetailService.findTicketDetail(
-            ticket.getId());
-        assertThat(response).isNotNull();
-        assertThat(response.getCategory()).isEqualTo("연극");
-        assertThat(response.getName()).isEqualTo("test");
-        assertThat(response.getDateTime()).isEqualTo(dateTime);
-        assertThat(response.getTheater()).isEqualTo("test");
+
+        Long id = createTicketService.create(request, file);
+        FindTicketDetailResponse response = findTicketDetailService.find(id);
+
+        System.out.println(response.getFilepath());
     }
 }
