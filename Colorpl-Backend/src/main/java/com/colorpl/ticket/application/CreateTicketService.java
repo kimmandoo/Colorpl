@@ -14,20 +14,24 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CreateUnformattedTicketService {
+public class CreateTicketService {
 
     private final StorageService storageService;
     private final TicketRepository ticketRepository;
 
-    public Ticket create(CreateUnformattedTicketRequest request, MultipartFile attachFile) {
+    public Long create(CreateTicketRequest request, MultipartFile attachFile) {
+
         UploadFile uploadFile = storageService.storeFile(attachFile);
+
         Ticket ticket = Ticket.builder()
-            .category(Category.fromString(request.getCategory()).orElseThrow())
-            .name(request.getName())
-            .dateTime(LocalDateTime.parse(request.getDateTime()))
-            .theater(request.getTheater())
             .filename(uploadFile.getStoreFilename())
+            .name(request.getName())
+            .theater(request.getTheater())
+            .dateTime(LocalDateTime.parse(request.getDateTime()))
+            .seat(request.getSeat())
+            .category(Category.fromString(request.getCategory()).orElseThrow())
             .build();
-        return ticketRepository.save(ticket);
+
+        return ticketRepository.save(ticket).getId();
     }
 }

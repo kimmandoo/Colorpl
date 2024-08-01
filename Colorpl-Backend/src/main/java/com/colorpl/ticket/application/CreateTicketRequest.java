@@ -8,10 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class CreateUnformattedTicketRequest {
+public class CreateTicketRequest {
 
-    private String category;
     private String name;
-    private String dateTime;
     private String theater;
+    private String dateTime;
+    private String seat;
+    private String category;
 }

@@ -1,4 +1,4 @@
-package com.colorpl.ticket.application;
+package com.colorpl.ticket.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,10 @@ import lombok.Getter;
 @Getter
 public class FindTicketDetailResponse {
 
-    private String category;
-    private String name;
-    private String dateTime;
-    private String theater;
     private String filepath;
+    private String name;
+    private String theater;
+    private String dateTime;
+    private String seat;
+    private String category;
 }
