@@ -1,6 +1,7 @@
 package com.presentation.feed
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedTicketSelectBinding
@@ -8,6 +9,8 @@ import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.FeedTicketSelectAdapter
 import com.presentation.util.addCustomItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -22,6 +25,7 @@ class FeedTicketSelectFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         initAdapter()
+        initClickEvent()
     }
 
 
@@ -38,5 +42,20 @@ class FeedTicketSelectFragment :
             })
         }
         feedTicketSelectAdapter.submitList(listOf("", "", "", "", ""))
+    }
+
+    private fun initClickEvent() {
+        binding.apply {
+            tvSelect.setOnClickListener {
+                navigateDestination(R.id.action_fragment_feed_ticket_select_to_fragment_review)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(1000L)
+                    dismiss()
+                }
+            }
+            ivBack.setOnClickListener {
+                navigatePopBackStack()
+            }
+        }
     }
 }
