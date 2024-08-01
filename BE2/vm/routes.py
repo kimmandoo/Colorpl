@@ -4,6 +4,9 @@ from .database import SessionLocal, get_db
 from .models import Show, SeatGradePrice, SeatInfo
 from .schemas import ShowSchema, ShowCreateSchema, ShowUpdateSchema, SeatGradePriceSchema, SeatGradePriceUpdateSchema
 from typing import List
+from common.dependencies import super_admin_only, admin_only, chief_or_super_admin, get_current_administrator
+
+
 
 router = APIRouter()
 

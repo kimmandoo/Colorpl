@@ -18,6 +18,7 @@ class Member(BaseEntity):
     reviews = relationship("Review", back_populates="member")
     comments = relationship("Comment", back_populates="member")
     categories = relationship("UserCategory", back_populates="member")
+    management_logs = relationship("ManagementLog", back_populates="member")
 
 class Schedule(BaseEntity):
     __tablename__ = 'schedule'
@@ -63,12 +64,11 @@ class ManagementLog(Base):
     __tablename__ = 'management_log'
     id = Column(Integer, primary_key=True, index=True)
     management_category = Column(SMALLINT, nullable=False)
-    # 1. 사용자, 2. 리뷰, 3. 댓글
-    member_id = Column(BigInteger, nullable=False)
+    member_id = Column(BigInteger, ForeignKey('member.member_id'), nullable=False)
     management_action = Column(SMALLINT, nullable=False)
-    # 1. 삭제, 2. 수정
     management_by = Column(String(200), nullable=False)
-    # 관리자 이메일
     management_reason = Column(String(255), nullable=True)
     managed_at = Column(DateTime, default=func.now())
     ban_until = Column(DateTime, nullable=True)
+
+    member = relationship("Member", back_populates="management_logs")

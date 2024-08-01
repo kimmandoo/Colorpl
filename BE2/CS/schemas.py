@@ -16,6 +16,12 @@ class Member(MemberBase):
 
     class Config:
         from_attributes = True
+        
+class MemberUpdateStatus(BaseModel):
+    is_deleted: bool
+    management_reason: str
+    ban_days: Optional[int] = None
+    ban_hours: Optional[int] = None
 
 # Review
 class ReviewBase(BaseModel):

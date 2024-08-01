@@ -13,14 +13,18 @@ def get_members(db: Session, skip: int = 0, limit: int = 100) -> Tuple[List[sche
     total_count = db.query(models.Member).count()
     return [schemas.Member.model_validate(member, from_attributes=True) for member in members], total_count
 
-def manage_member(db: Session, member_id: int, is_deleted: bool, management_by: str, management_reason: str, ban_duration: Optional[int] = None) -> Optional[schemas.Member]:
+def manage_member(db: Session, member_id: int, is_deleted: bool, management_by: str, management_reason: str, ban_days: Optional[int] = None, ban_hours: Optional[int] = None) -> Optional[schemas.Member]:
     member = db.query(models.Member).filter(models.Member.member_id == member_id).first()
     if member:
         member.is_deleted = is_deleted
         db.commit()
 
-        action = 1 if is_deleted else 2
-        ban_until = datetime.utcnow() + timedelta(days=ban_duration) if is_deleted and ban_duration else None
+        if is_deleted:
+            action = 1  # 차단
+            ban_until = datetime.utcnow() + timedelta(days=ban_days or 0, hours=ban_hours or 0)
+        else:
+            action = 3  # 차단 해제
+            ban_until = None
 
         log = models.ManagementLog(
             management_category=1,
