@@ -35,6 +35,7 @@ public class Member extends BaseEntity{
 
     @Column
     private String nickname;
+    private String profile;
 
     private String password;
 
@@ -53,6 +54,9 @@ public class Member extends BaseEntity{
 
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
 //    private List<Review> reviews;
+
+
+
 
     // 연관관계 편의 메서드
     public void addReservation(Reservation reservation) {
@@ -86,6 +90,7 @@ public class Member extends BaseEntity{
         ticket.updateMember(null);
     }
 
+
     public void updatePassword(String password) {
         this.password = password;
     }
@@ -103,6 +108,7 @@ public class Member extends BaseEntity{
         this.email = member.getEmail();
         this.password = encoder.encode(member.getPassword());
         this.nickname = member.getNickname();
+        this.profile = member.getProfile();
         this.type = member.getType();
     }
 
