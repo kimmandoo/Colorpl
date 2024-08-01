@@ -15,6 +15,11 @@ enum class Mode(val mode: String) {
     FERRY("FERRY"),
 }
 
+enum class ReviewMode {
+    NEW,
+    EDIT
+}
+
 enum class TicketState(val state: Int) {
     ISSUED(0),
     UNISSUED(1)
