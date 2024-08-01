@@ -26,6 +26,12 @@ public class Comment {
     private Member member;
 
     @Column(name = "CONTENT")
-    private String content;
+    private String comment_content;
+
+    public void updateComment(Review review, Member member, String comment_content) {
+        this.member = member;
+        this.review = review;
+        this.comment_content = comment_content;
+    }
 
 }

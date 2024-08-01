@@ -1,6 +1,7 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.schedule.domain.Schedule;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,18 +13,17 @@ import java.util.List;
 @Entity
 @Getter
 //@Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
 
     @Column(name = "REVIEW_ID")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
+    private Long id;
 
-    // schdule 아직 없음
-    @JoinColumn(name = "SCHEDULE_ID")
-    @OneToOne(mappedBy = "SCHEDULE_ID")
-    private Integer schedule;
+    // schedule 아직 없음
+    @OneToOne(mappedBy = "review")
+    private Schedule schedule;
 
     @Column(name = "REVIEW_CONTENT")
     private  String content;
@@ -32,18 +32,17 @@ public class Review {
     private  Boolean spoiler;
 
     @Column(name = "REVIEW_EMOTION")
-    private  Integer emotion;
+    private  Byte emotion;
 
     @Column(name = "EMPHATHY_NUMBER")
-    private  Byte emphathy;
+    private  Integer emphathy;
 
     // ?
     @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
-    public void updateReview(Integer schedule, String content, Boolean spoiler, Integer emotion) {
-        this.schedule = schedule;
+    public void updateReview(String content, Boolean spoiler, Byte emotion) {
         this.content = content;
         this.spoiler = spoiler;
         this.emotion = emotion;
