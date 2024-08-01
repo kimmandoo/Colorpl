@@ -3,7 +3,7 @@ package com.colorpl.di
 import com.data.datasource.CommentDataSource
 import com.data.datasource.FeedDataSource
 import com.data.datasource.local.TokenDataSource
-import com.data.datasource.local.TokenDataSourceImpl
+import com.data.datasourceimpl.TokenDataSourceImpl
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
 import com.data.datasource.remote.TmapRouteDataSource
@@ -11,6 +11,7 @@ import com.data.datasourceimpl.CommentDataSourceImpl
 import com.data.datasourceimpl.FeedDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
+import com.data.datasourceimpl.SignDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -57,6 +58,12 @@ interface DataSourceModule {
     @Binds
     fun provideCommentDataSource(
         commentDataSourceImpl: CommentDataSourceImpl
+    ): CommentDataSource
+
+    @Singleton
+    @Binds
+    fun provideSignDataSource(
+        signDataSourceImpl: SignDataSourceImpl
     ): CommentDataSource
 
 }

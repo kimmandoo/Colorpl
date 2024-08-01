@@ -1,15 +1,13 @@
-package com.data.repository
+package com.data.datasource.remote
 
 import com.data.model.request.RequestSignIn
 import com.data.model.response.ResponseSignIn
-import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
 
-interface SignRepository {
+interface SignDataSource {
 
-
-    suspend fun signIn(
+    suspend fun postSignIn(
         requestSignIn: RequestSignIn
-    ): Flow<ApiResult<ResponseSignIn>>
+    ): ResponseSignIn
 
 }
