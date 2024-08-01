@@ -35,6 +35,7 @@ public class Member extends BaseEntity{
 
     @Column
     private String nickname;
+    private String profile;
 
     private String profile;
 
