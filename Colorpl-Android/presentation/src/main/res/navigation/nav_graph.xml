@@ -17,6 +17,11 @@
             app:destination="@id/fragment_feed_detail"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select"
+            app:enterAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down" />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -50,15 +55,20 @@
         android:label="FeedDetailFragment"
         tools:layout="@layout/fragment_feed_detail" />
 
+    <dialog
+        android:id="@+id/fragment_feed_ticket_select"
+        android:name="com.presentation.feed.FeedTicketSelectFragment"
+        tools:layout="@layout/fragment_feed_ticket_select" />
+
     <!-- Reservation -->
     <fragment
         android:id="@+id/fragment_reservation"
         android:name="com.presentation.reservation.ReservationFragment"
         android:label="ReservationFragment"
-        tools:layout="@layout/fragment_reservation" >
+        tools:layout="@layout/fragment_reservation">
         <action
             android:id="@+id/action_fragment_reservation_to_fragment_reservation_detail"
-            app:destination="@+id/fragment_reservation_detail"/>
+            app:destination="@+id/fragment_reservation_detail" />
 
     </fragment>
 
