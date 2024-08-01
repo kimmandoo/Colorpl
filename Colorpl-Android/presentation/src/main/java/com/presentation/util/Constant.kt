@@ -105,7 +105,8 @@ enum class Sign {
     ID,
     PASSWORD,
     NICKNAME,
-    PROFILE
+    PROFILE,
+    LOGIN
 }
 
 enum class Category {

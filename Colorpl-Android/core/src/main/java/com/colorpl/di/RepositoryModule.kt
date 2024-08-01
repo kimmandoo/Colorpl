@@ -46,7 +46,7 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun provideFeedPagingRepository(
-        feedRepositoryImpl : FeedRepositoryImpl
+        feedRepositoryImpl: FeedRepositoryImpl
     ): FeedRepository
 
     @Singleton

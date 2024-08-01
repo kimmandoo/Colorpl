@@ -7,17 +7,19 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.viewModels
+import androidx.core.widget.addTextChangedListener
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpBinding
 import com.presentation.base.BaseFragment
 import com.presentation.util.Sign
+import com.presentation.util.emailCheck
 import com.presentation.util.getPhotoGallery
 import com.presentation.util.hideKeyboard
 import com.presentation.util.imeOptionsActionCheck
+import com.presentation.util.onBackButtonPressed
 import com.presentation.util.setImage
 import com.presentation.util.setPasswordTransformation
 import com.presentation.viewmodel.SignUpViewModel
@@ -28,16 +30,20 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sign_up) {
 
-    private val signUpViewModel: SignUpViewModel by viewModels()
+    private val signUpViewModel: SignUpViewModel by hiltNavGraphViewModels(R.id.sign_nav_graph)
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+
 
     override fun initView() {
         initSetting()
         setImeOptions()
         observeSignType()
         observeProfileImage()
+        observeEditText()
+        observeNextButton()
         initClickEvent()
+        backEvent()
     }
 
     private fun initSetting() { //초기 세팅
@@ -60,16 +66,44 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
     }
 
+
+    private fun observeEditText() { // 텍스트 삽입
+        binding.includeId.etContent.addTextChangedListener {
+            signUpViewModel.setUserEmail(it.toString())
+            binding.includeId.apply {
+                if (it?.isNotEmpty() == true) {
+                    tvError.visibility = View.VISIBLE
+                    errorCheck = it.toString().emailCheck()
+                    tvError.isSelected = !it.toString().emailCheck()
+                }
+            }
+        }
+
+        binding.includePassword.etContent.addTextChangedListener {
+            signUpViewModel.setPassWord(it.toString())
+        }
+
+        binding.includeNickname.etContent.addTextChangedListener {
+            signUpViewModel.setUserNickName(it.toString())
+        }
+    }
+
+    private fun observeNextButton() { //다음 버튼 활성화
+        signUpViewModel.nextButton.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                binding.tvNext.apply {
+                    isSelected = it
+                    isEnabled = it
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
     private fun observeSignType() { //Type 감지
         signUpViewModel.typeEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 binding.apply {
                     type = it
                     when (it) {
-                        Sign.ID -> {
-
-                        }
-
                         Sign.PASSWORD -> {
                             includeId.etContent.clearFocus()
                             includeId.titleVisible = true
@@ -91,6 +125,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                             clProfileImage.visibility = View.VISIBLE
                             requireActivity().hideKeyboard(clProfileImage)
                         }
+
+                        else -> {
+
+                        }
                     }
                 }
             }
@@ -102,6 +140,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
+                        signUpViewModel.setUserImage(uri.toString())
                         binding.ivProfile.setImage(uri)
                     }
                 }
@@ -119,6 +158,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         }
 
         binding.ivBack.setOnClickListener { //뒤로 가기
+            signUpViewModel.clearData()
             navigatePopBackStack()
         }
 
@@ -128,5 +168,13 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             )
         }
     }
+
+    private fun backEvent() {
+        requireActivity().onBackButtonPressed(viewLifecycleOwner) {
+            signUpViewModel.clearData()
+            navigatePopBackStack()
+        }
+    }
+
 }
 
