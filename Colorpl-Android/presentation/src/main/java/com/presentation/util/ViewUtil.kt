@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import timber.log.Timber
+import kotlin.math.abs
 
 
 // EditText
@@ -99,14 +100,12 @@ fun ViewPager2.addCustomItemDecoration() {
             // 페이지가 보이지 않을 때
             page.scaleX = scaleFactor
             page.scaleY = scaleFactor
-        } else if (position <= 0) {
-            // 왼쪽 페이지
-            page.scaleX = scaleFactor + (1 - scaleFactor) * (1 + position)
-            page.scaleY = scaleFactor + (1 - scaleFactor) * (1 + position)
-        } else {
-            // 오른쪽 페이지
-            page.scaleX = scaleFactor + (1 - scaleFactor) * (1 - position)
-            page.scaleY = scaleFactor + (1 - scaleFactor) * (1 - position)
+        }else{
+            // 왼쪽 페이지 && 오른쪽 페이지
+            val absolute = 1 - abs(position)
+            page.scaleX = scaleFactor + (1 - scaleFactor) * absolute
+            page.scaleY = scaleFactor + (1 - scaleFactor) * absolute
         }
-    }
+
+        }
 }
