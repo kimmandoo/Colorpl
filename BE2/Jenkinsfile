@@ -2,9 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "stylishy62/colorpl_admin" // Docker Hub 사용자 이름과 이미지 이름
-        GIT_CREDENTIALS_ID = '0d1b1d1e-4f09-42a0-9c09-519c062b3fb5' // GitLab 자격 증명 ID
-        DOCKER_CREDENTIALS_ID = 'docker_jenkins' // Docker 자격 증명 ID
+        DOCKER_IMAGE = "stylishy62/colorpl_admin"
+        GIT_CREDENTIALS_ID = '0d1b1d1e-4f09-42a0-9c09-519c062b3fb5'
+        DOCKER_CREDENTIALS_ID = 'docker_jenkins'
+        SSH_CREDENTIALS_ID = 'ssh_public'
+        REMOTE_USER = 'ubuntu'
+        REMOTE_HOST = 'i11d109.p.ssafy.io'
     }
 
     stages {
@@ -43,13 +46,17 @@ pipeline {
             }
         }
 
-        stage('Deploy Docker Image') {
+        stage('Deploy to Remote Server') {
             steps {
                 script {
-                    sh '''
-                    docker rm -f fastapi-app || true
-                    docker run -d --name fastapi-app -p 80:80 ${DOCKER_IMAGE}:${env.BUILD_ID}
-                    '''
+                    sshagent(credentials: ["${SSH_CREDENTIALS_ID}"]) {
+                        sh """
+                        ssh ${REMOTE_USER}@${REMOTE_HOST} << EOF
+                        docker rm -f fastapi-app || true
+                        docker run -d --name fastapi-app -p 8000:8000 ${DOCKER_IMAGE}:${env.BUILD_ID}
+                        EOF
+                        """
+                    }
                 }
             }
         }
