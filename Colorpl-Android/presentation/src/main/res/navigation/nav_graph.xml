@@ -55,10 +55,10 @@
         android:id="@+id/fragment_reservation"
         android:name="com.presentation.reservation.ReservationFragment"
         android:label="ReservationFragment"
-        tools:layout="@layout/fragment_reservation" >
+        tools:layout="@layout/fragment_reservation">
         <action
             android:id="@+id/action_fragment_reservation_to_fragment_reservation_detail"
-            app:destination="@+id/fragment_reservation_detail"/>
+            app:destination="@+id/fragment_reservation_detail" />
 
     </fragment>
 
@@ -148,7 +148,11 @@
     <fragment
         android:id="@+id/fragment_my_review"
         android:name="com.presentation.my_page.MyReviewFragment"
-        tools:layout="@layout/fragment_my_review" />
+        tools:layout="@layout/fragment_my_review" >
+        <action
+            android:id="@+id/action_fragment_my_review_to_fragment_review"
+            app:destination="@id/fragment_review" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_notice"
@@ -164,6 +168,11 @@
         android:id="@+id/fragment_setting"
         android:name="com.presentation.my_page.SettingFragment"
         tools:layout="@layout/fragment_setting" />
+
+    <dialog
+        android:id="@+id/fragment_review"
+        android:name="com.presentation.component.review.ReviewFragment"
+        tools:layout="@layout/fragment_review" />
 
     <include app:graph="@navigation/nav_ticket_graph" />
 
