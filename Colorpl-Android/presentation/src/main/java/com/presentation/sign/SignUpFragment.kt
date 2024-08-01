@@ -67,12 +67,15 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
     }
 
 
-
     private fun observeEditText() { // 텍스트 삽입
         binding.includeId.etContent.addTextChangedListener {
             signUpViewModel.setUserEmail(it.toString())
             binding.includeId.apply {
-                tvError.isSelected = !it.toString().emailCheck()
+                if (it?.isNotEmpty() == true) {
+                    tvError.visibility = View.VISIBLE
+                    errorCheck = it.toString().emailCheck()
+                    tvError.isSelected = !it.toString().emailCheck()
+                }
             }
         }
 
@@ -122,6 +125,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                             clProfileImage.visibility = View.VISIBLE
                             requireActivity().hideKeyboard(clProfileImage)
                         }
+
                         else -> {
 
                         }
