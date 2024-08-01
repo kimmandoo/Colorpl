@@ -2,7 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.domain.model.CalendarItem
-import com.domain.model.TicketTest
+import com.domain.model.Ticket
 import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +27,8 @@ class ScheduleViewModel @Inject constructor(
     private val _calendarItems = MutableStateFlow<List<CalendarItem>>(emptyList())
     val calendarItems: StateFlow<List<CalendarItem>> = _calendarItems
 
-    private val _tickets = MutableStateFlow<List<TicketTest>>(emptyList())
-    val tickets: StateFlow<List<TicketTest>> = _tickets
+    private val _tickets = MutableStateFlow<List<Ticket>>(emptyList())
+    val tickets: StateFlow<List<Ticket>> = _tickets
 
     private val _displayDate = MutableStateFlow("")
     val displayDate: StateFlow<String> = _displayDate

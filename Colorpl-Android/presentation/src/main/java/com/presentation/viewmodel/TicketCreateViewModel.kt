@@ -3,7 +3,7 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Description
-import com.domain.model.TicketCreate
+import com.domain.model.Ticket
 import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TicketCreateUseCase
 import com.domain.util.RepoResult
@@ -27,8 +27,9 @@ class TicketCreateViewModel @Inject constructor(
     fun createTicket(image: File) {
         viewModelScope.launch {
             ticketCreateUseCase(
-                image, TicketCreate(
+                image, Ticket(
                     file = null,
+                    ticketId = 1101,
                     name = _description.value!!.title!!,
                     theater = _description.value!!.detail!!,
                     date = _description.value!!.schedule!!,

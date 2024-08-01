@@ -4,7 +4,7 @@ import com.data.model.request.RequestTicketCreate
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
-import com.domain.model.TicketCreate
+import com.domain.model.Ticket
 import com.domain.usecase.TicketCreateUseCase
 import com.domain.util.RepoResult
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class TicketCreateUseCaseImpl @Inject constructor(
     private val ticketRepository: TicketRepository
 ): TicketCreateUseCase {
-    override suspend fun invoke(image: File, ticket: TicketCreate): Flow<RepoResult<TicketCreate>> = flow {
+    override suspend fun invoke(image: File, ticket: Ticket): Flow<RepoResult<Ticket>> = flow {
         ticketRepository.createTicket(image, RequestTicketCreate(
             name = ticket.name,
             theater = ticket.theater,

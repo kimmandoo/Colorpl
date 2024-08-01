@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
-import com.domain.model.TicketTest
+import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.component.adapter.schedule.CustomPopupAdapter
@@ -118,13 +118,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
             ticketAdapter.submitList(
                 listOf( // testcode
-                    TicketTest(
+                    Ticket(
                         ticketId = 4706,
                         name = "Elijah Merritt",
-                        date = Date(),
-                        space = "ignota",
-                        seat = "commune"
-                    )
+                        date = Date().toString(),
+                        theater = "ignota",
+                        seat = "commune",
+                        category = "뮤지컬"
+                    ),
                 )
             )
         }

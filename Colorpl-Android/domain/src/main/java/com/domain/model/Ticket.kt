@@ -1,10 +1,11 @@
 package com.domain.model
 
-data class TicketCreate(
-    val file: String? = null,
+data class Ticket(
+    val ticketId: Int,
     val name: String,
     val theater: String,
     val date: String,
     val seat: String,
-    val category: String
+    val category: String,
+    val file: String? = null,
 )

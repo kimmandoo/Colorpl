@@ -1,16 +1,12 @@
 package com.presentation.ticket
 
 import android.os.Bundle
-import android.util.Log
-import androidx.core.net.toFile
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketFinishBinding
-import com.domain.model.TicketCreate
-import com.domain.model.TicketTest
 import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.onBackButtonPressed

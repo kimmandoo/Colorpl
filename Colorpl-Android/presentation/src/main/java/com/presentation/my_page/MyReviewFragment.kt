@@ -3,7 +3,7 @@ package com.presentation.my_page
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyReviewBinding
-import com.domain.model.TicketTest
+import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.util.setDistanceX
@@ -36,34 +36,38 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
 
         ticketAdapter.submitList(
             listOf( // testcode
-                TicketTest(
+                Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
-                TicketTest(
+                Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
-                TicketTest(
+                Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
-                TicketTest(
+                Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
-                )
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
+                ),
             )
         )
 
