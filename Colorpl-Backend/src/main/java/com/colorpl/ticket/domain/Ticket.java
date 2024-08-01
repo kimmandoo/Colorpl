@@ -35,9 +35,6 @@ public class Ticket {
     @Id
     private Long id;
 
-    @Column(name = "TICKET_CATEGORY")
-    private Category category;
-
     @Column(name = "TICKET_NAME")
     private String name;
 
