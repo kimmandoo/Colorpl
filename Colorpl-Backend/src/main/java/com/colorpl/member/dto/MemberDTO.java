@@ -14,6 +14,7 @@ public class MemberDTO {
     private String email;
     private String nickname;
     private String password;
+    private String profile;
 
     public static MemberDTO toMemberDTO(Member member) {
         if (member == null) {
@@ -24,6 +25,7 @@ public class MemberDTO {
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .password(member.getPassword())
+                .profile(member.getProfile())
                 .build();
     }
 }

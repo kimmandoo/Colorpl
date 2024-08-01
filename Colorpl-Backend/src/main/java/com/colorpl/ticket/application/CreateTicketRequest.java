@@ -10,9 +10,10 @@ import lombok.Getter;
 @Getter
 public class CreateTicketRequest {
 
-    private String name;
-    private String theater;
-    private String dateTime;
-    private String seat;
     private String category;
+    private String name;
+    private String dateTime;
+    private String theater;
+    private String seat;
+
 }

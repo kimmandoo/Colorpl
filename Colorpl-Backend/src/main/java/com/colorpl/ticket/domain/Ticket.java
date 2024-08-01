@@ -1,13 +1,22 @@
 package com.colorpl.ticket.domain;
 
+import static jakarta.persistence.FetchType.*;
+
+import com.colorpl.member.Member;
 import com.colorpl.show.domain.detail.Category;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,14 +35,25 @@ public class Ticket {
     @Id
     private Long id;
 
-    @Column(name = "TICKET_FILENAME")
-    private String filename;
+    @Column(name = "TICKET_CATEGORY")
+    private Category category;
 
     @Column(name = "TICKET_NAME")
     private String name;
 
     @Column(name = "TICKET_THEATER")
     private String theater;
+
+    @Column(name = "TICKET_FILENAME")
+    private String filename;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    public void updateMember(Member member) {
+        this.member = member;
+    }
 
     @Column(name = "TICKET_DATE_TIME")
     private LocalDateTime dateTime;
