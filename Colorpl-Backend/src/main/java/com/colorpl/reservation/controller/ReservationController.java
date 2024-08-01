@@ -6,6 +6,7 @@ import com.colorpl.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ReservationController {
 
     // 특정 멤버의 모든 예약 조회(테스트 완료)
     @GetMapping("/member/{memberId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<ReservationDTO>> getReservationsByMemberId(@PathVariable Integer memberId) {
         List<ReservationDTO> reservations = reservationService.getReservationsByMemberId(memberId);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
