@@ -13,5 +13,5 @@ interface TicketApi {
     suspend fun createTicket(
         @Part file: MultipartBody.Part,
         @Part("request") request: RequestBody,
-    ): ResponseTicketCreate
+    ): String
 }

@@ -14,19 +14,21 @@ import java.io.File
 import javax.inject.Inject
 
 class TicketCreateUseCaseImpl @Inject constructor(
-    private val ticketRepository: TicketRepository
-): TicketCreateUseCase {
-    override suspend fun invoke(image: File, ticket: Ticket): Flow<RepoResult<Ticket>> = flow {
-        ticketRepository.createTicket(image, RequestTicketCreate(
-            name = ticket.name,
-            theater = ticket.theater,
-            dateTime = ticket.date,
-            seat = ticket.seat,
-            category = ticket.category
-        )).collect { result ->
+    private val ticketRepository: TicketRepository,
+) : TicketCreateUseCase {
+    override suspend fun invoke(image: File, ticket: Ticket): Flow<RepoResult<String>> = flow {
+        ticketRepository.createTicket(
+            image, RequestTicketCreate(
+                name = ticket.name,
+                theater = ticket.theater,
+                dateTime = ticket.date,
+                seat = ticket.seat,
+                category = ticket.category
+            )
+        ).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    val description = result.data.toEntity()
+                    val description = result.data
                     Timber.d("$description")
                     emit(RepoResult.success(description))
                 }

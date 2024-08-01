@@ -10,5 +10,5 @@ interface TicketRepository {
     suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
-    ): Flow<ApiResult<ResponseTicketCreate>>
+    ): Flow<ApiResult<String>>
 }

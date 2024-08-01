@@ -14,7 +14,7 @@ class TicketDataSourceImpl @Inject constructor(
     override suspend fun createTicket(
         ticket: MultipartBody.Part,
         request: RequestBody
-    ): ResponseTicketCreate {
+    ): String {
         return api.createTicket(
             request = request,
             file = ticket

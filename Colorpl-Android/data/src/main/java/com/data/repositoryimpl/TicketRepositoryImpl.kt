@@ -19,7 +19,7 @@ class TicketRepositoryImpl @Inject constructor(
     override suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
-    ): Flow<ApiResult<ResponseTicketCreate>> = flow {
+    ): Flow<ApiResult<String>> = flow {
         emit(safeApiCall {
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
             val filePart: MultipartBody.Part =

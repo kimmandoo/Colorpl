@@ -9,5 +9,5 @@ interface TicketDataSource {
     suspend fun createTicket(
         ticket: MultipartBody.Part,
         request: RequestBody
-    ): ResponseTicketCreate
+    ): String
 }

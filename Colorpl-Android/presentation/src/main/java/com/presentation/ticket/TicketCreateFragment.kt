@@ -10,6 +10,7 @@ import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
 import com.domain.model.Description
 import com.presentation.base.BaseFragment
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.checkCameraPermission
@@ -26,6 +28,8 @@ import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -92,12 +96,12 @@ class TicketCreateFragment :
 
     private fun observeDescription() {
         viewLifecycleOwner.lifecycleScope.launch {
-            binding.pbProgress.isVisible = true
+            val loading = LoadingDialog(requireContext())
+            loading.show()
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.description.collectLatest { data ->
                     data?.let {
-                        binding.pbProgress.isVisible = false
-                        binding.clProgress.visibility = View.GONE
+                        loading.dismiss()
                         Timber.tag("description").d(data.toString())
                         binding.apply {
                             etTitle.setText(data.title)
@@ -109,6 +113,10 @@ class TicketCreateFragment :
                 }
             }
         }
+        viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
+            Timber.d("$state")
+            binding.tvConfirm.isSelected = state != ""
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun describeImage(uri: Uri) {
