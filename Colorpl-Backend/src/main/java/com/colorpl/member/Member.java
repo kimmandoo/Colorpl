@@ -3,19 +3,27 @@ package com.colorpl.member;
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
-import com.colorpl.review.domain.Review;
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.ticket.domain.Ticket;
-import jakarta.persistence.*;
-
-import java.util.Collection;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
@@ -23,7 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id
     @Column(name = "MEMBER_ID")
@@ -35,7 +43,6 @@ public class Member extends BaseEntity{
 
     @Column
     private String nickname;
-    private String profile;
 
     private String profile;
 
@@ -52,12 +59,10 @@ public class Member extends BaseEntity{
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Category> categories=new HashSet<>();
+    private Set<Category> categories = new HashSet<>();
 
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
 //    private List<Review> reviews;
-
-
 
 
     // 연관관계 편의 메서드
@@ -76,6 +81,7 @@ public class Member extends BaseEntity{
         reservations.remove(reservation);
         reservation.updateMember(null);
     }
+
     public void addTicket(Ticket ticket) {
         if (tickets.contains(ticket)) {
             throw new IllegalArgumentException("이미 추가된 티켓입니다.");
