@@ -23,6 +23,12 @@ class TicketCreateViewModel @Inject constructor(
 ) : ViewModel() {
     private val _description = MutableStateFlow<Description?>(null)
     val description: StateFlow<Description?> = _description
+    private val _category = MutableStateFlow("")
+    val category: StateFlow<String> = _category
+
+    fun setCategory(text: String) {
+        _category.value = text
+    }
 
     fun createTicket(image: File) {
         viewModelScope.launch {
@@ -34,7 +40,7 @@ class TicketCreateViewModel @Inject constructor(
                     theater = _description.value!!.detail!!,
                     date = _description.value!!.schedule!!,
                     seat = _description.value!!.seat!!,
-                    category = "뮤지컬"
+                    category = _category.value
                 )
             ).collectLatest { response ->
                 when (response) {

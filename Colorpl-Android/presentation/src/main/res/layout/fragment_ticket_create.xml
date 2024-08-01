@@ -79,10 +79,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:orientation="horizontal"
+            android:scrollbars="none"
             app:layout_constraintTop_toBottomOf="@+id/et_seat">
 
             <RadioGroup
                 android:layout_width="wrap_content"
+                android:id="@+id/rg_category"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -157,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/rectangle_imperial_red_8"
+            android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:text="@string/schedule_confirm"

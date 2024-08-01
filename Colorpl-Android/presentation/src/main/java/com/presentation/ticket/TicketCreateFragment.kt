@@ -74,6 +74,20 @@ class TicketCreateFragment :
                 )
             findNavController().navigate(action)
         }
+        binding.rgCategory.setOnCheckedChangeListener { radioGroup, itemId ->
+            val selectedText = when (itemId) {
+                R.id.rb_movie -> binding.rbMovie
+                R.id.rb_show -> binding.rbShow
+                R.id.rb_concert -> binding.rbConcert
+                R.id.rb_play -> binding.rbPlay
+                R.id.rb_musical -> binding.rbMusical
+                R.id.rb_exhibition -> binding.rbExhibition
+                R.id.rb_else -> binding.rbElse
+                else -> null
+            }?.text?.toString()
+
+            selectedText?.let { viewModel.setCategory(it) }
+        }
     }
 
     private fun observeDescription() {
