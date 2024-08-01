@@ -1,16 +1,22 @@
 package com.presentation.ticket
 
 import android.os.Bundle
+import android.util.Log
+import androidx.core.net.toFile
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketFinishBinding
+import com.domain.model.TicketCreate
+import com.domain.model.TicketTest
 import com.presentation.base.BaseFragment
+import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class TicketFinishFragment :
@@ -40,8 +46,10 @@ class TicketFinishFragment :
             tvSeat.text = description?.seat
             tvConfirm.setOnClickListener {
                 // 서버에 등록된 티켓 보내고 navigate 돌리기
+                Timber.d("${ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!}  size: ${ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!.length()}")
+                viewModel.createTicket(ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!)
                 // 보내는 동안 저장중 띄우기
-                findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
+//                findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
             }
         }
     }

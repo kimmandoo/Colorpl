@@ -2,7 +2,7 @@ package com.domain.model
 
 import java.util.Date
 
-data class Ticket(
+data class TicketTest(
     val ticketId: Int,
     val name: String,
     val date: Date,

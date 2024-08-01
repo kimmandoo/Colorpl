@@ -1,5 +1,6 @@
 package com.presentation.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,10 +8,13 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.util.Base64
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 
 class ImageProcessingUtil(private val context: Context) {
@@ -82,5 +86,95 @@ class ImageProcessingUtil(private val context: Context) {
 
     fun cropBitmap(bitmap: Bitmap, left: Int, top: Int, width: Int, height: Int): Bitmap {
         return Bitmap.createBitmap(bitmap, left, top, width, height)
+    }
+
+    fun uriToCompressedFile(uri: Uri, quality: Int = 80, maxWidth: Int = 1024, maxHeight: Int = 1024): File? {
+        val fileName = getFileName(context, uri)
+        val cacheDir = context.externalCacheDir
+        val file = File(cacheDir, "compressed_$fileName")
+
+        try {
+            // 원본 이미지를 비트맵으로 로드
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val originalBitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            // 이미지 크기 조정
+            val scaledBitmap = scaleBitmap(originalBitmap, maxWidth, maxHeight)
+
+            // 압축된 이미지를 파일로 저장
+            val outputStream = FileOutputStream(file)
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+            outputStream.flush()
+            outputStream.close()
+
+            // 원본 비트맵과 조정된 비트맵 메모리 해제
+            originalBitmap.recycle()
+            scaledBitmap.recycle()
+
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun scaleBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+        val ratioX = maxWidth.toFloat() / bitmap.width
+        val ratioY = maxHeight.toFloat() / bitmap.height
+        val ratio = minOf(ratioX, ratioY)
+
+        val newWidth = (bitmap.width * ratio).toInt()
+        val newHeight = (bitmap.height * ratio).toInt()
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+
+    @SuppressLint("Range")
+    fun getFileName(context: Context, uri: Uri): String {
+        var fileName = ""
+        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        }
+        if (fileName.isEmpty()) {
+            fileName = uri.path?.split('/')?.last() ?: "unknown"
+        }
+        return fileName
+    }
+
+    fun uriToFile(uri: Uri): File? {
+        val fileName = getFileName(uri)
+        val cacheDir = context.externalCacheDir
+        val file = File(cacheDir, fileName)
+
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(file)
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    @SuppressLint("Range")
+    fun getFileName(uri: Uri): String {
+        var fileName = ""
+        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        }
+        if (fileName.isEmpty()) {
+            fileName = uri.path?.split('/')?.last() ?: "unknown"
+        }
+        return fileName
     }
 }

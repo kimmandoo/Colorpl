@@ -1,7 +1,7 @@
 package com.data.api
 
-import com.data.util.NETWORK_ERROR
 import com.data.util.ApiResult
+import com.data.util.NETWORK_ERROR
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,8 +22,12 @@ suspend fun <T> safeApiCall(
                 is HttpException -> {
                     val code = throwable.code()
                     val errorResponse = throwable.response()?.errorBody()?.string()
-                    Timber.d("에러 바디 데이터 확인 ${throwable.message}")
-                    ApiResult.error(Exception("HTTP 에러 $code: $errorResponse"))
+                    Timber.d(
+                        "에러 바디 데이터 확인 ${throwable.message}  || ${
+                            throwable.response()?.message()
+                        }"
+                    )
+                    ApiResult.error(Exception("HTTP 에러 $code: $errorResponse ${throwable.message()}"))
                 }
 
                 else -> {

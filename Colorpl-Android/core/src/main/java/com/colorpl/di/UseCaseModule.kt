@@ -4,11 +4,13 @@ import com.domain.usecase.CommentUseCase
 import com.domain.usecase.FeedUseCase
 import com.domain.usecase.NotificationUseCase
 import com.domain.usecase.OpenAiUseCase
+import com.domain.usecase.TicketCreateUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.feed.CommentUseCaseImpl
 import com.domain.usecaseimpl.feed.FeedUseCaseImpl
 import com.domain.usecaseimpl.notification.NotificationUseCaseImpl
 import com.domain.usecaseimpl.openai.OpenAiUseCaseImpl
+import com.domain.usecaseimpl.ticket.TicketCreateUseCaseImpl
 import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -50,4 +52,10 @@ interface UseCaseModule {
     fun provideCommentUseCase(
         commentUseCaseImpl: CommentUseCaseImpl
     ): CommentUseCase
+
+    @Binds
+    @Singleton
+    fun provideTicketCreateUseCase(
+        ticketCreateUseCaseImpl: TicketCreateUseCaseImpl
+    ): TicketCreateUseCase
 }

@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.colorpl.presentation.databinding.ItemTicketBinding
-import com.domain.model.Ticket
+import com.domain.model.TicketTest
 import com.presentation.base.BaseDiffUtil
 
 class TicketAdapter(private val onTicketClickListener: () -> Unit) :
-    ListAdapter<Ticket, ViewHolder>(BaseDiffUtil<Ticket>()) {
+    ListAdapter<TicketTest, ViewHolder>(BaseDiffUtil<TicketTest>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

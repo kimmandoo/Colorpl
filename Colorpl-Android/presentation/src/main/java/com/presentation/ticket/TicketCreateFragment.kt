@@ -1,6 +1,5 @@
 package com.presentation.ticket
 
-import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
@@ -15,14 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
 import com.domain.model.Description
-import com.domain.model.Ticket
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType

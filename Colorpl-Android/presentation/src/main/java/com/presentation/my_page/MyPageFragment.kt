@@ -2,7 +2,7 @@ package com.presentation.my_page
 
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
-import com.domain.model.Ticket
+import com.domain.model.TicketTest
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.util.setDistanceX
@@ -36,28 +36,28 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
         ticketAdapter.submitList(
             listOf( // testcode
-                Ticket(
+                TicketTest(
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date(),
                     space = "ignota",
                     seat = "commune"
                 ),
-                Ticket(
+                TicketTest(
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date(),
                     space = "ignota",
                     seat = "commune"
                 ),
-                Ticket(
+                TicketTest(
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date(),
                     space = "ignota",
                     seat = "commune"
                 ),
-                Ticket(
+                TicketTest(
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date(),
