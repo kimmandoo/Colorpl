@@ -20,8 +20,7 @@
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
             app:destination="@id/fragment_feed_ticket_select"
-            app:enterAnim="@anim/down_to_top"
-            app:popExitAnim="@anim/top_to_down" />
+            />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -61,8 +60,8 @@
         tools:layout="@layout/fragment_feed_ticket_select" >
         <action
             android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
-            app:popExitAnim="@anim/anim_fade_out_x_right_to_left"
-            app:popUpTo="@id/fragment_feed"
+            app:popUpTo="@id/fragment_feed_ticket_select"
+            app:popUpToInclusive="true"
             app:destination="@id/fragment_review" />
     </dialog>
 
