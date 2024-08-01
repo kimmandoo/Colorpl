@@ -37,8 +37,6 @@ public class Member extends BaseEntity{
     private String nickname;
     private String profile;
 
-    private String profile;
-
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -52,10 +50,21 @@ public class Member extends BaseEntity{
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Category> categories=new HashSet<>();
+    private Set<Category> categories;
 
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
 //    private List<Review> reviews;
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_following",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private Set<Member> followingList;
+
+    @ManyToMany(mappedBy = "followingList")
+    private Set<Member> followerList;
 
 
 
@@ -92,6 +101,15 @@ public class Member extends BaseEntity{
         ticket.updateMember(null);
     }
 
+    public void addFollowing(Member member) {
+        followingList.add(member);
+        member.getFollowerList().add(this);
+    }
+
+    public void removeFollowing(Member member) {
+        followingList.remove(member);
+        member.getFollowerList().remove(this);
+    }
 
     public void updatePassword(String password) {
         this.password = password;

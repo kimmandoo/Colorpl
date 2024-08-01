@@ -2,15 +2,11 @@ package com.colorpl.member.service;
 
 import static com.colorpl.member.dto.MemberDTO.toMemberDTO;
 
-import com.colorpl.global.common.exception.BusinessException;
-import com.colorpl.global.common.exception.EmailAlreadyExistsException;
-import com.colorpl.global.common.exception.EmailNotFoundException;
-import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.MemberRequestNotMatchException;
-import com.colorpl.global.common.exception.Messages;
+import com.colorpl.global.common.exception.*;
 import com.colorpl.global.config.TokenProvider;
 import com.colorpl.member.Member;
 import com.colorpl.member.MemberRefreshToken;
+import com.colorpl.member.dto.FollowCountDTO;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInResponse;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
@@ -99,6 +95,66 @@ public class MemberService {
             .orElseThrow(() -> new BusinessException(Messages.MEMBER_NOT_FOUND));
 
         return toMemberDTO(existingMember);
+    }
+
+    @Transactional
+    public void followMember(Integer memberId, Integer followId) {
+        if (memberId.equals(followId)) {
+            throw new MemberSelfFollowException();
+        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        Member followMember = memberRepository.findById(followId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (member.getFollowingList().contains(followMember)) {
+            throw new MemberAlreadyFollowException();
+        }
+
+        member.addFollowing(followMember);
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void unfollowMember(Integer memberId, Integer followId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        Member followMember = memberRepository.findById(followId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        member.removeFollowing(followMember);
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public List<Member> getFollowers(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        return List.copyOf(member.getFollowerList());
+    }
+
+    @Transactional
+    public List<Member> getFollowing(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        return List.copyOf(member.getFollowingList());
+    }
+    @Transactional
+    public FollowCountDTO getFollowersCount(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        int followersCount = member.getFollowerList().size();
+        return new FollowCountDTO(followersCount); // members 필드는 사용하지 않음
+    }
+
+    @Transactional
+    public FollowCountDTO getFollowingCount(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        int followingCount = member.getFollowingList().size();
+        return new FollowCountDTO(followingCount); // members 필드는 사용하지 않음
     }
 
     //리뷰 조회는 querydsl
