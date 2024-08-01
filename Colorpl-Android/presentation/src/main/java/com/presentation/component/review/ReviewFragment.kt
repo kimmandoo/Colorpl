@@ -20,10 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-enum class ReviewMode {
-    NEW,
-    EDIT
-}
 
 @AndroidEntryPoint
 class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragment_review) {
