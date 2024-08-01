@@ -1,4 +1,4 @@
-package com.presentation.component.review
+package com.presentation.feed
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReviewBinding
 import com.presentation.base.BaseDialogFragment
+import com.presentation.base.BaseFragment
 import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.ReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +37,12 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         checkEditText()
     }
 
+
+
     private fun initUi() {
         binding.tvConfirm.setOnClickListener {
             // action
-            dismiss()
+            navigatePopBackStack()
         }
         binding.ivEnroll.setOnClickListener {
             getPhotoGallery(pickImageLauncher)

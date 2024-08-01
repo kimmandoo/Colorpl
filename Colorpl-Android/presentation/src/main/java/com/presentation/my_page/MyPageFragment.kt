@@ -80,40 +80,41 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         val expire = binding.ivTicketExpire
         star.isSelected = true
 
-        binding.ivTicketStar.setOnClickListener {
-            it.isSelected = !it.isSelected
-            expire.isSelected = false
-            binding.indicator.setTransactionX(0f)
-        }
-
-        binding.ivTicketExpire.setOnClickListener {
-            it.isSelected = !it.isSelected
-            star.isSelected = false
-            val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
-            binding.indicator.setTransactionX(distance)
-        }
-
-        binding.tvProfileImg.setOnClickListener { //프로필 수정 이동
-            navigateDestination(
-                R.id.action_fragment_my_page_to_fragment_profile_update
-            )
-        }
-
-        binding.includeSearchUser.clMenu.setOnClickListener { // 유저 찾기 이동
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_user_search)
-        }
-        binding.includeMyReview.clMenu.setOnClickListener { // 나의 리뷰 이동
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_my_review)
-        }
-        binding.includeNotice.clMenu.setOnClickListener { //공지사항 이동
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_notice)
-        }
-
-        binding.includePayment.clMenu.setOnClickListener { //결제 내역 이동
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_payment_history)
-        }
-        binding.ivSetting.setOnClickListener {
-            navigateDestination(R.id.action_fragment_my_page_to_fragment_setting)
+        binding.apply {
+            ivTicketStar.setOnClickListener {
+                it.isSelected = !it.isSelected
+                expire.isSelected = false
+                indicator.setTransactionX(0f)
+            }
+            ivTicketExpire.setOnClickListener {
+                it.isSelected = !it.isSelected
+                star.isSelected = false
+                val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
+                indicator.setTransactionX(distance)
+            }
+            tvProfileImg.setOnClickListener { //프로필 수정 이동
+                navigateDestination(
+                    R.id.action_fragment_my_page_to_fragment_profile_update
+                )
+            }
+            includeSearchUser.clMenu.setOnClickListener { // 유저 찾기 이동
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_user_search)
+            }
+            includeMyReview.clMenu.setOnClickListener { // 나의 리뷰 이동
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_my_review)
+            }
+            includeNotice.clMenu.setOnClickListener { //공지사항 이동
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_notice)
+            }
+            includePayment.clMenu.setOnClickListener { //결제 내역 이동
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_payment_history)
+            }
+            ivSetting.setOnClickListener { //설정 이동
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_setting)
+            }
+            imgFeedRegister.setOnClickListener {
+                navigateDestination(R.id.action_fragment_my_page_to_fragment_feed_ticket_select)
+            }
         }
     }
 

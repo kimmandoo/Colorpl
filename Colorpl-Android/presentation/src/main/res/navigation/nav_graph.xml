@@ -17,6 +17,10 @@
             app:destination="@id/fragment_feed_detail"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select"
+            />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -49,6 +53,17 @@
         android:name="com.presentation.feed.FeedDetailFragment"
         android:label="FeedDetailFragment"
         tools:layout="@layout/fragment_feed_detail" />
+
+    <dialog
+        android:id="@+id/fragment_feed_ticket_select"
+        android:name="com.presentation.feed.FeedTicketSelectFragment"
+        tools:layout="@layout/fragment_feed_ticket_select" >
+        <action
+            android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
+            app:popUpTo="@id/fragment_feed_ticket_select"
+            app:popUpToInclusive="true"
+            app:destination="@id/fragment_review" />
+    </dialog>
 
     <!-- Reservation -->
     <fragment
@@ -132,6 +147,9 @@
             android:id="@+id/action_fragment_my_page_to_fragment_setting"
             app:destination="@id/fragment_setting"
             app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select" />
     </fragment>
 
 
@@ -149,9 +167,10 @@
         android:id="@+id/fragment_my_review"
         android:name="com.presentation.my_page.MyReviewFragment"
         tools:layout="@layout/fragment_my_review" >
+
         <action
-            android:id="@+id/action_fragment_my_review_to_fragment_review"
-            app:destination="@id/fragment_review" />
+            android:id="@+id/action_fragment_my_review_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select" />
     </fragment>
 
     <fragment
@@ -171,7 +190,7 @@
 
     <dialog
         android:id="@+id/fragment_review"
-        android:name="com.presentation.component.review.ReviewFragment"
+        android:name="com.presentation.feed.ReviewFragment"
         tools:layout="@layout/fragment_review" />
 
     <include app:graph="@navigation/nav_ticket_graph" />
