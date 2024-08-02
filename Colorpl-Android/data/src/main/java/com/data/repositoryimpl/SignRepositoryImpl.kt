@@ -3,7 +3,9 @@ package com.data.repositoryimpl
 import com.data.api.safeApiCall
 import com.data.datasource.remote.SignDataSource
 import com.data.model.request.RequestSignIn
+import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
+import com.data.model.response.ResponseSignUp
 import com.data.repository.SignRepository
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +20,14 @@ class SignRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 signDataSource.postSignIn(requestSignIn)
+            })
+        }
+    }
+
+    override suspend fun signUp(requestSignUp: RequestSignUp): Flow<ApiResult<ResponseSignUp>> {
+        return flow {
+            emit(safeApiCall {
+                signDataSource.postSignUp(requestSignUp)
             })
         }
     }

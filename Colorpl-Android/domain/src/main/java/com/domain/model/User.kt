@@ -5,6 +5,7 @@ data class User(
     val password : String,
     val nickName : String = "",
     val type : String ="",
+    val profile : String ="",
     val accessToken: String ="",
     val refreshToken: String =""
 )
