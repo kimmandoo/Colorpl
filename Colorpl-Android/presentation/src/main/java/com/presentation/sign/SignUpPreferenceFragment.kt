@@ -44,12 +44,18 @@ class SignUpPreferenceFragment :
             //취향 클릭
             item.keys.forEach { view ->
                 view.clPreference.setOnClickListener {
-                    item[view]?.let { item -> signUpViewModel.userPreference.addOrRemove(item) }
-                    val selected = !it.isSelected
+                    val selected = if (signUpViewModel.userPreference.getItemCount() < 2) {
+                        item[view]?.let { item -> signUpViewModel.userPreference.addOrRemove(item) }
+                        !it.isSelected
+                    } else {
+                        item[view]?.let { item -> signUpViewModel.userPreference.remove(item) }
+                        false
+                    }
                     it.isSelected = selected
                     view.ivIcon.isSelected = selected
                     view.tvType.isSelected = selected
                     view.isSelected = selected
+
                 }
             }
             ivBack.setOnClickListener {
