@@ -23,7 +23,6 @@ object NetworkModule {
 
     //local property로 따로 빼기
     val baseUrl = BuildConfig.BASE_URL
-    val mockUrl = BuildConfig.MOCK_URL
     val tmapUrl = "https://apis.openapi.sk.com/"
     val gptUrl = "https://api.openai.com/"
 
