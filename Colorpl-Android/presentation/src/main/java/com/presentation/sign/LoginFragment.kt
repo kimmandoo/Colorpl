@@ -44,8 +44,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         super.onStart()
         val firebase = Firebase.auth
         if (firebase.currentUser != null) {
-            startActivity(Intent(requireActivity(), MainActivity::class.java))
-            requireActivity().finish()
+//            startActivity(Intent(requireActivity(), MainActivity::class.java))
+//            requireActivity().finish()
         }
     }
 

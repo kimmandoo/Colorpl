@@ -28,6 +28,6 @@ fun User.toSignUpParam(): RequestSignUp {
         email = this.email,
         password = this.password,
         nickname = this.nickName,
-        profile = this.profile
+        profile = this.profileImage
     )
 }
