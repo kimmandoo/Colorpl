@@ -129,7 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@{viewModel.reservationSeat.size + `매` + ` | ` + viewModel.reservationSeat.toString()}"
+                            app:setFormattedSeatsText="@{viewModel.reservationSeat}"
                             android:textColor="@color/white"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tv_location"
@@ -330,7 +330,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/reservation_pay"
+                android:text="@string/reservation_discount_pay"
                 android:textColor="@color/timber_wolf"
                 app:layout_constraintStart_toEndOf="@+id/tv_pay_value"
                 app:layout_constraintTop_toTopOf="parent" />

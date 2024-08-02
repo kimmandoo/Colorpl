@@ -1,9 +1,12 @@
 package com.presentation.reservation
 
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationTimeTableBinding
+import com.domain.model.DateTableItem
 import com.domain.model.ReservationPairInfo
 import com.domain.model.ReservationPlace
 import com.domain.model.Theater
@@ -11,10 +14,14 @@ import com.domain.model.TimeTable
 import com.domain.model.toModel
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.reservation.process.OnTimeTableClickListener
+import com.presentation.component.adapter.reservation.process.ReservationDateTableAdapter
 import com.presentation.component.adapter.reservation.process.ReservationPlaceAdapter
 import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class ReservationTimeTableFragment :
@@ -22,9 +29,23 @@ class ReservationTimeTableFragment :
     OnTimeTableClickListener {
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
     private lateinit var reservationPlaceAdapter: ReservationPlaceAdapter
+    private val reservationDateTableAdapter by lazy {
+        ReservationDateTableAdapter{ dateItem  ->
+            onDateTableClick(dateItem)
+            viewModel.setReservationDate(dateItem.date)
+        }
+    }
     private val selectedTimeTable = mutableListOf<ReservationPairInfo>()
+
+    private fun onDateTableClick(dateTable: DateTableItem) {
+        Toast.makeText(requireContext(), "${dateTable.date}", Toast.LENGTH_SHORT).show()
+    }
+
     override fun initView() {
         initAdapter()
+        initDateAdapter()
+        initViewModel()
+        observedSelectedDate()
     }
 
 
@@ -83,6 +104,44 @@ class ReservationTimeTableFragment :
         reservationPlaceAdapter.submitList(
             data.toModel()
         )
+    }
+
+    private fun initDateAdapter() {
+        binding.rcReservationDateTable.itemAnimator = null
+        binding.rcReservationDateTable.adapter = reservationDateTableAdapter
+        val today = LocalDate.now()
+        val dateList = (0 until 14).map { i ->
+            val date = today.plusDays(i.toLong())
+            DateTableItem(
+                date = date,
+                isSelected = i == 0,
+                isEvent = !date.dayOfMonth.toString().contains('6')
+            )
+        }
+
+        reservationDateTableAdapter.submitList(dateList)
+    }
+
+    private fun initViewModel() {
+        viewModel.setReservationDate(LocalDate.now())
+        binding.apply {
+            this@apply.viewModel = this@ReservationTimeTableFragment.viewModel
+        }
+    }
+
+    private fun observedSelectedDate() {
+        viewModel.reservationDate.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                val dateList = (0 until 14).map { i ->
+                    val date = LocalDate.now().plusDays(i.toLong())
+                    DateTableItem(
+                        date = date,
+                        isSelected = viewModel.reservationDate.value == date,
+                        isEvent = !date.dayOfMonth.toString().contains('6')
+                    )
+                }
+                reservationDateTableAdapter.submitList(dateList)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {

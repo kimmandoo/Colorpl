@@ -6,6 +6,7 @@ import com.domain.model.TimeTable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +17,8 @@ class ReservationViewModel @Inject constructor(
     val reservationImg: StateFlow<String> = _reservationImg
     private val _reservationTitle = MutableStateFlow("")
     val reservationTitle: StateFlow<String> = _reservationTitle
-    private val _reservationDate = MutableStateFlow("")
-    val reservationDate: StateFlow<String> = _reservationDate
+    private val _reservationDate = MutableStateFlow<LocalDate>(LocalDate.now())
+    val reservationDate: StateFlow<LocalDate> = _reservationDate
     private val _reservationPlace = MutableStateFlow("")
     val reservationPlace: StateFlow<String> = _reservationPlace
     private val _reservationTheater = MutableStateFlow("")
@@ -36,7 +37,7 @@ class ReservationViewModel @Inject constructor(
         _reservationTitle.value = title
     }
 
-    fun setReservationDate(date: String) {
+    fun setReservationDate(date: LocalDate) {
         _reservationDate.value = date
     }
 

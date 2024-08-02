@@ -8,9 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
+import com.domain.model.Seat
 import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @BindingAdapter("setImage")
 fun loadImage(imageView: ImageView, image: Drawable?) {
@@ -191,4 +196,43 @@ fun setPaymentBackground(imageView: ImageView, paymentResult: PaymentResult?) {
     }
 }
 
+@BindingAdapter("setFormattedSeatsText")
+fun setFormattedSeatsText(textView: TextView, seats: List<Seat>?) {
+    seats?.let {
+        val seatText = "${seats.size}매 | ${seats.joinToString(separator = ", ") { it.toString() }}"
+        textView.text = seatText
+    }
+}
 
+@BindingAdapter("dayOfWeekColor", "isSelected")
+fun setDayOfWeekColor(view: TextView, date: LocalDate, isSelected: Boolean) {
+    val context = view.context
+    val dayOfWeek = date.dayOfWeek
+    val colorRes = when {
+        isSelected -> R.color.white
+        date.isBefore(LocalDate.now()) -> R.color.light_gray // 선택 불가능한 색
+        dayOfWeek == java.time.DayOfWeek.SATURDAY -> R.color.blue
+        dayOfWeek == java.time.DayOfWeek.SUNDAY -> R.color.imperial_red
+        else -> R.color.eerie_black
+    }
+    view.setTextColor(ContextCompat.getColor(context, colorRes))
+}
+
+@BindingAdapter("date", "setTitle")
+fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
+    val today = LocalDate.now()
+    val tomorrow = today.plusDays(1)
+    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+    val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+    if (setTitle) {
+        val dateText = when (date) {
+            today -> "${R.string.reservation_selected_title} : $formattedDate(${dayOfWeek}) ${R.string.reservation_date_today}"
+            tomorrow -> "${R.string.reservation_selected_title} : $formattedDate($dayOfWeek) ${R.string.reservation_date_tomorrow}"
+            else -> "${R.string.reservation_selected_title} : $formattedDate($dayOfWeek)"
+        }
+        view.text = dateText
+    } else {
+        view.text = formattedDate
+    }
+
+}
