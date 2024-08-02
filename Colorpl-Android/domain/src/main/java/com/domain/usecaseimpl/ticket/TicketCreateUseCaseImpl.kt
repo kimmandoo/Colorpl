@@ -16,7 +16,10 @@ import javax.inject.Inject
 class TicketCreateUseCaseImpl @Inject constructor(
     private val ticketRepository: TicketRepository,
 ) : TicketCreateUseCase {
-    override suspend fun invoke(image: File, ticket: Ticket): Flow<RepoResult<String>> = flow {
+    override suspend fun invoke(
+        image: File,
+        ticket: Ticket
+    ): Flow<RepoResult<String>> = flow {
         ticketRepository.createTicket(
             image, RequestTicketCreate(
                 name = ticket.name,
@@ -28,7 +31,7 @@ class TicketCreateUseCaseImpl @Inject constructor(
         ).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    val description = result.data
+                    val description = result.data.toEntity()
                     Timber.d("$description")
                     emit(RepoResult.success(description))
                 }

@@ -19,7 +19,7 @@ import java.io.InputStream
 
 class ImageProcessingUtil(private val context: Context) {
 
-    fun processImageForVisionAPI(imageUri: Uri, maxWidth: Int = 512, maxHeight: Int = 512, quality: Int = 85): ByteArray {
+    fun processImageForVisionAPI(imageUri: Uri, maxWidth: Int = 1024, maxHeight: Int = 1024, quality: Int = 85): ByteArray {
         val inputStream = context.contentResolver.openInputStream(imageUri)
         var bitmap = BitmapFactory.decodeStream(inputStream)
         inputStream?.close()

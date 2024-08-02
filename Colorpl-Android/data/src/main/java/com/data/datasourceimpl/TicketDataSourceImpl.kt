@@ -2,7 +2,6 @@ package com.data.datasourceimpl
 
 import com.data.api.TicketApi
 import com.data.datasource.remote.TicketDataSource
-import com.data.model.request.RequestTicketCreate
 import com.data.model.response.ResponseTicketCreate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -14,7 +13,7 @@ class TicketDataSourceImpl @Inject constructor(
     override suspend fun createTicket(
         ticket: MultipartBody.Part,
         request: RequestBody
-    ): String {
+    ): ResponseTicketCreate {
         return api.createTicket(
             request = request,
             file = ticket

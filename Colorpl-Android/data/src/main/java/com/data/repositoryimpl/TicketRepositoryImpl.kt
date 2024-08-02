@@ -10,6 +10,7 @@ import com.data.util.FormDataConverterUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -19,8 +20,9 @@ class TicketRepositoryImpl @Inject constructor(
     override suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
-    ): Flow<ApiResult<String>> = flow {
+    ): Flow<ApiResult<ResponseTicketCreate>> = flow {
         emit(safeApiCall {
+            Timber.d("ticket: ${ticket}\n request:$request")
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
             val filePart: MultipartBody.Part =
                 FormDataConverterUtil.getMultiPartBody("file", ticket)
