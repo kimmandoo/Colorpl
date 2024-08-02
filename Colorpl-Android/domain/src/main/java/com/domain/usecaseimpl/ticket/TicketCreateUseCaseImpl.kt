@@ -1,6 +1,5 @@
 package com.domain.usecaseimpl.ticket
 
-import com.data.model.request.RequestTicketCreate
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
@@ -21,13 +20,7 @@ class TicketCreateUseCaseImpl @Inject constructor(
         ticket: Ticket
     ): Flow<DomainResult<Int>> = flow {
         ticketRepository.createTicket(
-            image, RequestTicketCreate(
-                name = ticket.name,
-                theater = ticket.theater,
-                dateTime = ticket.date,
-                seat = ticket.seat,
-                category = ticket.category
-            )
+            image, ticket.toEntity()
         ).collect { result ->
             when (result) {
                 is ApiResult.Success -> {

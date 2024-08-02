@@ -33,24 +33,26 @@ class TicketCreateViewModel @Inject constructor(
 
     fun createTicket(image: File) {
         viewModelScope.launch {
-            ticketCreateUseCase(
-                image, Ticket(
-                    file = null,
-                    ticketId = 1101,
-                    name = _description.value!!.title!!,
-                    theater = _description.value!!.detail!!,
-                    date = _description.value!!.schedule!!,
-                    seat = _description.value!!.seat!!,
-                    category = _category.value
-                )
-            ).collectLatest { response ->
-                _createResponse.value = when (response) {
-                    is DomainResult.Success -> {
-                        response.data
-                    }
+            _description.value?.let { ticket ->
+                ticketCreateUseCase(
+                    image, Ticket(
+                        file = null,
+                        ticketId = -1,
+                        name = ticket.title,
+                        theater = ticket.detail,
+                        date = ticket.schedule,
+                        seat = ticket.seat!!,
+                        category = _category.value
+                    )
+                ).collectLatest { response ->
+                    _createResponse.value = when (response) {
+                        is DomainResult.Success -> {
+                            response.data
+                        }
 
-                    is DomainResult.Error -> {
-                         -1
+                        is DomainResult.Error -> {
+                            -1
+                        }
                     }
                 }
             }
