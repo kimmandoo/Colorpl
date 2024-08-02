@@ -6,7 +6,7 @@ import com.domain.model.Description
 import com.domain.model.Ticket
 import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TicketCreateUseCase
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,11 +44,11 @@ class TicketCreateViewModel @Inject constructor(
                 )
             ).collectLatest { response ->
                 when (response) {
-                    is RepoResult.Success -> {
+                    is DomainResult.Success -> {
                         Timber.d("success $response")
                     }
 
-                    is RepoResult.Error -> {
+                    is DomainResult.Error -> {
                         Timber.d("error $response")
                     }
                 }
@@ -60,11 +60,11 @@ class TicketCreateViewModel @Inject constructor(
         viewModelScope.launch {
             openAiUseCase(base64String).collectLatest {
                 when (it) {
-                    is RepoResult.Success -> {
+                    is DomainResult.Success -> {
                         _description.value = it.data
                     }
 
-                    is RepoResult.Error -> {
+                    is DomainResult.Error -> {
 
                     }
                 }

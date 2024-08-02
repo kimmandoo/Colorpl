@@ -6,7 +6,7 @@ import com.data.util.ApiResult
 import com.domain.mapper.toEntity
 import com.domain.model.Ticket
 import com.domain.usecase.TicketCreateUseCase
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -19,7 +19,7 @@ class TicketCreateUseCaseImpl @Inject constructor(
     override suspend fun invoke(
         image: File,
         ticket: Ticket
-    ): Flow<RepoResult<Int>> = flow {
+    ): Flow<DomainResult<Int>> = flow {
         ticketRepository.createTicket(
             image, RequestTicketCreate(
                 name = ticket.name,
@@ -33,11 +33,11 @@ class TicketCreateUseCaseImpl @Inject constructor(
                 is ApiResult.Success -> {
                     val description = result.data.toEntity()
                     Timber.d("$description")
-                    emit(RepoResult.success(description))
+                    emit(DomainResult.success(description))
                 }
 
                 is ApiResult.Error -> {
-                    emit(RepoResult.error(result.exception))
+                    emit(DomainResult.error(result.exception))
                 }
             }
         }
