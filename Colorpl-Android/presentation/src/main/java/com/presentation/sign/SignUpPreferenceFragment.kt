@@ -51,11 +51,10 @@ class SignUpPreferenceFragment :
                         item[view]?.let { item -> signUpViewModel.userPreference.remove(item) }
                         false
                     }
-                    it.isSelected = selected
-                    view.ivIcon.isSelected = selected
-                    view.tvType.isSelected = selected
+                    listOf(it, view.ivIcon, view.tvType).forEach {child ->
+                        child.isSelected = selected
+                    }
                     view.isSelected = selected
-
                 }
             }
             ivBack.setOnClickListener {
