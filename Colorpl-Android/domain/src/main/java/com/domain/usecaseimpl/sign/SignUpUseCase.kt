@@ -4,7 +4,7 @@ import com.data.repository.SignRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toSignUpParam
 import com.domain.model.User
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,12 +18,11 @@ class SignUpUseCase @Inject constructor(
             Timber.d("회원 가입 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    val data = RepoResult.success(result.data)
-                    emit(RepoResult.success(result.data))
+                    emit(DomainResult.success(result.data))
                 }
 
                 is ApiResult.Error -> {
-                    emit(RepoResult.error(result.exception))
+                    emit(DomainResult.error(result.exception))
                 }
             }
         }

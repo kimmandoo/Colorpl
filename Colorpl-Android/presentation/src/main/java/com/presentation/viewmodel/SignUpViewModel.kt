@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.User
 import com.domain.usecaseimpl.sign.SignUpUseCase
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import com.presentation.component.custom.ListStateFlow
 import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
@@ -119,17 +119,15 @@ class SignUpViewModel @Inject constructor(
             profileImage = userImage.value
         )
         viewModelScope.launch {
-            viewModelScope.launch {
-                signUpUseCase.signUp(user).collectLatest {
-                    when (it) {
-                        is RepoResult.Success -> {
-                            _signUpEvent.emit(SignUpEventState.SignUpSuccess)
-                        }
+            signUpUseCase.signUp(user).collectLatest {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _signUpEvent.emit(SignUpEventState.SignUpSuccess)
+                    }
 
-                        is RepoResult.Error -> {
-                            Timber.d("회원가입 에러 확인 ${it.exception}")
-                            _signUpEvent.emit(SignUpEventState.Error(it.exception.toString()))
-                        }
+                    is DomainResult.Error -> {
+                        Timber.d("회원가입 에러 확인 ${it.exception}")
+                        _signUpEvent.emit(SignUpEventState.Error(it.exception.toString()))
                     }
                 }
             }
