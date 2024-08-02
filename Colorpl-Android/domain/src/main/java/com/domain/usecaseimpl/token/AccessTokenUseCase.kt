@@ -2,7 +2,7 @@ package com.domain.usecaseimpl.token
 
 import com.data.repository.TokenRepository
 import com.data.util.ApiResult
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -14,11 +14,11 @@ class AccessTokenUseCase @Inject constructor(
         tokenRepository.getAccessToken().collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    emit(RepoResult.success(result.data))
+                    emit(DomainResult.success(result.data))
                 }
 
                 is ApiResult.Error -> {
-                    emit(RepoResult.error(result.exception))
+                    emit(DomainResult.error(result.exception))
                 }
             }
         }

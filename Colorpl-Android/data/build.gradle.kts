@@ -61,9 +61,11 @@ dependencies {
 
     // Network
     implementation(libs.retrofit)
+    implementation(platform(libs.okhttp.bom))
     implementation(libs.retrofit.converter.kotlinxSerialization)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.converter.gson)
 
     // DataStore
     implementation(libs.datastore.preferences)

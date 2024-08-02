@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.User
 import com.domain.usecaseimpl.sign.SignInUseCase
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import com.presentation.sign.model.SignInEventState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,11 +28,11 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             signInUseCase.signIn(User(email, password)).collectLatest {
                 when (it) {
-                    is RepoResult.Success -> {
+                    is DomainResult.Success -> {
                         _signInEvent.emit(SignInEventState.SignInSuccess)
                     }
 
-                    is RepoResult.Error -> {
+                    is DomainResult.Error -> {
                         Timber.d("로그인 에러 확인 ${it.exception}")
                         _signInEvent.emit(SignInEventState.Error(it.exception.toString()))
                     }

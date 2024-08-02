@@ -121,10 +121,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     Ticket(
                         ticketId = 4706,
                         name = "Elijah Merritt",
-                        date = Date(),
-                        space = "ignota",
-                        seat = "commune"
-                    )
+                        date = Date().toString(),
+                        theater = "ignota",
+                        seat = "commune",
+                        category = "뮤지컬"
+                    ),
                 )
             )
         }

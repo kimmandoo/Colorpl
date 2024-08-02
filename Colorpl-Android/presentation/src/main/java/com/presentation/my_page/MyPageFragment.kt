@@ -35,35 +35,40 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
 
         ticketAdapter.submitList(
-            listOf( // testcode
+            listOf(
+                // testcode
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
-                )
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
+                ),
             )
         )
 

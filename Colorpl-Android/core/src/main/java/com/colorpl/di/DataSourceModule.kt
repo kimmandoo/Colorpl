@@ -6,12 +6,14 @@ import com.data.datasource.local.TokenDataSource
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
 import com.data.datasource.remote.SignDataSource
+import com.data.datasource.remote.TicketDataSource
 import com.data.datasource.remote.TmapRouteDataSource
 import com.data.datasourceimpl.CommentDataSourceImpl
 import com.data.datasourceimpl.FeedDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.SignDataSourceImpl
+import com.data.datasourceimpl.TicketDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
 import com.data.datasourceimpl.TokenDataSourceImpl
 import dagger.Binds
@@ -60,6 +62,12 @@ interface DataSourceModule {
     fun provideCommentDataSource(
         commentDataSourceImpl: CommentDataSourceImpl
     ): CommentDataSource
+
+    @Singleton
+    @Binds
+    fun provideTicketDataSource(
+        ticketDataSourceImpl: TicketDataSourceImpl
+    ): TicketDataSource
 
     @Singleton
     @Binds

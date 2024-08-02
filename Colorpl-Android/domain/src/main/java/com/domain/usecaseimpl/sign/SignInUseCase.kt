@@ -5,7 +5,7 @@ import com.data.repository.TokenRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toParam
 import com.domain.model.User
-import com.domain.util.RepoResult
+import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,13 +20,13 @@ class SignInUseCase @Inject constructor(
             Timber.d("로그인 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    val data = RepoResult.success(result.data)
+                    val data = DomainResult.success(result.data)
                     tokenRepository.setAccessToken(data.data.accessToken)
-                    emit(RepoResult.success(result.data))
+                    emit(DomainResult.success(result.data))
                 }
 
                 is ApiResult.Error -> {
-                    emit(RepoResult.error(result.exception))
+                    emit(DomainResult.error(result.exception))
                 }
             }
         }
