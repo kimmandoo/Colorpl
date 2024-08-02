@@ -5,6 +5,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AppProvider } from './components/dashboard/AppContext';
 
 const theme = extendTheme({});
 
@@ -13,7 +14,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ChakraProvider theme={theme}>
-        <App />
+        <AppProvider>
+          <App />
+        </ AppProvider>
       </ChakraProvider>
     </BrowserRouter>
   </React.StrictMode>

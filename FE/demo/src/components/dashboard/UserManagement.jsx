@@ -5,8 +5,10 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon, ViewIcon } from '@chakra-ui/icons';
 import axios from 'axios';
+import { useAppContext } from './AppContext';
 
 const UserManagementPage = () => {
+  const { admin } = useAppContext();
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
@@ -16,8 +18,10 @@ const UserManagementPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    fetchMembers();
-  }, []);
+    if (admin) {
+      fetchMembers();
+    }
+  }, [admin]);
 
   const fetchMembers = async () => {
     try {
@@ -26,6 +30,7 @@ const UserManagementPage = () => {
         params: {
           skip: 0,
           limit: 100,
+          order_by: 'created_date', // 최근 생성된 유저를 가져오기 위한 파라미터
         },
         headers: {
           Authorization: `Bearer ${token}`
@@ -67,8 +72,7 @@ const UserManagementPage = () => {
       await axios.put(`http://localhost:8000/cs/members/${memberId}/status`, {
         is_deleted: isDeleted,
         management_reason: managementReason,
-        ban_days: parseInt(banDays, 10),
-        ban_hours: parseInt(banHours, 10),
+        ban_duration: parseInt(banDays, 10) * 24 + parseInt(banHours, 10),  // Total duration in hours
       }, {
         headers: {
           Authorization: `Bearer ${token}`

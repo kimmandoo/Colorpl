@@ -33,7 +33,7 @@ class Review(BaseEntity):
     schedule_id = Column(BigInteger, ForeignKey('schedule.schedule_id'), nullable=False)
     member_id = Column(BigInteger, ForeignKey('member.member_id'), nullable=False)
     content = Column(VARCHAR(255), nullable=False)
-    is_spoiler = Column(Boolean, nullable=False)
+    is_spoiler = Column(Boolean, default=False)
     schedule = relationship("Schedule", back_populates="reviews")
     member = relationship("Member", back_populates="reviews")
     comments = relationship("Comment", back_populates="review")

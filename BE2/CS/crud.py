@@ -54,14 +54,10 @@ def get_reviews(db: Session, skip: int = 0, limit: int = 100) -> Tuple[List[sche
     total_count = db.query(models.Review).count()
     return [schemas.Review.model_validate(review, from_attributes=True) for review in reviews], total_count
 
-def update_review(db: Session, review_id: int, review_update: schemas.ReviewUpdate, management_by: str, management_reason: str) -> Optional[schemas.Review]:
+def update_review(db: Session, review_id: int, is_spoiler: bool, management_by: str, management_reason: str) -> Optional[schemas.Review]:
     review = db.query(models.Review).filter(models.Review.review_id == review_id).first()
     if review:
-        update_data = review_update.dict(exclude_unset=True)
-        for key, value in update_data.items():
-            if key == 'member_id' and value is None:
-                continue  # member_id가 None인 경우 건너뛰기
-            setattr(review, key, value)
+        review.is_spoiler = is_spoiler
         db.commit()
         db.refresh(review)
         log = models.ManagementLog(
@@ -74,6 +70,9 @@ def update_review(db: Session, review_id: int, review_update: schemas.ReviewUpda
         db.add(log)
         db.commit()
     return schemas.Review.model_validate(review, from_attributes=True) if review else None
+
+def get_reviews_by_content(db: Session, content: str, skip: int = 0, limit: int = 100):
+    return db.query(models.Review).filter(models.Review.content.contains(content)).offset(skip).limit(limit).all()
 
 # Comments
 def get_comment(db: Session, comment_id: int) -> Optional[schemas.Comment]:
