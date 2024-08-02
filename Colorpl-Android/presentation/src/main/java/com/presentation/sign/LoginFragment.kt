@@ -44,8 +44,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         super.onStart()
         val firebase = Firebase.auth
         if (firebase.currentUser != null) {
-            startActivity(Intent(requireActivity(), MainActivity::class.java))
-            requireActivity().finish()
+//            startActivity(Intent(requireActivity(), MainActivity::class.java))
+//            requireActivity().finish()
         }
     }
 
@@ -143,6 +143,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                         GoogleIdTokenCredential.createFrom(credential.data)
                     Timber.d("구글 로그인 타입처리")
                     val idToken = googleIdTokenCredential.idToken
+                    Timber.d("구글 아이디 토큰 $idToken")
                     val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
                     auth.signInWithCredential(firebaseCredential)
                         .addOnCompleteListener { task ->

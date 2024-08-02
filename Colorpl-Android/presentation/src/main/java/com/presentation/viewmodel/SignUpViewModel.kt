@@ -2,7 +2,11 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.User
+import com.domain.usecaseimpl.sign.SignUpUseCase
+import com.domain.util.DomainResult
 import com.presentation.component.custom.ListStateFlow
+import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
 import com.presentation.util.Sign
 import com.presentation.util.emailCheck
@@ -21,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
 
@@ -40,8 +44,13 @@ class SignUpViewModel @Inject constructor(
     val userEmail: StateFlow<String> get() = _userEmail
 
     private val _userNickName = MutableStateFlow("")
+    val userNickName: StateFlow<String> get() = _userNickName
+
     private val _userPassWord = MutableStateFlow("")
+    val userPassWord: StateFlow<String> get() = _userPassWord
+
     private val _userImage = MutableStateFlow("")
+    val userImage: StateFlow<String> get() = _userImage
 
     fun setUserEmail(value: String) {
         _userEmail.value = value
@@ -73,6 +82,9 @@ class SignUpViewModel @Inject constructor(
         checkCompleteNext()
     }
 
+    private val _signUpUser = MutableStateFlow(User())
+    val signUpUser: StateFlow<User> get() = _signUpUser
+
     private fun checkSignNext() {
         combine(
             _userEmail,
@@ -93,6 +105,34 @@ class SignUpViewModel @Inject constructor(
                 _completeButton.emit(item.isNotEmpty())
             }
         }
+    }
+
+    private val _signUpEvent = MutableSharedFlow<SignUpEventState>()
+    val signUpEvent: SharedFlow<SignUpEventState> get() = _signUpEvent
+
+
+    fun signUp() { //회원 가입 서버 통신
+        val user = User(
+            email = userEmail.value,
+            password = userPassWord.value,
+            nickName = userNickName.value,
+            profileImage = userImage.value
+        )
+        viewModelScope.launch {
+            signUpUseCase.signUp(user).collectLatest {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _signUpEvent.emit(SignUpEventState.SignUpSuccess)
+                    }
+
+                    is DomainResult.Error -> {
+                        Timber.d("회원가입 에러 확인 ${it.exception}")
+                        _signUpEvent.emit(SignUpEventState.Error(it.exception.toString()))
+                    }
+                }
+            }
+        }
+
     }
 
 

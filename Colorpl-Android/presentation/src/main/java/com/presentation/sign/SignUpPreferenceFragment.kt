@@ -2,6 +2,7 @@ package com.presentation.sign
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -9,6 +10,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpPreferenceBinding
 import com.presentation.MainActivity
 import com.presentation.base.BaseDialogFragment
+import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
 import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,41 +27,44 @@ class SignUpPreferenceFragment :
     override fun initView(savedInstanceState: Bundle?) {
         initClickEvent()
         observeCompleteButton()
+        observeSignUp()
     }
 
 
     private fun initClickEvent() {
-        val item = hashMapOf(
-            binding.includeMovie to Category.MOVIE,
-            binding.includeCircus to Category.CIRCUS,
-            binding.includeMusical to Category.MUSICAL,
-            binding.includeTheatre to Category.THEATRE,
-            binding.includeExhibition to Category.EXHIBITION
-        )
+        binding.apply {
+            val item = hashMapOf(
+                includeMovie to Category.MOVIE,
+                includeCircus to Category.CIRCUS,
+                includeMusical to Category.MUSICAL,
+                includeTheatre to Category.THEATRE,
+                includeExhibition to Category.EXHIBITION
+            )
 
-        //취향 클릭
-        item.keys.forEach { view ->
-            view.clPreference.setOnClickListener {
-                item[view]?.let { item -> signUpViewModel.userPreference.addOrRemove(item) }
-                val selected = !it.isSelected
-                it.isSelected = selected
-                view.ivIcon.isSelected = selected
-                view.tvType.isSelected = selected
-                view.isSelected = selected
+            //취향 클릭
+            item.keys.forEach { view ->
+                view.clPreference.setOnClickListener {
+                    val selected = if (signUpViewModel.userPreference.getItemCount() < 2) {
+                        item[view]?.let { item -> signUpViewModel.userPreference.addOrRemove(item) }
+                        !it.isSelected
+                    } else {
+                        item[view]?.let { item -> signUpViewModel.userPreference.remove(item) }
+                        false
+                    }
+                    listOf(it, view.ivIcon, view.tvType).forEach {child ->
+                        child.isSelected = selected
+                    }
+                    view.isSelected = selected
+                }
             }
-        }
+            ivBack.setOnClickListener {
+                signUpViewModel.userPreference.clear()
+                navigatePopBackStack()
+            }
 
-
-        binding.ivBack.setOnClickListener {
-            signUpViewModel.userPreference.clear()
-            navigatePopBackStack()
-        }
-
-
-
-        binding.tvNext.setOnClickListener { //회원 가입 로직 및 성공시 Main 이동
-            startActivity(Intent(requireActivity(), MainActivity::class.java))
-            requireActivity().finish()
+            tvNext.setOnClickListener { //회원 가입 로직 및 성공시 Main 이동
+                signUpViewModel.signUp()
+            }
         }
     }
 
@@ -72,6 +77,26 @@ class SignUpPreferenceFragment :
                     isEnabled = it
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeSignUp() {
+        signUpViewModel.signUpEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when (it) {
+                    is SignUpEventState.SignUpSuccess -> {
+                        Timber.d("회원가입 성공")
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
+                        requireActivity().finish()
+                    }
+
+                    is SignUpEventState.Error -> {
+                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
     }
 
 

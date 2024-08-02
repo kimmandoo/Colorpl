@@ -29,7 +29,6 @@ android {
         buildConfigField("String", "BASE_URL", getApiKey("BASE_URL"))
         buildConfigField("String", "BOOT_PAY_KEY", getApiKey("BOOT_PAY_KEY"))
         buildConfigField("String", "OPEN_API_KEY", getApiKey("OPEN_API_KEY"))
-        buildConfigField("String", "MOCK_URL", getApiKey("MOCK_URL"))
         buildConfigField("String", "BASE_URL", getApiKey("BASE_URL"))
         buildConfigField("String", "DATASTORE_NAME", getApiKey("DATASTORE_NAME"))
         manifestPlaceholders["NAVER_MAP_CLIENT_ID"] = naverMapClientId
