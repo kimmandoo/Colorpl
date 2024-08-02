@@ -25,11 +25,11 @@ const Dashboard = () => {
         <Box flex="1" ml={isSidebarOpen ? "15%" : "5%"} transition="margin-left 0.3s ease-in-out">
           <Center flexDirection="column">
             <Routes>
-              <Route path="issues" element={<Issues />} />
-              <Route path="user-management" element={<UserManagement />} />
-              <Route path="review-management" element={<ReviewManagement />} />
-              <Route path="comment-management" element={<CommentManagement />} />
-              <Route path="customer-inquiries" element={<CustomerInquiries />} />
+              <Route path="cs/issues" element={<Issues />} />
+              <Route path="cs/user-management" element={<UserManagement />} />
+              <Route path="cs/review-management" element={<ReviewManagement />} />
+              <Route path="cs/comment-management" element={<CommentManagement />} />
+              <Route path="cs/customer" element={<CustomerInquiries />} />
               <Route path="/" element={<Text fontSize="2xl">대시보드 홈</Text>} />
             </Routes>
           </Center>
