@@ -11,8 +11,9 @@ import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInResponse;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
 import com.colorpl.member.repository.MemberRepository;
-import com.colorpl.review.domain.Review;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
 
-    //등록시 이메일 중복 여부 체크하는 로직 추후에 작성
+
     @Transactional
     public Member registerMember(MemberDTO memberDTO) {
 
@@ -59,6 +60,37 @@ public class MemberService {
             );
         return new SignInResponse(member.getEmail(), member.getType(), accessToken, refreshToken);
     }
+    @Transactional
+    public SignInResponse oauthSignIn(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+
+        if (optionalMember.isPresent()) {
+            // 기존 회원이 있으면 로그인 처리
+            Member member = optionalMember.get();
+            String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", member.getId(), member.getType()));
+            String refreshToken = tokenProvider.createRefreshToken();
+            memberRefreshTokenRepository.findById(member.getId())
+                .ifPresentOrElse(
+                    it -> it.updateRefreshToken(refreshToken),
+                    () -> memberRefreshTokenRepository.save(new MemberRefreshToken(member, refreshToken))
+                );
+            return new SignInResponse(member.getEmail(), member.getType(), accessToken, refreshToken);
+        } else {
+            // 기존 회원이 없으면 회원 가입 후 로그인 처리
+            String randomPassword = UUID.randomUUID().toString(); // 랜덤 비밀번호 생성
+            MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setEmail(email);
+            memberDTO.setPassword(randomPassword); // 비밀번호 설정
+
+            // 필요한 경우 추가 정보 설정 (예: 닉네임, 프로필 이미지 등)
+            Member newMember = registerMember(memberDTO);
+            String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", newMember.getId(), newMember.getType()));
+            String refreshToken = tokenProvider.createRefreshToken();
+            memberRefreshTokenRepository.save(new MemberRefreshToken(newMember, refreshToken));
+            return new SignInResponse(newMember.getEmail(), newMember.getType(), accessToken, refreshToken);
+        }
+    }
+
     //멤버 정보 업데이트
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
@@ -68,6 +100,9 @@ public class MemberService {
         existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
         return memberRepository.save(existingMember);
     }
+
+
+
 
 
     //모든 멤버 조회
@@ -98,7 +133,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void followMember(Integer memberId, Integer followId) {
+    public String followMember(Integer memberId, Integer followId) {
         if (memberId.equals(followId)) {
             throw new MemberSelfFollowException();
         }
@@ -113,10 +148,11 @@ public class MemberService {
 
         member.addFollowing(followMember);
         memberRepository.save(member);
+        return followMember.getNickname()+ "님을 팔로우 합니다";
     }
 
     @Transactional
-    public void unfollowMember(Integer memberId, Integer followId) {
+    public String unfollowMember(Integer memberId, Integer followId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
         Member followMember = memberRepository.findById(followId)
@@ -124,6 +160,7 @@ public class MemberService {
 
         member.removeFollowing(followMember);
         memberRepository.save(member);
+        return followMember.getNickname()+ "님을 언팔로우 합니다";
     }
 
     @Transactional

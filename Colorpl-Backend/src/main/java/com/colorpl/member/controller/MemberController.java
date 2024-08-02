@@ -110,16 +110,16 @@ public class MemberController {
     }
     @PostMapping("/{memberId}/follow/{followId}")
     @Operation(summary = "팔로우", description = "특정 멤버가 다른 멤버를 팔로우하는 API")
-    public ResponseEntity<Void> followMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
-        memberService.followMember(memberId, followId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> followMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
+        String followMember = memberService.followMember(memberId, followId);
+        return ResponseEntity.ok(followMember);
     }
 
     @DeleteMapping("/{memberId}/unfollow/{followId}")
     @Operation(summary = "언팔로우", description = "특정 멤버가 다른 멤버의 팔로우를 취소하는 API")
-    public ResponseEntity<Void> unfollowMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
-        memberService.unfollowMember(memberId, followId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> unfollowMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
+        String unfollowMember = memberService.unfollowMember(memberId, followId);
+        return ResponseEntity.status(HttpStatus.OK).body(unfollowMember);
     }
 
     @GetMapping("/{memberId}/followers")
@@ -149,7 +149,7 @@ public class MemberController {
         return ResponseEntity.ok(followersCount);
     }
 
-    @GetMapping("/{memberId}/follow/count")
+    @GetMapping("/{memberId}/following/count")
     @Operation(summary = "팔로우 수 조회", description = "특정 멤버의 팔로우 수를 조회하는 API")
     public ResponseEntity<FollowCountDTO> getFollowCount(@PathVariable Integer memberId) {
         FollowCountDTO followingCount = memberService.getFollowingCount(memberId);
