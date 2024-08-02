@@ -1,13 +1,9 @@
 package com.presentation.ticket
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import androidx.core.view.isVisible
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -25,6 +21,8 @@ import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.checkCameraPermission
 import com.presentation.util.getPhotoGallery
+import com.presentation.util.setCameraLauncher
+import com.presentation.util.setImageLauncher
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -126,29 +124,19 @@ class TicketCreateFragment :
         Glide.with(binding.root.context).load(uri.toString()).centerCrop().into(binding.ivPoster)
     }
 
-    private fun initGalleryPhoto() { //프로필 이미지
-        pickImageLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == RESULT_OK) {
-                    it.data?.data?.let { uri ->
-                        photoUri = uri
-                        describeImage(uri)
-                    }
-                } else {
-                    findNavController().popBackStack()
-                }
-            }
+    private fun initGalleryPhoto() {
+        pickImageLauncher = setImageLauncher { uri ->
+            photoUri = uri
+            describeImage(uri)
+        }
     }
 
     private fun initCamera() {
-        takePicture =
-            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                if (success) {
-                    if (::photoUri.isInitialized) {
-                        describeImage(photoUri)
-                    }
-                }
+        takePicture = setCameraLauncher {
+            if (::photoUri.isInitialized) {
+                describeImage(photoUri)
             }
+        }
     }
 
     private fun openCamera() {
@@ -160,5 +148,4 @@ class TicketCreateFragment :
         )
         takePicture.launch(photoUri)
     }
-
 }
