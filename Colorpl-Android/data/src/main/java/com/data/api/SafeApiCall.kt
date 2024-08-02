@@ -18,7 +18,10 @@ suspend fun <T> safeApiCall(
             ApiResult.success(apiCall())
         } catch (throwable: Throwable) {
             when (throwable) {
-                is IOException -> ApiResult.error(Exception(NETWORK_ERROR))
+                is IOException -> {
+                    throwable.printStackTrace()
+                    ApiResult.error(Exception(NETWORK_ERROR))
+                }
                 is HttpException -> {
                     val code = throwable.code()
                     val errorResponse = throwable.response()?.errorBody()?.string()

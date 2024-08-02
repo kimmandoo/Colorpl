@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -25,6 +24,8 @@ class TicketCreateViewModel @Inject constructor(
     val description: StateFlow<Description?> = _description
     private val _category = MutableStateFlow("")
     val category: StateFlow<String> = _category
+    private val _createResponse = MutableStateFlow<Boolean>(false)
+    val createResponse: StateFlow<Boolean> = _createResponse
 
     fun setCategory(text: String) {
         _category.value = text
@@ -45,11 +46,11 @@ class TicketCreateViewModel @Inject constructor(
             ).collectLatest { response ->
                 when (response) {
                     is DomainResult.Success -> {
-                        Timber.d("success $response")
+                        _createResponse.value = true
                     }
 
                     is DomainResult.Error -> {
-                        Timber.d("error $response")
+                        _createResponse.value = false
                     }
                 }
             }
