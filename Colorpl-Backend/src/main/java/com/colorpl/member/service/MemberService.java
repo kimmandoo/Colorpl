@@ -2,21 +2,18 @@ package com.colorpl.member.service;
 
 import static com.colorpl.member.dto.MemberDTO.toMemberDTO;
 
-import com.colorpl.global.common.exception.BusinessException;
-import com.colorpl.global.common.exception.EmailAlreadyExistsException;
-import com.colorpl.global.common.exception.EmailNotFoundException;
-import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.MemberRequestNotMatchException;
-import com.colorpl.global.common.exception.Messages;
+import com.colorpl.global.common.exception.*;
 import com.colorpl.global.config.TokenProvider;
 import com.colorpl.member.Member;
 import com.colorpl.member.MemberRefreshToken;
+import com.colorpl.member.dto.FollowCountDTO;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInResponse;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
 import com.colorpl.member.repository.MemberRepository;
-import com.colorpl.review.domain.Review;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
 
-    //등록시 이메일 중복 여부 체크하는 로직 추후에 작성
+
     @Transactional
     public Member registerMember(MemberDTO memberDTO) {
 
@@ -63,6 +60,37 @@ public class MemberService {
             );
         return new SignInResponse(member.getEmail(), member.getType(), accessToken, refreshToken);
     }
+    @Transactional
+    public SignInResponse oauthSignIn(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+
+        if (optionalMember.isPresent()) {
+            // 기존 회원이 있으면 로그인 처리
+            Member member = optionalMember.get();
+            String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", member.getId(), member.getType()));
+            String refreshToken = tokenProvider.createRefreshToken();
+            memberRefreshTokenRepository.findById(member.getId())
+                .ifPresentOrElse(
+                    it -> it.updateRefreshToken(refreshToken),
+                    () -> memberRefreshTokenRepository.save(new MemberRefreshToken(member, refreshToken))
+                );
+            return new SignInResponse(member.getEmail(), member.getType(), accessToken, refreshToken);
+        } else {
+            // 기존 회원이 없으면 회원 가입 후 로그인 처리
+            String randomPassword = UUID.randomUUID().toString(); // 랜덤 비밀번호 생성
+            MemberDTO memberDTO = new MemberDTO();
+            memberDTO.setEmail(email);
+            memberDTO.setPassword(randomPassword); // 비밀번호 설정
+
+            // 필요한 경우 추가 정보 설정 (예: 닉네임, 프로필 이미지 등)
+            Member newMember = registerMember(memberDTO);
+            String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", newMember.getId(), newMember.getType()));
+            String refreshToken = tokenProvider.createRefreshToken();
+            memberRefreshTokenRepository.save(new MemberRefreshToken(newMember, refreshToken));
+            return new SignInResponse(newMember.getEmail(), newMember.getType(), accessToken, refreshToken);
+        }
+    }
+
     //멤버 정보 업데이트
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
@@ -72,6 +100,9 @@ public class MemberService {
         existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
         return memberRepository.save(existingMember);
     }
+
+
+
 
 
     //모든 멤버 조회
@@ -99,6 +130,68 @@ public class MemberService {
             .orElseThrow(() -> new BusinessException(Messages.MEMBER_NOT_FOUND));
 
         return toMemberDTO(existingMember);
+    }
+
+    @Transactional
+    public String followMember(Integer memberId, Integer followId) {
+        if (memberId.equals(followId)) {
+            throw new MemberSelfFollowException();
+        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        Member followMember = memberRepository.findById(followId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (member.getFollowingList().contains(followMember)) {
+            throw new MemberAlreadyFollowException();
+        }
+
+        member.addFollowing(followMember);
+        memberRepository.save(member);
+        return followMember.getNickname()+ "님을 팔로우 합니다";
+    }
+
+    @Transactional
+    public String unfollowMember(Integer memberId, Integer followId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        Member followMember = memberRepository.findById(followId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        member.removeFollowing(followMember);
+        memberRepository.save(member);
+        return followMember.getNickname()+ "님을 언팔로우 합니다";
+    }
+
+    @Transactional
+    public List<Member> getFollowers(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        return List.copyOf(member.getFollowerList());
+    }
+
+    @Transactional
+    public List<Member> getFollowing(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        return List.copyOf(member.getFollowingList());
+    }
+    @Transactional
+    public FollowCountDTO getFollowersCount(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        int followersCount = member.getFollowerList().size();
+        return new FollowCountDTO(followersCount); // members 필드는 사용하지 않음
+    }
+
+    @Transactional
+    public FollowCountDTO getFollowingCount(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        int followingCount = member.getFollowingList().size();
+        return new FollowCountDTO(followingCount); // members 필드는 사용하지 않음
     }
 
     //리뷰 조회는 querydsl

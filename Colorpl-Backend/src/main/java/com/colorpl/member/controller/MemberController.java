@@ -4,6 +4,7 @@ import com.colorpl.global.common.exception.BusinessException;
 import com.colorpl.global.common.exception.EmailNotFoundException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.member.Member;
+import com.colorpl.member.dto.FollowCountDTO;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInRequest;
 import com.colorpl.member.dto.SignInResponse;
@@ -17,14 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/members")
@@ -113,6 +107,53 @@ public class MemberController {
         } catch (JsonProcessingException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+    @PostMapping("/{memberId}/follow/{followId}")
+    @Operation(summary = "팔로우", description = "특정 멤버가 다른 멤버를 팔로우하는 API")
+    public ResponseEntity<String> followMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
+        String followMember = memberService.followMember(memberId, followId);
+        return ResponseEntity.ok(followMember);
+    }
+
+    @DeleteMapping("/{memberId}/unfollow/{followId}")
+    @Operation(summary = "언팔로우", description = "특정 멤버가 다른 멤버의 팔로우를 취소하는 API")
+    public ResponseEntity<String> unfollowMember(@PathVariable Integer memberId, @PathVariable Integer followId) {
+        String unfollowMember = memberService.unfollowMember(memberId, followId);
+        return ResponseEntity.status(HttpStatus.OK).body(unfollowMember);
+    }
+
+    @GetMapping("/{memberId}/followers")
+    @Operation(summary = "팔로워 조회", description = "특정 멤버의 팔로워를 조회하는 API")
+    public ResponseEntity<List<MemberDTO>> getFollowers(@PathVariable Integer memberId) {
+        List<MemberDTO> followers = memberService.getFollowers(memberId)
+                .stream()
+                .map(MemberDTO::toMemberDTO)
+                .toList();
+        return ResponseEntity.ok(followers);
+    }
+
+    @GetMapping("/{memberId}/following")
+    @Operation(summary = "팔로우 조회", description = "특정 멤버의 팔로우를 조회하는 API")
+    public ResponseEntity<List<MemberDTO>> getFollow(@PathVariable Integer memberId) {
+        List<MemberDTO> following = memberService.getFollowing(memberId)
+                .stream()
+                .map(MemberDTO::toMemberDTO)
+                .toList();
+        return ResponseEntity.ok(following);
+    }
+
+    @GetMapping("/{memberId}/followers/count")
+    @Operation(summary = "팔로워 수 조회", description = "특정 멤버의 팔로워 수를 조회하는 API")
+    public ResponseEntity<FollowCountDTO> getFollowersCount(@PathVariable Integer memberId) {
+        FollowCountDTO followersCount = memberService.getFollowersCount(memberId);
+        return ResponseEntity.ok(followersCount);
+    }
+
+    @GetMapping("/{memberId}/following/count")
+    @Operation(summary = "팔로우 수 조회", description = "특정 멤버의 팔로우 수를 조회하는 API")
+    public ResponseEntity<FollowCountDTO> getFollowCount(@PathVariable Integer memberId) {
+        FollowCountDTO followingCount = memberService.getFollowingCount(memberId);
+        return ResponseEntity.ok(followingCount);
     }
 
 }
