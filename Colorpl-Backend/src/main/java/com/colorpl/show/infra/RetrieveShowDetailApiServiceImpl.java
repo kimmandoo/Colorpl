@@ -27,6 +27,7 @@ public class RetrieveShowDetailApiServiceImpl implements RetrieveShowDetailApiSe
     @Override
     public ShowDetailApiResponse retrieve(String apiId) {
         URI uri = UriComponentsBuilder.fromHttpUrl(showApiUrl)
+            .path("pblprfr/")
             .path(apiId)
             .queryParam("service", showApiKey)
             .queryParam("newsql", "Y")

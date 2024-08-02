@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationDetailDTO {
+
     private Long id;
     private Byte row;
     private Byte col;
-    private Integer showScheduleId;
+    private Long showScheduleId;
 
     public static ReservationDetailDTO toReservationDetailDTO(ReservationDetail reservationDetail) {
         return ReservationDetailDTO.builder()

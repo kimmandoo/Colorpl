@@ -1,69 +1,102 @@
 package com.colorpl.review.controller;
 
-import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.domain.Review;
 import com.colorpl.review.service.ReviewService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/reviews")
-@RequiredArgsConstructor
 public class ReviewController {
 
-    private final ReviewService reviewService;
+    @Autowired
+    private ReviewService reviewService;
 
-    // 모든 리뷰 조회
-    @GetMapping("/all")
-    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
-        List<ReviewDTO> reviews = reviewService.findAll();
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Review>> getAllReviews() {
+//        List<Review> reviews = reviewService.findAll();
+//        return new ResponseEntity<>(reviews, HttpStatus.OK);
+//    }
 
-    // 무한 스크롤
     @GetMapping
-    public List<ReviewDTO> getReviews(@RequestParam int page, @RequestParam int size) {
-        return reviewService.getReviews(page, size);
+    public String list(Model model) {
+        List<Review> reviews = reviewService.findAll();
+        model.addAttribute("reviews", reviews);
+        return "review_list";
     }
 
-    // 특정 멤버의 모든 리뷰 조회
-    @GetMapping("/members/{memberId}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByMemberId(@PathVariable Integer memberId) {
-        List<ReviewDTO> reviews = reviewService.findMembersAll(memberId);
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("review", new Review());
+        return "review_form";
     }
 
-    @GetMapping("/{reviewId}")
-    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long reviewId) {
-        ReviewDTO review = reviewService.findById(reviewId);
+    @PostMapping
+    public String createReview(Review review) {
+        reviewService.save(review);
+        return "redirect:/reviews";
+    }
+
+    @GetMapping("/{id}/details")
+    public String showReviewDetails(@PathVariable Integer id, Model model) {
+        Review review = reviewService.findById(id);
         if (review == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return "404";  // Or handle not found case appropriately
+        }
+        model.addAttribute("review", review);
+        return "review_detail";
+    }
+
+    @GetMapping("/{id}/update")
+    public String showReviewupdate(@PathVariable Integer id, Model model) {
+        Review review = reviewService.findById(id);
+        if (review == null) {
+            return "404";  // Or handle not found case appropriately
+        }
+        model.addAttribute("review", review);
+        return "review_update";
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Review> getReviewById(@PathVariable Integer id) {
+        Review review = reviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(review, HttpStatus.OK);
     }
 
-    // 리뷰 생성
-    @PostMapping("/members/{memberId}")
-    public ResponseEntity<ReviewDTO> createReview(@PathVariable Integer memberId, @RequestBody ReviewDTO reviewDTO) {
-        System.out.println(memberId);
-        ReviewDTO createdReview = reviewService.createReview(memberId, reviewDTO);
-        return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
+//    @PostMapping
+//    public ResponseEntity<Review> createReview(@RequestBody Review review) {
+//        Review createdReview = reviewService.save(review);
+//        return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
+//    }
+
+    @PostMapping("/{id}")
+    public String updateReview(@PathVariable Integer id, @ModelAttribute Review review) {
+        if (reviewService.findById(id) == null) {
+            return "404";  // Or handle not found case appropriately
+        }
+        review.setId(id);  // Ensure the ID is set for the update
+        reviewService.save(review);
+        return "redirect:/reviews";
     }
 
-    // 리뷰 업데이트
-    @PutMapping("/members/{memberId}/reviews/{reviewId}")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Integer memberId,  @PathVariable Long reviewId, @RequestBody ReviewDTO reviewDTO) {
-        ReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, reviewDTO);
-        return new ResponseEntity<>(updatedReview, HttpStatus.OK);
+
+
+    @PostMapping("/{id}/delete")
+    public String deleteReview(@PathVariable Integer id) {
+        if (reviewService.findById(id) == null) {
+            return "404";  // Or handle not found case appropriately
+        }
+        reviewService.deleteById(id);
+        return "redirect:/reviews";
     }
 
-    // 리뷰 삭제
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
-        reviewService.deleteById(reviewId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }

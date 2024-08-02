@@ -44,6 +44,27 @@ public class ReservationService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public ReservationDTO getReservationByMemberIdAndReservationId(Integer memberId, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+            .filter(res -> res.getMember().getId().equals(memberId))
+            .orElseThrow(ReservationNotFoundException::new);
+
+        return ReservationDTO.toReservationDTO(reservation);
+    }
+    @Transactional(readOnly = true)
+    public List<ReservationDTO> getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        if (reservations.isEmpty()) {
+            throw new ReservationNotFoundException();
+        }
+
+        return reservations.stream()
+            .map(ReservationDTO::toReservationDTO)
+            .collect(Collectors.toList());
+    }
+
     // 모든 예매 삭제
     @Transactional
     public void deleteAllReservationsByMemberId(Integer memberId) {

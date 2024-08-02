@@ -19,7 +19,7 @@ public class ShowDetailApiResponse {
     public static class Item {
 
         @JacksonXmlProperty(localName = "mt20id")
-        private String apiId;
+        private String showApiId;
 
         @JacksonXmlProperty(localName = "prfnm")
         private String name;
@@ -48,7 +48,13 @@ public class ShowDetailApiResponse {
         @JacksonXmlProperty(localName = "prfstate")
         private String state;
 
+        @JacksonXmlProperty(localName = "mt10id")
+        private String theaterApiId;
+
         @JacksonXmlProperty(localName = "dtguidance")
         private String schedule;
+
+        @JacksonXmlProperty(localName = "fcltynm")
+        private String hall;
     }
 }
