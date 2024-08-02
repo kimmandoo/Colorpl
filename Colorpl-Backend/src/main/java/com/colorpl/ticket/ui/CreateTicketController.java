@@ -1,6 +1,7 @@
 package com.colorpl.ticket.ui;
 
 import com.colorpl.ticket.application.CreateTicketRequest;
+import com.colorpl.ticket.application.CreateTicketResponse;
 import com.colorpl.ticket.application.CreateTicketService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class CreateTicketController {
     private final CreateTicketService createTicketService;
 
     @PostMapping("tickets")
-    public ResponseEntity<?> create(
+    public ResponseEntity<CreateTicketResponse> create(
         @RequestPart CreateTicketRequest request,
         @RequestPart(required = false) MultipartFile file
     ) {
@@ -27,6 +28,9 @@ public class CreateTicketController {
             .path("/tickets/{id}")
             .buildAndExpand(id)
             .toUri();
-        return ResponseEntity.created(uri).build();
+        CreateTicketResponse response = CreateTicketResponse.builder()
+            .ticketId(id)
+            .build();
+        return ResponseEntity.created(uri).body(response);
     }
 }
