@@ -38,9 +38,10 @@ class TicketFinishFragment :
     }
 
     private fun observeViewModel() {
-        viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { value ->
-            if (value) findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { ticketId ->
+                if (ticketId > 0) findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initUi() {
@@ -52,7 +53,6 @@ class TicketFinishFragment :
             tvSchedule.text = description?.schedule
             tvSeat.text = description?.seat
             tvConfirm.setOnClickListener {
-                // 서버에 등록된 티켓 보내고 navigate 돌리기
                 Timber.d(
                     "${ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!}  size: ${
                         ImageProcessingUtil(

@@ -24,8 +24,8 @@ class TicketCreateViewModel @Inject constructor(
     val description: StateFlow<Description?> = _description
     private val _category = MutableStateFlow("")
     val category: StateFlow<String> = _category
-    private val _createResponse = MutableStateFlow<Boolean>(false)
-    val createResponse: StateFlow<Boolean> = _createResponse
+    private val _createResponse = MutableStateFlow<Int>(-1)
+    val createResponse: StateFlow<Int> = _createResponse
 
     fun setCategory(text: String) {
         _category.value = text
@@ -44,13 +44,13 @@ class TicketCreateViewModel @Inject constructor(
                     category = _category.value
                 )
             ).collectLatest { response ->
-                when (response) {
+                _createResponse.value = when (response) {
                     is DomainResult.Success -> {
-                        _createResponse.value = true
+                        response.data
                     }
 
                     is DomainResult.Error -> {
-                        _createResponse.value = false
+                         -1
                     }
                 }
             }
