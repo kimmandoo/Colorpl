@@ -63,7 +63,7 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun provideSignDataSource(
+    fun bindsSignDataSource(
         signDataSourceImpl: SignDataSourceImpl
     ): SignDataSource
 

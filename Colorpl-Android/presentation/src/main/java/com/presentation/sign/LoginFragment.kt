@@ -118,7 +118,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun login() {
         viewLifecycleOwner.lifecycleScope.launch {
-            kotlin.runCatching {
+            runCatching {
                 CredentialManager.create(requireActivity()).getCredential(
                     request = googleRequest,
                     context = requireActivity(),
