@@ -2,14 +2,15 @@ package com.presentation.sign
 
 import android.content.Intent
 import android.text.method.PasswordTransformationMethod
-import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentLoginBinding
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
@@ -19,9 +20,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.presentation.MainActivity
 import com.presentation.base.BaseFragment
-import com.presentation.util.Sign
+import com.presentation.sign.model.SignInEventState
 import com.presentation.util.setPasswordTransformation
+import com.presentation.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,6 +37,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     lateinit var googleIdOption: GetSignInWithGoogleOption
 
     private lateinit var googleRequest: GetCredentialRequest
+
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onStart() {
         super.onStart()
@@ -47,6 +53,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         initGoogleLogin()
         initIncludeView()
         initClickEvent()
+        observeLoginSuccess()
     }
 
     private fun initGoogleLogin() {
@@ -59,7 +66,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun initIncludeView() {
         binding.apply {
-            with(includePassword.etContent){
+            with(includePassword.etContent) {
                 transformationMethod = PasswordTransformationMethod.getInstance()
                 imeOptions = EditorInfo.IME_ACTION_DONE
             }
@@ -68,9 +75,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun initClickEvent() {
         binding.apply {
-            tvLogin.setOnClickListener {
-                startActivity(Intent(requireActivity(), MainActivity::class.java))
-                requireActivity().finish()
+            tvLogin.setOnClickListener { //로그인 버튼 클릭
+                loginViewModel.signIn(
+                    includeId.etContent.text.toString(),
+                    includePassword.etContent.text.toString()
+                )
             }
             tvSignUp.setOnClickListener {
                 navigateDestination(
@@ -87,9 +96,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         }
     }
 
+    private fun observeLoginSuccess() {
+        loginViewModel.signInEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when (it) {
+                    is SignInEventState.SignInSuccess -> {
+                        Timber.d("로그인 성공")
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
+                        requireActivity().finish()
+                    }
+
+                    is SignInEventState.Error -> {
+                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+
     private fun login() {
         viewLifecycleOwner.lifecycleScope.launch {
-            kotlin.runCatching {
+            runCatching {
                 CredentialManager.create(requireActivity()).getCredential(
                     request = googleRequest,
                     context = requireActivity(),

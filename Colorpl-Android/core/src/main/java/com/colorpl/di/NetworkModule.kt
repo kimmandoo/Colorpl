@@ -22,8 +22,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     //local property로 따로 빼기
-    val baseUrl = "http://192.168.100.142:8080/"
-    val mockUrl = BuildConfig.MOCK_URL
+    val baseUrl = BuildConfig.BASE_URL
     val tmapUrl = "https://apis.openapi.sk.com/"
     val gptUrl = "https://api.openai.com/"
 
@@ -33,7 +32,7 @@ object NetworkModule {
     fun provideRetrofit(@NormalOkHttp okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
-            .baseUrl(mockUrl)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .build()
     }
