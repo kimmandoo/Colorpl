@@ -13,5 +13,5 @@ interface TicketCreateUseCase {
     suspend operator fun invoke(
         image: File,
         ticket: Ticket
-    ): Flow<RepoResult<String>>
+    ): Flow<RepoResult<Int>>
 }

@@ -19,7 +19,7 @@ class TicketCreateUseCaseImpl @Inject constructor(
     override suspend fun invoke(
         image: File,
         ticket: Ticket
-    ): Flow<RepoResult<String>> = flow {
+    ): Flow<RepoResult<Int>> = flow {
         ticketRepository.createTicket(
             image, RequestTicketCreate(
                 name = ticket.name,
