@@ -14,105 +14,174 @@
         <ImageView
             android:id="@+id/iv_poster"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="20dp"
-            app:layout_constraintBottom_toTopOf="@id/et_title"
+            android:layout_height="240dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toTopOf="@id/cl_container"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/et_title"
-            style="@style/suite_bold_18"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/rectangle_timber_wolf_10"
-            android:hint="@string/ticket_title_hint"
-            android:padding="8dp"
-            android:textColor="@color/eerie_black"
-            app:layout_constraintBottom_toTopOf="@+id/et_detail"
-            app:layout_constraintTop_toBottomOf="@+id/iv_poster"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:layout_editor_absoluteX="20dp" />
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_confirm"
+            app:layout_constraintTop_toBottomOf="@id/iv_poster">
 
-        <EditText
-            android:id="@+id/et_detail"
-            style="@style/suite_bold_18"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/rectangle_timber_wolf_10"
-            android:hint="@string/ticket_detail_hint"
-            android:padding="8dp"
-            android:textColor="@color/eerie_black"
-            app:layout_constraintBottom_toTopOf="@+id/et_schedule"
-            app:layout_constraintTop_toBottomOf="@+id/et_title"
-            tools:layout_editor_absoluteX="20dp" />
+            <EditText
+                android:id="@+id/et_title"
+                style="@style/suite_bold_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/rectangle_timber_wolf_10"
+                android:hint="@string/ticket_title_hint"
+                android:padding="8dp"
+                android:textColor="@color/eerie_black"
+                app:layout_constraintBottom_toTopOf="@+id/et_detail"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="20dp" />
 
-        <EditText
-            android:id="@+id/et_schedule"
-            style="@style/suite_bold_18"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/rectangle_timber_wolf_10"
-            android:hint="@string/ticket_schedule_hint"
-            android:padding="8dp"
-            android:textColor="@color/eerie_black"
-            app:layout_constraintBottom_toTopOf="@+id/et_seat"
-            app:layout_constraintTop_toBottomOf="@+id/et_detail"
-            tools:layout_editor_absoluteX="20dp" />
+            <EditText
+                android:id="@+id/et_detail"
+                style="@style/suite_bold_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rectangle_timber_wolf_10"
+                android:hint="@string/ticket_detail_hint"
+                android:padding="8dp"
+                android:textColor="@color/eerie_black"
+                app:layout_constraintBottom_toTopOf="@id/et_schedule"
+                app:layout_constraintTop_toBottomOf="@+id/et_title"
+                tools:layout_editor_absoluteX="20dp" />
 
-        <EditText
-            android:id="@+id/et_seat"
-            style="@style/suite_bold_18"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/rectangle_timber_wolf_10"
-            android:hint="@string/ticket_seat_hint"
-            android:padding="8dp"
-            android:textColor="@color/eerie_black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_confirm"
-            app:layout_constraintTop_toBottomOf="@+id/et_schedule"
-            tools:layout_editor_absoluteX="20dp" />
+            <EditText
+                android:id="@+id/et_schedule"
+                style="@style/suite_bold_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rectangle_timber_wolf_10"
+                android:hint="@string/ticket_schedule_hint"
+                android:padding="8dp"
+                android:textColor="@color/eerie_black"
+                app:layout_constraintBottom_toTopOf="@+id/et_seat"
+                app:layout_constraintTop_toBottomOf="@+id/et_detail" />
+
+            <EditText
+                android:id="@+id/et_seat"
+                style="@style/suite_bold_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rectangle_timber_wolf_10"
+                android:hint="@string/ticket_seat_hint"
+                android:padding="8dp"
+                android:textColor="@color/eerie_black"
+                app:layout_constraintBottom_toTopOf="@id/hs_category"
+                app:layout_constraintTop_toBottomOf="@+id/et_schedule" />
+
+            <HorizontalScrollView
+                android:id="@+id/hs_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:scrollbars="none"
+                app:layout_constraintTop_toBottomOf="@+id/et_seat">
+
+                <RadioGroup
+                    android:id="@+id/rg_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_movie"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_movie"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_show"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_performance"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_concert"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_concert"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_play"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_play"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_musical"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_musical"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_exhibition"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/feed_filter_exhibition"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/rb_else"
+                        style="@style/suite_extra_bold_18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="기타"
+                        android:textColor="@color/white" />
+                </RadioGroup>
+            </HorizontalScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_confirm"
+            style="@style/suite_bold_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="@drawable/rectangle_imperial_red_8"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
-            style="@style/suite_bold_20"
             android:text="@string/schedule_confirm"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_seat" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black_fifty">
-
-            <ProgressBar
-                android:id="@+id/pb_progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/cl_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
