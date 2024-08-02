@@ -9,7 +9,9 @@ import com.domain.util.onFailure
 import com.domain.util.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,15 +22,24 @@ import javax.inject.Inject
 class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
 ) : ViewModel() {
+
     private val _routeData = MutableSharedFlow<List<LatLng>>()
     val routeData: SharedFlow<List<LatLng>> = _routeData.asSharedFlow()
 
-    fun getRoute(myLocation: LatLng, destination: LatLng) {
+    private val _latLng = MutableStateFlow(LatLng(0.0,0.0))
+    val latLng : StateFlow<LatLng> get() = _latLng
+
+    fun setLatLng(value : LatLng){
+        _latLng.value = value
+    }
+
+
+    fun getRoute(destination: LatLng) {
         viewModelScope.launch {
             val routeData = mutableListOf<LatLng>()
             tmapRouteUseCase(
-                startX = myLocation.longitude.toString(),
-                startY = myLocation.latitude.toString(),
+                startX = latLng.value.longitude.toString(),
+                startY = latLng.value.latitude.toString(),
                 endX = destination.longitude.toString(),
                 endY = destination.latitude.toString(),
             ).collectLatest { response ->

@@ -13,16 +13,25 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:paddingBottom="30dp">
+
+            <include
+                android:id="@+id/include_top"
+                layout="@layout/include_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@{`여기 제목 들어감`}" />
 
             <ImageView
                 android:id="@+id/iv_poster"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:layout_marginTop="20dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/test_feed"
                 app:layout_constraintBottom_toTopOf="@id/ll_info"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/include_top" />
 
             <LinearLayout
                 android:id="@+id/ll_info"
@@ -33,29 +42,27 @@
                 app:layout_constraintBottom_toTopOf="@+id/cl_my_review"
                 app:layout_constraintTop_toBottomOf="@id/iv_poster">
 
-                <include
-                    android:id="@+id/include_title"
-                    layout="@layout/include_ticket_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
                 <include
                     android:id="@+id/include_place"
                     layout="@layout/include_ticket_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
 
                 <include
                     android:id="@+id/include_date"
                     layout="@layout/include_ticket_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
 
                 <include
                     android:id="@+id/include_seat"
                     layout="@layout/include_ticket_info"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
