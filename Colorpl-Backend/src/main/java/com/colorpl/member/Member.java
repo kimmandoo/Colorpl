@@ -8,10 +8,8 @@ import com.colorpl.show.domain.detail.Category;
 import com.colorpl.ticket.domain.Ticket;
 import jakarta.persistence.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
