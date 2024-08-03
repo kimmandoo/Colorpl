@@ -3,18 +3,10 @@ package com.colorpl.ticket.domain;
 import static jakarta.persistence.FetchType.*;
 
 import com.colorpl.member.Member;
+import com.colorpl.review.domain.Review;
 import com.colorpl.show.domain.detail.Category;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -61,4 +53,10 @@ public class Ticket {
     @Column(name = "TICKET_CATEGORY")
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @OneToOne(mappedBy = "ticket", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "REVIEW_ID")
+    private Review review;
+
+
 }

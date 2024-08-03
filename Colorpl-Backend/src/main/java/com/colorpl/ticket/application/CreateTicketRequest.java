@@ -15,5 +15,6 @@ public class CreateTicketRequest {
     private String dateTime;
     private String theater;
     private String seat;
+    private Integer memberId;
 
 }

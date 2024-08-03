@@ -1,12 +1,14 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
-import com.colorpl.schedule.domain.Schedule;
+import com.colorpl.ticket.domain.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -20,10 +22,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-
-    // schedule 아직 없음
-    @OneToOne(mappedBy = "review")
-    private Schedule schedule;
 
     @Column(name = "REVIEW_CONTENT")
     private  String content;
@@ -41,6 +39,14 @@ public class Review {
     @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TICKET_ID", referencedColumnName = "TICKET_ID")
+    private Ticket ticket;
+
+//    public void setTicket(Ticket ticket) {
+//        this.ticket = ticket;
+//    }
 
     public void updateReview(String content, Boolean spoiler, Byte emotion) {
         this.content = content;

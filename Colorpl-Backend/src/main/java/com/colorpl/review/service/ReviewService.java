@@ -10,6 +10,8 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.schedule.domain.Schedule;
+import com.colorpl.ticket.domain.Ticket;
+import com.colorpl.ticket.domain.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class ReviewService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private TicketRepository ticketRepository;
+
     public List<ReviewDTO> findAll() {
         // 전체 리뷰 받아서 반환
         return reviewRepository.findAll().stream()
@@ -47,21 +52,18 @@ public class ReviewService {
 
 
     // need test here
-    public List<ReviewDTO> findMembersAll(Integer memberId) {
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
+    public List<ReviewDTO> findReviewsOfMembers(Integer memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
 
-            return member.getSchedules().stream()
-                    .map(Schedule::getReview)
-                    .filter(Objects::nonNull)
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        } else {
-            // Handle case where member not found
-            return Collections.emptyList(); // Or throw an exception
-        }
+        return member.getTickets().stream()
+                .map(Ticket::getReview)
+                .filter(Objects::nonNull)
+                .map(ReviewDTO::toReviewDTO)
+                .collect(Collectors.toList());
     }
+
+
 
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId) {
@@ -80,14 +82,19 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewDTO createReview(Integer memberId, ReviewDTO reviewDTO) {
-        // Fetch member if needed
+    public ReviewDTO createReview(Integer memberId,Long ticketId, ReviewDTO reviewDTO) {
+        // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
         System.out.println("pass member");
 
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+
+
         // Build review entity from DTO
         Review review = Review.builder()
+                .ticket(ticket)
                 .content(reviewDTO.getContent())
                 .spoiler(reviewDTO.getSpoiler())
                 .emotion(reviewDTO.getEmotion())
@@ -96,18 +103,16 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
 
-        // Convert comments from DTO to Comment entities
+        // DTO의 댓글들 엔티티화
         List<Comment> comments = reviewDTO.getComments().stream()
                 .map(dto -> dto.toComment(member, savedReview))
-                .collect(Collectors.toList());
+                .toList();
 
-        // Save the comments separately
-        // Assuming you have a CommentRepository, save comments here
-        // commentRepository.saveAll(comments);
 
-        // Return the DTO
+        // DTO 반환
         return ReviewDTO.toReviewDTO(savedReview);
     }
+
 
     @Transactional
     public ReviewDTO updateReview(Integer memberId, Long reviewId, ReviewDTO reviewDTO) {

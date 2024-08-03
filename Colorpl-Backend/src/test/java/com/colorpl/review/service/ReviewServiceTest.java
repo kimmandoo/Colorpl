@@ -1,12 +1,10 @@
 package com.colorpl.review.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
@@ -17,12 +15,13 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.schedule.domain.Schedule;
+import com.colorpl.ticket.domain.Ticket;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -61,7 +60,7 @@ public class ReviewServiceTest {
         // Given
         Review review = Review.builder().id(1L).content("Test Review").build();
         Pageable pageable = PageRequest.of(0, 1);
-        when(reviewRepository.findAll(pageable)).thenReturn(new org.springframework.data.domain.PageImpl<>(Collections.singletonList(review)));
+        when(reviewRepository.findAll(pageable)).thenReturn(new PageImpl<>(Collections.singletonList(review)));
 
         // When
         List<ReviewDTO> result = reviewService.getReviews(0, 1);
@@ -73,23 +72,38 @@ public class ReviewServiceTest {
     }
 
     @Test
-    void testFindMembersAll() {
+    void testFindReviewsOfMembers() {
         // Given
         Integer memberId = 1;
-        Member member = Member.builder().id(memberId).schedules(new ArrayList<>()).build();
-        Review review = Review.builder().id(1L).content("Test Review").build();
-        Schedule schedule = Schedule.builder().review(review).build();
-        member.getSchedules().add(schedule);
+        Member member = Member.builder().id(memberId).build();
+        Ticket ticket = Ticket.builder()
+                .review(Review.builder().id(1L).content("Review Content").build())
+                .build();
+        member.getTickets().add(ticket);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // When
-        List<ReviewDTO> result = reviewService.findMembersAll(memberId);
+        List<ReviewDTO> result = reviewService.findReviewsOfMembers(memberId);
 
         // Then
         verify(memberRepository, times(1)).findById(memberId);
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getContent()).isEqualTo("Test Review");
+        assertThat(result.get(0).getContent()).isEqualTo("Review Content");
+    }
+
+    @Test
+    void testFindReviewsOfMembers_MemberNotFound() {
+        // Given
+        Integer memberId = 1;
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
+
+        // When
+        List<ReviewDTO> result = reviewService.findReviewsOfMembers(memberId);
+
+        // Then
+        verify(memberRepository, times(1)).findById(memberId);
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -114,12 +128,14 @@ public class ReviewServiceTest {
         Member member = Member.builder().id(memberId).build();
         ReviewDTO reviewDTO = ReviewDTO.builder().content("New Review").build();
         Review review = Review.builder().id(1L).content("New Review").build();
+        Long ticketId = 1L;
+        Ticket ticket = Ticket.builder().id(ticketId).build();
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
         // When
-        ReviewDTO result = reviewService.createReview(memberId, reviewDTO);
+        ReviewDTO result = reviewService.createReview(memberId, ticketId, reviewDTO);
 
         // Then
         verify(memberRepository, times(1)).findById(memberId);
@@ -159,5 +175,15 @@ public class ReviewServiceTest {
         // Then
         verify(reviewRepository, times(1)).existsById(reviewId);
         verify(reviewRepository, times(1)).deleteById(reviewId);
+    }
+
+    @Test
+    void testDeleteById_ReviewNotFound() {
+        // Given
+        Long reviewId = 1L;
+        when(reviewRepository.existsById(reviewId)).thenReturn(false);
+
+        // When & Then
+        assertThrows(ReviewNotFoundException.class, () -> reviewService.deleteById(reviewId));
     }
 }
