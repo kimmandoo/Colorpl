@@ -85,11 +85,9 @@ public class ReviewService {
         // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
-        System.out.println("pass member");
 
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
 
         // Build review entity from DTO
         Review review = Review.builder()

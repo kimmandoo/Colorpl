@@ -103,6 +103,7 @@ public class CommentServiceTest {
                 .build();
         Review review = Review.builder().id(commentDTO.getReviewId()).build();
         Member member = Member.builder().id(memberId).build();
+
         Comment comment = Comment.builder()
                 .id(commentId)
                 .review(review)

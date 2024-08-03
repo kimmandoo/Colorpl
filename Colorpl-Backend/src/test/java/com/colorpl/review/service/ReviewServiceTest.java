@@ -16,6 +16,7 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
+import com.colorpl.ticket.domain.TicketRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,9 @@ public class ReviewServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private TicketRepository ticketRepository;
 
     @Test
     void testFindAll() {
@@ -98,12 +102,12 @@ public class ReviewServiceTest {
         Integer memberId = 1;
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
-        // When
-        List<ReviewDTO> result = reviewService.findReviewsOfMembers(memberId);
+        // When & Then
+        assertThrows(MemberNotFoundException.class, () -> {
+            reviewService.findReviewsOfMembers(memberId);
+        });
 
-        // Then
         verify(memberRepository, times(1)).findById(memberId);
-        assertThat(result).isEmpty();
     }
 
     @Test
@@ -126,12 +130,15 @@ public class ReviewServiceTest {
         // Given
         Integer memberId = 1;
         Member member = Member.builder().id(memberId).build();
-        ReviewDTO reviewDTO = ReviewDTO.builder().content("New Review").build();
-        Review review = Review.builder().id(1L).content("New Review").build();
         Long ticketId = 1L;
         Ticket ticket = Ticket.builder().id(ticketId).build();
+        ReviewDTO reviewDTO = ReviewDTO.builder().content("New Review").build();
+        Review review = Review.builder().id(1L).content("New Review").build();
+
+        System.out.println(ticket);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
+        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
         // When
