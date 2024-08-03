@@ -46,7 +46,9 @@ public class Member extends BaseEntity{
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> tickets;
+    @Builder.Default
+    private List<Ticket> tickets = new ArrayList<>();
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

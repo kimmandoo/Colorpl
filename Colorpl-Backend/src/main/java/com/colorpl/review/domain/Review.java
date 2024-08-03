@@ -1,28 +1,27 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.ticket.domain.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+//@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
 
     @Column(name = "REVIEW_ID")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Integer id;
-
-    // schdule 아직 없음
-//    @JoinColumn(name = "SCHEDULE_ID")
-//    @OneToOne(mappedBy = "SCHEDULE_ID")
-//    private Schedule schedule;
+    private Long id;
 
     @Column(name = "REVIEW_CONTENT")
     private  String content;
@@ -31,13 +30,28 @@ public class Review {
     private  Boolean spoiler;
 
     @Column(name = "REVIEW_EMOTION")
-    private  Integer emotion;
+    private  Byte emotion;
 
     @Column(name = "EMPHATHY_NUMBER")
-    private  Byte emphathy;
+    private  Integer emphathy;
 
     // ?
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TICKET_ID", referencedColumnName = "TICKET_ID")
+    private Ticket ticket;
+
+//    public void setTicket(Ticket ticket) {
+//        this.ticket = ticket;
+//    }
+
+    public void updateReview(String content, Boolean spoiler, Byte emotion) {
+        this.content = content;
+        this.spoiler = spoiler;
+        this.emotion = emotion;
+    }
 
 }
