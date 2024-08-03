@@ -9,7 +9,6 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
