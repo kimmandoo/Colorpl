@@ -1,6 +1,7 @@
 package com.presentation.component.adapter
 
 import android.graphics.drawable.Drawable
+import android.provider.Settings.Global.getString
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -222,17 +223,18 @@ fun setDayOfWeekColor(view: TextView, date: LocalDate, isSelected: Boolean) {
 fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
     val today = LocalDate.now()
     val tomorrow = today.plusDays(1)
-    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+    val selectedDateTitle = "${view.context.getString(R.string.reservation_selected_title)} : "
     val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-    if (setTitle) {
-        val dateText = when (date) {
-            today -> "${R.string.reservation_selected_title} : $formattedDate(${dayOfWeek}) ${R.string.reservation_date_today}"
-            tomorrow -> "${R.string.reservation_selected_title} : $formattedDate($dayOfWeek) ${R.string.reservation_date_tomorrow}"
-            else -> "${R.string.reservation_selected_title} : $formattedDate($dayOfWeek)"
+    val dayOfWeek = " (${date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+    view.text = if (setTitle) {
+        val subText = when (date) {
+            today -> " ${view.context.getString(R.string.reservation_date_today)}"
+            tomorrow -> " ${view.context.getString(R.string.reservation_date_tomorrow)}"
+            else -> ""
         }
-        view.text = dateText
+        selectedDateTitle + formattedDate + dayOfWeek + subText
     } else {
-        view.text = formattedDate
+        formattedDate
     }
 
 }

@@ -28,14 +28,15 @@ class ReservationTimeTableFragment :
     BaseFragment<FragmentReservationTimeTableBinding>(R.layout.fragment_reservation_time_table),
     OnTimeTableClickListener {
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
-    private lateinit var reservationPlaceAdapter: ReservationPlaceAdapter
+    private val reservationPlaceAdapter by lazy {
+        ReservationPlaceAdapter(this)
+    }
     private val reservationDateTableAdapter by lazy {
-        ReservationDateTableAdapter{ dateItem  ->
+        ReservationDateTableAdapter { dateItem ->
             onDateTableClick(dateItem)
             viewModel.setReservationDate(dateItem.date)
         }
     }
-    private val selectedTimeTable = mutableListOf<ReservationPairInfo>()
 
     private fun onDateTableClick(dateTable: DateTableItem) {
         Toast.makeText(requireContext(), "${dateTable.date}", Toast.LENGTH_SHORT).show()
@@ -50,7 +51,6 @@ class ReservationTimeTableFragment :
 
 
     private fun initAdapter() {
-        reservationPlaceAdapter = ReservationPlaceAdapter(this)
         binding.rcReservationTimeTable.adapter = reservationPlaceAdapter
         val data = listOf(
             ReservationPlace.DEFAULT,
