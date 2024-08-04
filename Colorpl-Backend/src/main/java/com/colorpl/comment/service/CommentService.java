@@ -61,6 +61,7 @@ public class CommentService {
                 .member(member)
                 .review(review)
                 .comment_content(commentDTO.getCommentContent())
+
                 .build();
 
         Comment createdComment = commentRepository.save(comment);
