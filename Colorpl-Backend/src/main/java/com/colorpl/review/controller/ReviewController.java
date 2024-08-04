@@ -1,5 +1,6 @@
 package com.colorpl.review.controller;
 
+import com.colorpl.review.dto.DetailReviewDTO;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,52 +18,50 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // 모든 리뷰 조회
-    @GetMapping("/all")
-    @Operation(summary = "모든 리뷰 조회", description = "모든 리뷰를 조회 할 때 사용하는 API")
-    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
-        List<ReviewDTO> reviews = reviewService.findAll();
+    // 무한 스크롤 *일반 리뷰
+    @GetMapping("/members/{memberId}/all")
+    @Operation(summary = "리뷰 무한 스크롤", description = "무한 스크롤옹 리뷰를 단위별로 가져오는 API")
+    public List<ReviewDTO> getReviews(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
+        return reviewService.getReviews(memberId, page, size);
+    }
+
+    // 특정 멤버의 모든 리뷰 조회 *일반 리뷰
+    @GetMapping("/members/{memberId}")
+    @Operation(summary = "특정 멤버의 모든 리뷰 조회", description = "특정 멤버의 모든 리뷰 조회 할 때 사용하는 API(url의 멤버id, 사용)")
+    public ResponseEntity<List<ReviewDTO>> findReviewsOfMembers(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
+        List<ReviewDTO> reviews = reviewService.findReviewsOfMember(memberId, page, size);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    // 무한 스크롤
-    @GetMapping
-    @Operation(summary = "리뷰 무한 스크롤", description = "무한 스크롤옹 리뷰를 단위별로 가져오는 API")
-    public List<ReviewDTO> getReviews(@RequestParam int page, @RequestParam int size) {
-        return reviewService.getReviews(page, size);
-    }
-
-    // 특정 멤버의 모든 리뷰 조회
-    @GetMapping("/members/{memberId}")
-    @Operation(summary = "특정 멤버의 모든 리뷰 조회", description = "특정 멤버의 모든 리뷰 조회 할 때 사용하는 API(url의 멤버id, 사용)")
-    public ResponseEntity<List<ReviewDTO>> findReviewsOfMembers(@PathVariable Integer memberId) {
-        List<ReviewDTO> reviews = reviewService.findReviewsOfMembers(memberId);
-        if (reviews == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    // 리뷰 한 개만 *디테일 리뷰
+    // findbyid 활용
+    @GetMapping("/details/{reviewId}")
+    @Operation(summary = "특정 리뷰 조회", description = "특정 리뷰 조회 할 때 사용하는 API(url의 리뷰id 및 (*주의!) param으로 memberId 사용)")
+    public ResponseEntity<DetailReviewDTO> findReviewsOfMembers(@PathVariable Long reviewId, @RequestParam int memberId) {
+        DetailReviewDTO reviews = reviewService.findById(reviewId, memberId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     // 리뷰 생성
     @PostMapping("/members/{memberId}/tickets/{ticketId}")
     @Operation(summary = "새로운 리뷰 작성", description = "리뷰 생성 시 사용하는 API(url의 멤버id, 티켓 id 사용)")
-    public ResponseEntity<ReviewDTO> createReview(@PathVariable Integer memberId, @PathVariable Long ticketId, @RequestBody ReviewDTO reviewDTO) {
+    public ResponseEntity<DetailReviewDTO> createReview(@PathVariable Integer memberId, @PathVariable Long ticketId, @RequestBody DetailReviewDTO detailReviewDTO) {
         System.out.println(memberId);
-        ReviewDTO createdReview = reviewService.createReview(memberId, ticketId, reviewDTO);
+        DetailReviewDTO createdReview = reviewService.createReview(memberId, ticketId, detailReviewDTO);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
 
     // 리뷰 업데이트
     @PutMapping("/members/{memberId}/reviews/{reviewId}")
-    @Operation(summary = "특정 멤버의 모든 예매 조회", description = "특정 멤버의 모든 예매 조회 할 때 사용하는 API")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Integer memberId,  @PathVariable Long reviewId, @RequestBody ReviewDTO reviewDTO) {
-        ReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, reviewDTO);
+    @Operation(summary = "특정 리뷰의 내용 수정", description = "특정 리뷰의 내용 수정할 때 사용하는 API")
+    public ResponseEntity<DetailReviewDTO> updateReview(@PathVariable Integer memberId, @PathVariable Long reviewId, @RequestBody DetailReviewDTO detailReviewDTO) {
+        DetailReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, detailReviewDTO);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
     }
 
     // 리뷰 삭제
     @DeleteMapping("/{reviewId}")
-    @Operation(summary = "특정 멤버의 모든 예매 조회", description = "특정 멤버의 모든 리뷰 조회 할 때 사용하는 API(url의 멤버id 사용)")
+    @Operation(summary = "특정 리뷰 삭제", description = "특정 리뷰 삭제할 때 사용하는 API(url의 리뷰id 사용)")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
         reviewService.deleteById(reviewId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

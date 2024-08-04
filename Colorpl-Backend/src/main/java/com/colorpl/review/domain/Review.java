@@ -1,6 +1,7 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
+import com.colorpl.global.common.BaseEntity;
 import com.colorpl.ticket.domain.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +17,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 //@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends BaseEntity {
 
     @Column(name = "REVIEW_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +36,6 @@ public class Review {
     @Column(name = "EMPHATHY_NUMBER")
     private  Integer emphathy;
 
-    // ?
     @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();

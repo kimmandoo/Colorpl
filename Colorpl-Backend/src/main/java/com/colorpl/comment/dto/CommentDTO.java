@@ -6,13 +6,17 @@ import com.colorpl.review.domain.Review;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class CommentDTO {
     private Long id;
     private Long reviewId;
     private Integer memberId; // Changed to Long for consistency
+    private String writer;
     private String commentContent;
+    private LocalDateTime createdate;
 
     // Static method to create a CommentDTO from a Comment entity
     public static CommentDTO fromComment(Comment comment) {
@@ -26,11 +30,14 @@ public class CommentDTO {
 
     // Static method to create a CommentDTO from a Comment entity
     public static CommentDTO toCommentDTO(Comment comment) {
+        System.out.println(comment.getCreateDate());
         return CommentDTO.builder()
                 .id(comment.getId())
                 .reviewId(comment.getReview() != null ? comment.getReview().getId() : null)
                 .memberId(comment.getMember() != null ? comment.getMember().getId() : null)
+                .writer(comment.getMember().getNickname())
                 .commentContent(comment.getComment_content())
+                .createdate(comment.getCreateDate())
                 .build();
     }
 

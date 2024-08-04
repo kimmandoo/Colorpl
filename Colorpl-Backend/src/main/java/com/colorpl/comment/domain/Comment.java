@@ -1,5 +1,6 @@
 package com.colorpl.comment.domain;
 
+import com.colorpl.global.common.BaseEntity;
 import com.colorpl.member.Member;
 import com.colorpl.review.domain.Review;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue
