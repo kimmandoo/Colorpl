@@ -5,6 +5,7 @@ import com.data.repository.FeedRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
 import com.data.repository.SignRepository
+import com.data.repository.TicketRepository
 import com.data.repository.TmapRouteRepository
 import com.data.repository.TokenRepository
 import com.data.repositoryimpl.CommentRepositoryImpl
@@ -12,6 +13,7 @@ import com.data.repositoryimpl.FeedRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.SignRepositoryImpl
+import com.data.repositoryimpl.TicketRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
 import com.data.repositoryimpl.TokenRepositoryImpl
 import dagger.Binds
@@ -66,4 +68,10 @@ interface RepositoryModule {
     fun provideCommentPagingRepository(
         commentPagingRepositoryImpl: CommentRepositoryImpl
     ): CommentRepository
+
+    @Singleton
+    @Binds
+    fun provideTicketRepository(
+        ticketRepositoryImpl: TicketRepositoryImpl
+    ): TicketRepository
 }

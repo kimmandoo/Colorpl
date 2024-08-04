@@ -1,6 +1,7 @@
 package com.presentation.util
 
 import android.animation.ObjectAnimator
+import android.graphics.Rect
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_DONE
@@ -9,8 +10,11 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import timber.log.Timber
+import kotlin.math.abs
 
 
 // EditText
@@ -70,4 +74,38 @@ fun setDistanceX(viewOne: View, viewTwo: View): Float { // 두 View 사이의 �
 fun View.setTransactionX(distance: Float) {
     val anim = ObjectAnimator.ofFloat(this, "translationX", distance)
     anim.start()
+}
+
+//ViewPager
+fun ViewPager2.addCustomItemDecoration() {
+    this.addItemDecoration(object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            outRect.right = 70.dpToPx
+            outRect.left = 70.dpToPx
+        }
+    })
+    val scaleFactor = 0.8f
+
+    val pageTranslationX = 150.dpToPx
+
+    this.setPageTransformer { page, position ->
+        page.translationX = -pageTranslationX * (position)
+
+        if (position <= -1 || position >= 1) {
+            // 페이지가 보이지 않을 때
+            page.scaleX = scaleFactor
+            page.scaleY = scaleFactor
+        }else{
+            // 왼쪽 페이지 && 오른쪽 페이지
+            val absolute = 1 - abs(position)
+            page.scaleX = scaleFactor + (1 - scaleFactor) * absolute
+            page.scaleY = scaleFactor + (1 - scaleFactor) * absolute
+        }
+
+        }
 }

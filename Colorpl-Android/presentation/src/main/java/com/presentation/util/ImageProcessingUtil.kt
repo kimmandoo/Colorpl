@@ -1,5 +1,6 @@
 package com.presentation.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,15 +8,18 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.util.Base64
 import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 
 class ImageProcessingUtil(private val context: Context) {
 
-    fun processImageForVisionAPI(imageUri: Uri, maxWidth: Int = 512, maxHeight: Int = 512, quality: Int = 85): ByteArray {
+    fun processImageForVisionAPI(imageUri: Uri, maxWidth: Int = 1024, maxHeight: Int = 1024, quality: Int = 85): ByteArray {
         val inputStream = context.contentResolver.openInputStream(imageUri)
         var bitmap = BitmapFactory.decodeStream(inputStream)
         inputStream?.close()
@@ -82,5 +86,39 @@ class ImageProcessingUtil(private val context: Context) {
 
     fun cropBitmap(bitmap: Bitmap, left: Int, top: Int, width: Int, height: Int): Bitmap {
         return Bitmap.createBitmap(bitmap, left, top, width, height)
+    }
+
+    fun uriToFile(uri: Uri): File? {
+        val fileName = getFileName(uri)
+        val cacheDir = context.externalCacheDir
+        val file = File(cacheDir, fileName)
+
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(file)
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    @SuppressLint("Range")
+    fun getFileName(uri: Uri): String {
+        var fileName = ""
+        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        }
+        if (fileName.isEmpty()) {
+            fileName = uri.path?.split('/')?.last() ?: "unknown"
+        }
+        return fileName
     }
 }

@@ -1,6 +1,5 @@
 package com.presentation.my_page
 
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyReviewBinding
 import com.domain.model.Ticket
@@ -17,7 +16,6 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
             onTicketClickListener = {
-                findNavController().navigate(R.id.action_fragment_my_review_to_fragment_review)
             }
         )
     }
@@ -39,31 +37,35 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
                 ),
                 Ticket(
                     ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date(),
-                    space = "ignota",
-                    seat = "commune"
-                )
+                    date = Date().toString(),
+                    theater = "ignota",
+                    seat = "commune",
+                    category = "뮤지컬"
+                ),
             )
         )
 
@@ -74,23 +76,29 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
         val use = binding.ivUseTicket
         unUse.isSelected = true
 
-        binding.ivUnUseTicket.setOnClickListener {
-            it.isSelected = !it.isSelected
-            use.isSelected = false
-            binding.type = false
-            binding.indicator.setTransactionX(0f)
-        }
+        binding.apply {
+            ivUnUseTicket.setOnClickListener {
+                it.isSelected = !it.isSelected
+                use.isSelected = false
+                type = false
+                indicator.setTransactionX(0f)
+            }
 
-        binding.ivUseTicket.setOnClickListener {
-            it.isSelected = !it.isSelected
-            unUse.isSelected = false
-            binding.type = true
-            val distance = setDistanceX(unUse, use)
-            binding.indicator.setTransactionX(distance)
-        }
+            ivUseTicket.setOnClickListener {
+                it.isSelected = !it.isSelected
+                unUse.isSelected = false
+                type = true
+                val distance = setDistanceX(unUse, use)
+                indicator.setTransactionX(distance)
+            }
 
-        binding.includeTop.ivBack.setOnClickListener {
-            navigatePopBackStack()
+            includeTop.ivBack.setOnClickListener {
+                navigatePopBackStack()
+            }
+
+            imgFeedRegister.setOnClickListener {
+                navigateDestination(R.id.action_fragment_my_review_to_fragment_feed_ticket_select)
+            }
         }
     }
 }

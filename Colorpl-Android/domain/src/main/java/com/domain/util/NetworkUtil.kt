@@ -1,14 +1,14 @@
 package com.domain.util
 
-suspend fun <T> RepoResult<T>.onSuccess(block: suspend (T) -> Unit): RepoResult<T> {
-    if (this is RepoResult.Success) {
+suspend fun <T> DomainResult<T>.onSuccess(block: suspend (T) -> Unit): DomainResult<T> {
+    if (this is DomainResult.Success) {
         block(data)
     }
     return this
 }
 
-suspend fun <T> RepoResult<T>.onFailure(block: suspend (Exception) -> Unit): RepoResult<T> {
-    if (this is RepoResult.Error) {
+suspend fun <T> DomainResult<T>.onFailure(block: suspend (Exception) -> Unit): DomainResult<T> {
+    if (this is DomainResult.Error) {
         block(exception)
     }
     return this

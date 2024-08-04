@@ -3,6 +3,8 @@ package com.colorpl.di
 import com.data.api.FeedApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
+import com.data.api.TicketApi
+import com.data.api.SignApi
 import com.data.api.TmapRouteApi
 import dagger.Module
 import dagger.Provides
@@ -44,4 +46,20 @@ object ApiModule {
         @NormalRetrofit
         retrofit: Retrofit
     ): FeedApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideTicketApi(
+        @NormalRetrofit
+        retrofit: Retrofit
+    ): TicketApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideSignApi(
+        @NormalRetrofit
+        retrofit: Retrofit
+    ): SignApi = retrofit.create()
+
+
 }
