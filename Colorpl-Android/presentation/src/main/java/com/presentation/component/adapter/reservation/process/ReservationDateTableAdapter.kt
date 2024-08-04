@@ -18,12 +18,7 @@ class ReservationDateTableAdapter(private val onItemClickListener: (DateTableIte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        when (holder) {
-            is ReservationDateTableViewHolder -> {
-                holder.bind(getItem(position))
-            }
-
-        }
+        (holder as ReservationDateTableViewHolder).bind(getItem(position))
     }
 
 }

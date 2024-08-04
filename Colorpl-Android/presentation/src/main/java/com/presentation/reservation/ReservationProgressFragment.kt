@@ -36,8 +36,10 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
     }
 
     private fun initViewModelData() {
-        args.reservationDetail.contentImg?.let { viewModel.setReservationImg(it) }
-        args.reservationDetail.title.let { viewModel.setReservationTitle(it) }
+        with(args.reservationDetail) {
+            contentImg?.let { viewModel.setReservationImg(it) }
+            viewModel.setReservationTitle(title)
+        }
     }
 
     /** ViewPager 설정 */
@@ -110,14 +112,20 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> ReservationTimeTableFragment()
-                1 -> ReservationSeatFragment()
-                2 -> ReservationPaymentFragment()
-                3 -> ReservationCompleteFragment()
+                TIME_TABLE -> ReservationTimeTableFragment()
+                SEAT -> ReservationSeatFragment()
+                PAYMENT -> ReservationPaymentFragment()
+                COMPLETE -> ReservationCompleteFragment()
                 else -> throw IllegalStateException("Unexpected position $position")
             }
         }
     }
+     companion object{
+         private const val TIME_TABLE = 0
+         private const val SEAT = 1
+         private const val PAYMENT = 2
+         private const val COMPLETE = 3
 
+     }
 
 }

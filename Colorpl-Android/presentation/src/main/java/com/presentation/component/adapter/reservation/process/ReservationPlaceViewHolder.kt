@@ -10,7 +10,7 @@ import timber.log.Timber
 
 class ReservationPlaceViewHolder(
     private val binding: ItemReservationPlaceBinding,
-    private val clickListener: OnTimeTableClickListener
+    private val timeTableClickListener: OnTimeTableClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: ReservationPairInfo, type: () -> Boolean) {
         binding.apply {
@@ -20,8 +20,7 @@ class ReservationPlaceViewHolder(
 
             val reservationTimeTableAdapter = ReservationTimeTableAdapter(onClickListener = {timeTable ->
                 Toast.makeText(binding.root.context, "${data.placeName} ${data.theaterName} ${timeTable.startTime}", Toast.LENGTH_SHORT).show()
-                clickListener.onTimeTableClick(data, timeTable)
-                ViewPagerManager.moveNext()
+                timeTableClickListener.onTimeTableClick(data, timeTable)
             })
             rvTheater.adapter = reservationTimeTableAdapter
             reservationTimeTableAdapter.submitList(data.timeTableList)
