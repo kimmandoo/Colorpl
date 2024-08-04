@@ -16,6 +16,7 @@ import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.reservation.process.OnTimeTableClickListener
 import com.presentation.component.adapter.reservation.process.ReservationDateTableAdapter
 import com.presentation.component.adapter.reservation.process.ReservationPlaceAdapter
+import com.presentation.util.ViewPagerManager
 import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -145,9 +146,12 @@ class ReservationTimeTableFragment :
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
-        viewModel.setReservationPlace(data.placeName)
-        viewModel.setReservationTheater(data.theaterName)
-        viewModel.setReservationTimeTable(timeTable)
+        with(viewModel) {
+            setReservationPlace(data.placeName)
+            setReservationTheater(data.theaterName)
+            setReservationTimeTable(timeTable)
+        }
+        ViewPagerManager.moveNext()
         Timber.d("선택된 장소 : ${data.placeName}")
         Timber.d("선택된 상영관 : ${data.theaterName}")
         Timber.d("선택된 시간표 : ${timeTable.startTime}")

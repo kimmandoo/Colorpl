@@ -10,7 +10,7 @@ import com.domain.model.ReservationPairInfo
 import com.presentation.base.BaseDiffUtil
 
 class ReservationPlaceAdapter (
-    private val clickListener: OnTimeTableClickListener
+    private val timeTableClickListener: OnTimeTableClickListener
 ):
     ListAdapter<ReservationPairInfo, ReservationPlaceViewHolder>(
         BaseDiffUtil<ReservationPairInfo>()
@@ -20,7 +20,7 @@ class ReservationPlaceAdapter (
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationPlaceViewHolder {
         val binding =
             ItemReservationPlaceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ReservationPlaceViewHolder(binding, clickListener)
+        return ReservationPlaceViewHolder(binding, timeTableClickListener)
     }
 
     override fun onBindViewHolder(holder: ReservationPlaceViewHolder, position: Int) {
