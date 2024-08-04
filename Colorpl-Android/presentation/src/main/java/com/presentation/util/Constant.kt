@@ -182,3 +182,16 @@ enum class TopButtonsStatus(private val back: Int, private val exit: Int) {
     fun getBackVisibility() = back
     fun getExitVisibility() = exit
 }
+
+class Payment {
+    enum class Discount {
+        NONE,
+        SSAFY_TRAINEE,
+        COUPON;
+    };
+    enum class Method {
+        NONE,
+        BOOT,
+        SSAFY;
+    }
+}

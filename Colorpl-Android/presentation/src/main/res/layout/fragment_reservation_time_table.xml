@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.presentation.viewmodel.ReservationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,20 +20,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
             android:text="@string/reservation_time_table_value"
             android:textColor="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/reservation_time_table_value" />
+        <TextView
+            android:id="@+id/tv_selected_date"
+            style="@style/suite_bold_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:date="@{viewModel.reservationDate}"
+            app:setTitle="@{true}"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_reservation_time_table_value"
+            tools:text="선택한 날짜 : 2024.08.03 (토)"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_reservation_date_table"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_reservation_time_table"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_reservation_time_table_value" />
+            app:layout_constraintTop_toBottomOf="@+id/rc_reservation_date_table" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

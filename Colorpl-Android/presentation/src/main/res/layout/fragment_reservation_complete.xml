@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="43dp"
-                android:text="@string/reservation_pay_date"
+                android:text="@string/reservation_pay_value"
                 android:textColor="@color/timber_wolf"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_pay_info"

@@ -38,4 +38,8 @@
     <string name="reservation_complete">완료</string>
     <string name="reservation_seat_cnt">x%d</string>
     <string name="reservation_seat_price">%d원</string>
+
+    <string name="reservation_date_today">오늘</string>
+    <string name="reservation_date_tomorrow">내일</string>
+    <string name="reservation_selected_title">선택한 날짜</string>
 </resources>
