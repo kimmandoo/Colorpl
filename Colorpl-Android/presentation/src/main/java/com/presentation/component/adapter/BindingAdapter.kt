@@ -234,7 +234,7 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
         }
         selectedDateTitle + formattedDate + dayOfWeek + subText
     } else {
-        formattedDate
+        formattedDate + dayOfWeek
     }
 
 }
