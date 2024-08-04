@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.colorpl.presentation.databinding.ItemReservationPlaceBinding
 import com.domain.model.ReservationPairInfo
+import com.domain.model.TimeTable
 import com.presentation.util.ViewPagerManager
 import timber.log.Timber
 
 class ReservationPlaceViewHolder(
-    val binding: ItemReservationPlaceBinding,
+    private val binding: ItemReservationPlaceBinding,
+    private val clickListener: OnTimeTableClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(data: ReservationPairInfo, type: () -> Boolean) {
         binding.apply {
@@ -18,10 +20,15 @@ class ReservationPlaceViewHolder(
 
             val reservationTimeTableAdapter = ReservationTimeTableAdapter(onClickListener = {timeTable ->
                 Toast.makeText(binding.root.context, "${data.placeName} ${data.theaterName} ${timeTable.startTime}", Toast.LENGTH_SHORT).show()
+                clickListener.onTimeTableClick(data, timeTable)
                 ViewPagerManager.moveNext()
             })
             rvTheater.adapter = reservationTimeTableAdapter
             reservationTimeTableAdapter.submitList(data.timeTableList)
         }
     }
+}
+
+interface OnTimeTableClickListener {
+    fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable)
 }

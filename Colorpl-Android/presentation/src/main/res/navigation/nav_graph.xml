@@ -93,6 +93,9 @@
         android:id="@+id/fragment_reservation_progress"
         android:name="com.presentation.reservation.ReservationProgressFragment"
         tools:layout="@layout/fragment_reservation_progress">
+        <argument
+            android:name="reservationDetail"
+            app:argType="com.domain.model.ReservationInfo" />
 
     </fragment>
 
