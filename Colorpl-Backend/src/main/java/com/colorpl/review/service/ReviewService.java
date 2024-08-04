@@ -107,7 +107,6 @@ public class ReviewService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
-
         // Build review entity from DTO
         Review review = Review.builder()
                 .ticket(ticket)
