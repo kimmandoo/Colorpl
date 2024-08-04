@@ -16,7 +16,7 @@ class FeedRepositoryImpl @Inject constructor(
     override fun getPagedFeed(): Flow<PagingData<Feed>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 1,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = false,
                 initialLoadSize = PAGE_SIZE
             ),
@@ -25,6 +25,6 @@ class FeedRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 10
+        private const val PAGE_SIZE = 5
     }
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class FeedDataSourceImpl @Inject constructor(
     private val feedApi: FeedApi
 ) : FeedDataSource {
-    override suspend fun getFeed(page: Int, items: Int): ResponsePagedFeed {
-        return feedApi.getFeedData(page, items)
+    override suspend fun getFeed(page: Int, size: Int): ResponsePagedFeed {
+        return feedApi.getFeedData(page, size)
     }
 }

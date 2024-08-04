@@ -5,5 +5,5 @@ import com.data.model.paging.Comment
 import kotlinx.coroutines.flow.Flow
 
 interface CommentRepository {
-    fun getPagedComment(feedId: Int): Flow<PagingData<Comment>>
+    fun getPagedComment(reviewId: Int): Flow<PagingData<Comment>>
 }
