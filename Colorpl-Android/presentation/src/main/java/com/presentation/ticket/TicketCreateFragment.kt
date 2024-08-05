@@ -2,6 +2,9 @@ package com.presentation.ticket
 
 import android.content.Intent
 import android.net.Uri
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -41,6 +44,9 @@ class TicketCreateFragment :
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
+    private val loading by lazy {
+        LoadingDialog(requireContext())
+    }
 
     override fun initView() {
         observeDescription()
@@ -76,25 +82,32 @@ class TicketCreateFragment :
                 )
             findNavController().navigate(action)
         }
-        binding.rgCategory.setOnCheckedChangeListener { radioGroup, itemId ->
-            val selectedText = when (itemId) {
-                R.id.rb_movie -> binding.rbMovie
-                R.id.rb_show -> binding.rbShow
-                R.id.rb_concert -> binding.rbConcert
-                R.id.rb_play -> binding.rbPlay
-                R.id.rb_musical -> binding.rbMusical
-                R.id.rb_exhibition -> binding.rbExhibition
-                R.id.rb_else -> binding.rbElse
-                else -> null
-            }?.text?.toString()
+        val items = resources.getStringArray(R.array.ticket_category)
+        val adapter =
+            ArrayAdapter(requireContext(), R.layout.item_category_spinner, items)
+        binding.spinner.apply {
+            this.adapter = adapter
+            adapter.setDropDownViewResource(R.layout.item_category_spinner)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    Timber.tag("spinner").d("${items[position]}")
+                    viewModel.setCategory(items[position])
+                }
 
-            selectedText?.let { viewModel.setCategory(it) }
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    viewModel.setCategory(items[0])
+                }
+            }
         }
     }
 
     private fun observeDescription() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val loading = LoadingDialog(requireContext())
             loading.show()
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.description.collectLatest { data ->
@@ -114,6 +127,7 @@ class TicketCreateFragment :
         viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
             Timber.d("$state")
             binding.tvConfirm.isSelected = state != ""
+            binding.tvConfirm.isEnabled = state != ""
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -147,5 +161,10 @@ class TicketCreateFragment :
             photoFile
         )
         takePicture.launch(photoUri)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loading.dismiss()
     }
 }

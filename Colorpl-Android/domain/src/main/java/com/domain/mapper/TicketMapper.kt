@@ -15,6 +15,7 @@ fun Ticket.toEntity(): RequestTicketCreate{
         theater = theater,
         dateTime = date,
         seat = seat,
-        category = category
+        category = category,
+        memberId = 1
     )
 }
