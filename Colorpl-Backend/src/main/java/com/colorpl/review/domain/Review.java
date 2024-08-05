@@ -24,6 +24,9 @@ public class Review extends BaseEntity {
     @Id
     private Long id;
 
+    @Column(name = "REVIEW_FILENAME")
+    private String filename;
+
     @Column(name = "REVIEW_CONTENT")
     private  String content;
 

@@ -5,7 +5,6 @@ import com.colorpl.review.domain.Review;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
-public class DetailReviewDTO {
+public class RequestDTO_cpy {
     private Long id;
     private Long ticketId;
     private String writer;
@@ -48,7 +47,7 @@ public class DetailReviewDTO {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
-    public static DetailReviewDTO toDetailReviewDTO(Integer memberId, Review review) {
+    public static RequestDTO_cpy toDetailReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
                 .map(CommentDTO::toCommentDTO)
                 .collect(Collectors.toList());
@@ -69,7 +68,7 @@ public class DetailReviewDTO {
         String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
 
-        return DetailReviewDTO.builder()
+        return RequestDTO_cpy.builder()
                 .id(review.getId())
                 .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
                 .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
