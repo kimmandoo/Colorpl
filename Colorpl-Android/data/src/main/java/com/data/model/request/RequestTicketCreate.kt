@@ -5,5 +5,6 @@ data class RequestTicketCreate(
     val theater: String,
     val dateTime: String,
     val seat: String,
-    val category: String
+    val category: String,
+    val memberId: Int,
 )
