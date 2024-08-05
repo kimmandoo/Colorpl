@@ -9,4 +9,8 @@
     <string name="ticket_title_hint">제목을 입력해주세요</string>
     <string name="ticket_created">티켓이 생성되었습니다</string>
     <string name="ticket_save">저장</string>
+
+    <string name="ticket_total_distance">총 거리 : %s</string>
+    <string name="ticket_total_time">총 시간 : %s</string>
+    <string name="ticket_route_info">길찾기 정보</string>
 </resources>

@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.Route
 import com.domain.usecase.TmapRouteUseCase
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
@@ -23,8 +24,8 @@ class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
 ) : ViewModel() {
 
-    private val _routeData = MutableSharedFlow<List<LatLng>>()
-    val routeData: SharedFlow<List<LatLng>> = _routeData.asSharedFlow()
+    private val _routeData = MutableSharedFlow<Pair<Route,List<LatLng>>>()
+    val routeData: SharedFlow<Pair<Route,List<LatLng>>> = _routeData.asSharedFlow()
 
     private val _latLng = MutableStateFlow(LatLng(0.0,0.0))
     val latLng : StateFlow<LatLng> get() = _latLng
@@ -59,7 +60,8 @@ class TicketViewModel @Inject constructor(
                             }
                         }
                     }
-                    _routeData.emit(routeData)
+                    val pairData = Pair(data, routeData)
+                    _routeData.emit(pairData)
                 }.onFailure { error ->
                     Timber.tag("error").e(error)
                 }

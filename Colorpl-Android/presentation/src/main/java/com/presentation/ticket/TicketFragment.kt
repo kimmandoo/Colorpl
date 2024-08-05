@@ -19,7 +19,9 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapDialogFragment
 import com.presentation.util.LocationHelper
 import com.presentation.util.checkLocationPermission
+import com.presentation.util.distanceChange
 import com.presentation.util.ignoreParentScroll
+import com.presentation.util.roadTimeChange
 import com.presentation.util.setup
 import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,12 +31,12 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fragment_ticket) {
 
-    private val ticketViewModel : TicketViewModel by viewModels()
+    private val ticketViewModel: TicketViewModel by viewModels()
     override var mapView: MapView? = null
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
-    var currentLocation : LatLng? = null
+    var currentLocation: LatLng? = null
 
     override fun initView(savedInstanceState: Bundle?) {
         initNaverMap()
@@ -62,15 +64,14 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         }
     }
 
-    private fun initClickEvent(){
+    private fun initClickEvent() {
         binding.apply {
             includeMyReview.clFeedDetail.setOnClickListener {
                 findNavController().navigate(R.id.fragment_feed_detail)
             }
             tvFindRoad.setOnClickListener {
                 ticketViewModel.getRoute(
-                    LatLng(37.63788539420793, 127.02550910860451),
-                    LatLng(37.609094989686, 127.030406594109)
+                    LatLng(DEFAULT_LAT, DEFAULT_LONG)
                 )
             }
         }
@@ -91,7 +92,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         }
         checkLocationPermission(requireActivity())
         LocationHelper.getInstance().getClient().lastLocation.addOnSuccessListener { location ->
-            currentLocation = LatLng(location.latitude, location.longitude)
+            ticketViewModel.setLatLng(LatLng(location.latitude, location.longitude))
             currentLocation?.let {
                 naverMap.cameraPosition = CameraPosition(it, DEFAULT_ZOOM)
             }
@@ -103,17 +104,24 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             .onEach { routeData ->
                 val routeOverlay = PathOverlay()
                 routeOverlay.apply {
-                    coords = routeData
+                    coords = routeData.second
                     color = ContextCompat.getColor(binding.root.context, R.color.imperial_red)
                     outlineWidth = 4
                     map = naverMap
                 }
-                naverMap.cameraPosition = CameraPosition(routeData.first(), 16.0)
+                binding.apply {
+                    totalTime = routeData.first.totalTime.roadTimeChange()
+                    totalDistance = routeData.first.totalDistance.distanceChange()
+                    this.clFindRoadContent.visibility = View.VISIBLE
+                }
+                val firstData = routeData.second.first()
+                naverMap.cameraPosition = CameraPosition(firstData, 16.0)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     companion object {
-
+        private const val DEFAULT_LAT = 36.0990913
+        private const val DEFAULT_LONG = 128.4236401
         private const val DEFAULT_ZOOM = 15.0
     }
 }
