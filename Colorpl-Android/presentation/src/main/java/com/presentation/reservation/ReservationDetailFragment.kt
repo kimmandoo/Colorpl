@@ -1,19 +1,23 @@
 package com.presentation.reservation
 
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
 import com.presentation.base.BaseFragment
 import com.presentation.util.TopButtonsStatus
+import com.presentation.viewmodel.ReservationDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>(R.layout.fragment_reservation_detail) {
     private val args: ReservationDetailFragmentArgs by navArgs()
+    private val viewModel: ReservationDetailViewModel by viewModels()
 
     override fun initView() {
         initClickEvent()
+        viewModel.setReservationInfo(1)
         initUi()
     }
 
