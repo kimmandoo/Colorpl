@@ -51,4 +51,20 @@ public class CreateShowService {
             }
         }
     }
+
+    public Long createByShowApiId(String showApiId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        if (showDetailRepository.findByApiId(showApiId).isEmpty()) {
+            ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
+                showApiId);
+            ShowDetail showDetail = createShowDetailService.create(
+                showDetailApiResponse.getItem());
+            createShowScheduleService.create(showDetail,
+                LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
+                LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
+                showDetailApiResponse.getItem().getSchedule());
+            return showDetail.getId();
+        }
+        return null;
+    }
 }
