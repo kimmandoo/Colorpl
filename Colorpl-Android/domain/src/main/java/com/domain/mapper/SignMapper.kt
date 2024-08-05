@@ -27,7 +27,7 @@ fun Member.toSignUpParam(): RequestSignUp {
     return RequestSignUp(
         email = this.email,
         password = this.password,
-        nickname = this.nickName,
-        profile = this.profileImage
+        nickname = this.nickName ?: "",
+        profile = this.profileImage ?: ""
     )
 }
