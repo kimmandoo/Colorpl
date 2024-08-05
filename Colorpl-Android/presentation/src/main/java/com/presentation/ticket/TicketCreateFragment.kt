@@ -2,11 +2,7 @@ package com.presentation.ticket
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
@@ -28,7 +24,6 @@ import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.checkCameraPermission
 import com.presentation.util.getPhotoGallery
-import com.presentation.util.onBackButtonPressed
 import com.presentation.util.setCameraLauncher
 import com.presentation.util.setImageLauncher
 import com.presentation.viewmodel.TicketCreateViewModel
@@ -87,15 +82,7 @@ class TicketCreateFragment :
                 )
             findNavController().navigate(action)
         }
-        val items = arrayOf(
-            getString(R.string.feed_filter_play),
-            getString(R.string.feed_filter_movie),
-            getString(R.string.feed_filter_concert),
-            getString(R.string.feed_filter_musical),
-            getString(R.string.feed_filter_exhibition),
-            getString(R.string.feed_filter_performance),
-            getString(R.string.ticket_etc)
-        )
+        val items = resources.getStringArray(R.array.ticket_category)
         val adapter =
             ArrayAdapter(requireContext(), R.layout.item_category_spinner, items)
         binding.spinner.apply {
