@@ -5,6 +5,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <dialog
+        android:id="@+id/ticketAddressDialog"
+        android:name="com.presentation.ticket.TicketAddressDialog"
+        android:label="TicketAddressDialog" />
     <argument
         android:name="photoType"
         app:argType="com.presentation.util.TicketType" />
@@ -24,6 +28,9 @@
                 app:argType="android.net.Uri"
                 app:nullable="true" />
         </action>
+        <action
+            android:id="@+id/action_fragment_ticket_create_to_ticketAddressDialog"
+            app:destination="@id/ticketAddressDialog" />
 
     </fragment>
     <fragment

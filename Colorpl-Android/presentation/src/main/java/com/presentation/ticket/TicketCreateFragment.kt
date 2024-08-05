@@ -67,6 +67,10 @@ class TicketCreateFragment :
                 getPhotoGallery(pickImageLauncher)
             }
         }
+        binding.etDetail.setOnLongClickListener {
+            findNavController().navigate(R.id.action_fragment_ticket_create_to_ticketAddressDialog)
+            false
+        }
         binding.tvConfirm.setOnClickListener {
             viewModel.setTicketInfo(
                 Description(
