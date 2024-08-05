@@ -76,14 +76,15 @@ public class ReviewController {
     @PostMapping("/members/{memberId}/empathize/{reviewId}")
     @Operation(summary = "특정 리뷰에 공감 추가", description = "특정 리뷰에 공감할 때 사용하는 API")
     public ResponseEntity<Void> addEmpathy(@PathVariable Long reviewId, @PathVariable Integer memberId) {
-        // Logic to add empathy
+        empathyService.addEmpathy(reviewId, memberId);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/members/{memberId}/empathize/{reviewId}")
     @Operation(summary = "특정 리뷰에 공감 취소", description = "특정 리뷰에 공감 취소할 때 사용하는 API")
     public ResponseEntity<Void> removeEmpathy(@PathVariable Long reviewId, @PathVariable Integer memberId) {
-        // Logic to remove empathy
+        empathyService.removeEmpathy(reviewId, memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

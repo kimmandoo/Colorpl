@@ -1,65 +1,69 @@
 package com.colorpl.review.service;
 
 import com.colorpl.member.Member;
+import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
+import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmpathyService {
+
     @Autowired
     private EmpathyRepository empathyRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public void addEmpathy(Long reviewId, Member member) {
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Transactional
+    public void addEmpathy(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
 
-        Optional<Empathy> existingEmpathy = empathyRepository.findByReviewAndMember(review, member);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
 
-        if (existingEmpathy.isPresent()) {
-            Empathy empathy = existingEmpathy.get();
-            if (!empathy.getMyempathy()) {
-                empathy.activate();
-                empathyRepository.save(empathy);
-                review.incrementEmphathy();
-                reviewRepository.save(review);
-            } else {
-                throw new IllegalStateException("Already empathized with this review");
-            }
-        } else {
-            Empathy empathy = Empathy.builder()
-                    .review(review)
-                    .member(member)
-                    .build();
-            empathyRepository.save(empathy);
-            review.incrementEmphathy();
-            reviewRepository.save(review);
+        EmpathyId empathyId = new EmpathyId(reviewId, memberId);
+
+        if (empathyRepository.findById(empathyId).isPresent()) {
+            throw new IllegalStateException("Already empathized with this review");
         }
+
+        Empathy empathy = new Empathy(empathyId, review, member);
+        empathyRepository.save(empathy);
+        review.incrementEmphathy();
+        reviewRepository.save(review);
     }
 
-    public void removeEmpathy(Long reviewId, Member member) {
+    @Transactional
+    public void removeEmpathy(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
 
-        Empathy empathy = empathyRepository.findByReviewAndMember(review, member)
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
+
+        EmpathyId empathyId = new EmpathyId(reviewId, memberId);
+
+        Empathy empathy = empathyRepository.findById(empathyId)
                 .orElseThrow(() -> new IllegalStateException("No empathy found for this review by the member"));
 
-        if (empathy.getMyempathy()) {
-            empathy.deactivate();
-            empathyRepository.save(empathy);
-            review.decrementEmphathy();
-            reviewRepository.save(review);
-        } else {
-            throw new IllegalStateException("Empathy is already removed");
-        }
+        empathyRepository.delete(empathy);
+        review.decrementEmphathy();
+        reviewRepository.save(review);
+    }
+
+    public boolean checkEmpathy(Long reviewId, Integer memberId) {
+        EmpathyId empathyId = new EmpathyId(reviewId, memberId);
+
+        return empathyRepository.findById(empathyId).isPresent();
     }
 }
-

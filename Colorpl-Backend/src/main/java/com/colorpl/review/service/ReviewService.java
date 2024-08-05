@@ -9,6 +9,7 @@ import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
+import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.DetailReviewDTO;
 import com.colorpl.review.dto.ReviewDTO;
@@ -16,47 +17,31 @@ import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 public class ReviewService {
-
-//    @Autowired
-//    private ReviewRepository reviewRepository;
-
-//    @Autowired
-//    private MemberRepository memberRepository;
-
-//    @Autowired
-//    private CommentRepository commentRepository;
-//
-//    @Autowired
-//    private TicketRepository ticketRepository;
-
 
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final TicketRepository ticketRepository;
     private final MemberRepository memberRepository;
     private final EmpathyRepository empathyRepository;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-        "yyyy년 MM월 dd일 HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, CommentRepository commentRepository,
-        TicketRepository ticketRepository, MemberRepository memberRepository,
-        EmpathyRepository empathyRepository) {
+    public ReviewService(ReviewRepository reviewRepository, CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
         this.reviewRepository = reviewRepository;
         this.ticketRepository = ticketRepository;
         this.commentRepository = commentRepository;
@@ -69,25 +54,26 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size);
         List<Review> reviews = reviewRepository.findAll(pageable).getContent();
         return reviews.stream()
-            .map(review -> toReviewDTO(memberId, review)) // Pass size to toReviewDTO
-            .collect(Collectors.toList());
+                .map(review -> toReviewDTO(memberId, review))
+                .collect(Collectors.toList());
     }
 
     // 특정 멤버 리뷰 리스트
     public List<ReviewDTO> findReviewsOfMember(Integer memberId, int page, int size) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
 
         // 관련 티켓 추출
         List<Ticket> tickets = member.getTickets();
 
         // null인 리뷰 외 모두 추출
         List<Review> reviews = tickets.stream()
-            .map(t -> t.getReview().get()) // 각 티켓의 리뷰 추출
-            .filter(Objects::nonNull) // null 확인
-            .distinct() // 중복 리뷰 방지
-            .collect(Collectors.toList());
+                .map(Ticket::getReview) // 각 티켓의 리뷰 추출
+                .filter(Optional::isPresent) // null 확인
+                .map(Optional::get) // Optional 제거
+                .distinct() // 중복 리뷰 방지
+                .collect(Collectors.toList());
 
         // 페이지화
         int start = page * size;
@@ -101,71 +87,63 @@ public class ReviewService {
 
         // DTO로 반환
         return paginatedReviews.stream()
-            .map(review -> toReviewDTO(memberId, review))
-            .collect(Collectors.toList());
+                .map(review -> toReviewDTO(memberId, review))
+                .collect(Collectors.toList());
     }
-
 
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(ReviewNotFoundException::new);
         return toReviewDTO(memberId, review);
     }
 
-
-    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review,
-        Member member) {
+    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review, Member member) {
         return commentDTOs.stream()
-            .map(dto -> dto.toComment(member, review))
-            .collect(Collectors.toList());
+                .map(dto -> dto.toComment(member, review))
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public DetailReviewDTO createReview(Integer memberId, Long ticketId,
-        DetailReviewDTO detailReviewDTO) {
+    public DetailReviewDTO createReview(Integer memberId, Long ticketId, DetailReviewDTO detailReviewDTO) {
         // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
 
         Ticket ticket = ticketRepository.findById(ticketId)
-            .orElseThrow(() -> new RuntimeException("Ticket not found"));
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
         // Build review entity from DTO
         Review review = Review.builder()
-            .ticket(ticket)
-            .content(detailReviewDTO.getContent())
-            .spoiler(detailReviewDTO.getSpoiler())
-            .emotion(detailReviewDTO.getEmotion())
-            .emphathy(detailReviewDTO.getEmpathy())
-            .build();
+                .ticket(ticket)
+                .content(detailReviewDTO.getContent())
+                .spoiler(detailReviewDTO.getSpoiler())
+                .emotion(detailReviewDTO.getEmotion())
+                .emphathy(detailReviewDTO.getEmpathy())
+                .build();
 
         Review savedReview = reviewRepository.save(review);
 
         // DTO의 댓글들 엔티티화
         List<Comment> comments = detailReviewDTO.getComments().stream()
-            .map(dto -> dto.toComment(member, savedReview))
-            .toList();
+                .map(dto -> dto.toComment(member, savedReview))
+                .toList();
 
         // DTO 반환
         return DetailReviewDTO.toDetailReviewDTO(memberId, savedReview);
     }
 
-
     @Transactional
-    public DetailReviewDTO updateReview(Integer memberId, Long reviewId,
-        DetailReviewDTO detailReviewDTO) {
+    public DetailReviewDTO updateReview(Integer memberId, Long reviewId, DetailReviewDTO detailReviewDTO) {
         // 리뷰 가져오기
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(ReviewNotFoundException::new);
-        ;
-        // 리뷰 업데이트
-        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(),
-            detailReviewDTO.getEmotion());
-        Review updatedReview = reviewRepository.save(review);
-        return detailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
-    }
+                .orElseThrow(ReviewNotFoundException::new);
 
+        // 리뷰 업데이트
+        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(), detailReviewDTO.getEmotion());
+        Review updatedReview = reviewRepository.save(review);
+        return DetailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
+    }
 
     @Transactional
     public void deleteById(Long id) {
@@ -177,70 +155,61 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-
     private DetailReviewDTO convertToDTO(Review review) {
         List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
-            .orElse(Collections.emptyList())
-            .stream()
-            .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
-            .collect(Collectors.toList());
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
+                .collect(Collectors.toList());
 
         return DetailReviewDTO.builder()
-            .id(review.getId())
-            .content(review.getContent())
-            .spoiler(review.getSpoiler())
-            .emotion(review.getEmotion())
-            .empathy(review.getEmphathy())
-            .comments(commentDTOs)
-            .build();
+                .id(review.getId())
+                .content(review.getContent())
+                .spoiler(review.getSpoiler())
+                .emotion(review.getEmotion())
+                .empathy(review.getEmphathy())
+                .comments(commentDTOs)
+                .build();
     }
 
-    public Optional<Empathy> findByReviewAndMember(Review review, Member member) {
-//        System.out.println("Review ID: " + review.getId());
-//        System.out.println("Member ID: " + member.getId());
-        return empathyRepository.findByReviewAndMember(review, member);
+    public Optional<Empathy> findByReviewAndMember(Long reviewId, Integer memberId) {
+        EmpathyId empathyId = new EmpathyId(reviewId, memberId);
+        return empathyRepository.findById(empathyId);
     }
 
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
-            .map(CommentDTO::toCommentDTO)
-            .collect(Collectors.toList());
+                .map(CommentDTO::toCommentDTO)
+                .collect(Collectors.toList());
         int totalComments = commentDTOs.size();
 
-        boolean myreviewcheck = review.getTicket() != null &&
-            review.getTicket().getMember() != null &&
-            review.getTicket().getMember().getId() != null &&
-            review.getTicket().getMember().getId().equals(memberId);
+        boolean myReviewCheck = review.getTicket() != null &&
+                review.getTicket().getMember() != null &&
+                review.getTicket().getMember().getId() != null &&
+                review.getTicket().getMember().getId().equals(memberId);
 
-        Integer size = 10;
-        int pages = (int) Math.ceil((double) commentDTOs.size() / size);
+        int size = 10; // Assuming fixed size for comment pages
+        int pages = (int) Math.ceil((double) totalComments / size);
 
-        String formattedDate =
-            review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+        String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(MemberMismatchException::new);
+        boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId)).isPresent();
 
-        boolean myempathy = empathyRepository.findByReviewAndMember(review, member).isPresent();
-//        System.out.println(myempathy);
         return ReviewDTO.builder()
-            .id(review.getId())
-            .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
-            .writer(review.getTicket() != null && review.getTicket().getMember() != null
-                ? review.getTicket().getMember().getNickname() : null)
-            .title(review.getTicket() != null ? review.getTicket().getName() : null)
-            .category(review.getTicket() != null && review.getTicket().getCategory() != null
-                ? review.getTicket().getCategory().name() : null)
-            .content(review.getContent())
-            .spoiler(review.getSpoiler())
-            .emotion(review.getEmotion())
-            .createdate(formattedDate)
-            .empathy(review.getEmphathy())
-            .myempathy(myempathy)
-            .commentpagesize(pages)
-            .commentscount(totalComments)
-            .myreview(myreviewcheck)
-            .build();
+                .id(review.getId())
+                .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
+                .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
+                .title(review.getTicket() != null ? review.getTicket().getName() : null)
+                .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
+                .content(review.getContent())
+                .spoiler(review.getSpoiler())
+                .emotion(review.getEmotion())
+                .createdate(formattedDate)
+                .empathy(review.getEmphathy())
+                .myempathy(myEmpathy)
+                .commentpagesize(pages)
+                .commentscount(totalComments)
+                .myreview(myReviewCheck)
+                .build();
     }
-
 }

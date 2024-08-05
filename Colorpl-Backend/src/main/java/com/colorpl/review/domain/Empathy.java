@@ -1,35 +1,57 @@
 package com.colorpl.review.domain;
 
 import com.colorpl.member.Member;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import lombok.Builder;
 
-@Entity
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Entity
 public class Empathy {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "EMPATHY_ID")
-    private Long id;
+    @EmbeddedId
+    private EmpathyId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REVIEW_ID", referencedColumnName = "REVIEW_ID")
+    @ManyToOne
+    @MapsId("reviewId")
     private Review review;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
+    @ManyToOne
+    @MapsId("memberId")
     private Member member;
 
-    private Boolean myempathy = true;
+    // Constructors
+    public Empathy() {}
 
-    public void deactivate() {
-        this.myempathy = false;
+    public Empathy(EmpathyId id, Review review, Member member) {
+        this.id = id;
+        this.review = review;
+        this.member = member;
     }
 
-    public void activate() {
-        this.myempathy = true;
+    // Getters and setters
+    public EmpathyId getId() {
+        return id;
+    }
+
+    public void setId(EmpathyId id) {
+        this.id = id;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }
-

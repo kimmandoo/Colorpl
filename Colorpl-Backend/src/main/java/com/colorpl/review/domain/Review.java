@@ -34,7 +34,8 @@ public class Review extends BaseEntity {
     private  Byte emotion;
 
     @Column(name = "EMPHATHY_NUMBER")
-    private  Integer emphathy;
+    @Builder.Default
+    private  Integer emphathy = 0;
 
     @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
     @Builder.Default
@@ -46,6 +47,7 @@ public class Review extends BaseEntity {
     
     // 공감 유저 추적
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Empathy> empathies = new ArrayList<>();
 
     public void updateReview(String content, Boolean spoiler, Byte emotion) {
