@@ -15,6 +15,9 @@ import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +85,7 @@ public class MemberService {
             memberDTO.setEmail(email);
             memberDTO.setPassword(randomPassword); // 비밀번호 설정
 
-            // 필요한 경우 추가 정보 설정 (예: 닉네임, 프로필 이미지 등)
+            // 필요한 경우 추가 정보 설정
             Member newMember = registerMember(memberDTO);
             String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", newMember.getId(), newMember.getType()));
             String refreshToken = tokenProvider.createRefreshToken();
@@ -214,6 +217,13 @@ public class MemberService {
 
         int followingCount = member.getFollowingList().size();
         return new FollowCountDTO(followingCount); // members 필드는 사용하지 않음
+    }
+
+    //기본적으로 Authorization 헤더에 값이 있어야 정상 사용 가능
+    public Integer getCurrentMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return Integer.parseInt(userDetails.getUsername());
     }
 
     //리뷰 조회는 querydsl
