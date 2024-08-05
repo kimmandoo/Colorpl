@@ -1,12 +1,18 @@
 package com.colorpl.review.dto;
 
 import com.colorpl.comment.dto.CommentDTO;
+import com.colorpl.global.common.exception.MemberMismatchException;
+import com.colorpl.member.Member;
+import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.repository.EmpathyRepository;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -15,50 +21,37 @@ public class ReviewDTO {
     private Long id;
     private Long ticketId;
     private String writer;
+    private boolean myreview;
     private String title;
+    private String createdate;
     private String category;
+    private String imgurl;
     private String content;
     private Boolean spoiler;
     private Byte emotion;
-    private LocalDateTime createdate;
     private Integer empathy;
+    private Boolean myempathy;
     private Integer commentpagesize;
     private Integer commentscount;
-    private boolean myreview;
 
-    public static ReviewDTO toReviewDTO(Integer memberId, Review review) {
-        List<CommentDTO> commentDTOs = review.getComments().stream()
-                .map(CommentDTO::toCommentDTO)
-                .collect(Collectors.toList());
-        boolean myreviewcheck = false;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
-        if (review.getTicket() != null && review.getTicket().getMember() != null && review.getTicket().getMember().getId() != null && review.getTicket().getMember().getId() == memberId) {
-            myreviewcheck = true;
-        } else {
-            myreviewcheck = false;
-        }
-
-        int totalComments = commentDTOs.size();
-
-        // size is written here
-        Integer size = 10;
-
-        int pages = (int) Math.ceil((double) commentDTOs.size() / size); // size
-
-        return ReviewDTO.builder()
-                .id(review.getId())
-                .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
-                .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
-                .title(review.getTicket() != null ? review.getTicket().getName() : null)
-                .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .createdate(review.getCreateDate())
-                .empathy(review.getEmphathy())
-                .commentpagesize(pages)
-                .commentscount(totalComments)
-                .myreview(myreviewcheck)
-                .build();
+    // Constructor
+    public ReviewDTO(Long id, Long ticketId, String writer, boolean myreview, String title, String createdate, String category, String imgurl, String content, Boolean spoiler, Byte emotion, Integer empathy, Boolean myempathy, Integer commentpagesize, Integer commentscount) {
+        this.id = id;
+        this.ticketId = ticketId;
+        this.writer = writer;
+        this.myreview = myreview;
+        this.title = title;
+        this.createdate = createdate;
+        this.category = category;
+        this.imgurl = imgurl;
+        this.content = content;
+        this.spoiler = spoiler;
+        this.emotion = emotion;
+        this.empathy = empathy;
+        this.myempathy = myempathy;
+        this.commentpagesize = commentpagesize;
+        this.commentscount = commentscount;
     }
 }

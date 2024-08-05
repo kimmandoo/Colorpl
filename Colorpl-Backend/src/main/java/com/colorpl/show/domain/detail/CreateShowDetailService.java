@@ -39,7 +39,7 @@ public class CreateShowDetailService {
             .posterImagePath(item.getPosterImagePath())
             .area(item.getArea())
             .state(ShowState.from(item.getState()))
-            .theater(theater)
+//            .theater(theater)
             .hall(hall)
             .build();
         createSeatService.create(showDetail);

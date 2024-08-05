@@ -15,6 +15,9 @@ import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +85,7 @@ public class MemberService {
             memberDTO.setEmail(email);
             memberDTO.setPassword(randomPassword); // 비밀번호 설정
 
-            // 필요한 경우 추가 정보 설정 (예: 닉네임, 프로필 이미지 등)
+            // 필요한 경우 추가 정보 설정
             Member newMember = registerMember(memberDTO);
             String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", newMember.getId(), newMember.getType()));
             String refreshToken = tokenProvider.createRefreshToken();
@@ -91,17 +94,39 @@ public class MemberService {
         }
     }
 
-    //멤버 정보 업데이트
+//    멤버 정보 업데이트
+//    @Transactional
+//    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
+//        Member existingMember = memberRepository.findById(memberId)
+//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+//
+//        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
+//        return memberRepository.save(existingMember);
+//    }
+
+
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
         Member existingMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+        String email = existingMember.getEmail();
 
-        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
+        // Ensure only nickname and password can be updated
+        if (memberDTO.getEmail() != null && !memberDTO.getEmail().equals(email)) {
+            throw new IllegalArgumentException("이메일은 변경할 수 없습니다.");
+        }
+        if (memberDTO.getNickname() != null) {
+            existingMember.updateNickname(memberDTO.getNickname());
+        }
+        if (memberDTO.getPassword() != null) {
+            existingMember.updatePassword(passwordEncoder.encode(memberDTO.getPassword()));
+        }
+        if (memberDTO.getProfile() != null) {
+            existingMember.updateNickname(memberDTO.getProfile());
+        }
+
         return memberRepository.save(existingMember);
     }
-
-
 
 
 
@@ -192,6 +217,13 @@ public class MemberService {
 
         int followingCount = member.getFollowingList().size();
         return new FollowCountDTO(followingCount); // members 필드는 사용하지 않음
+    }
+
+    //기본적으로 Authorization 헤더에 값이 있어야 정상 사용 가능
+    public Integer getCurrentMemberId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return Integer.parseInt(userDetails.getUsername());
     }
 
     //리뷰 조회는 querydsl

@@ -3,17 +3,16 @@ package com.colorpl.member;
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
-import com.colorpl.review.domain.Review;
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.ticket.domain.Ticket;
 import jakarta.persistence.*;
 
-import java.util.*;
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
@@ -44,9 +43,7 @@ public class Member extends BaseEntity{
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Ticket> tickets = new ArrayList<>();
-
+    private List<Ticket> tickets;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -115,6 +112,14 @@ public class Member extends BaseEntity{
         this.password = password;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfile(String profile) {
+        this.profile = profile;
+    }
+
     public static Member toMember(MemberDTO memberDTO, PasswordEncoder encoder) {
         return Member.builder()
             .email(memberDTO.getEmail())
@@ -135,5 +140,10 @@ public class Member extends BaseEntity{
 
     public String getUsername() {
         return email;
+    }
+
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + type.name()));
     }
 }

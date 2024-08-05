@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,19 +17,36 @@ public class DetailReviewDTO {
     private Long id;
     private Long ticketId;
     private String writer;
+    private boolean myreview;
     private String title;
+    private String createdate;
     private String category;
+    private String imgurl;
     private String content;
     private Boolean spoiler;
     private Byte emotion;
-    private LocalDateTime createdate;
     private Integer empathy;
+    private Boolean myempathy;
     private Integer commentpagesize;
     private Integer commentscount;
-    private boolean myreview;
+
+
+
+
+    // 공감확인, 이미지파일, 리뷰 페이지 묶음 json 형식으로.
+    // yyyy년 MM월 dd일 hh:mm
+    // 1. 더미데이터 20개정도
+    // 2. DTO 먼저
+    // 3. JSON파싱
+//    {
+//        "items" : List<DTO>,
+//        "totalPage" : 40
+//    }
+
     @Builder.Default
     private List<CommentDTO> comments = new ArrayList<>(); // Initialize to empty list
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     public static DetailReviewDTO toDetailReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
@@ -48,6 +66,8 @@ public class DetailReviewDTO {
         Integer size = 10;
 
         int pages = (int) Math.ceil((double) commentDTOs.size() / size); // size
+        String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+
 
         return DetailReviewDTO.builder()
                 .id(review.getId())
@@ -58,7 +78,7 @@ public class DetailReviewDTO {
                 .content(review.getContent())
                 .spoiler(review.getSpoiler())
                 .emotion(review.getEmotion())
-                .createdate(review.getCreateDate())
+                .createdate(formattedDate)
                 .empathy(review.getEmphathy())
                 .commentpagesize(pages)
                 .commentscount(totalComments)
@@ -68,3 +88,6 @@ public class DetailReviewDTO {
     }
 
 }
+
+
+

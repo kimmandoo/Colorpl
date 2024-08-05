@@ -12,6 +12,8 @@ public class Messages {
     public static final String MEMBER_REQUEST_NOT_MATCH = "이메일이나 패스워드가 일치하지 않습니다.";
     public static final String MEMBER_ALREADY_FOLLOW = " 이미 팔로우 중인 멤버입니다.";
     public static final String MEMBER_SELF_FOLLOW_ = " 자기 자신은 팔로우 불가합니다.";
+    public static final String INVALID_GOOGLE_ID_TOKEN = "유효하지 않은 구글 id 토큰입니다.";
+
 
 
 }
