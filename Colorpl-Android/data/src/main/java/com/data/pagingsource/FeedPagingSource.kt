@@ -23,12 +23,12 @@ class FeedPagingSource(private val feedDataSource: FeedDataSource) :
         return when (val result = safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
-                Timber.tag("pager").d("${response.items.firstOrNull()?.feedId}")
+                Timber.tag("pager").d("${response.items.firstOrNull()?.id}")
 
                 LoadResult.Page(
                     data = response.items,
                     prevKey = if (nextPage == 1) null else nextPage - 1,
-                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPages) null else nextPage + 1
+                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPage) null else nextPage + 1
                 )
             }
 
