@@ -1,7 +1,5 @@
 package com.colorpl.review.service;
 
-import static com.colorpl.review.dto.ReviewDTO.toReviewDTO;
-
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
@@ -18,6 +16,7 @@ import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,14 +27,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
-
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -59,10 +50,13 @@ public class ReviewService {
     private final TicketRepository ticketRepository;
     private final MemberRepository memberRepository;
     private final EmpathyRepository empathyRepository;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+        "yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository,CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+    public ReviewService(ReviewRepository reviewRepository, CommentRepository commentRepository,
+        TicketRepository ticketRepository, MemberRepository memberRepository,
+        EmpathyRepository empathyRepository) {
         this.reviewRepository = reviewRepository;
         this.ticketRepository = ticketRepository;
         this.commentRepository = commentRepository;
@@ -107,15 +101,15 @@ public class ReviewService {
 
         // DTO로 반환
         return paginatedReviews.stream()
-                .map(review -> toReviewDTO(memberId, review))
-                .collect(Collectors.toList());
+            .map(review -> toReviewDTO(memberId, review))
+            .collect(Collectors.toList());
     }
 
 
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
         return toReviewDTO(memberId, review);
     }
 
@@ -209,40 +203,44 @@ public class ReviewService {
 
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
-                .map(CommentDTO::toCommentDTO)
-                .collect(Collectors.toList());
+            .map(CommentDTO::toCommentDTO)
+            .collect(Collectors.toList());
         int totalComments = commentDTOs.size();
 
         boolean myreviewcheck = review.getTicket() != null &&
-                review.getTicket().getMember() != null &&
-                review.getTicket().getMember().getId() != null &&
-                review.getTicket().getMember().getId().equals(memberId);
+            review.getTicket().getMember() != null &&
+            review.getTicket().getMember().getId() != null &&
+            review.getTicket().getMember().getId().equals(memberId);
 
         Integer size = 10;
         int pages = (int) Math.ceil((double) commentDTOs.size() / size);
 
-        String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+        String formattedDate =
+            review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberMismatchException::new);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(MemberMismatchException::new);
 
         boolean myempathy = empathyRepository.findByReviewAndMember(review, member).isPresent();
 //        System.out.println(myempathy);
         return ReviewDTO.builder()
-                .id(review.getId())
-                .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
-                .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
-                .title(review.getTicket() != null ? review.getTicket().getName() : null)
-                .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .createdate(formattedDate)
-                .empathy(review.getEmphathy())
-                .myempathy(myempathy)
-                .commentpagesize(pages)
-                .commentscount(totalComments)
-                .myreview(myreviewcheck)
-                .build();
+            .id(review.getId())
+            .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
+            .writer(review.getTicket() != null && review.getTicket().getMember() != null
+                ? review.getTicket().getMember().getNickname() : null)
+            .title(review.getTicket() != null ? review.getTicket().getName() : null)
+            .category(review.getTicket() != null && review.getTicket().getCategory() != null
+                ? review.getTicket().getCategory().name() : null)
+            .content(review.getContent())
+            .spoiler(review.getSpoiler())
+            .emotion(review.getEmotion())
+            .createdate(formattedDate)
+            .empathy(review.getEmphathy())
+            .myempathy(myempathy)
+            .commentpagesize(pages)
+            .commentscount(totalComments)
+            .myreview(myreviewcheck)
+            .build();
     }
 
 }
