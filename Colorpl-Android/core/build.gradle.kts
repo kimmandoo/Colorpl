@@ -25,6 +25,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", naverMapClientId)
+        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", getApiKey("NAVER_MAP_CLIENT_SECRET"))
         buildConfigField("String", "TMAP_APP_KEY", getApiKey("TMAP_APP_KEY"))
         buildConfigField("String", "BASE_URL", getApiKey("BASE_URL"))
         buildConfigField("String", "BOOT_PAY_KEY", getApiKey("BOOT_PAY_KEY"))
