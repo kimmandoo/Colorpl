@@ -40,4 +40,21 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    fun googleSignIn(idToken : String) {
+        viewModelScope.launch {
+            signInUseCase.googleSignIn(idToken).collectLatest {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _signInEvent.emit(SignInEventState.SignInSuccess)
+                    }
+                    is DomainResult.Error -> {
+                        Timber.d("구글 로그인 에러 확인 ${it.exception}")
+                        _signInEvent.emit(SignInEventState.Error(it.exception.toString()))
+                    }
+                }
+            }
+        }
+    }
+
 }

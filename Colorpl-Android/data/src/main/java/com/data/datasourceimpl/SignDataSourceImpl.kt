@@ -2,6 +2,7 @@ package com.data.datasourceimpl
 
 import com.data.api.SignApi
 import com.data.datasource.remote.SignDataSource
+import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
@@ -20,5 +21,9 @@ class SignDataSourceImpl @Inject constructor(
 
     override suspend fun postSignUp(requestSignUp: RequestSignUp): ResponseSignUp {
         return signApi.postSignUp(requestSignUp)
+    }
+
+    override suspend fun postGoogleSignIn(requestGoogleSignIn: RequestGoogleSignIn): ResponseSignIn {
+        return signApi.postGoogleSignIn(requestGoogleSignIn)
     }
 }

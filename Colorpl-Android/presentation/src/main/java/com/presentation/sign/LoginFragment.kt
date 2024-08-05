@@ -148,8 +148,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     auth.signInWithCredential(firebaseCredential)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                startActivity(Intent(requireActivity(), MainActivity::class.java))
-                                requireActivity().finish()
+                                loginViewModel.googleSignIn(idToken)
                                 Timber.d("구글 로그인 성공")
                             } else {
                                 Timber.d("구글 로그인 실패 ${task.exception}")

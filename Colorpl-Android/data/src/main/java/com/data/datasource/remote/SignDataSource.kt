@@ -1,5 +1,6 @@
 package com.data.datasource.remote
 
+import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
@@ -16,4 +17,8 @@ interface SignDataSource {
         requestSignUp: RequestSignUp
     ): ResponseSignUp
 
+
+    suspend fun postGoogleSignIn(
+        requestGoogleSignIn: RequestGoogleSignIn
+    ): ResponseSignIn
 }
