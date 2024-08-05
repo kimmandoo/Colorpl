@@ -9,6 +9,7 @@ import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
+import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.DetailReviewDTO;
 import com.colorpl.review.dto.ReviewDTO;
@@ -29,22 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ReviewService {
-
-//    @Autowired
-//    private ReviewRepository reviewRepository;
-
-//    @Autowired
-//    private MemberRepository memberRepository;
-
-//    @Autowired
-//    private CommentRepository commentRepository;
-//
-//    @Autowired
-//    private TicketRepository ticketRepository;
-
 
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
@@ -54,7 +41,7 @@ public class ReviewService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository,CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+    public ReviewService(ReviewRepository reviewRepository, CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
         this.reviewRepository = reviewRepository;
         this.ticketRepository = ticketRepository;
         this.commentRepository = commentRepository;
@@ -67,7 +54,7 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size);
         List<Review> reviews = reviewRepository.findAll(pageable).getContent();
         return reviews.stream()
-                .map(review -> toReviewDTO(memberId, review)) // Pass size to toReviewDTO
+                .map(review -> toReviewDTO(memberId, review))
                 .collect(Collectors.toList());
     }
 
@@ -103,20 +90,16 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-
-
-
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(ReviewNotFoundException::new);
         return toReviewDTO(memberId, review);
     }
 
-
     private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review, Member member) {
         return commentDTOs.stream()
-                .map(dto -> dto.toComment (member, review))
+                .map(dto -> dto.toComment(member, review))
                 .collect(Collectors.toList());
     }
 
@@ -145,23 +128,21 @@ public class ReviewService {
                 .map(dto -> dto.toComment(member, savedReview))
                 .toList();
 
-
         // DTO 반환
         return DetailReviewDTO.toDetailReviewDTO(memberId, savedReview);
     }
 
-
     @Transactional
     public DetailReviewDTO updateReview(Integer memberId, Long reviewId, DetailReviewDTO detailReviewDTO) {
         // 리뷰 가져오기
-        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
-        ;
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+
         // 리뷰 업데이트
         review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(), detailReviewDTO.getEmotion());
         Review updatedReview = reviewRepository.save(review);
-        return detailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
+        return DetailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
     }
-
 
     @Transactional
     public void deleteById(Long id) {
@@ -172,7 +153,6 @@ public class ReviewService {
         // 삭제
         reviewRepository.deleteById(id);
     }
-
 
     private DetailReviewDTO convertToDTO(Review review) {
         List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
@@ -191,10 +171,9 @@ public class ReviewService {
                 .build();
     }
 
-    public Optional<Empathy> findByReviewAndMember(Review review, Member member) {
-//        System.out.println("Review ID: " + review.getId());
-//        System.out.println("Member ID: " + member.getId());
-        return empathyRepository.findByReviewAndMember(review, member);
+    public Optional<Empathy> findByReviewAndMember(Long reviewId, Integer memberId) {
+        EmpathyId empathyId = new EmpathyId(reviewId, memberId);
+        return empathyRepository.findById(empathyId);
     }
 
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
@@ -203,20 +182,18 @@ public class ReviewService {
                 .collect(Collectors.toList());
         int totalComments = commentDTOs.size();
 
-        boolean myreviewcheck = review.getTicket() != null &&
+        boolean myReviewCheck = review.getTicket() != null &&
                 review.getTicket().getMember() != null &&
                 review.getTicket().getMember().getId() != null &&
                 review.getTicket().getMember().getId().equals(memberId);
 
-        Integer size = 10;
-        int pages = (int) Math.ceil((double) commentDTOs.size() / size);
+        int size = 10; // Assuming fixed size for comment pages
+        int pages = (int) Math.ceil((double) totalComments / size);
 
         String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberMismatchException::new);
+        boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId)).isPresent();
 
-        boolean myempathy = empathyRepository.findByReviewAndMember(review, member).isPresent();
-//        System.out.println(myempathy);
         return ReviewDTO.builder()
                 .id(review.getId())
                 .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
@@ -228,11 +205,10 @@ public class ReviewService {
                 .emotion(review.getEmotion())
                 .createdate(formattedDate)
                 .empathy(review.getEmphathy())
-                .myempathy(myempathy)
+                .myempathy(myEmpathy)
                 .commentpagesize(pages)
                 .commentscount(totalComments)
-                .myreview(myreviewcheck)
+                .myreview(myReviewCheck)
                 .build();
     }
-
 }
