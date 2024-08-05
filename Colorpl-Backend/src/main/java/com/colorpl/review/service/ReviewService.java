@@ -70,7 +70,8 @@ public class ReviewService {
         // null인 리뷰 외 모두 추출
         List<Review> reviews = tickets.stream()
                 .map(Ticket::getReview) // 각 티켓의 리뷰 추출
-                .filter(Objects::nonNull) // null 확인
+                .filter(Optional::isPresent) // null 확인
+                .map(Optional::get) // Optional 제거
                 .distinct() // 중복 리뷰 방지
                 .collect(Collectors.toList());
 

@@ -1,14 +1,23 @@
 package com.colorpl.ticket.domain;
 
-import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 import com.colorpl.member.Member;
 import com.colorpl.review.domain.Review;
 import com.colorpl.show.domain.detail.Category;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,9 +63,17 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(name = "TICKET_LATITUDE")
+    private Double latitude;
+
+    @Column(name = "TICKET_LONGITUDE")
+    private Double longitude;
+
     @OneToOne(mappedBy = "ticket", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "REVIEW_ID")
     private Review review;
 
-
+    public Optional<Review> getReview() {
+        return Optional.ofNullable(review);
+    }
 }
