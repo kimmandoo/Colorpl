@@ -158,21 +158,6 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-//    private ReviewDTO convertToDTO(Review review) {
-//        List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
-//                .collect(Collectors.toList());
-//
-//        return ReviewDTO.builder()
-//                .id(review.getId())
-//                .content(review.getContent())
-//                .spoiler(review.getSpoiler())
-//                .emotion(review.getEmotion())
-//                .empathy(review.getEmphathy())
-//                .build();
-//    }
 
     public Optional<Empathy> findByReviewAndMember(Long reviewId, Integer memberId) {
         EmpathyId empathyId = new EmpathyId(reviewId, memberId);
