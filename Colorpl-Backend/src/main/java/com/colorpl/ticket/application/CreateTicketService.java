@@ -2,6 +2,8 @@ package com.colorpl.ticket.application;
 
 import com.colorpl.global.common.storage.StorageService;
 import com.colorpl.global.common.storage.UploadFile;
+import com.colorpl.member.Member;
+import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
@@ -17,10 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional
 public class CreateTicketService {
 
+    private final MemberRepository MemberRepository;
     private final StorageService storageService;
     private final TicketRepository ticketRepository;
+    private final MemberRepository memberRepository;
 
     public Long create(CreateTicketRequest request, MultipartFile attachFile) {
+
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow();
 
         UploadFile uploadFile = storageService.storeFile(attachFile);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
@@ -32,6 +38,7 @@ public class CreateTicketService {
             .dateTime(LocalDateTime.parse(request.getDateTime(), formatter))
             .seat(request.getSeat())
             .category(Category.fromString(request.getCategory()).orElseThrow())
+            .member(member)
             .build();
 
         return ticketRepository.save(ticket).getId();
