@@ -1,5 +1,6 @@
 package com.data.repository
 
+import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
@@ -18,4 +19,8 @@ interface SignRepository {
     suspend fun signUp(
         requestSignUp: RequestSignUp
     ): Flow<ApiResult<ResponseSignUp>>
+
+    suspend fun googleSignIn(
+        requestGoogleSignIn: RequestGoogleSignIn
+    ): Flow<ApiResult<ResponseSignIn>>
 }

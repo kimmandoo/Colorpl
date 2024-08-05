@@ -1,5 +1,6 @@
 package com.domain.usecaseimpl.sign
 
+import com.data.model.request.RequestGoogleSignIn
 import com.data.repository.SignRepository
 import com.data.repository.TokenRepository
 import com.data.util.ApiResult
@@ -30,7 +31,23 @@ class SignInUseCase @Inject constructor(
                 }
             }
         }
+    }
 
+    suspend fun googleSignIn(idToken : String) = flow{
+        signRepository.googleSignIn(RequestGoogleSignIn(idToken)).collect { result ->
+            Timber.d("구글 로그인 확인 $result")
+            when (result) {
+                is ApiResult.Success -> {
+                    val data = DomainResult.success(result.data)
+                    tokenRepository.setAccessToken(data.data.accessToken)
+                    emit(DomainResult.success(result.data))
+                }
+
+                is ApiResult.Error -> {
+                    emit(DomainResult.error(result.exception))
+                }
+            }
+        }
     }
 
 }
