@@ -4,6 +4,7 @@ import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.global.common.storage.StorageService;
+import com.colorpl.global.common.storage.UploadFile;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
@@ -116,24 +117,44 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldReturnReviewId() {
-        RequestDTO requestDTO = RequestDTO.builder().memberId(1).ticketId(1L).content("Test content").build();
-        Member member = Member.builder().id(1).build();
-        Ticket ticket = Ticket.builder().id(1L).build();
-        Review review = Review.builder().id(1L).content("Test content").ticket(ticket).build();
+        // Create test data
+        RequestDTO requestDTO = RequestDTO.builder()
+                .memberId(1)
+                .ticketId(1L)
+                .content("Test content")
+                .build();
+        Member member = Member.builder()
+                .id(1)
+                .build();
+        Ticket ticket = Ticket.builder()
+                .id(1L)
+                .build();
+        Review review = Review.builder()
+                .id(1L)
+                .content("Test content")
+                .ticket(ticket)
+                .build();
         MultipartFile file = mock(MultipartFile.class);
+        UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName").uploadFilename("originalFileName").build();
+
+        // Mock repository and service method calls
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
-        when(storageService.storeFile(file)).thenReturn(null); // Assuming the storage service returns null for simplicity
+        when(storageService.storeFile(file)).thenReturn(uploadFile);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
+        // Call the service method
         Long result = reviewService.createReview(requestDTO, file);
 
+        // Assert the result and verify interactions
         assertNotNull(result);
         assertEquals(1L, result);
         verify(memberRepository, times(1)).findById(1);
         verify(ticketRepository, times(1)).findById(1L);
+        verify(storageService, times(1)).storeFile(file);
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
+
 
     @Test
     void updateReview_ShouldReturnUpdatedReviewDTO() {
