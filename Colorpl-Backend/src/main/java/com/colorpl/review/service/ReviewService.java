@@ -3,13 +3,16 @@ package com.colorpl.review.service;
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
+import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.DetailReviewDTO;
 import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
@@ -19,26 +22,45 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.colorpl.review.dto.ReviewDTO.toReviewDTO;
 
 
 @Service
 public class ReviewService {
 
-    @Autowired
-    private ReviewRepository reviewRepository;
+//    @Autowired
+//    private ReviewRepository reviewRepository;
+
+//    @Autowired
+//    private MemberRepository memberRepository;
+
+//    @Autowired
+//    private CommentRepository commentRepository;
+//
+//    @Autowired
+//    private TicketRepository ticketRepository;
+
+
+    private final ReviewRepository reviewRepository;
+    private final CommentRepository commentRepository;
+    private final TicketRepository ticketRepository;
+    private final MemberRepository memberRepository;
+    private final EmpathyRepository empathyRepository;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private TicketRepository ticketRepository;
+    public ReviewService(ReviewRepository reviewRepository,CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+        this.reviewRepository = reviewRepository;
+        this.ticketRepository = ticketRepository;
+        this.commentRepository = commentRepository;
+        this.memberRepository = memberRepository;
+        this.empathyRepository = empathyRepository;
+    }
 
     // 리뷰 무한 스크롤
     public List<ReviewDTO> getReviews(Integer memberId, int page, int size) {
@@ -77,7 +99,7 @@ public class ReviewService {
 
         // DTO로 반환
         return paginatedReviews.stream()
-                .map(review -> ReviewDTO.toReviewDTO(memberId, review))
+                .map(review -> toReviewDTO(memberId, review))
                 .collect(Collectors.toList());
     }
 
@@ -85,10 +107,10 @@ public class ReviewService {
 
 
     @Transactional(readOnly = true)
-    public DetailReviewDTO findById(Long reviewId, Integer memberId) {
+    public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(MemberNotFoundException::new);
-        return DetailReviewDTO.toDetailReviewDTO(memberId, review);
+        return toReviewDTO(memberId, review);
     }
 
 
@@ -166,6 +188,50 @@ public class ReviewService {
                 .emotion(review.getEmotion())
                 .empathy(review.getEmphathy())
                 .comments(commentDTOs)
+                .build();
+    }
+
+    public Optional<Empathy> findByReviewAndMember(Review review, Member member) {
+//        System.out.println("Review ID: " + review.getId());
+//        System.out.println("Member ID: " + member.getId());
+        return empathyRepository.findByReviewAndMember(review, member);
+    }
+
+    public ReviewDTO toReviewDTO(Integer memberId, Review review) {
+        List<CommentDTO> commentDTOs = review.getComments().stream()
+                .map(CommentDTO::toCommentDTO)
+                .collect(Collectors.toList());
+        int totalComments = commentDTOs.size();
+
+        boolean myreviewcheck = review.getTicket() != null &&
+                review.getTicket().getMember() != null &&
+                review.getTicket().getMember().getId() != null &&
+                review.getTicket().getMember().getId().equals(memberId);
+
+        Integer size = 10;
+        int pages = (int) Math.ceil((double) commentDTOs.size() / size);
+
+        String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberMismatchException::new);
+
+        boolean myempathy = empathyRepository.findByReviewAndMember(review, member).isPresent();
+//        System.out.println(myempathy);
+        return ReviewDTO.builder()
+                .id(review.getId())
+                .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
+                .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
+                .title(review.getTicket() != null ? review.getTicket().getName() : null)
+                .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
+                .content(review.getContent())
+                .spoiler(review.getSpoiler())
+                .emotion(review.getEmotion())
+                .createdate(formattedDate)
+                .empathy(review.getEmphathy())
+                .myempathy(myempathy)
+                .commentpagesize(pages)
+                .commentscount(totalComments)
+                .myreview(myreviewcheck)
                 .build();
     }
 

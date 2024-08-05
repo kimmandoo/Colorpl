@@ -43,15 +43,27 @@ public class Review extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TICKET_ID", referencedColumnName = "TICKET_ID")
     private Ticket ticket;
-
-//    public void setTicket(Ticket ticket) {
-//        this.ticket = ticket;
-//    }
+    
+    // 공감 유저 추적
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Empathy> empathies = new ArrayList<>();
 
     public void updateReview(String content, Boolean spoiler, Byte emotion) {
         this.content = content;
         this.spoiler = spoiler;
         this.emotion = emotion;
+    }
+
+    // 공감 수 증가
+    public void incrementEmphathy() {
+        this.emphathy = (this.emphathy == null) ? 1 : this.emphathy + 1;
+    }
+
+    // 공감 수 감소
+    public void decrementEmphathy() {
+        if (this.emphathy != null && this.emphathy > 0) {
+            this.emphathy = this.emphathy - 1;
+        }
     }
 
 }
