@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
         <ImageView
             android:id="@+id/iv_poster"
@@ -22,7 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toTopOf="@id/tv_confirm"
             app:layout_constraintTop_toBottomOf="@id/iv_poster">
@@ -82,87 +83,34 @@
                 android:hint="@string/ticket_seat_hint"
                 android:padding="8dp"
                 android:textColor="@color/eerie_black"
-                app:layout_constraintBottom_toTopOf="@id/hs_category"
+                app:layout_constraintBottom_toTopOf="@id/tv_category"
                 app:layout_constraintTop_toBottomOf="@+id/et_schedule" />
 
-            <HorizontalScrollView
-                android:id="@+id/hs_category"
+            <TextView
+                android:id="@+id/tv_category"
+                style="@style/suite_bold_18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/ticket_category"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_seat" />
+
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal"
-                android:scrollbars="none"
-                app:layout_constraintTop_toBottomOf="@+id/et_seat">
-
-                <RadioGroup
-                    android:id="@+id/rg_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rb_movie"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_movie"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_show"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_performance"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_concert"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_concert"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_play"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_play"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_musical"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_musical"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exhibition"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:text="@string/feed_filter_exhibition"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/rb_else"
-                        style="@style/suite_extra_bold_18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="기타"
-                        android:textColor="@color/white" />
-                </RadioGroup>
-            </HorizontalScrollView>
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rectangle_spinner"
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_category"
+                tools:listitem="@layout/item_category_spinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
