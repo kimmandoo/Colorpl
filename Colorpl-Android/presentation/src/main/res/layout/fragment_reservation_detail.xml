@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="600dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/test_reservation_info"
+                    app:loadImage="@{viewModel.reservationInfo.contentImg}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.domain.model.ReservationInfo
 import com.domain.usecase.ReservationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -27,7 +26,7 @@ class ReservationDetailViewModel @Inject constructor(
     )
     val reservationInfo: MutableStateFlow<ReservationInfo> = _reservationInfo
 
-    fun setReservationInfo(showId: Int) {
+    fun getReservationInfo(showId: Int) {
         viewModelScope.launch {
             val data = getReservationUseCase.getReservationInfo(showId)
             _reservationInfo.value = data

@@ -1,11 +1,13 @@
 package com.data.model.response
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 data class ResponseReservationShows(
     val items: List<ReservationInfo>
 )
 
+@Serializable
 data class ReservationInfo(
     @SerialName("id") val id: Int,
     @SerialName("apiId") val apiId: String,

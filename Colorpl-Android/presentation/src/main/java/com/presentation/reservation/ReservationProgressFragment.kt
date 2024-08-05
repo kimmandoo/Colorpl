@@ -25,7 +25,7 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
     override fun initView() {
         initUi()
 //        backEvent()
-        viewModel.getReservationShows(2)
+//        viewModel.getReservationShows(2)
     }
 
     private fun initUi() {
