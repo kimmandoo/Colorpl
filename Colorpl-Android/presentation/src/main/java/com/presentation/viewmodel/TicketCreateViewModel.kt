@@ -40,6 +40,7 @@ class TicketCreateViewModel @Inject constructor(
 
     fun getAddress(address: String) {
         viewModelScope.launch {
+            _geocodingLatLng.emit(LatLng(0.0, 0.0))
             geocodingUseCase(address).collectLatest { response ->
                 when (response) {
                     is DomainResult.Error -> {
@@ -47,13 +48,20 @@ class TicketCreateViewModel @Inject constructor(
                     }
 
                     is DomainResult.Success -> {
-                        Timber.tag("test").d("${LatLng(response.data.x, response.data.y)}")
-                        _geocodingLatLng.emit(LatLng(response.data.x, response.data.y))
+                        Timber.tag("test").d("${LatLng(response.data.y, response.data.x)}")
+                        _geocodingLatLng.emit(LatLng(response.data.y, response.data.x))
                     }
                 }
             }
         }
     }
+
+    fun cancelGetAddress() {
+        viewModelScope.launch {
+            _geocodingLatLng.emit(LatLng(0.0, 0.0))
+        }
+    }
+
 
     fun createTicket(image: File) {
         viewModelScope.launch {

@@ -21,13 +21,21 @@ class TicketAddressDialog :
 
     private val viewModel: TicketCreateViewModel by hiltNavGraphViewModels(R.id.nav_ticket_graph)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isBackPressedEnabled = false
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         initWebView()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
-        binding.locationIvBack.setOnClickListener { navigatePopBackStack() }
+        binding.locationIvBack.setOnClickListener {
+            viewModel.cancelGetAddress()
+            navigatePopBackStack()
+        }
         webView = binding.locationSearchWebView
         webView.clearCache(true)
         webView.settings.javaScriptEnabled = true
@@ -45,7 +53,6 @@ class TicketAddressDialog :
         fun processDATA(fullRoadAddr: String) {
             lifecycleScope.launch {
                 Timber.tag("address").d("Full Road Address: $fullRoadAddr")
-                // 여기에서 주소 데이터를 처리하는 로직을 추가합니다.
                 viewModel.getAddress(fullRoadAddr)
                 findNavController().popBackStack()
             }
