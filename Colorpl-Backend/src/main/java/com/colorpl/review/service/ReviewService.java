@@ -1,5 +1,7 @@
 package com.colorpl.review.service;
 
+import static com.colorpl.review.dto.ReviewDTO.toReviewDTO;
+
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
@@ -16,8 +18,14 @@ import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
@@ -67,25 +75,25 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size);
         List<Review> reviews = reviewRepository.findAll(pageable).getContent();
         return reviews.stream()
-                .map(review -> toReviewDTO(memberId, review)) // Pass size to toReviewDTO
-                .collect(Collectors.toList());
+            .map(review -> toReviewDTO(memberId, review)) // Pass size to toReviewDTO
+            .collect(Collectors.toList());
     }
 
     // 특정 멤버 리뷰 리스트
     public List<ReviewDTO> findReviewsOfMember(Integer memberId, int page, int size) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
         // 관련 티켓 추출
         List<Ticket> tickets = member.getTickets();
 
         // null인 리뷰 외 모두 추출
         List<Review> reviews = tickets.stream()
-                .map(Ticket::getReview) // 각 티켓의 리뷰 추출
-                .filter(Objects::nonNull) // null 확인
-                .distinct() // 중복 리뷰 방지
-                .collect(Collectors.toList());
+            .map(t -> t.getReview().get()) // 각 티켓의 리뷰 추출
+            .filter(Objects::nonNull) // null 확인
+            .distinct() // 중복 리뷰 방지
+            .collect(Collectors.toList());
 
         // 페이지화
         int start = page * size;
@@ -104,8 +112,6 @@ public class ReviewService {
     }
 
 
-
-
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
@@ -114,37 +120,38 @@ public class ReviewService {
     }
 
 
-    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review, Member member) {
+    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review,
+        Member member) {
         return commentDTOs.stream()
-                .map(dto -> dto.toComment (member, review))
-                .collect(Collectors.toList());
+            .map(dto -> dto.toComment(member, review))
+            .collect(Collectors.toList());
     }
 
     @Transactional
-    public DetailReviewDTO createReview(Integer memberId, Long ticketId, DetailReviewDTO detailReviewDTO) {
+    public DetailReviewDTO createReview(Integer memberId, Long ticketId,
+        DetailReviewDTO detailReviewDTO) {
         // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+            .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
         // Build review entity from DTO
         Review review = Review.builder()
-                .ticket(ticket)
-                .content(detailReviewDTO.getContent())
-                .spoiler(detailReviewDTO.getSpoiler())
-                .emotion(detailReviewDTO.getEmotion())
-                .emphathy(detailReviewDTO.getEmpathy())
-                .build();
+            .ticket(ticket)
+            .content(detailReviewDTO.getContent())
+            .spoiler(detailReviewDTO.getSpoiler())
+            .emotion(detailReviewDTO.getEmotion())
+            .emphathy(detailReviewDTO.getEmpathy())
+            .build();
 
         Review savedReview = reviewRepository.save(review);
 
         // DTO의 댓글들 엔티티화
         List<Comment> comments = detailReviewDTO.getComments().stream()
-                .map(dto -> dto.toComment(member, savedReview))
-                .toList();
-
+            .map(dto -> dto.toComment(member, savedReview))
+            .toList();
 
         // DTO 반환
         return DetailReviewDTO.toDetailReviewDTO(memberId, savedReview);
@@ -152,12 +159,15 @@ public class ReviewService {
 
 
     @Transactional
-    public DetailReviewDTO updateReview(Integer memberId, Long reviewId, DetailReviewDTO detailReviewDTO) {
+    public DetailReviewDTO updateReview(Integer memberId, Long reviewId,
+        DetailReviewDTO detailReviewDTO) {
         // 리뷰 가져오기
-        Review review = reviewRepository.findById(reviewId).orElseThrow(ReviewNotFoundException::new);
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(ReviewNotFoundException::new);
         ;
         // 리뷰 업데이트
-        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(), detailReviewDTO.getEmotion());
+        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(),
+            detailReviewDTO.getEmotion());
         Review updatedReview = reviewRepository.save(review);
         return detailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
     }
@@ -176,19 +186,19 @@ public class ReviewService {
 
     private DetailReviewDTO convertToDTO(Review review) {
         List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
-                .collect(Collectors.toList());
+            .orElse(Collections.emptyList())
+            .stream()
+            .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
+            .collect(Collectors.toList());
 
         return DetailReviewDTO.builder()
-                .id(review.getId())
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .empathy(review.getEmphathy())
-                .comments(commentDTOs)
-                .build();
+            .id(review.getId())
+            .content(review.getContent())
+            .spoiler(review.getSpoiler())
+            .emotion(review.getEmotion())
+            .empathy(review.getEmphathy())
+            .comments(commentDTOs)
+            .build();
     }
 
     public Optional<Empathy> findByReviewAndMember(Review review, Member member) {
