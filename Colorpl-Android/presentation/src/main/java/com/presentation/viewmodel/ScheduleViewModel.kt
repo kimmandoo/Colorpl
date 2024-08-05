@@ -23,6 +23,7 @@ class ScheduleViewModel @Inject constructor(
 
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     private val _clickedDate = MutableStateFlow<CalendarItem?>(null)
+    val clickedDate: StateFlow<CalendarItem?> = _clickedDate
 
     private val _calendarItems = MutableStateFlow<List<CalendarItem>>(emptyList())
     val calendarItems: StateFlow<List<CalendarItem>> = _calendarItems

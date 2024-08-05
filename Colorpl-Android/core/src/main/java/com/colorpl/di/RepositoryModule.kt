@@ -2,6 +2,7 @@ package com.colorpl.di
 
 import com.data.repository.CommentRepository
 import com.data.repository.FeedRepository
+import com.data.repository.GeocodingRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
 import com.data.repository.SignRepository
@@ -10,6 +11,7 @@ import com.data.repository.TmapRouteRepository
 import com.data.repository.TokenRepository
 import com.data.repositoryimpl.CommentRepositoryImpl
 import com.data.repositoryimpl.FeedRepositoryImpl
+import com.data.repositoryimpl.GeocodingRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.SignRepositoryImpl
@@ -74,4 +76,10 @@ interface RepositoryModule {
     fun provideTicketRepository(
         ticketRepositoryImpl: TicketRepositoryImpl
     ): TicketRepository
+
+    @Singleton
+    @Binds
+    fun bindGeocodingRepository(
+        geocodingRepositoryImpl: GeocodingRepositoryImpl
+    ): GeocodingRepository
 }

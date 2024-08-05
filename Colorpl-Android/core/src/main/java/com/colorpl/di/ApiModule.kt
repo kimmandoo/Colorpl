@@ -1,10 +1,11 @@
 package com.colorpl.di
 
 import com.data.api.FeedApi
+import com.data.api.NaverApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
-import com.data.api.TicketApi
 import com.data.api.SignApi
+import com.data.api.TicketApi
 import com.data.api.TmapRouteApi
 import dagger.Module
 import dagger.Provides
@@ -39,6 +40,13 @@ object ApiModule {
         @GptRetrofit
         retrofit: Retrofit
     ): OpenAiApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideNaverApi(
+        @NaverRetrofit
+        retrofit: Retrofit
+    ): NaverApi = retrofit.create()
 
     @Singleton
     @Provides

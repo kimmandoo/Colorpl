@@ -23,6 +23,7 @@ object NetworkModule {
 
     //local property로 따로 빼기
     val baseUrl = BuildConfig.BASE_URL
+    val naverUrl = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/"
     val tmapUrl = "https://apis.openapi.sk.com/"
     val gptUrl = "https://api.openai.com/"
 
@@ -102,6 +103,36 @@ object NetworkModule {
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .header("Authorization", bearer)
+                .method(original.method, original.body)
+                .build()
+            chain.proceed(request = request)
+        }
+        connectTimeout(120, TimeUnit.SECONDS)
+        readTimeout(120, TimeUnit.SECONDS)
+        writeTimeout(120, TimeUnit.SECONDS)
+        build()
+    }
+
+    @Singleton
+    @Provides
+    @NaverRetrofit
+    fun provideGeoCodingRetrofit(@NaverOkHttp okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .baseUrl(naverUrl)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    @NaverOkHttp
+    fun provideGeoCodingOkHttpClient() = OkHttpClient.Builder().run {
+        addInterceptor { chain ->
+            val original = chain.request()
+            val request = original.newBuilder()
+                .header("X-NCP-APIGW-API-KEY-ID", BuildConfig.NAVER_MAP_CLIENT_ID)
+                .header("X-NCP-APIGW-API-KEY", BuildConfig.NAVER_MAP_CLIENT_SECRET)
                 .method(original.method, original.body)
                 .build()
             chain.proceed(request = request)

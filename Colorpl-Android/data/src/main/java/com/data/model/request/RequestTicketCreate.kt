@@ -6,5 +6,5 @@ data class RequestTicketCreate(
     val dateTime: String,
     val seat: String,
     val category: String,
-    val memberId: Int
+    val memberId: Int,
 )

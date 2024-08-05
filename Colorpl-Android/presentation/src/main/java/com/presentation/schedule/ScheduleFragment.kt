@@ -114,10 +114,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         binding.apply {
             rvTicket.adapter = ticketAdapter
             rvTicket.overScrollControl { direction, deltaDistance ->
-                handlePull(direction)
+                if (viewModel.clickedDate.value != null) {
+                    handlePull(direction)
+                }
             }
             ticketAdapter.submitList(
-                listOf( // testcode
+                listOf(
+                    // testcode
                     Ticket(
                         ticketId = 4706,
                         name = "Elijah Merritt",
