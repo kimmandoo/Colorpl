@@ -25,7 +25,7 @@ enum class TicketState(val state: Int) {
     UNISSUED(1)
 }
 
-enum class TicketType(){
+enum class TicketType() {
     CAMERA,
     GALLERY
 }
@@ -61,6 +61,7 @@ enum class Page(val hideBottomNav: Boolean) {
     SETTING(false),
     TICKET(false),
     SCHEDULE(false),
+    ADDRESS(true),
 
     ;
 
@@ -88,7 +89,7 @@ enum class Page(val hideBottomNav: Boolean) {
             TICKET -> R.id.fragment_ticket
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
-
+            ADDRESS -> R.id.dialog_ticket_address
         }
 }
 
