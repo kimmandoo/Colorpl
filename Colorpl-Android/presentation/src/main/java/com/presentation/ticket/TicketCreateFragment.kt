@@ -68,7 +68,7 @@ class TicketCreateFragment :
             }
         }
         binding.etDetail.setOnLongClickListener {
-            findNavController().navigate(R.id.action_fragment_ticket_create_to_ticketAddressDialog)
+            findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
             false
         }
         binding.tvConfirm.setOnClickListener {

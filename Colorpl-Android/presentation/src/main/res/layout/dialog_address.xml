@@ -16,7 +16,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_margin="12dp"
-            android:src="?android:attr/actionModeCloseDrawable"
+            android:src="@drawable/ic_close_night"
             app:layout_constraintBottom_toTopOf="@id/location_search_webView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
