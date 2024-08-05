@@ -19,6 +19,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta, datetime
 from common.security import security_settings
 import shutil, os, re, hashlib
+from jose import jwt
 
 ACCESS_TOKEN_EXPIRE_MINUTES = security_settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -250,6 +251,10 @@ async def get_administrator(admin_id: str, db: Session = Depends(get_db)):
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 @router.post("/logout")
-async def logout(token: str = Depends(oauth2_scheme)):
-    TOKEN_BLACKLIST.add(token)
-    return {"message": "Logged out successfully"}
+async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    try:
+        payload = jwt.decode(token, security_settings.SECRET_KEY, algorithms=[security_settings.ALGORITHM])
+        TOKEN_BLACKLIST.add(token)
+        return {"message": "Logged out successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")

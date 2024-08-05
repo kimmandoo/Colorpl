@@ -1,27 +1,47 @@
+// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import InitialScreen from './components/InitialScreen';
-import LoginScreen from './components/auth/LoginScreen';
-import Dashboard from './components/dashboard/Dashboard';
-import { ChakraProvider } from '@chakra-ui/react';
+import { CssBaseline, Box } from '@mui/material';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import Members from './pages/Members';
+import Reviews from './pages/Reviews';
+import Comments from './pages/Comments';
+import LoginScreen from './pages/LoginScreen';
+import PrivateRoute from './components/PrivateRoute';
+import DashboardHome from './pages/DashboardHome';
 
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
-};
-
-function App() {
+const App = () => {
   return (
-    <ChakraProvider>
-      {/* <Router> */}
-        <Routes>
-          <Route path="/" element={<InitialScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/dashboard/*" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        </Routes>
-      {/* </Router> */}
-    </ChakraProvider>
+    <Router>
+      <CssBaseline />
+      <Routes>
+        <Route path="/login" element={<LoginScreen />} />
+        <Route
+          path="*"
+          element={
+            <PrivateRoute>
+              <Box display="flex">
+                <Sidebar />
+                <Box component="main" flexGrow={1} ml={30}>
+                  <Header />
+                  <Box p={3} mt={8}>
+                    <Routes>
+                      <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                      <Route path="/dashboard" element={<DashboardHome />} />
+                      <Route path="/members" element={<Members />} />
+                      <Route path="/reviews" element={<Reviews />} />
+                      <Route path="/comments" element={<Comments />} />
+                    </Routes>
+                  </Box>
+                </Box>
+              </Box>
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

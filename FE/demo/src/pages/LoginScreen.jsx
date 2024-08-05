@@ -1,7 +1,8 @@
+// pages/LoginScreen.jsx
 import React, { useState } from 'react';
-import { Box, Button, Center, FormControl, FormLabel, Input, Text, VStack, HStack, SlideFade, Alert, AlertIcon, useToast } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, Text, VStack, HStack, SlideFade, Alert, AlertIcon, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api';
+import api from '../api';
 
 const LoginScreen = () => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -24,11 +25,15 @@ const LoginScreen = () => {
       const response = await api.post('/auth/token', new URLSearchParams({
         username,
         password
-      }));
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
       console.log(response.data);
       localStorage.setItem('token', response.data.access_token);
       toast({
-        description: "술을 섞고 삶을 바꿔줄 시간이군",
+        description: "로그인 성공",
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -66,7 +71,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <Center height="100vh">
+    <Box height="100vh" display="flex" alignItems="center" justifyContent="center">
       <SlideFade in={true} offsetY="20px">
         <Box 
           p={8} 
@@ -137,7 +142,7 @@ const LoginScreen = () => {
           </form>
         </Box>
       </SlideFade>
-    </Center>
+    </Box>
   );
 };
 
