@@ -91,17 +91,39 @@ public class MemberService {
         }
     }
 
-    //멤버 정보 업데이트
+//    멤버 정보 업데이트
+//    @Transactional
+//    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
+//        Member existingMember = memberRepository.findById(memberId)
+//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+//
+//        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
+//        return memberRepository.save(existingMember);
+//    }
+
+
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
         Member existingMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+        String email = existingMember.getEmail();
 
-        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
+        // Ensure only nickname and password can be updated
+        if (memberDTO.getEmail() != null && !memberDTO.getEmail().equals(email)) {
+            throw new IllegalArgumentException("이메일은 변경할 수 없습니다.");
+        }
+        if (memberDTO.getNickname() != null) {
+            existingMember.updateNickname(memberDTO.getNickname());
+        }
+        if (memberDTO.getPassword() != null) {
+            existingMember.updatePassword(passwordEncoder.encode(memberDTO.getPassword()));
+        }
+        if (memberDTO.getProfile() != null) {
+            existingMember.updateNickname(memberDTO.getProfile());
+        }
+
         return memberRepository.save(existingMember);
     }
-
-
 
 
 

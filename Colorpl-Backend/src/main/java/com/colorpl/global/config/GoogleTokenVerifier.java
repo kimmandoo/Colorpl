@@ -1,4 +1,5 @@
 package com.colorpl.global.config;
+import com.colorpl.global.common.exception.InvalidGoogleIdTokenException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -37,7 +38,7 @@ public class GoogleTokenVerifier {
         // ID 토큰 검증
         GoogleIdToken idToken = idTokenVerifier.verify(idTokenString);
         if (idToken == null) {
-            throw new RuntimeException("유효하지 않은 id 토큰입니다.");
+            throw new InvalidGoogleIdTokenException();
         }
 
         // 토큰의 페이로드에서 이메일 추출
