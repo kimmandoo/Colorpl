@@ -131,7 +131,6 @@ object NetworkModule {
         addInterceptor { chain ->
             val original = chain.request()
             val request = original.newBuilder()
-                .header("Accept", "application/json")
                 .header("X-NCP-APIGW-API-KEY-ID", BuildConfig.NAVER_MAP_CLIENT_ID)
                 .header("X-NCP-APIGW-API-KEY", BuildConfig.NAVER_MAP_CLIENT_SECRET)
                 .method(original.method, original.body)

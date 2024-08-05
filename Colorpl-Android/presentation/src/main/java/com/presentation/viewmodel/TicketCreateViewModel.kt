@@ -47,7 +47,7 @@ class TicketCreateViewModel @Inject constructor(
                     }
 
                     is DomainResult.Success -> {
-                        Timber.d("${LatLng(response.data.x, response.data.y)}")
+                        Timber.tag("test").d("${LatLng(response.data.x, response.data.y)}")
                         _geocodingLatLng.emit(LatLng(response.data.x, response.data.y))
                     }
                 }
