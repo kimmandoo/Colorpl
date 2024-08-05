@@ -1,5 +1,6 @@
 package com.presentation.reservation
 
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
@@ -26,7 +27,8 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
             navigatePopBackStack()
         }
         binding.tvReservationNext.setOnClickListener {
-            navigateDestination(R.id.action_fragment_reservation_detail_to_fragment_reservation_progress)
+            val action = ReservationDetailFragmentDirections.actionFragmentReservationDetailToFragmentReservationProgress(args.reservationDetail)
+            Navigation.findNavController(binding.root).navigate(action)
         }
     }
 }

@@ -3,13 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.presentation.viewmodel.ReservationViewModel" />
 
+        <variable
+            name="paymentDiscount"
+            type="com.presentation.util.Payment.Discount" />
+        <variable
+            name="paymentMethod"
+            type="com.presentation.util.Payment.Method" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.presentation.reservation.ReservationInfoFragment">
+        tools:context="com.presentation.reservation.ReservationPaymentFragment">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -26,7 +35,7 @@
                     style="@style/suite_bold_20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:text="@string/reservation_info_value"
                     android:textColor="@color/white"
@@ -47,8 +56,8 @@
                         style="@style/suite_semibold_20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginTop="9dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/reservation_info"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
@@ -79,11 +88,13 @@
                             style="@style/suite_medium_16"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="신과 함께 - 죄와벌"
+                            android:text="@{viewModel.reservationTitle}"
                             android:textColor="@color/white"
+                            app:layout_constraintBottom_toTopOf="@id/tv_date"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_chainStyle="spread_inside"
+                            tools:text="신과 함께 - 죄와벌" />
 
 
                         <TextView
@@ -92,10 +103,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="2024.07.27(금) 20:30 ~ 22:30"
                             android:textColor="@color/timber_wolf"
+                            app:date="@{viewModel.reservationDate}"
+                            app:layout_constraintBottom_toTopOf="@id/tv_location"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                            app:setTitle="@{false}"
+                            tools:text="2024.07.27(금)" />
+
+                        <TextView
+                            android:id="@+id/tv_time"
+                            style="@style/suite_medium_12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="@{viewModel.reservationTimeTable.startTime + ` ~ ` + viewModel.reservationTimeTable.endTime}"
+                            android:textColor="@color/timber_wolf"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_date"
+                            app:layout_constraintStart_toEndOf="@id/tv_date"
+                            app:layout_constraintTop_toTopOf="@+id/tv_date"
+                            tools:text="20:30 ~ 22:30" />
+
 
                         <TextView
                             android:id="@+id/tv_location"
@@ -103,10 +131,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="수원 CGV | 1관"
+                            android:text="@{viewModel.reservationPlace + ` | ` + viewModel.reservationTheater}"
                             android:textColor="@color/timber_wolf"
+                            app:layout_constraintBottom_toTopOf="@id/tv_suit"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_date" />
+                            app:layout_constraintTop_toBottomOf="@+id/tv_date"
+                            tools:text="수원 CGV | 1관" />
 
                         <TextView
                             android:id="@+id/tv_suit"
@@ -114,10 +144,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="4매 | F06, F07, F08, F09"
                             android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+                            app:layout_constraintTop_toBottomOf="@+id/tv_location"
+                            app:setFormattedSeatsText="@{viewModel.reservationSeat}"
+                            tools:text="4매 | F06, F07, F08, F09" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -136,8 +168,8 @@
                         style="@style/suite_semibold_20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginTop="9dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/reservation_discount"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
@@ -148,11 +180,11 @@
                         style="@style/suite_medium_12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="7dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_1"
+                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_3"
                         android:gravity="center"
                         android:paddingVertical="13dp"
                         android:text="@string/reservation_ssafy_discount"
@@ -167,10 +199,10 @@
                         style="@style/suite_medium_12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="14dp"
-                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_1"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_3"
                         android:gravity="center"
                         android:paddingVertical="13dp"
                         android:text="@string/reservation_coupon_discount"
@@ -196,8 +228,8 @@
                         style="@style/suite_semibold_20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_marginTop="9dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/reservation_pay_how"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
@@ -208,11 +240,11 @@
                         style="@style/suite_medium_12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="7dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_1"
+                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_3"
                         android:gravity="center"
                         android:paddingVertical="13dp"
                         android:text="@string/reservation_boot_pay"
@@ -227,10 +259,10 @@
                         style="@style/suite_medium_12"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="14dp"
-                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_1"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/selector_rectangle_transparent_stroke_timber_wolf_1_to_rectangle_transparent_stroke_imperial_red_3"
                         android:gravity="center"
                         android:paddingVertical="13dp"
                         android:text="@string/reservation_ssafy_pay"
@@ -254,7 +286,7 @@
                         style="@style/suite_medium_12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/reservation_caution"
                         android:textColor="@color/timber_wolf"
                         app:layout_constraintStart_toStartOf="parent"
@@ -313,7 +345,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/reservation_pay"
+                android:text="@string/reservation_discount_pay"
                 android:textColor="@color/timber_wolf"
                 app:layout_constraintStart_toEndOf="@+id/tv_pay_value"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -360,7 +392,7 @@
                 style="@style/suite_medium_16"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:background="@color/imperial_red"
+                android:background="@color/selector_timber_wolf_to_imperial_red"
                 android:gravity="center"
                 android:paddingHorizontal="12dp"
                 android:text="@string/reservation_pay"

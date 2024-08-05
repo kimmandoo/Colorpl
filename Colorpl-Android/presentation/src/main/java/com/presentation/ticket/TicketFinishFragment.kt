@@ -16,6 +16,7 @@ import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -40,7 +41,10 @@ class TicketFinishFragment :
     private fun observeViewModel() {
         viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { ticketId ->
-                if (ticketId > 0) findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
+                if (ticketId > 0) {
+                    findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
+                    binding.tvConfirm.isEnabled = true
+                }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -60,7 +64,10 @@ class TicketFinishFragment :
                         ).uriToFile(args.imageUrl!!)!!.length()
                     }"
                 )
-                viewModel.createTicket(ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.createTicket(ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!)
+                    tvConfirm.isEnabled = false
+                }
             }
         }
     }

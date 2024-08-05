@@ -1,19 +1,24 @@
 package com.presentation.reservation
 
 import android.view.ViewTreeObserver
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationSeatBinding
 import com.domain.model.Seat
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.reservation.SeatAdapter
 import com.presentation.component.dialog.SeatDialog
+import com.presentation.util.ViewPagerManager
+import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReservationSeatFragment :
     BaseFragment<FragmentReservationSeatBinding>(R.layout.fragment_reservation_seat) {
-
+    private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
     private val seatAdapter by lazy {
         SeatAdapter(onSeatSelected = { seat ->
             updateSeatSelection(seat)
@@ -39,6 +44,12 @@ class ReservationSeatFragment :
 
             tvPersonChange.setOnClickListener {
                 showPeopleCountBottomSheet()
+            }
+            tvNext.setOnClickListener {
+                viewModel.setReservationSeat(selectedSeats)
+                val selectedSeatsInfo = selectedSeats.map { "Row: ${it.row}, Col: ${it.column}" }.joinToString(", ")
+                Timber.d("선택좌석 : $selectedSeatsInfo")
+                ViewPagerManager.moveNext()
             }
         }
 
