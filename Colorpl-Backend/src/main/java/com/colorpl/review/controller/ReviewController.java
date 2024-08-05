@@ -1,17 +1,23 @@
 package com.colorpl.review.controller;
 
-import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
-import com.colorpl.review.dto.DetailReviewDTO;
+import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.dto.ReviewResponse;
 import com.colorpl.review.service.EmpathyService;
 import com.colorpl.review.service.ReviewService;
+import com.colorpl.ticket.application.CreateTicketRequest;
+import com.colorpl.ticket.application.CreateTicketResponse;
+import com.colorpl.ticket.application.CreateTicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 
@@ -48,20 +54,35 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    // 리뷰 생성
+
     @PostMapping("/members/{memberId}/tickets/{ticketId}")
     @Operation(summary = "새로운 리뷰 작성", description = "리뷰 생성 시 사용하는 API(url의 멤버id, 티켓 id 사용)")
-    public ResponseEntity<DetailReviewDTO> createReview(@PathVariable Integer memberId, @PathVariable Long ticketId, @RequestBody DetailReviewDTO detailReviewDTO) {
-//        System.out.println(memberId);
-        DetailReviewDTO createdReview = reviewService.createReview(memberId, ticketId, detailReviewDTO);
-        return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
+    public ResponseEntity<ReviewResponse> createReview(
+            @RequestPart RequestDTO request,
+            @RequestPart(required = false) MultipartFile file
+    ) {
+
+        Long id = reviewService.createReview(request, file);
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/reviews/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        ReviewResponse response = ReviewResponse.builder()
+                .reviewId(id)
+                .build();
+
+        return ResponseEntity.created(uri).body(response);
     }
+
+
+
 
     // 리뷰 업데이트
     @PutMapping("/members/{memberId}/reviews/{reviewId}")
     @Operation(summary = "특정 리뷰의 내용 수정", description = "특정 리뷰의 내용 수정할 때 사용하는 API")
-    public ResponseEntity<DetailReviewDTO> updateReview(@PathVariable Integer memberId, @PathVariable Long reviewId, @RequestBody DetailReviewDTO detailReviewDTO) {
-        DetailReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, detailReviewDTO);
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Integer memberId, @PathVariable Long reviewId, @RequestBody RequestDTO detailReviewDTO) {
+        ReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, detailReviewDTO);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
     }
 

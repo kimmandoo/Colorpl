@@ -1,16 +1,15 @@
 package com.colorpl.review.service;
 
-import com.colorpl.comment.domain.Comment;
-import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
+import com.colorpl.global.common.storage.StorageService;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
-import com.colorpl.review.dto.DetailReviewDTO;
+import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
@@ -23,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -33,6 +33,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ReviewServiceTest {
+
+    @Mock
+    private StorageService storageService;
 
     @Mock
     private ReviewRepository reviewRepository;
@@ -112,36 +115,37 @@ class ReviewServiceTest {
     }
 
     @Test
-    void createReview_ShouldReturnDetailReviewDTO() {
-        Integer memberId = 1;
-        Long ticketId = 1L;
-        DetailReviewDTO detailReviewDTO = DetailReviewDTO.builder().content("Test content").build();
-        Member member = Member.builder().id(memberId).build();
-        Ticket ticket = Ticket.builder().id(ticketId).build();
-        Review review = Review.builder().ticket(ticket).content("Test content").build();
-
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(ticketRepository.findById(ticketId)).thenReturn(Optional.of(ticket));
+    void createReview_ShouldReturnReviewId() {
+        RequestDTO requestDTO = RequestDTO.builder().memberId(1).ticketId(1L).content("Test content").build();
+        Member member = Member.builder().id(1).build();
+        Ticket ticket = Ticket.builder().id(1L).build();
+        Review review = Review.builder().id(1L).content("Test content").ticket(ticket).build();
+        MultipartFile file = mock(MultipartFile.class);
+        when(memberRepository.findById(1)).thenReturn(Optional.of(member));
+        when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
+        when(storageService.storeFile(file)).thenReturn(null); // Assuming the storage service returns null for simplicity
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        DetailReviewDTO result = reviewService.createReview(memberId, ticketId, detailReviewDTO);
+        Long result = reviewService.createReview(requestDTO, file);
 
         assertNotNull(result);
-        assertEquals("Test content", result.getContent());
+        assertEquals(1L, result);
+        verify(memberRepository, times(1)).findById(1);
+        verify(ticketRepository, times(1)).findById(1L);
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
     @Test
-    void updateReview_ShouldReturnUpdatedDetailReviewDTO() {
+    void updateReview_ShouldReturnUpdatedReviewDTO() {
         Integer memberId = 1;
         Long reviewId = 1L;
-        DetailReviewDTO detailReviewDTO = DetailReviewDTO.builder().content("Updated content").build();
+        RequestDTO requestDTO = RequestDTO.builder().content("Updated content").build();
         Review review = Review.builder().id(reviewId).content("Original content").build();
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        DetailReviewDTO result = reviewService.updateReview(memberId, reviewId, detailReviewDTO);
+        ReviewDTO result = reviewService.updateReview(memberId, reviewId, requestDTO);
 
         assertNotNull(result);
         assertEquals("Updated content", result.getContent());

@@ -3,48 +3,55 @@ package com.colorpl.review.service;
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
-import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
+import com.colorpl.global.common.storage.StorageService;
+import com.colorpl.global.common.storage.UploadFile;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
-import com.colorpl.review.dto.DetailReviewDTO;
+import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.dto.ReviewResponse;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+//@RequiredArgsConstructor
 @Service
+@Transactional
 public class ReviewService {
 
+    private final StorageService storageService;
     private final ReviewRepository reviewRepository;
-    private final CommentRepository commentRepository;
+//    private final CommentRepository commentRepository;
     private final TicketRepository ticketRepository;
     private final MemberRepository memberRepository;
     private final EmpathyRepository empathyRepository;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+    public ReviewService(StorageService storageService, ReviewRepository reviewRepository, CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+        this.storageService = storageService;
         this.reviewRepository = reviewRepository;
         this.ticketRepository = ticketRepository;
-        this.commentRepository = commentRepository;
+//        this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.empathyRepository = empathyRepository;
     }
@@ -105,36 +112,32 @@ public class ReviewService {
     }
 
     @Transactional
-    public DetailReviewDTO createReview(Integer memberId, Long ticketId, DetailReviewDTO detailReviewDTO) {
+    public Long createReview(RequestDTO requestDTO, MultipartFile file) {
         // 멤버 및 티켓 가져오기
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(requestDTO.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        Ticket ticket = ticketRepository.findById(ticketId)
+        Ticket ticket = ticketRepository.findById(requestDTO.getTicketId())
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
+
+        UploadFile uploadFile = storageService.storeFile(file);
 
         // Build review entity from DTO
         Review review = Review.builder()
+                .filename(uploadFile.getStoreFilename())
                 .ticket(ticket)
-                .content(detailReviewDTO.getContent())
-                .spoiler(detailReviewDTO.getSpoiler())
-                .emotion(detailReviewDTO.getEmotion())
-                .emphathy(detailReviewDTO.getEmpathy())
+                .content(requestDTO.getContent())
+                .spoiler(requestDTO.getSpoiler())
+                .emotion(requestDTO.getEmotion())
+                .emphathy(0)
                 .build();
 
-        Review savedReview = reviewRepository.save(review);
-
-        // DTO의 댓글들 엔티티화
-        List<Comment> comments = detailReviewDTO.getComments().stream()
-                .map(dto -> dto.toComment(member, savedReview))
-                .toList();
-
-        // DTO 반환
-        return DetailReviewDTO.toDetailReviewDTO(memberId, savedReview);
+        // 저장 및 id 반환
+        return reviewRepository.save(review).getId();
     }
 
     @Transactional
-    public DetailReviewDTO updateReview(Integer memberId, Long reviewId, DetailReviewDTO detailReviewDTO) {
+    public ReviewDTO updateReview(Integer memberId, Long reviewId, RequestDTO detailReviewDTO) {
         // 리뷰 가져오기
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
@@ -142,7 +145,7 @@ public class ReviewService {
         // 리뷰 업데이트
         review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(), detailReviewDTO.getEmotion());
         Review updatedReview = reviewRepository.save(review);
-        return DetailReviewDTO.toDetailReviewDTO(memberId, updatedReview);
+        return toReviewDTO(memberId, updatedReview);
     }
 
     @Transactional
@@ -155,22 +158,21 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    private DetailReviewDTO convertToDTO(Review review) {
-        List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
-                .collect(Collectors.toList());
-
-        return DetailReviewDTO.builder()
-                .id(review.getId())
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .empathy(review.getEmphathy())
-                .comments(commentDTOs)
-                .build();
-    }
+//    private ReviewDTO convertToDTO(Review review) {
+//        List<CommentDTO> commentDTOs = Optional.ofNullable(review.getComments())
+//                .orElse(Collections.emptyList())
+//                .stream()
+//                .map(CommentDTO::toCommentDTO) // Convert each Comment to CommentDTO
+//                .collect(Collectors.toList());
+//
+//        return ReviewDTO.builder()
+//                .id(review.getId())
+//                .content(review.getContent())
+//                .spoiler(review.getSpoiler())
+//                .emotion(review.getEmotion())
+//                .empathy(review.getEmphathy())
+//                .build();
+//    }
 
     public Optional<Empathy> findByReviewAndMember(Long reviewId, Integer memberId) {
         EmpathyId empathyId = new EmpathyId(reviewId, memberId);
@@ -180,7 +182,7 @@ public class ReviewService {
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
                 .map(CommentDTO::toCommentDTO)
-                .collect(Collectors.toList());
+                .toList();
         int totalComments = commentDTOs.size();
 
         boolean myReviewCheck = review.getTicket() != null &&
@@ -201,6 +203,7 @@ public class ReviewService {
                 .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
                 .title(review.getTicket() != null ? review.getTicket().getName() : null)
                 .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
+                .imgurl(review.getFilename())
                 .content(review.getContent())
                 .spoiler(review.getSpoiler())
                 .emotion(review.getEmotion())
