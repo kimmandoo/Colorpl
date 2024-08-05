@@ -1,5 +1,6 @@
 package com.data.api
 
+import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
@@ -19,4 +20,10 @@ interface SignApi {
     suspend fun postSignUp(
         @Body requestSignUp: RequestSignUp
     ): ResponseSignUp
+
+    @POST("oauth-sign-in")
+    suspend fun postGoogleSignIn(
+        @Body requestGoogleSignIn: RequestGoogleSignIn
+    ): ResponseSignIn
+
 }

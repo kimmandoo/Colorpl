@@ -2,6 +2,7 @@ package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
 import com.data.datasource.remote.SignDataSource
+import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
@@ -28,6 +29,14 @@ class SignRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 signDataSource.postSignUp(requestSignUp)
+            })
+        }
+    }
+
+    override suspend fun googleSignIn(requestGoogleSignIn: RequestGoogleSignIn): Flow<ApiResult<ResponseSignIn>> {
+        return flow {
+            emit(safeApiCall {
+                signDataSource.postGoogleSignIn(requestGoogleSignIn)
             })
         }
     }
