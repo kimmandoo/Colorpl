@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import timber.log.Timber
 import javax.inject.Inject
 
 class AccessTokenInterceptor @Inject constructor(
@@ -17,7 +16,7 @@ class AccessTokenInterceptor @Inject constructor(
         val originRequest = chain.request()
         val requestBuilder = originRequest.newBuilder()
         val accessToken: String? = runBlocking {
-            var token : String? = ""
+            var token: String? = ""
             accessTokenUseCase.getAccessToken().collectLatest { response ->
                 response.onSuccess { data ->
                     token = data
@@ -28,8 +27,7 @@ class AccessTokenInterceptor @Inject constructor(
             }
             token
         }
-        Timber.d("요거 확인요 $accessToken")
-        val request = requestBuilder.addHeader("accessToken", accessToken ?: "").build()
+        val request = requestBuilder.addHeader("Authorization", "Bearer $accessToken").build()
         return chain.proceed(request)
     }
 }
