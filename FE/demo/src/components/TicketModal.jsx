@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Box, Typography, List, ListItem } from '@mui/material';
+import { Modal, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 
-const TicketModal = ({ open, onClose, ticket }) => {
+const TicketModal = ({ open, onClose, ticket, onViewMember, onViewReview }) => {
   if (!ticket) return null;
 
   return (
@@ -19,6 +19,28 @@ const TicketModal = ({ open, onClose, ticket }) => {
         <Typography variant="body1" component="p" sx={{ mt: 2 }}>
           Category: {ticket.category}
         </Typography>
+        <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+          Owner
+        </Typography>
+        <List>
+          <ListItem button onClick={() => onViewMember(ticket.owner.member_id)}>
+            <ListItemText primary={ticket.owner.nickname} secondary={ticket.owner.email} />
+          </ListItem>
+        </List>
+        <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+          Reviews
+        </Typography>
+        <List>
+          {ticket.recent_reviews && ticket.recent_reviews.length > 0 ? (
+            ticket.recent_reviews.map((review) => (
+              <ListItem button key={review.review_id} onClick={() => onViewReview(review.review_id)}>
+                <ListItemText primary={review.content} secondary={`By: ${review.owner.nickname}`} />
+              </ListItem>
+            ))
+          ) : (
+            <ListItem>No reviews available</ListItem>
+          )}
+        </List>
       </Box>
     </Modal>
   );

@@ -1,34 +1,50 @@
 import React from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, IconButton } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
 const ReviewList = ({ reviews, onReviewClick }) => {
+  const truncateContent = (content) => {
+    if (content.length > 50) {
+      return `${content.slice(0, 50)}...`;
+    }
+    return content;
+  };
+
   return (
-    <List>
-      {reviews.map((review) => {
-        const owner = review.owner || {};
-        return (
-          <ListItem key={review.review_id} secondaryAction={
-            <IconButton edge="end" aria-label="search" onClick={() => onReviewClick(review.review_id)}>
-              <SearchIcon />
-            </IconButton>
-          }>
-            <ListItemAvatar>
-              <Avatar src={owner.profile} alt={owner.nickname} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={review.content}
-              secondary={
-                <>
-                  <span>후기: {review.emotion}</span><br />
-                  <span>작성자: {owner.nickname}</span>
-                </>
-              }
-            />
-          </ListItem>
-        );
-      })}
-    </List>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Profile</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Emotion</TableCell>
+            <TableCell>Content</TableCell>
+            <TableCell>Spoiler</TableCell>
+            <TableCell>Details</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {reviews.map((review) => (
+            <TableRow key={review.review_id}>
+              <TableCell>
+                <Avatar src={review.owner.profile} alt={review.owner.nickname} />
+              </TableCell>
+              <TableCell>{review.owner.nickname}</TableCell>
+              <TableCell>{new Date(review.created_date).toLocaleDateString()}</TableCell>
+              <TableCell>{review.emotion}</TableCell>
+              <TableCell>{truncateContent(review.content)}</TableCell>
+              <TableCell>{review.spoiler ? 'Yes' : 'No'}</TableCell>
+              <TableCell>
+                <IconButton onClick={() => onReviewClick(review.review_id)}>
+                  <SearchIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

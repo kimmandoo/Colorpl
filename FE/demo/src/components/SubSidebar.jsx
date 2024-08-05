@@ -4,6 +4,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from '
 import PeopleIcon from '@mui/icons-material/People';
 import CommentIcon from '@mui/icons-material/Comment';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber'; // 티켓 아이콘 추가
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,6 +48,12 @@ const SubSidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
             <CommentIcon />
           </ListItemIcon>
           <ListItemText primary="Comments" />
+        </ListItem>
+        <ListItem button onClick={() => handleNavigate('/tickets')}>
+          <ListItemIcon sx={{ color: 'black' }}>
+            <ConfirmationNumberIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tickets" />
         </ListItem>
       </List>
     </Drawer>

@@ -1,34 +1,45 @@
 import React from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, IconButton } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
 const CommentList = ({ comments, onCommentClick }) => {
   return (
-    <List>
-      {comments.map((comment) => {
-        const owner = comment.owner || {};
-        return (
-          <ListItem key={comment.comment_id} secondaryAction={
-            <IconButton edge="end" aria-label="search" onClick={() => onCommentClick(comment.comment_id)}>
-              <SearchIcon />
-            </IconButton>
-          }>
-            <ListItemAvatar>
-              <Avatar src={owner.profile} alt={owner.nickname} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={comment.commentContent}
-              secondary={
-                <>
-                  <span>Writer: {owner.nickname}</span><br />
-                  <span>Review ID: {comment.review_id}</span>
-                </>
-              }
-            />
-          </ListItem>
-        );
-      })}
-    </List>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Profile</TableCell>
+            <TableCell>Nickname</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Content</TableCell>
+            <TableCell>Created At</TableCell>
+            <TableCell>Modified At</TableCell>
+            <TableCell>Violation</TableCell>
+            <TableCell>Details</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {comments.map((comment) => (
+            <TableRow key={comment.comment_id}>
+              <TableCell>
+                <Avatar src={comment.owner.profile} alt={comment.owner.nickname} />
+              </TableCell>
+              <TableCell>{comment.owner.nickname}</TableCell>
+              <TableCell>{comment.owner.email}</TableCell>
+              <TableCell>{comment.commentContent}</TableCell>
+              <TableCell>{new Date(comment.created_date).toLocaleDateString()}</TableCell>
+              <TableCell>{new Date(comment.modified_date).toLocaleDateString()}</TableCell>
+              <TableCell>{comment.violation ? 'Yes' : 'No'}</TableCell>
+              <TableCell>
+                <IconButton onClick={() => onCommentClick(comment.comment_id)}>
+                  <SearchIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

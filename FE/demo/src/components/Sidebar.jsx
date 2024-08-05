@@ -1,10 +1,10 @@
-// components/Sidebar.jsx
 import React from 'react';
 import { Box, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
 import CommentIcon from '@mui/icons-material/Comment';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import TicketIcon from '@mui/icons-material/ConfirmationNumber';  // 티켓 아이콘 추가
 import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -44,6 +44,12 @@ const Sidebar = () => {
             <CommentIcon />
           </ListItemIcon>
           <ListItemText primary="Comments" />
+        </ListItem>
+        <ListItem button onClick={() => navigate('/tickets')}>
+          <ListItemIcon>
+            <TicketIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tickets" />
         </ListItem>
       </List>
     </Box>

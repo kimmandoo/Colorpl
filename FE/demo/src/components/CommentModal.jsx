@@ -1,30 +1,32 @@
-// CommentModal.js
 import React from 'react';
-import { Modal, Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Modal, Box, Typography, List, ListItem } from '@mui/material';
 
-const CommentModal = ({ open, onClose, comment }) => {
+const CommentModal = ({ open, onClose, comment, onViewMember, onViewReview }) => {
   if (!comment) return null;
-
-  const owner = comment.owner || {};
-  const review = comment.review || {};
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box sx={{ p: 4, bgcolor: 'background.paper', margin: 'auto', mt: '10%', maxWidth: 600 }}>
+      <Box sx={{ width: 400, margin: 'auto', mt: 5, bgcolor: 'background.paper', p: 2, borderRadius: 2 }}>
         <Typography variant="h6" component="h2">
-          {/* {comment.commentContent}의 활동 */}
-          {owner.nickname}의 활동
+          Comment by {comment.owner?.nickname || 'unknown'}
         </Typography>
-        <Typography variant="subtitle1">리뷰</Typography>
+        <Typography variant="body1" component="p" sx={{ mt: 2 }}>
+          {comment.commentContent}
+        </Typography>
+        <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+          Related Review
+        </Typography>
         <List>
-          <ListItem key={review.review_id}>
-            <ListItemText primary={review.content || 'Unknown Review'} />
+          <ListItem button onClick={() => onViewReview(comment.review.review_id)}>
+            {comment.review.content}
           </ListItem>
         </List>
-        <Typography variant="subtitle1">작성자</Typography>
+        <Typography variant="h6" component="h2" sx={{ mt: 2 }}>
+          Violation
+        </Typography>
         <List>
-          <ListItem key={owner.member_id}>
-            <ListItemText primary={owner.nickname || 'Unknown Writer'} />
+          <ListItem>
+            {comment.violation ? 'Yes' : 'No'}
           </ListItem>
         </List>
       </Box>
