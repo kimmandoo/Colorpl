@@ -1,8 +1,10 @@
 package com.colorpl.ticket.query;
 
+import static com.colorpl.review.domain.QReview.review;
 import static com.colorpl.ticket.domain.QTicket.ticket;
 
 import com.colorpl.member.Member;
+import com.colorpl.ticket.domain.Ticket;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -19,19 +21,12 @@ public class TicketRepositoryImpl implements TicketRepositoryCustom {
     }
 
     @Override
-    public List<MonthlyTicketListResponse> monthlyTicketList(Member member, LocalDateTime from,
+    public List<Ticket> monthlyTicketList(Member member, LocalDateTime from,
         LocalDateTime to) {
         return queryFactory
-            .select(new QMonthlyTicketListResponse(
-                ticket.name,
-                ticket.theater,
-                ticket.dateTime,
-                ticket.seat,
-                ticket.category))
+            .select(ticket)
             .from(ticket)
-            .where(
-                ticket.member.eq(member),
-                ticket.dateTime.between(from, to))
+            .leftJoin(ticket.review, review).fetchJoin()
             .fetch();
     }
 }
