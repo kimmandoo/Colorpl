@@ -31,43 +31,43 @@ interface UseCaseModule {
 
     @Binds
     @Singleton
-    fun provideNotificationUseCase(
+    fun bindsNotificationUseCase(
         notificationUseCaseImpl: NotificationUseCaseImpl
     ): NotificationUseCase
 
     @Binds
     @Singleton
-    fun provideTmapRouteUseCase(
+    fun bindsTmapRouteUseCase(
         tmapRouteUseCaseImpl: TmapRouteUseCaseImpl
     ): TmapRouteUseCase
 
     @Binds
     @Singleton
-    fun provideOpenAiUseCase(
+    fun bindsOpenAiUseCase(
         openAiUseCaseImpl: OpenAiUseCaseImpl
     ): OpenAiUseCase
 
     @Binds
     @Singleton
-    fun provideFeedUseCase(
+    fun bindsFeedUseCase(
         feedUseCaseImpl: FeedUseCaseImpl
     ): FeedUseCase
 
     @Binds
     @Singleton
-    fun provideCommentUseCase(
+    fun bindsCommentUseCase(
         commentUseCaseImpl: CommentUseCaseImpl
     ): CommentUseCase
 
     @Binds
     @Singleton
-    fun provideTicketCreateUseCase(
+    fun bindsTicketCreateUseCase(
         ticketCreateUseCaseImpl: TicketCreateUseCaseImpl
     ): TicketCreateUseCase
 
     @Binds
     @Singleton
-    fun bindReservationUseCase(
+    fun bindsReservationUseCase(
         reservationUseCaseImpl: ReservationUseCaseImpl
     ): ReservationUseCase
 

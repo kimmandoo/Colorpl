@@ -36,7 +36,7 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun provideTokenDataSource(
+    fun bindsTokenDataSource(
         tokenDataSourceImpl: TokenDataSourceImpl
     ): TokenDataSource
 
@@ -49,37 +49,37 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun provideNotificationDataSource(
+    fun bindsNotificationDataSource(
         notificationDataSourceImpl: NotificationDataSourceImpl
     ): NotificationDataSource
 
     @Singleton
     @Binds
-    fun provideTmapRouteDataSource(
+    fun bindsTmapRouteDataSource(
         tmapRouteDataSourceImpl: TmapRouteDataSourceImpl
     ): TmapRouteDataSource
 
     @Singleton
     @Binds
-    fun provideOpenAiDataSource(
+    fun bindsOpenAiDataSource(
         openAiDataSourceImpl: OpenAiDataSourceImpl
     ): OpenAiDataSource
 
     @Singleton
     @Binds
-    fun provideFeedDataSource(
+    fun bindsFeedDataSource(
         feedDataSourceImpl: FeedDataSourceImpl
     ): FeedDataSource
 
     @Singleton
     @Binds
-    fun provideCommentDataSource(
+    fun bindsCommentDataSource(
         commentDataSourceImpl: CommentDataSourceImpl
     ): CommentDataSource
 
     @Singleton
     @Binds
-    fun provideTicketDataSource(
+    fun bindsTicketDataSource(
         ticketDataSourceImpl: TicketDataSourceImpl
     ): TicketDataSource
 
