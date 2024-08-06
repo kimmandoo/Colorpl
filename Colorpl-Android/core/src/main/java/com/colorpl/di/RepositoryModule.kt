@@ -7,6 +7,7 @@ import com.data.repository.MemberRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
 import com.data.repository.ReviewRepository
+import com.data.repository.ReservationRepository
 import com.data.repository.SignRepository
 import com.data.repository.TicketRepository
 import com.data.repository.TmapRouteRepository
@@ -18,6 +19,7 @@ import com.data.repositoryimpl.MemberRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
 import com.data.repositoryimpl.ReviewRepositoryImpl
+import com.data.repositoryimpl.ReservationRepositoryImpl
 import com.data.repositoryimpl.SignRepositoryImpl
 import com.data.repositoryimpl.TicketRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
@@ -80,6 +82,13 @@ interface RepositoryModule {
     fun provideTicketRepository(
         ticketRepositoryImpl: TicketRepositoryImpl
     ): TicketRepository
+
+    @Singleton
+    @Binds
+    fun bindReservationRepository(
+        reservationRepositoryImpl: ReservationRepositoryImpl
+    ): ReservationRepository
+
 
     @Singleton
     @Binds

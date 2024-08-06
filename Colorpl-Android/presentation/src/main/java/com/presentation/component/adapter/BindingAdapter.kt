@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.colorpl.presentation.R
 import com.domain.model.Seat
@@ -247,4 +248,18 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
         formattedDate + dayOfWeek
     }
 
+}
+
+@BindingAdapter("loadImageToReservationDetail")
+fun loadImageToReservationDetail(view: ImageView, url: String?) {
+    url?.let {
+        Glide.with(view.context)
+            .load(it)
+            .apply(
+                RequestOptions()
+                .placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
+                .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
+            )
+            .into(view)
+    }
 }

@@ -6,6 +6,7 @@ import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.NotificationUseCase
 import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.ReviewCreateUseCase
+import com.domain.usecase.ReservationUseCase
 import com.domain.usecase.TicketCreateUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.feed.CommentUseCaseImpl
@@ -14,6 +15,7 @@ import com.domain.usecaseimpl.naver.GeocodingUesCaseImpl
 import com.domain.usecaseimpl.notification.NotificationUseCaseImpl
 import com.domain.usecaseimpl.openai.OpenAiUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewCreateUseCaseImpl
+import com.domain.usecaseimpl.reservation.ReservationUseCaseImpl
 import com.domain.usecaseimpl.ticket.TicketCreateUseCaseImpl
 import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
 import dagger.Binds
@@ -62,6 +64,13 @@ interface UseCaseModule {
     fun provideTicketCreateUseCase(
         ticketCreateUseCaseImpl: TicketCreateUseCaseImpl
     ): TicketCreateUseCase
+
+    @Binds
+    @Singleton
+    fun bindReservationUseCase(
+        reservationUseCaseImpl: ReservationUseCaseImpl
+    ): ReservationUseCase
+
 
     @Binds
     @Singleton
