@@ -35,7 +35,6 @@ class SignRepositoryImpl @Inject constructor(
     ): Flow<ApiResult<ResponseSignUp>> {
         return flow {
             emit(safeApiCall {
-                Timber.d("회원가입 데이터 확인 $requestSignUp, , $file")
                 val requestPart = FormDataConverterUtil.getJsonRequestBody(requestSignUp)
                 val filePart: MultipartBody.Part? =
                     FormDataConverterUtil.getNullableMultiPartBody("profileImage", file)
