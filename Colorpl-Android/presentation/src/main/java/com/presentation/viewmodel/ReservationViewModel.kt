@@ -61,13 +61,4 @@ class ReservationViewModel @Inject constructor(
     fun setReservationSeat(seatList: List<Seat>) {
         _reservationSeat.value = seatList
     }
-
-    fun getReservationShows(showId: Int) {
-        viewModelScope.launch {
-            val data = getReservationUseCase.getReservationInfo(showId)
-            Timber.d(data.toString())
-        }
-    }
-
-
 }

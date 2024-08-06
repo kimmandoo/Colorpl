@@ -94,6 +94,8 @@ interface RepositoryModule {
         memberRepositoryImpl: MemberRepositoryImpl
     ): MemberRepository
 
+    @Singleton
+    @Binds
     fun bindGeocodingRepository(
         geocodingRepositoryImpl: GeocodingRepositoryImpl
     ): GeocodingRepository

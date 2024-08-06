@@ -5,6 +5,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
 import com.presentation.base.BaseFragment
@@ -45,7 +46,6 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
     }
 
     private fun initReservationInfo() {
-        val loading = LoadingDialog(requireContext())
         viewModel.getReservationInfo(1)
         viewModel.reservationInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationInfo ->
             viewModel.reservationInfo.value = reservationInfo

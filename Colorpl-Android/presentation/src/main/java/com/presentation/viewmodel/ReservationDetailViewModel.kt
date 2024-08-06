@@ -26,6 +26,8 @@ class ReservationDetailViewModel @Inject constructor(
     )
     val reservationInfo: MutableStateFlow<ReservationInfo> = _reservationInfo
 
+    /** showId로 예매 아이템 정보 단건 조회.
+     * @param showId DB의 showId */
     fun getReservationInfo(showId: Int) {
         viewModelScope.launch {
             val data = getReservationUseCase.getReservationInfo(showId)

@@ -250,15 +250,15 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
 
 }
 
-@BindingAdapter("loadImage")
-fun loadImage(view: ImageView, url: String?) {
+@BindingAdapter("loadImageToReservationDetail")
+fun loadImageToReservationDetail(view: ImageView, url: String?) {
     url?.let {
         Glide.with(view.context)
             .load(it)
             .apply(
                 RequestOptions()
-                .placeholder(R.drawable.test_reservation_info) // 로딩 중 보여줄 이미지
-                .error(R.drawable.test_feed) // 로딩 실패 시 보여줄 이미지
+                .placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
+                .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
             )
             .into(view)
     }

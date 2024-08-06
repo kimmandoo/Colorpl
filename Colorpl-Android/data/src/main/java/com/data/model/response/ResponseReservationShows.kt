@@ -7,7 +7,7 @@ data class ResponseReservationShows(
     val items: List<ReservationInfo>
 )
 
-@Serializable
+
 data class ReservationInfo(
     @SerialName("id") val id: Int,
     @SerialName("apiId") val apiId: String,
