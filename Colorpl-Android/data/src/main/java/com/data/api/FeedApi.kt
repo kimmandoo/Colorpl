@@ -1,6 +1,5 @@
 package com.data.api
 
-import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
 import com.data.model.request.RequestReviewEdit
@@ -67,7 +66,7 @@ interface FeedApi {
         @Path("memberId") memberId: Int,
     ): ResponsePagedComment
 
-    @POST("/comments/reviews/{reviewId}/members/{memberId}")
+    @POST("comments/reviews/{reviewId}/members/{memberId}")
     suspend fun createCommentData(
         @Path("reviewId") reviewId: Int,
         @Path("memberId") memberId: Int,
