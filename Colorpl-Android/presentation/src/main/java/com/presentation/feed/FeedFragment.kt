@@ -1,9 +1,9 @@
 package com.presentation.feed
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
@@ -30,7 +30,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     }
     private val feedAdapter by lazy {
         FeedAdapter(
-            onFeedContentClickListener = { onFeedContentClickListener() },
+            onFeedContentClickListener = { id ->
+                onFeedContentClickListener(id)
+            },
             onCommentClickListener = { onCommentClickListener() },
             onEmotionClickListener = { onEmotionClickListener() },
             onReportClickListener = { onReportClickListener() },
@@ -83,8 +85,11 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         filterAdapter.submitList(updatedList)
     }
 
-    private fun onFeedContentClickListener() {
-        findNavController().navigate(R.id.action_fragment_feed_to_fragment_feed_detail)
+    private fun onFeedContentClickListener(reviewId: Int) {
+        navigateDestinationBundle(
+            R.id.action_fragment_feed_to_fragment_feed_detail,
+            bundleOf()
+        )
     }
 
     private fun onCommentClickListener() {

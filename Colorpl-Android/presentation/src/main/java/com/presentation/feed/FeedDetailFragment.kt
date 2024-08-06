@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
@@ -32,12 +33,18 @@ class FeedDetailFragment :
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        feedViewModel.getComment(feedId = 1)
-        initAdapter()
 
+        initAdapter()
+        observeReviewDetail()
     }
 
-    private fun initAdapter(){
+    private fun initData(){
+
+        feedViewModel.getComment(feedId = 1)
+        feedViewModel.getReviewDetail(1)
+    }
+
+    private fun initAdapter() {
         val loading = LoadingDialog(requireContext())
         binding.apply {
             rvComment.adapter = commentAdapter
