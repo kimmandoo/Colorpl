@@ -1,6 +1,6 @@
 package com.colorpl.review.service;
 
-import com.colorpl.comment.repository.CommentRepository;
+import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.global.common.storage.StorageService;
@@ -10,6 +10,7 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.EmpathyRepository;
@@ -41,8 +42,8 @@ class ReviewServiceTest {
     @Mock
     private ReviewRepository reviewRepository;
 
-    @Mock
-    private CommentRepository commentRepository;
+//    @Mock
+//    private CommentRepository commentRepository;
 
     @Mock
     private TicketRepository ticketRepository;
@@ -64,7 +65,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void getReviews_ShouldReturnReviewDTOList() {
+    void getReviews_ShouldReturnReadReviewResponse() {
         Integer memberId = 1;
         int page = 0;
         int size = 10;
@@ -72,16 +73,19 @@ class ReviewServiceTest {
         Review review = Review.builder().id(1L).content("Test content").build();
 
         when(reviewRepository.findAll(pageable)).thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(review)));
+        when(reviewRepository.count()).thenReturn(1L);
 
-        List<ReviewDTO> result = reviewService.getReviews(memberId, page, size);
+        ReadReviewResponse result = reviewService.getReviews(memberId, page, size);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(1, result.getItems().size());
+        assertEquals(1, result.getTotalPage());
         verify(reviewRepository, times(1)).findAll(pageable);
+        verify(reviewRepository, times(1)).count();
     }
 
     @Test
-    void findReviewsOfMember_ShouldReturnReviewDTOList() {
+    void findReviewsOfMember_ShouldReturnReadReviewResponse() {
         Integer memberId = 1;
         int page = 0;
         int size = 10;
@@ -89,14 +93,13 @@ class ReviewServiceTest {
         Review review = Review.builder().id(1L).content("Test content").build();
         Ticket ticket = Ticket.builder().id(1L).review(review).build();
         Member member = Member.builder().id(memberId).tickets(List.of(ticket)).build();
-        ticket = Ticket.builder().id(1L).review(review).member(member).build(); // Ensure the ticket is linked to the member
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
-        List<ReviewDTO> result = reviewService.findReviewsOfMember(memberId, page, size);
+        ReadReviewResponse result = reviewService.findReviewsOfMember(memberId, page, size);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(1, result.getItems().size());
         verify(memberRepository, times(1)).findById(memberId);
     }
 
@@ -123,30 +126,19 @@ class ReviewServiceTest {
                 .ticketId(1L)
                 .content("Test content")
                 .build();
-        Member member = Member.builder()
-                .id(1)
-                .build();
-        Ticket ticket = Ticket.builder()
-                .id(1L)
-                .build();
-        Review review = Review.builder()
-                .id(1L)
-                .content("Test content")
-                .ticket(ticket)
-                .build();
+        Member member = Member.builder().id(1).build();
+        Ticket ticket = Ticket.builder().id(1L).build();
+        Review review = Review.builder().id(1L).content("Test content").ticket(ticket).build();
         MultipartFile file = mock(MultipartFile.class);
         UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName").uploadFilename("originalFileName").build();
 
-        // Mock repository and service method calls
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
         when(storageService.storeFile(file)).thenReturn(uploadFile);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        // Call the service method
         Long result = reviewService.createReview(requestDTO, file);
 
-        // Assert the result and verify interactions
         assertNotNull(result);
         assertEquals(1L, result);
         verify(memberRepository, times(1)).findById(1);
@@ -155,13 +147,12 @@ class ReviewServiceTest {
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
-
     @Test
     void updateReview_ShouldReturnUpdatedReviewDTO() {
         Integer memberId = 1;
         Long reviewId = 1L;
-        RequestDTO requestDTO = RequestDTO.builder().content("Updated content").build();
-        Review review = Review.builder().id(reviewId).content("Original content").build();
+        RequestDTO requestDTO = RequestDTO.builder().spoiler(false).content("Updated content").build();
+        Review review = Review.builder().id(reviewId).emotion((byte)3).spoiler(true).content("Original content").build();
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
@@ -170,6 +161,8 @@ class ReviewServiceTest {
 
         assertNotNull(result);
         assertEquals("Updated content", result.getContent());
+        assertEquals(false, result.getSpoiler());
+        assertEquals((byte)3, result.getEmotion());
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
@@ -203,6 +196,8 @@ class ReviewServiceTest {
     void toReviewDTO_ShouldReturnReviewDTO() {
         Integer memberId = 1;
         Review review = Review.builder().id(1L).content("Test content").build();
+
+        when(empathyRepository.findById(new EmpathyId(1L, memberId))).thenReturn(Optional.of(new Empathy()));
 
         ReviewDTO result = reviewService.toReviewDTO(memberId, review);
 
