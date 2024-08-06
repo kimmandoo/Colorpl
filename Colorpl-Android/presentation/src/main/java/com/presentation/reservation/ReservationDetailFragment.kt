@@ -45,7 +45,7 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
     }
 
     private fun initReservationInfo() {
-        viewModel.getReservationInfo(1)
+        viewModel.getReservationInfo(args.reservationDetail.reservationInfoId)
         viewModel.reservationInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationInfo ->
             viewModel.reservationInfo.value = reservationInfo
         }.launchIn(viewLifecycleOwner.lifecycleScope)

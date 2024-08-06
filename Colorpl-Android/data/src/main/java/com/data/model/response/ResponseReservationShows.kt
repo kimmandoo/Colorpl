@@ -14,7 +14,7 @@ data class ReservationInfo(
     val name: String,
     val cast: String?,
     val runtime: String,
-    val priceBySeatClass: PriceBySeatClass,
+    val priceBySeatClass: Map<String, Int>,
     val posterImagePath: String,
     val area: String,
     val category: String?,

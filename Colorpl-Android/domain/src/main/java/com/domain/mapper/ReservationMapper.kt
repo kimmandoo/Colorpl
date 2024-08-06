@@ -12,6 +12,6 @@ fun com.data.model.response.ReservationInfo.toEntity(): ReservationInfo {
         cast = this.cast,
         category = this.category,
         runtime = this.runtime,
-        price = this.priceBySeatClass.gradeA.toString()
+        price = this.priceBySeatClass.getOrDefault("R석", "기본값").toString()
     )
 }

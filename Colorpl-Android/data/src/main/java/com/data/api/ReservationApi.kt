@@ -13,6 +13,6 @@ interface ReservationApi {
     ): ReservationInfo
 
     @GET("shows/")
-    suspend fun getReservationAllShows(): ResponseReservationShows
+    suspend fun getReservationAllShows(): List<ReservationInfo>
 
 }

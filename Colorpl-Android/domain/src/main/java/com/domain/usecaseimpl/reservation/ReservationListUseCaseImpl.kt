@@ -5,11 +5,10 @@ import com.data.util.ApiResult
 import com.domain.mapper.toEntity
 import com.domain.model.ReservationInfo
 import com.domain.usecase.ReservationListUseCase
-import com.domain.usecase.ReservationUseCase
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReservationListUseCaseImpl @Inject constructor(
@@ -24,6 +23,7 @@ class ReservationListUseCaseImpl @Inject constructor(
                 }
 
                 is ApiResult.Error -> {
+                    Timber.d("예약 에러 확인 ${result.exception}")
                     emit(DomainResult.error(result.exception))
                 }
 

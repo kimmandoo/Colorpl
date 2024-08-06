@@ -13,7 +13,7 @@ class ReservationDataSourceImpl @Inject constructor(
         return reservationApi.getReservationShow(showId)
     }
 
-    override suspend fun getReservationAllShow(): ResponseReservationShows {
+    override suspend fun getReservationAllShow(): List<ReservationInfo> {
         return reservationApi.getReservationAllShows()
     }
 }

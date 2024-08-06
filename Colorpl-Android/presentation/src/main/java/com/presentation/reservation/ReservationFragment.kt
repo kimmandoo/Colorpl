@@ -55,7 +55,7 @@ class ReservationFragment :
 
     override fun initView() {
         initFilter()
-//        initReservationInfo()
+        initReservationInfo()
         initClickListener()
         initReservationList()
     }
@@ -95,7 +95,7 @@ class ReservationFragment :
                 )
             )
         }
-        reservationInfoAdapter.submitList(testReservationInfo)
+//        reservationInfoAdapter.submitList(testReservationInfo)
     }
 
     private fun initClickListener() {
@@ -105,6 +105,9 @@ class ReservationFragment :
             }
             clSelectLocation.setOnClickListener {
                 showLocationPickerDialog()
+            }
+            ivFilter.setOnClickListener {
+                initReservationList()
             }
         }
     }

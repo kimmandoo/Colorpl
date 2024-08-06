@@ -10,5 +10,5 @@ interface ReservationDataSource {
         showsId: Int,
     ): ReservationInfo
 
-    suspend fun getReservationAllShow(): ResponseReservationShows
+    suspend fun getReservationAllShow(): List<ReservationInfo>
 }
