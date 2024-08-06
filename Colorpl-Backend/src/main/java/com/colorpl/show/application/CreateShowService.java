@@ -27,13 +27,37 @@ public class CreateShowService {
     @Value("${days.to.add}")
     private Long daysToAdd;
 
-    @Scheduled(cron = "0 27 17 * * *")
+    @Scheduled(cron = "0 28 17 * * *")
     public void create() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         int page = 1;
         while (true) {
             ShowListApiResponse showListApiResponse = retrieveShowListApiService.retrieve(
                 LocalDate.now(), LocalDate.now().plusDays(daysToAdd), page++);
+            if (showListApiResponse.getItems().isEmpty()) {
+                break;
+            }
+            for (Item item : showListApiResponse.getItems()) {
+                if (showDetailRepository.findByApiId(item.getApiId()).isEmpty()) {
+                    ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
+                        item.getApiId());
+                    ShowDetail showDetail = createShowDetailService.create(
+                        showDetailApiResponse.getItem());
+                    createShowScheduleService.create(showDetail,
+                        LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
+                        LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
+                        showDetailApiResponse.getItem().getSchedule());
+                }
+            }
+        }
+    }
+
+    public void create(LocalDate from, LocalDate to) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        int page = 1;
+        while (true) {
+            ShowListApiResponse showListApiResponse = retrieveShowListApiService.retrieve(
+                from, to, page++);
             if (showListApiResponse.getItems().isEmpty()) {
                 break;
             }
