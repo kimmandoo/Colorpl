@@ -8,10 +8,19 @@ import com.colorpl.presentation.R
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.clustering.ClusterMarkerInfo
+import com.naver.maps.map.clustering.Clusterer
+import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
+import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
+import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
-import timber.log.Timber
+import com.presentation.map.model.MapMarker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 /** Naver map 셋팅 */
@@ -75,3 +84,55 @@ fun MapView.ignoreParentScroll() {
     }
 }
 
+
+fun makeMarker(
+    marker: List<MapMarker>,
+    builder: Clusterer.Builder<MapMarker>,
+): Clusterer<MapMarker> { // cluster 연결
+    val cluster: Clusterer<MapMarker> = builder.build()
+
+
+    marker.forEach { item ->
+        cluster.add(item, null)
+    }
+
+    return cluster
+}
+
+suspend fun deleteMarker(marker: Clusterer<MapMarker>) {
+    withContext(Dispatchers.Default) {
+        marker.map = null
+    }
+}
+
+fun clickMarker(
+    builder: Clusterer.Builder<MapMarker>,
+    context: Context,
+    markerInfo: (MapMarker) -> Unit?,
+) {
+    builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
+
+        override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
+            super.updateClusterMarker(info, marker)
+            marker.apply {
+                width = 100
+                height = 100
+            }
+        }
+    }).leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
+        override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
+            super.updateLeafMarker(info, marker)
+            marker.apply {
+                width = 200
+                height = 200
+                val markerData = info.key as MapMarker
+                icon = combineImages(context, R.drawable.ic_pin, R.drawable.dummy_ticket)
+                onClickListener = Overlay.OnClickListener {
+
+                    markerInfo(markerData)
+                    true
+                }
+            }
+        }
+    })
+}
