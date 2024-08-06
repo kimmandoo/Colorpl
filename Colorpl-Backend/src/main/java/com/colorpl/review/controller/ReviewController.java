@@ -1,6 +1,7 @@
 package com.colorpl.review.controller;
 
 import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.member.service.MemberService;
 import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
@@ -25,12 +26,13 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final EmpathyService empathyService;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     // 무한 스크롤 *일반 리뷰
-    @GetMapping("/members/{memberId}/all")
+    @GetMapping("/all")
     @Operation(summary = "리뷰 무한 스크롤", description = "무한 스크롤옹 리뷰를 단위별로 가져오는 API")
-    public ReadReviewResponse getReviews(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
+    public ReadReviewResponse getReviews(@RequestParam int page, @RequestParam int size) {
+        Integer memberId = memberService.getCurrentMemberId();
         return reviewService.getReviews(memberId, page, size);
     }
 
@@ -45,24 +47,26 @@ public class ReviewController {
     // 리뷰 한 개만 *디테일 리뷰
     @GetMapping("/details/{reviewId}")
     @Operation(summary = "특정 리뷰 조회", description = "특정 리뷰 조회 할 때 사용하는 API(url의 리뷰id 및 (*주의!) param으로 memberId 사용)")
-    public ResponseEntity<ReviewDTO> findReviewsOfMembers(@PathVariable Long reviewId, @RequestParam int memberId) {
+    public ResponseEntity<ReviewDTO> findReviewsOfMembers(@PathVariable Long reviewId) {
+        Integer memberId = memberService.getCurrentMemberId();
         ReviewDTO reviews = reviewService.findById(reviewId, memberId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     // 새 리뷰 작성
-    @PostMapping("/members/{memberId}/tickets/{ticketId}")
+    @PostMapping("/tickets/{ticketId}")
     @Operation(summary = "새로운 리뷰 작성", description = "리뷰 생성 시 사용하는 API(url의 멤버id, 티켓 id 사용)")
     public ResponseEntity<NonReadReviewResponse> createReview(
             @RequestPart RequestDTO request,
             @RequestPart(required = false) MultipartFile file
     ) {
-
+        Integer memberId = memberService.getCurrentMemberId();
         Long id = reviewService.createReview(request, file);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/reviews/{id}")
                 .buildAndExpand(id)
                 .toUri();
+        System.out.println(uri);
 
         NonReadReviewResponse response = NonReadReviewResponse.builder()
                 .reviewId(id)
@@ -73,9 +77,10 @@ public class ReviewController {
 
 
     // 리뷰 업데이트
-    @PutMapping("/members/{memberId}/reviews/{reviewId}")
+    @PutMapping("/reviews/{reviewId}")
     @Operation(summary = "특정 리뷰의 내용 수정", description = "특정 리뷰의 내용 수정할 때 사용하는 API")
-    public ResponseEntity<NonReadReviewResponse> updateReview(@PathVariable Integer memberId, @PathVariable Long reviewId, @RequestBody RequestDTO requestDTO) {
+    public ResponseEntity<NonReadReviewResponse> updateReview( @PathVariable Long reviewId, @RequestBody RequestDTO requestDTO) {
+        Integer memberId = memberService.getCurrentMemberId();
         ReviewDTO updatedReview = reviewService.updateReview(memberId, reviewId, requestDTO);
         NonReadReviewResponse response = NonReadReviewResponse.builder()
                 .reviewId(reviewId)
@@ -96,9 +101,10 @@ public class ReviewController {
     }
 
     // 특정 리뷰에 공감 추가
-    @PostMapping("/members/{memberId}/empathize/{reviewId}")
+    @PostMapping("/empathize/{reviewId}")
     @Operation(summary = "특정 리뷰에 공감 추가", description = "특정 리뷰에 공감할 때 사용하는 API")
-    public ResponseEntity<NonReadReviewResponse> addEmpathy(@PathVariable Long reviewId, @PathVariable Integer memberId) {
+    public ResponseEntity<NonReadReviewResponse> addEmpathy(@PathVariable Long reviewId) {
+        Integer memberId = memberService.getCurrentMemberId();
         empathyService.addEmpathy(reviewId, memberId);
         NonReadReviewResponse response = NonReadReviewResponse.builder()
                 .reviewId(reviewId)
@@ -108,7 +114,8 @@ public class ReviewController {
     // 특정 리뷰에 공감 삭제
     @DeleteMapping("/members/{memberId}/empathize/{reviewId}")
     @Operation(summary = "특정 리뷰에 공감 취소", description = "특정 리뷰에 공감 취소할 때 사용하는 API")
-    public ResponseEntity<NonReadReviewResponse> removeEmpathy(@PathVariable Long reviewId, @PathVariable Integer memberId) {
+    public ResponseEntity<NonReadReviewResponse> removeEmpathy(@PathVariable Long reviewId) {
+        Integer memberId = memberService.getCurrentMemberId();
         empathyService.removeEmpathy(reviewId, memberId);
         NonReadReviewResponse response = NonReadReviewResponse.builder()
                 .reviewId(reviewId)
