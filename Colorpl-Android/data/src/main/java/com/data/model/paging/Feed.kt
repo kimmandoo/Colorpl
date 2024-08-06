@@ -1,7 +1,9 @@
 package com.data.model.paging
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Feed(
     @SerialName("category")
     val category: String,

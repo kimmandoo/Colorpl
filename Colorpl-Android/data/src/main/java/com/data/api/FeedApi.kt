@@ -1,5 +1,6 @@
 package com.data.api
 
+import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
 import retrofit2.http.DELETE
@@ -16,7 +17,7 @@ interface FeedApi {
         @Path("memberId") memberId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
-    ): ResponsePagedFeed
+    ): List<Feed>
 
     @GET("reviews/members/{memberId}")
     suspend fun getUserFeedData(
