@@ -20,15 +20,16 @@ class FeedPagingSource(private val feedDataSource: FeedDataSource) :
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Feed> {
         val nextPage = params.key ?: 1
 
-        return when (val result = safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
+        return when (val result =
+            safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
-                Timber.tag("pager").d("${response.items.firstOrNull()?.feedId}")
+                Timber.tag("pager").d("${response}")
 
                 LoadResult.Page(
-                    data = response.items,
+                    data = response,
                     prevKey = if (nextPage == 1) null else nextPage - 1,
-                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPages) null else nextPage + 1
+                    nextKey = if (response.isEmpty()) null else nextPage + 1
                 )
             }
 

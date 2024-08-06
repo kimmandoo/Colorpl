@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.colorpl.presentation.R
 import com.domain.model.Seat
 import com.presentation.util.Category
@@ -23,6 +24,15 @@ import java.util.Locale
 fun loadImage(imageView: ImageView, image: Drawable?) {
     Glide.with(imageView.context)
         .load(image)
+        .into(imageView)
+}
+
+@BindingAdapter("setImageCircleString")
+fun loadImage(imageView: ImageView, image: String?) {
+    Glide.with(imageView.context)
+        .load(image)
+        .transform(CircleCrop())
+        .placeholder(R.drawable.ic_profile_circle)
         .into(imageView)
 }
 

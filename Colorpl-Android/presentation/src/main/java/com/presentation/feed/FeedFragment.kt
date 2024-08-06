@@ -58,7 +58,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             itemAnimator = null
         }
         val loading = LoadingDialog(requireContext())
-        viewModel.getFeed()
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
                 feedAdapter.submitData(feed)

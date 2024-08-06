@@ -23,6 +23,7 @@ suspend fun <T> safeApiCall(
                     ApiResult.error(Exception(NETWORK_ERROR))
                 }
                 is HttpException -> {
+                    throwable.printStackTrace()
                     val code = throwable.code()
                     val errorResponse = throwable.response()?.errorBody()?.string()
                     Timber.d(

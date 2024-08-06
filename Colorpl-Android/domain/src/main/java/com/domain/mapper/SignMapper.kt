@@ -3,10 +3,10 @@ package com.domain.mapper
 import com.data.model.request.RequestSignIn
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
-import com.domain.model.User
+import com.domain.model.Member
 
-fun ResponseSignIn.toEntity(): User {
-    return User(
+fun ResponseSignIn.toEntity(): Member {
+    return Member(
         email = this.email,
         type = this.type,
         nickName = "",
@@ -16,18 +16,18 @@ fun ResponseSignIn.toEntity(): User {
     )
 }
 
-fun User.toSignInParam(): RequestSignIn {
+fun Member.toSignInParam(): RequestSignIn {
     return RequestSignIn(
         email = this.email,
         password = this.password,
     )
 }
 
-fun User.toSignUpParam(): RequestSignUp {
+fun Member.toSignUpParam(): RequestSignUp {
     return RequestSignUp(
         email = this.email,
         password = this.password,
-        nickname = this.nickName,
-        profile = this.profileImage
+        nickname = this.nickName ?: "",
+        profile = this.profileImage ?: ""
     )
 }

@@ -5,7 +5,7 @@ import com.data.repository.SignRepository
 import com.data.repository.TokenRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toSignInParam
-import com.domain.model.User
+import com.domain.model.Member
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -16,8 +16,8 @@ class SignInUseCase @Inject constructor(
     private val signRepository: SignRepository
 ) {
 
-    suspend fun signIn(user: User) = flow {
-        signRepository.signIn(user.toSignInParam()).collect { result ->
+    suspend fun signIn(member: Member) = flow {
+        signRepository.signIn(member.toSignInParam()).collect { result ->
             Timber.d("로그인 확인 $result")
             when (result) {
                 is ApiResult.Success -> {

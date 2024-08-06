@@ -1,15 +1,38 @@
 package com.data.model.paging
 
-import java.util.Date
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Feed(
-    val feedId: Int,
+    @SerialName("category")
+    val category: String,
+    @SerialName("commentpagesize")
+    val commentPageSize: Int,
+    @SerialName("commentscount")
+    val commentsCount: Int,
+    @SerialName("content")
+    val content: String,
+    @SerialName("createdate")
+    val createDate: String,
+    @SerialName("emotion")
+    val emotionMode: Int,
+    @SerialName("empathy")
+    val empathyCount: Int,
+    @SerialName("id")
+    val id: Int,
+    @SerialName("imgurl")
+    val contentImgUrl: String,
+    @SerialName("myempathy")
+    val isEmpathy: Boolean,
+    @SerialName("myreview")
+    val isMyReview: Boolean,
+    @SerialName("spoiler")
+    val isSpoiler: Boolean,
+    @SerialName("ticketId")
+    val ticketId: Int,
+    @SerialName("title")
     val title: String,
-    val userName: String,
-    val userProfileImg: String?,
-    val contentImg: String?,
-    val emotionMode: String,
-    val emotionTotal: Int,
-    val commentTotal: Int,
-    val uploadedDate: Date
+    @SerialName("writer")
+    val writer: String
 )

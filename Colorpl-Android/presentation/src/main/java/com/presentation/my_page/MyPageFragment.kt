@@ -1,5 +1,8 @@
 package com.presentation.my_page
 
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
 import com.domain.model.Ticket
@@ -7,11 +10,17 @@ import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.util.setDistanceX
 import com.presentation.util.setTransactionX
+import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 import java.util.Date
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
+
+    private val myPageViewModel: MyPageViewModel by viewModels()
 
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
@@ -25,6 +34,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     override fun initView() {
         initTicket()
         initClickEvent()
+        observeUiState()
     }
 
     private fun initTicket() {
@@ -71,7 +81,14 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 ),
             )
         )
+    }
 
+    private fun observeUiState() {
+        myPageViewModel.memberUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                binding.member = it.memberInfo
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 

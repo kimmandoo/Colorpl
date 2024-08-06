@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="member"
+            type="com.domain.model.Member" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -47,11 +49,11 @@
 
                         <ImageView
                             android:id="@+id/iv_profile_img"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_marginStart="30dp"
                             android:layout_marginTop="42dp"
-                            android:background="@drawable/ic_profile_circle"
+                            app:setImageCircleString="@{member.profileImage}"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,7 +77,7 @@
                             style="@style/suite_extra_bold_25"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="리움씨네마"
+                            android:text="@{member.email}"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_img"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +105,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="12dp"
-                            android:text="707"
+                            android:text="@{String.valueOf(member.followerCount)}"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
                             app:layout_constraintEnd_toStartOf="@+id/tv_following"
@@ -132,7 +134,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="30dp"
-                            android:text="581"
+                            android:text="@{String.valueOf(member.followingCount)}"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
                             app:layout_constraintEnd_toEndOf="parent"
