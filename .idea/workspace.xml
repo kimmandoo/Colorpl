@@ -5,13 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2c81a84-c9ab-4c73-b3e1-d0b39c6dfd4d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/dto/FollowCountDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/exception/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/exception/Messages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/config/QuerydslConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/CustomSchedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/ReservationSchedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/Schedule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/ScheduleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/application/MonthlyScheduleListService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/dao/ScheduleRepositoryCustom.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/dao/ScheduleRepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/dto/MonthlyScheduleListRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/test/java/com/colorpl/schedule/query/ScheduleRepositoryCustomTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/domain/ReservationDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/domain/ReservationDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/Schedule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/repository/ScheduleRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,14 +37,42 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/Colorpl-Backend">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -43,6 +82,22 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;project_707505_bot_563b0f363f37c56147757b32b7903809&quot;,
+      &quot;fullname&quot;: &quot;minuteman0212&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://lab.ssafy.com/s11-webmobile4-sub2/S11P12D109.git&quot;,
+    &quot;second&quot;: &quot;c3a12039-e0f5-492e-b662-07bd66e2f239&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -54,29 +109,87 @@
     <option name="sortByType" value="true" />
     <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build Colorpl-Backend.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.ColorplApplication.executor": "Run",
-    "git-widget-placeholder": "be/feat/member__S11P12D109-141",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/gimheon-u/Desktop/S11P12D109",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "File.Encoding",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build Colorpl-Backend.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Colorpl-Backend [compileJava].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScheduleRepositoryCustomTest.monthlyReservationScheduleList.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ColorplApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;be/feat/ticket__S11P12D109-296&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/gimheon-u/Desktop/S11P12D109&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.colorpl.schedule.query" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.ScheduleRepositoryCustomTest.monthlyReservationScheduleList">
+    <configuration name="Colorpl-Backend [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/Colorpl-Backend" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compileJava" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ScheduleRepositoryCustomTest.monthlyReservationScheduleList" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/Colorpl-Backend" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.colorpl.schedule.query.ScheduleRepositoryCustomTest.monthlyReservationScheduleList&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="ColorplApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="Colorpl-Backend.main" />
@@ -93,7 +206,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.ScheduleRepositoryCustomTest.monthlyReservationScheduleList" />
         <item itemvalue="Spring Boot.ColorplApplication" />
+        <item itemvalue="Gradle.Colorpl-Backend [compileJava]" />
       </list>
     </recent_temporary>
   </component>
@@ -114,6 +229,8 @@
       <option name="presentableId" value="Default" />
       <updated>1722251324585</updated>
       <workItem from="1722251326150" duration="2774000" />
+      <workItem from="1722862645037" duration="12930000" />
+      <workItem from="1722878252063" duration="3840000" />
     </task>
     <servers />
   </component>
