@@ -15,21 +15,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom {
+public class ReservationScheduleRepositoryImpl implements ReservationScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
     public List<ReservationSchedule> monthlyReservationScheduleList(Member member,
         LocalDateTime from, LocalDateTime to) {
-        return queryFactory
-            .select(reservationSchedule)
-            .from(reservationSchedule)
+        return queryFactory.select(reservationSchedule).from(reservationSchedule)
             .join(reservationSchedule.reservationDetail, reservationDetail).fetchJoin()
             .join(reservationDetail.showSchedule, showSchedule).fetchJoin()
             .join(showSchedule.showDetail, showDetail).fetchJoin()
-            .where(reservationSchedule.member.eq(member),
-                showSchedule.dateTime.between(from, to))
+            .where(reservationSchedule.member.eq(member), showSchedule.dateTime.between(from, to))
             .fetch();
     }
 }

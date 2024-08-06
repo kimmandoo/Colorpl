@@ -1,4 +1,4 @@
-package com.colorpl.schedule.query;
+package com.colorpl.schedule.query.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,12 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class ScheduleRepositoryCustomTest {
+class ReservationScheduleRepositoryCustomTest {
 
     @Autowired
     MemberRepository memberRepository;
     @Autowired
     ReservationRepository reservationRepository;
+    @Autowired
+    ReservationScheduleRepository reservationScheduleRepository;
     @Autowired
     ScheduleRepository scheduleRepository;
     @Autowired
@@ -40,6 +42,11 @@ class ScheduleRepositoryCustomTest {
 
         LocalDateTime now = LocalDateTime.now();
 
+        Member member = Member.builder()
+            .email("email")
+            .build();
+        memberRepository.save(member);
+
         ShowDetail showDetail = ShowDetail.builder()
             .name("name")
             .category(Category.PLAY)
@@ -51,11 +58,6 @@ class ScheduleRepositoryCustomTest {
             .dateTime(now)
             .build();
         showScheduleRepository.save(showSchedule);
-
-        Member member = Member.builder()
-            .email("email")
-            .build();
-        memberRepository.save(member);
 
         ReservationDetail reservationDetail = ReservationDetail.builder()
             .showSchedule(showSchedule)
@@ -74,8 +76,8 @@ class ScheduleRepositoryCustomTest {
             .build();
         scheduleRepository.save(createReservationSchedule);
 
-        ReservationSchedule findReservationSchedule = scheduleRepository.monthlyReservationScheduleList(
-            member, now, now).get(0);
+        ReservationSchedule findReservationSchedule = reservationScheduleRepository.monthlyReservationScheduleList(
+            member, now.minusDays(1), now.plusDays(1)).get(0);
 
         assertThat(findReservationSchedule.getReservationDetail().getRow()).isEqualTo(
             Byte.valueOf("0"));
@@ -84,8 +86,7 @@ class ScheduleRepositoryCustomTest {
         assertThat(findReservationSchedule.getReservationDetail().getShowSchedule()
             .getDateTime()).isEqualTo(now);
         assertThat(findReservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
-            .getName())
-            .isEqualTo("name");
+            .getName()).isEqualTo("name");
         assertThat(findReservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
             .getCategory()).isEqualTo(Category.PLAY);
     }
