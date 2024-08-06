@@ -2,7 +2,6 @@ package com.colorpl.reservation.domain;
 
 import com.colorpl.global.common.BaseEntity;
 import com.colorpl.show.domain.schedule.ShowSchedule;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +45,7 @@ public class ReservationDetail extends BaseEntity {
     private ShowSchedule showSchedule;
 
 
-    public void updateDetail(Byte row,Byte col,ShowSchedule showSchedule){
+    public void updateDetail(Byte row, Byte col, ShowSchedule showSchedule) {
         this.row = row;
         this.col = col;
         this.showSchedule = showSchedule;
