@@ -4,6 +4,7 @@ import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
 import com.data.model.response.ResponseReviewCreate
+import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
@@ -55,7 +56,7 @@ interface FeedApi {
     @DELETE("reviews/{reviewId}")
     suspend fun deleteFeedData(
         @Path("reviewId") reviewId: Int,
-    ): ResponsePagedFeed
+    ): ResponseReviewEdit
 
     @PUT("comments/{commentId}/members/{memberId}")
     suspend fun editCommentData(
