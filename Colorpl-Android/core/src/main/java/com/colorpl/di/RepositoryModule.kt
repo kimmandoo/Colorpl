@@ -2,6 +2,7 @@ package com.colorpl.di
 
 import com.data.repository.CommentRepository
 import com.data.repository.FeedRepository
+import com.data.repository.GeocodingRepository
 import com.data.repository.MemberRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
@@ -11,6 +12,7 @@ import com.data.repository.TmapRouteRepository
 import com.data.repository.TokenRepository
 import com.data.repositoryimpl.CommentRepositoryImpl
 import com.data.repositoryimpl.FeedRepositoryImpl
+import com.data.repositoryimpl.GeocodingRepositoryImpl
 import com.data.repositoryimpl.MemberRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
@@ -79,7 +81,13 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
+    <<<< <<< HEAD
     fun bindsMemberRepository(
         memberRepositoryImpl: MemberRepositoryImpl
     ): MemberRepository
+    =======
+    fun bindGeocodingRepository(
+        geocodingRepositoryImpl: GeocodingRepositoryImpl
+    ): GeocodingRepository
+    >>>>>>> develop-android
 }

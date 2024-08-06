@@ -67,6 +67,13 @@ class TicketCreateFragment :
                 getPhotoGallery(pickImageLauncher)
             }
         }
+
+        binding.cbFindRoute.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
+            }
+        }
+
         binding.tvConfirm.setOnClickListener {
             viewModel.setTicketInfo(
                 Description(
@@ -128,6 +135,12 @@ class TicketCreateFragment :
             Timber.d("$state")
             binding.tvConfirm.isSelected = state != ""
             binding.tvConfirm.isEnabled = state != ""
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.geocodingLatLng.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { latlng ->
+            Timber.d("$latlng")
+            if (latlng.latitude == 0.0 || latlng.longitude == 0.0) {
+                binding.cbFindRoute.isChecked = false
+            }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

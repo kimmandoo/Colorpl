@@ -3,6 +3,7 @@ package com.colorpl.di
 import com.data.datasource.CommentDataSource
 import com.data.datasource.FeedDataSource
 import com.data.datasource.local.TokenDataSource
+import com.data.datasource.remote.GeocodingDataSource
 import com.data.datasource.remote.MemberDataSource
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
@@ -11,6 +12,7 @@ import com.data.datasource.remote.TicketDataSource
 import com.data.datasource.remote.TmapRouteDataSource
 import com.data.datasourceimpl.CommentDataSourceImpl
 import com.data.datasourceimpl.FeedDataSourceImpl
+import com.data.datasourceimpl.GeocodingDataSourceImpl
 import com.data.datasourceimpl.MemberDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
@@ -33,6 +35,12 @@ interface DataSourceModule {
     fun provideTokenDataSource(
         tokenDataSourceImpl: TokenDataSourceImpl
     ): TokenDataSource
+
+    @Singleton
+    @Binds
+    fun bindGeoCodingDataSource(
+        geocodingDataSourceImpl: GeocodingDataSourceImpl
+    ): GeocodingDataSource
 
 
     @Singleton
@@ -80,7 +88,7 @@ interface DataSourceModule {
     @Singleton
     @Binds
     fun bindsMemberDataSource(
-        memberDataSourceImpl : MemberDataSourceImpl
-    ) : MemberDataSource
+        memberDataSourceImpl: MemberDataSourceImpl
+    ): MemberDataSource
 
 }
