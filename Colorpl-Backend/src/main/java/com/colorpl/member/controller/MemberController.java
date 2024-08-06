@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -36,12 +37,22 @@ public class MemberController {
         this.blackListService = blackListService;
     }
 
-    @PostMapping("/register")
-    @Operation(summary = "회원가입", description = "회원 가입을 진행하는 API")
-    public ResponseEntity<MemberDTO> registerMember(@RequestBody MemberDTO memberDTO) {
-        Member member = memberService.registerMember(memberDTO);
+    @PostMapping("/register/Oauth")
+    @Operation(summary = "Oauth 회원가입", description = "Oauth 회원 가입을 진행하는 API, multipart 이미지가 필요 없음")
+    public ResponseEntity<MemberDTO> registerOauthMember(@RequestPart MemberDTO memberDTO) {
+        Member member = memberService.registerOauthMember(memberDTO);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(member));
     }
+
+    @PostMapping("/register")
+    @Operation(summary = "회원가입", description = "회원 가입을 진행하는 API")
+    public ResponseEntity<MemberDTO> registerMember(
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        Member member = memberService.registerMember(memberDTO, profileImage);
+        return ResponseEntity.ok(MemberDTO.toMemberDTO(member));
+    }
+
 
     @PostMapping("/sign-in")
     @Operation(summary = "로그인", description = "로그인을 진행하는 API")
@@ -51,12 +62,23 @@ public class MemberController {
     }
 
 
+//    @PutMapping
+//    @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
+//    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO) {
+//        Integer memberId = memberService.getCurrentMemberId();
+//
+//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
+//    }
+
     @PutMapping
     @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
-    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<MemberDTO> updateMember(
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         Integer memberId = memberService.getCurrentMemberId();
 
-        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO,profileImage);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
     }
 
@@ -110,7 +132,7 @@ public class MemberController {
     @PostMapping("/sign-out")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "로그아웃", description = "로그인 된 사용자의 로그 아웃을 진행하는 API, Refresh Token을 BlackList 처리")
-    public ResponseEntity<Void> signOut(@RequestHeader("Refresh") String refreshToken) {
+    public ResponseEntity<Void> signOut(@RequestHeader("Refresh-Token") String refreshToken) {
         try {
             blackListService.signOut(refreshToken);
             return ResponseEntity.noContent().build();
@@ -179,14 +201,33 @@ public class MemberController {
         return ResponseEntity.ok(followingCount);
     }
 
+    @GetMapping("/search/{nickname}")
+    @Operation(summary = "닉네임으로 멤버 검색", description = "특정 닉네임을 가진 모든 멤버를 조회하는 API")
+    public ResponseEntity<List<MemberDTO>> getMembersByNickname(@PathVariable String nickname) {
+        List<MemberDTO> members = memberService.findMembersByNickname(nickname);
+        return ResponseEntity.ok(members);
+    }
+
 
 
 //
 ////------------------------관리자용--------------------------//
+//    @PutMapping("/{memberId}")
+//    @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")
+//    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
+//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
+//    }
+
+
+
     @PutMapping("/{memberId}")
     @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
-        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+    public ResponseEntity<MemberDTO> updateMember(
+        @PathVariable Integer memberId,
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO, profileImage);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
     }
 
@@ -255,6 +296,4 @@ public class MemberController {
         FollowCountDTO followingCount = memberService.getFollowingCount(memberId);
         return ResponseEntity.ok(followingCount);
     }
-
-
 }
