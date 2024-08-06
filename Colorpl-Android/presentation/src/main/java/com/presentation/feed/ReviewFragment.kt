@@ -42,31 +42,8 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
     private fun initUi() {
         binding.tvConfirm.setOnClickListener {
-            // action
             if (viewModel.confirmCheck.value) {
-                if (::photoUri.isInitialized) {
-                    val image = ImageProcessingUtil(binding.root.context).uriToFile(photoUri)
-                    viewModel.createReview(
-                        review = Review(
-                            1,
-                            5,
-                            binding.etContent.text.toString(),
-                            false,
-                            viewModel.selectedEmotion.value
-                        ),
-                        image
-                    )
-                } else {
-                    viewModel.createReview(
-                        review = Review(
-                            1,
-                            5,
-                            binding.etContent.text.toString(),
-                            false,
-                            viewModel.selectedEmotion.value
-                        )
-                    )
-                }
+                createReview()
             }
         }
         binding.ivEnroll.setOnClickListener {
@@ -88,6 +65,24 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
                 toggleEmotion(index)
             }
         }
+    }
+
+    private fun createReview() {
+        val image = if (::photoUri.isInitialized) {
+            ImageProcessingUtil(binding.root.context).uriToFile(photoUri)
+        } else {
+            null
+        }
+        viewModel.createReview(
+            review = Review(
+                1,
+                5,
+                binding.etContent.text.toString(),
+                false,
+                viewModel.selectedEmotion.value
+            ),
+            image
+        )
     }
 
     private fun observeViewModel() {
