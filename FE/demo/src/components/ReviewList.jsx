@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, IconButton, Paper } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
 const ReviewList = ({ reviews, onReviewClick }) => {
@@ -11,7 +11,7 @@ const ReviewList = ({ reviews, onReviewClick }) => {
   };
 
   return (
-    <TableContainer>
+    <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
       <Table>
         <TableHead>
           <TableRow>

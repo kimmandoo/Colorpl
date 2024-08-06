@@ -71,7 +71,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <Box height="100vh" display="flex" alignItems="center" justifyContent="center">
+    <Box height="100vh" display="flex" alignItems="center" justifyContent="center" overflow="auto">
       <SlideFade in={true} offsetY="20px">
         <Box 
           p={8} 

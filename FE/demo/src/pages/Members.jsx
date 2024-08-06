@@ -62,7 +62,7 @@ const Members = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{p: 3}}>
       <Box display="flex" alignItems="center" mb={2} gap={2}>
         <Select
           value={searchParams.category}
