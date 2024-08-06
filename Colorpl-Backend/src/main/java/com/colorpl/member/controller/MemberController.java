@@ -132,7 +132,7 @@ public class MemberController {
     @PostMapping("/sign-out")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "로그아웃", description = "로그인 된 사용자의 로그 아웃을 진행하는 API, Refresh Token을 BlackList 처리")
-    public ResponseEntity<Void> signOut(@RequestHeader("Refresh") String refreshToken) {
+    public ResponseEntity<Void> signOut(@RequestHeader("Refresh-Token") String refreshToken) {
         try {
             blackListService.signOut(refreshToken);
             return ResponseEntity.noContent().build();
@@ -199,6 +199,13 @@ public class MemberController {
 
         FollowCountDTO followingCount = memberService.getFollowingCount(memberId);
         return ResponseEntity.ok(followingCount);
+    }
+
+    @GetMapping("/search/{nickname}")
+    @Operation(summary = "닉네임으로 멤버 검색", description = "특정 닉네임을 가진 모든 멤버를 조회하는 API")
+    public ResponseEntity<List<MemberDTO>> getMembersByNickname(@PathVariable String nickname) {
+        List<MemberDTO> members = memberService.findMembersByNickname(nickname);
+        return ResponseEntity.ok(members);
     }
 
 
@@ -289,6 +296,4 @@ public class MemberController {
         FollowCountDTO followingCount = memberService.getFollowingCount(memberId);
         return ResponseEntity.ok(followingCount);
     }
-
-
 }

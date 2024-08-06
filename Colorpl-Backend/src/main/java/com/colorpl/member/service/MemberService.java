@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -134,54 +135,6 @@ public class MemberService {
 //        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
 //        return memberRepository.save(existingMember);
 //    }
-
-
-//    @Transactional
-//    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
-//        Member existingMember = memberRepository.findById(memberId)
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
-//        String email = existingMember.getEmail();
-//
-//        // Ensure only nickname and password can be updated
-//        if (memberDTO.getEmail() != null && !memberDTO.getEmail().equals(email)) {
-//            throw new IllegalArgumentException("이메일은 변경할 수 없습니다.");
-//        }
-//        if (memberDTO.getNickname() != null) {
-//            existingMember.updateNickname(memberDTO.getNickname());
-//        }
-//        if (memberDTO.getPassword() != null) {
-//            existingMember.updatePassword(passwordEncoder.encode(memberDTO.getPassword()));
-//        }
-//        if (memberDTO.getProfile() != null) {
-//            existingMember.updateNickname(memberDTO.getProfile());
-//        }
-//
-//        return memberRepository.save(existingMember);
-//    }
-
-//    @Transactional
-//    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
-//        Member existingMember = memberRepository.findById(memberId)
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
-//
-//        String email = existingMember.getEmail();
-//
-//        if (memberDTO.getEmail() != null && !memberDTO.getEmail().equals(email)) {
-//            throw new IllegalArgumentException("이메일은 변경할 수 없습니다.");
-//        }
-//        if (memberDTO.getNickname() != null) {
-//            existingMember.updateNickname(memberDTO.getNickname());
-//        }
-//        if (memberDTO.getPassword() != null) {
-//            existingMember.updatePassword(passwordEncoder.encode(memberDTO.getPassword()));
-//        }
-//        if (memberDTO.getProfile() != null) {
-//            existingMember.updateProfile(memberDTO.getProfile());
-//        }
-//
-//        return memberRepository.save(existingMember);
-//    }
-
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO, MultipartFile profileImage) {
         // 1. 멤버 존재 확인
@@ -320,16 +273,17 @@ public class MemberService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return Integer.parseInt(userDetails.getUsername());
     }
-
-    //리뷰 조회는 querydsl
-//    @Transactional
-//    public List<Review> getMyReviews(Integer memberId) {
-//        // 리뷰 엔티티가 Member와 연관된다고 가정
-//        Member member = memberRepository.findById(memberId)
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
-//        return member.getReviews();  // Member 엔티티에 getReviews() 메서드 추가
-//    }
-    //결제 내역 조회는 완성된 이후에
+    // nickname으로 멤버를 조회하는 메서드
+    @Transactional
+    public List<MemberDTO> findMembersByNickname(String nickname) {
+        List<Member> members = memberRepository.findByNickname(nickname);
+        if (members.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        return members.stream()
+            .map(MemberDTO::toMemberDTO)
+            .collect(Collectors.toList());
+    }
 
 
 }

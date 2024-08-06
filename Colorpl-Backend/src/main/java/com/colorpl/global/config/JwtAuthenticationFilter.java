@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,20 +29,27 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String accessToken = parseBearerToken(request, HttpHeaders.AUTHORIZATION);	// parseBearerToken() 변경에 따른 수정
+            String accessToken = parseBearerToken(request, HttpHeaders.AUTHORIZATION);
             User user = parseUserSpecification(accessToken);
             AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user, accessToken, user.getAuthorities());
             authenticated.setDetails(new WebAuthenticationDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
-        } catch (ExpiredJwtException e) {	// 변경
-            reissueAccessToken(request, response, e);
+        } catch (ExpiredJwtException e) {
+            String newAccessToken = reissueAccessToken(request, response, e);
+            response.setHeader("New-Access-Token", newAccessToken);
+            response.setContentType("application/json");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("{\"newAccessToken\": \"" + newAccessToken + "\"}");
+            response.getWriter().flush();
+            return;
         } catch (Exception e) {
             request.setAttribute("exception", e);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            authenticationEntryPoint.commence(request, response, null);
             return;
         }
 
@@ -65,7 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return new User(split[0], "", List.of(new SimpleGrantedAuthority(split[1])));
     }
-    private void reissueAccessToken(HttpServletRequest request, HttpServletResponse response, Exception exception) {
+
+    private String reissueAccessToken(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
         try {
             String refreshToken = parseBearerToken(request, "Refresh-Token");
             if (refreshToken == null) {
@@ -80,8 +89,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticated);
 
             response.setHeader("New-Access-Token", newAccessToken);
+            return newAccessToken;
         } catch (Exception e) {
             request.setAttribute("exception", e);
+            throw new IOException("Failed to reissue access token", e);
         }
     }
 }
