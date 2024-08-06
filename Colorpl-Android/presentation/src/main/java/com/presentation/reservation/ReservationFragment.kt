@@ -2,6 +2,9 @@ package com.presentation.reservation
 
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
@@ -13,7 +16,11 @@ import com.presentation.component.adapter.reservation.ReservationInfoAdapter
 import com.presentation.component.dialog.DateRangePickerDialog
 import com.presentation.component.dialog.LocationPickerDialog
 import com.presentation.util.getFilterItems
+import com.presentation.viewmodel.ReservationListViewModel
+import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kr.co.bootpay.android.Bootpay
 import kr.co.bootpay.android.events.BootpayEventListener
 import kr.co.bootpay.android.models.BootItem
@@ -30,6 +37,7 @@ class ReservationFragment :
     @Inject
     @Named("bootpay")
     lateinit var applicationId: String
+    private val viewModel: ReservationListViewModel by viewModels()
 
     private val filterAdapter by lazy {
         FilterAdapter(onItemClickListener = { filterItem ->
@@ -47,8 +55,18 @@ class ReservationFragment :
 
     override fun initView() {
         initFilter()
-        initReservationInfo()
+//        initReservationInfo()
         initClickListener()
+        initReservationList()
+    }
+
+    private fun initReservationList() {
+        viewModel.getReservationList()
+        viewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationList ->
+            viewModel.reservationList.value = reservationList
+            reservationInfoAdapter.submitList(reservationList)
+            Timber.tag("reservationList").d(reservationList.toString())
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initFilter() {

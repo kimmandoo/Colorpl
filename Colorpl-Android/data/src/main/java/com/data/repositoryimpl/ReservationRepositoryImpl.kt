@@ -3,6 +3,7 @@ package com.data.repositoryimpl
 import com.data.api.safeApiCall
 import com.data.datasource.remote.ReservationDataSource
 import com.data.model.response.ReservationInfo
+import com.data.model.response.ResponseReservationShows
 import com.data.repository.ReservationRepository
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,14 @@ class ReservationRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 reservationDataSource.getReservationShow(showsId)
+            })
+        }
+    }
+
+    override suspend fun getReservationAllShows(): Flow<ApiResult<ResponseReservationShows>> {
+        return flow {
+            emit(safeApiCall {
+                reservationDataSource.getReservationAllShow()
             })
         }
     }

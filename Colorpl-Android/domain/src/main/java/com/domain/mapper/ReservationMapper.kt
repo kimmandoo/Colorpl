@@ -5,7 +5,6 @@ import com.domain.model.ReservationInfo
 import timber.log.Timber
 
 fun com.data.model.response.ReservationInfo.toEntity(): ReservationInfo {
-    Timber.d("mapper : $posterImagePath")
     return ReservationInfo(
         reservationInfoId = this.id,
         contentImg = this.posterImagePath,

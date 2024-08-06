@@ -5,6 +5,7 @@ import com.domain.usecase.FeedUseCase
 import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.NotificationUseCase
 import com.domain.usecase.OpenAiUseCase
+import com.domain.usecase.ReservationListUseCase
 import com.domain.usecase.ReviewCreateUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.usecase.TicketCreateUseCase
@@ -14,6 +15,7 @@ import com.domain.usecaseimpl.feed.FeedUseCaseImpl
 import com.domain.usecaseimpl.naver.GeocodingUesCaseImpl
 import com.domain.usecaseimpl.notification.NotificationUseCaseImpl
 import com.domain.usecaseimpl.openai.OpenAiUseCaseImpl
+import com.domain.usecaseimpl.reservation.ReservationListUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewCreateUseCaseImpl
 import com.domain.usecaseimpl.reservation.ReservationUseCaseImpl
 import com.domain.usecaseimpl.ticket.TicketCreateUseCaseImpl
@@ -70,6 +72,12 @@ interface UseCaseModule {
     fun bindsReservationUseCase(
         reservationUseCaseImpl: ReservationUseCaseImpl
     ): ReservationUseCase
+
+    @Binds
+    @Singleton
+    fun bindsReservationListUseCase(
+        reservationListUseCaseImpl: ReservationListUseCaseImpl
+    ): ReservationListUseCase
 
 
     @Binds
