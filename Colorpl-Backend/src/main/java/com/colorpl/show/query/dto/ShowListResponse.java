@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class ShowListResponse {
 
+    private Long showDetailId;
     private String name;
     private String runtime;
     private Map<String, Integer> priceBySeatClass;
@@ -18,6 +19,7 @@ public class ShowListResponse {
 
     public static ShowListResponse from(ShowDetail showDetail) {
         return ShowListResponse.builder()
+            .showDetailId(showDetail.getId())
             .name(showDetail.getName())
             .runtime(showDetail.getRuntime())
             .priceBySeatClass(showDetail.getPriceBySeatClass())
