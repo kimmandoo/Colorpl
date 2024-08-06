@@ -11,20 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class ShowListService {
+public class ShowDetailListService {
 
     private final ShowDetailRepository showDetailRepository;
 
     @Transactional(readOnly = true)
-    public List<ShowDetailListResponse> showList() {
-        return showDetailRepository.showList().stream()
-            .map(ShowDetailListResponse::from)
-            .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<ShowDetailListResponse> search(ShowDetailSearchCondition condition) {
-        return showDetailRepository.search(condition).stream()
+    public List<ShowDetailListResponse> showDetailList(ShowDetailSearchCondition condition) {
+        return showDetailRepository.showDetailList(condition).stream()
             .map(ShowDetailListResponse::from)
             .toList();
     }

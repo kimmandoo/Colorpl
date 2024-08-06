@@ -7,6 +7,7 @@ import com.colorpl.show.domain.detail.Category;
 import com.colorpl.show.domain.detail.ShowDetail;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +20,13 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> showList() {
-        return queryFactory.select(showDetail).from(showDetail).where().fetch();
-    }
-
-    @Override
-    public List<ShowDetail> search(ShowDetailSearchCondition condition) {
-
-        LocalDateTime from = condition.getDate().atStartOfDay();
-        LocalDateTime to = from.plusDays(1);
-
+    public List<ShowDetail> showDetailList(ShowDetailSearchCondition condition) {
         return queryFactory
             .select(showDetail).distinct()
-            .from(showSchedule)
-            .join(showSchedule.showDetail, showDetail).fetchJoin()
+            .from(showDetail)
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
-                dateTimeBetween(from, to),
+                dateTimeBetween(condition.getDate()),
                 areaEq(condition.getArea()),
                 nameContains(condition.getKeyword()),
                 categoryEq(condition.getCategory())
@@ -42,8 +34,16 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .fetch();
     }
 
-    private BooleanExpression dateTimeBetween(LocalDateTime from, LocalDateTime to) {
-        return from != null && to != null ? showSchedule.dateTime.between(from, to) : null;
+    private BooleanExpression dateTimeBetween(LocalDate date) {
+
+        if (date == null) {
+            return null;
+        }
+
+        LocalDateTime from = date.atStartOfDay();
+        LocalDateTime to = from.plusDays(1);
+
+        return showSchedule.dateTime.between(from, to);
     }
 
     private BooleanExpression areaEq(String area) {
