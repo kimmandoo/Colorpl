@@ -8,7 +8,7 @@ import javax.inject.Inject
 class CommentDataSourceImpl @Inject constructor(
     private val feedApi: FeedApi
 ): CommentDataSource{
-    override suspend fun getComment(feedId: Int, page: Int, items: Int): ResponsePagedComment {
-        return feedApi.getCommentData(feedId, page, items)
+    override suspend fun getComment(reviewId: Int, page: Int, size: Int): ResponsePagedComment {
+        return feedApi.getCommentData(reviewId, page, size)
     }
 }

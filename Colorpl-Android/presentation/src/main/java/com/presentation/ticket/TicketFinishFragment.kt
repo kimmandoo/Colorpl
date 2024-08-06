@@ -1,6 +1,7 @@
 package com.presentation.ticket
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -41,9 +42,16 @@ class TicketFinishFragment :
     private fun observeViewModel() {
         viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { ticketId ->
-                if (ticketId > 0) {
-                    findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
-                    binding.tvConfirm.isEnabled = true
+                when {
+                    ticketId >= 0 -> {
+                        findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
+                        binding.tvConfirm.isEnabled = true
+                    }
+
+                    ticketId < 0 -> {
+                        Toast.makeText(requireContext(), "티켓 생성에 실패했습니다", Toast.LENGTH_SHORT).show()
+                        binding.tvConfirm.isEnabled = true
+                    }
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
