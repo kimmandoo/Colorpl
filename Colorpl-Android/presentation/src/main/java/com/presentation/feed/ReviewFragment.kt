@@ -2,6 +2,7 @@ package com.presentation.feed
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -13,8 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReviewBinding
+import com.domain.model.Review
 import com.presentation.base.BaseDialogFragment
-import com.presentation.base.BaseFragment
+import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.ReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,22 +29,45 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
     private lateinit var emotions: List<ImageView>
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var photoUri: Uri
     private val viewModel: ReviewViewModel by viewModels()
 
     override fun initView(savedInstanceState: Bundle?) {
+        observeViewModel()
         initGalleryPhoto()
         initUi()
-        observeViewModel()
         initEmotion()
         checkEditText()
     }
 
-
-
     private fun initUi() {
         binding.tvConfirm.setOnClickListener {
             // action
-            navigatePopBackStack()
+            if (viewModel.confirmCheck.value) {
+                if (::photoUri.isInitialized) {
+                    val image = ImageProcessingUtil(binding.root.context).uriToFile(photoUri)
+                    viewModel.createReview(
+                        review = Review(
+                            1,
+                            5,
+                            binding.etContent.text.toString(),
+                            false,
+                            viewModel.selectedEmotion.value
+                        ),
+                        image
+                    )
+                } else {
+                    viewModel.createReview(
+                        review = Review(
+                            1,
+                            5,
+                            binding.etContent.text.toString(),
+                            false,
+                            viewModel.selectedEmotion.value
+                        )
+                    )
+                }
+            }
         }
         binding.ivEnroll.setOnClickListener {
             getPhotoGallery(pickImageLauncher)
@@ -72,6 +97,12 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
                     binding.tvConfirm.isSelected = state
                 }
             }
+
+            launch {
+                viewModel.reviewResponse.collectLatest { reviewId ->
+                    if (reviewId > 0) navigatePopBackStack()
+                }
+            }
         }
     }
 
@@ -80,6 +111,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
+                        photoUri = uri
                         Glide.with(binding.root.context).load(uri).centerCrop()
                             .into(binding.ivReview)
                         binding.ivEnroll.visibility = View.GONE

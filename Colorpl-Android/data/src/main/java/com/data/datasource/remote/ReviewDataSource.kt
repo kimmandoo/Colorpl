@@ -8,7 +8,7 @@ interface ReviewDataSource {
     suspend fun createReview(
         memberId: Int,
         ticketId: Int,
-        review: MultipartBody.Part,
+        review: MultipartBody.Part?,
         request: RequestBody
     ): ResponseReviewCreate
 }

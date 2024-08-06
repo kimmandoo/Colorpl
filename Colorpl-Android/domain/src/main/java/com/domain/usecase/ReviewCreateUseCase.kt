@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface ReviewCreateUseCase {
-    suspend operator fun invoke(
-        image: File,
+    operator fun invoke(
+        image: File?,
         review: Review
     ): Flow<DomainResult<Int>>
 }

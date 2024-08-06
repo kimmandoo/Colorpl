@@ -10,6 +10,6 @@ interface ReviewRepository {
     suspend fun createReview(
         ticketId: Int,
         request: RequestReviewCreate,
-        file: File
+        file: File?
     ): Flow<ApiResult<ResponseReviewCreate>>
 }

@@ -4,11 +4,11 @@ import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
 import com.data.model.response.ResponseReviewCreate
-import com.data.model.response.ResponseTicketCreate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
@@ -24,11 +24,12 @@ interface FeedApi {
         @Query("size") size: Int
     ): List<Feed>
 
+    @Multipart
     @POST("reviews/members/{memberId}/tickets/{ticketId}")
     suspend fun createUserFeedData(
         @Path("memberId") memberId: Int,
-        @Path("ticketId") reviewId: Int,
-        @Part file: MultipartBody.Part,
+        @Path("ticketId") ticketId: Int,
+        @Part file: MultipartBody.Part?,
         @Part("request") request: RequestBody,
     ): ResponseReviewCreate
 

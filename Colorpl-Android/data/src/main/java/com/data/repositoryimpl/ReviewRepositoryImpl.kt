@@ -19,16 +19,16 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
     override suspend fun createReview(
         ticketId: Int,
         request: RequestReviewCreate,
-        file: File
+        file: File?
     ): Flow<ApiResult<ResponseReviewCreate>> = flow {
         emit(safeApiCall {
-            Timber.d("review: ${file}\n request:$request")
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
-            val filePart: MultipartBody.Part =
-                FormDataConverterUtil.getMultiPartBody("file", file)
+            val filePart: MultipartBody.Part? =
+                FormDataConverterUtil.getNullableMultiPartBody("file", file)
+            Timber.d("review: ${filePart}\n request:$requestPart")
             reviewDataSource.createReview(
-                memberId = 1,
-                ticketId = ticketId,
+                memberId = request.memberId,
+                ticketId = request.ticketId,
                 review = filePart,
                 request = requestPart
             )
