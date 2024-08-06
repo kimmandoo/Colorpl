@@ -3,7 +3,7 @@ package com.domain.usecaseimpl.sign
 import com.data.repository.SignRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toSignUpParam
-import com.domain.model.User
+import com.domain.model.Member
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.flow
 import timber.log.Timber
@@ -13,8 +13,8 @@ class SignUpUseCase @Inject constructor(
     private val signRepository: SignRepository
 ) {
 
-    suspend fun signUp(user: User) = flow {
-        signRepository.signUp(user.toSignUpParam()).collect { result ->
+    suspend fun signUp(member: Member) = flow {
+        signRepository.signUp(member.toSignUpParam()).collect { result ->
             Timber.d("회원 가입 확인 $result")
             when (result) {
                 is ApiResult.Success -> {

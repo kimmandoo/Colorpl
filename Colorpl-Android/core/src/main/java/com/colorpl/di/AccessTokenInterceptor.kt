@@ -17,7 +17,7 @@ class AccessTokenInterceptor @Inject constructor(
         val originRequest = chain.request()
         val requestBuilder = originRequest.newBuilder()
         val accessToken: String? = runBlocking {
-            var token : String? = ""
+            var token: String? = ""
             accessTokenUseCase.getAccessToken().collectLatest { response ->
                 response.onSuccess { data ->
                     token = data
@@ -28,8 +28,8 @@ class AccessTokenInterceptor @Inject constructor(
             }
             token
         }
-        Timber.d("요거 확인요 $accessToken")
-        val request = requestBuilder.addHeader("accessToken", accessToken ?: "").build()
+        Timber.d("액세스 토큰 확인용 $accessToken")
+        val request = requestBuilder.addHeader("Authorization", "Bearer $accessToken").build()
         return chain.proceed(request)
     }
 }

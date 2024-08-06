@@ -1,6 +1,7 @@
 package com.colorpl.di
 
 import com.data.api.FeedApi
+import com.data.api.MemberApi
 import com.data.api.NaverApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
@@ -69,5 +70,11 @@ object ApiModule {
         retrofit: Retrofit
     ): SignApi = retrofit.create()
 
+    @Singleton
+    @Provides
+    fun provideMemberApi(
+        @NormalRetrofit
+        retrofit: Retrofit
+    ): MemberApi = retrofit.create()
 
 }

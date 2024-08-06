@@ -2,7 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.domain.model.User
+import com.domain.model.Member
 import com.domain.usecaseimpl.sign.SignUpUseCase
 import com.domain.util.DomainResult
 import com.presentation.component.custom.ListStateFlow
@@ -82,8 +82,8 @@ class SignUpViewModel @Inject constructor(
         checkCompleteNext()
     }
 
-    private val _signUpUser = MutableStateFlow(User())
-    val signUpUser: StateFlow<User> get() = _signUpUser
+    private val _signUpMember = MutableStateFlow(Member())
+    val signUpMember: StateFlow<Member> get() = _signUpMember
 
     private fun checkSignNext() {
         combine(
@@ -112,14 +112,14 @@ class SignUpViewModel @Inject constructor(
 
 
     fun signUp() { //회원 가입 서버 통신
-        val user = User(
+        val member = Member(
             email = userEmail.value,
             password = userPassWord.value,
             nickName = userNickName.value,
             profileImage = userImage.value
         )
         viewModelScope.launch {
-            signUpUseCase.signUp(user).collectLatest {
+            signUpUseCase.signUp(member).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
                         _signUpEvent.emit(SignUpEventState.SignUpSuccess)
