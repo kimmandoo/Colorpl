@@ -4,5 +4,6 @@ data class ResponseSignUp(
     val email : String,
     val nickname : String,
     val password : String,
-    val profile : String
+    val profile : String,
+    val categories : List<String>
 )

@@ -2,11 +2,14 @@ package com.data.api
 
 import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
-import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
 import com.data.model.response.ResponseSignUp
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface SignApi {
 
@@ -15,10 +18,11 @@ interface SignApi {
         @Body requestSignIn: RequestSignIn
     ): ResponseSignIn
 
-
+    @Multipart
     @POST("members/register")
     suspend fun postSignUp(
-        @Body requestSignUp: RequestSignUp
+        @Part("memberDTO") memberDTO: RequestBody,
+        @Part profileImage: MultipartBody.Part?
     ): ResponseSignUp
 
     @POST("oauth-sign-in")

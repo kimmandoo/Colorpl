@@ -4,9 +4,11 @@ import com.data.api.SignApi
 import com.data.datasource.remote.SignDataSource
 import com.data.model.request.RequestGoogleSignIn
 import com.data.model.request.RequestSignIn
-import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
 import com.data.model.response.ResponseSignUp
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import timber.log.Timber
 import javax.inject.Inject
 
 class SignDataSourceImpl @Inject constructor(
@@ -19,8 +21,12 @@ class SignDataSourceImpl @Inject constructor(
     }
 
 
-    override suspend fun postSignUp(requestSignUp: RequestSignUp): ResponseSignUp {
-        return signApi.postSignUp(requestSignUp)
+    override suspend fun postSignUp(
+        requestSignUp: RequestBody,
+        profileImage: MultipartBody.Part?
+    ): ResponseSignUp {
+        Timber.d("확인 $requestSignUp ,,,, $profileImage")
+        return signApi.postSignUp(requestSignUp, profileImage)
     }
 
     override suspend fun postGoogleSignIn(requestGoogleSignIn: RequestGoogleSignIn): ResponseSignIn {
