@@ -3,10 +3,12 @@ package com.data.api
 import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
+import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
 import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -51,7 +53,8 @@ interface FeedApi {
     suspend fun editUserFeedData(
         @Path("memberId") memberId: Int,
         @Path("reviewId") reviewId: Int,
-    ): ResponsePagedFeed
+        @Body requestReviewEdit: RequestReviewEdit
+    ): ResponseReviewEdit
 
     @DELETE("reviews/{reviewId}")
     suspend fun deleteFeedData(

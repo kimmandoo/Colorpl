@@ -1,5 +1,6 @@
 package com.data.datasource.remote
 
+import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
 import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
@@ -14,4 +15,6 @@ interface ReviewDataSource {
     ): ResponseReviewCreate
 
     suspend fun deleteReview(reviewId: Int): ResponseReviewEdit
+
+    suspend fun editReview(memberId: Int, reviewId: Int, requestReviewEdit: RequestReviewEdit): ResponseReviewEdit
 }

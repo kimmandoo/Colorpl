@@ -3,6 +3,7 @@ package com.data.repositoryimpl
 import com.data.api.safeApiCall
 import com.data.datasource.remote.ReviewDataSource
 import com.data.model.request.RequestReviewCreate
+import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
 import com.data.model.response.ResponseReviewEdit
 import com.data.repository.ReviewRepository
@@ -39,6 +40,16 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
     override suspend fun deleteReview(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>> = flow {
         emit(safeApiCall {
             reviewDataSource.deleteReview(reviewId)
+        })
+    }
+
+    override suspend fun editReview(
+        memberId: Int,
+        reviewId: Int,
+        requestReviewEdit: RequestReviewEdit
+    ): Flow<ApiResult<ResponseReviewEdit>> = flow {
+        emit(safeApiCall {
+            reviewDataSource.editReview(memberId, reviewId, requestReviewEdit)
         })
     }
 }

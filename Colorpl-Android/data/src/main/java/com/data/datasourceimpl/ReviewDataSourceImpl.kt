@@ -2,6 +2,7 @@ package com.data.datasourceimpl
 
 import com.data.api.FeedApi
 import com.data.datasource.remote.ReviewDataSource
+import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
 import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
@@ -20,5 +21,13 @@ class ReviewDataSourceImpl @Inject constructor(private val feedApi: FeedApi) : R
 
     override suspend fun deleteReview(reviewId: Int): ResponseReviewEdit {
         return feedApi.deleteFeedData(reviewId)
+    }
+
+    override suspend fun editReview(
+        memberId: Int,
+        reviewId: Int,
+        requestReviewEdit: RequestReviewEdit
+    ): ResponseReviewEdit {
+        return feedApi.editUserFeedData(memberId, reviewId, requestReviewEdit)
     }
 }
