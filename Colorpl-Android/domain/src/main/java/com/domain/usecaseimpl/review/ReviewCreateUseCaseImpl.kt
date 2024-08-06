@@ -19,11 +19,11 @@ class ReviewCreateUseCaseImpl @Inject constructor(private val reviewRepository: 
             .collectLatest { result ->
                 when (result) {
                     is ApiResult.Error -> {
-                        DomainResult.error(result.exception)
+                        emit(DomainResult.error(result.exception))
                     }
 
                     is ApiResult.Success -> {
-                        DomainResult.success(result.data.reviewId)
+                        emit(DomainResult.success(result.data.reviewId))
                     }
                 }
             }
