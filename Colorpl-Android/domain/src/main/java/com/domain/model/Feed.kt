@@ -3,13 +3,19 @@ package com.domain.model
 import java.util.Date
 
 data class Feed(
-    val feedId: Int,
+    val category: String,
+    val commentPageSize: Int,
+    val commentsCount: Int,
+    val content: String,
+    val createDate: String,
+    val emotionMode: Int,
+    val empathyCount: Int,
+    val id: Int,
+    val contentImgUrl: String,
+    val isEmpathy: Boolean,
+    val isMyReview: Boolean,
+    val isSpoiler: Boolean,
+    val ticketId: Int,
     val title: String,
-    val userName: String,
-    val userProfileImg: String?,
-    val contentImg: String?,
-    val emotionMode: String,
-    val emotionTotal: Int,
-    val commentTotal: Int,
-    val uploadedDate: Date
+    val writer: String
 )

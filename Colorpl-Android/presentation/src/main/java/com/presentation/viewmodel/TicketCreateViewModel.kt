@@ -12,6 +12,7 @@ import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,10 +31,11 @@ class TicketCreateViewModel @Inject constructor(
     val description: StateFlow<Description?> = _description
     private val _category = MutableStateFlow("")
     val category: StateFlow<String> = _category
-    private val _createResponse = MutableStateFlow<Int>(-1)
-    val createResponse: StateFlow<Int> = _createResponse
     private val _geocodingLatLng = MutableSharedFlow<LatLng>()
     val geocodingLatLng = _geocodingLatLng.asSharedFlow()
+    private val _createResponse = MutableSharedFlow<Int>()
+    val createResponse: SharedFlow<Int> = _createResponse.asSharedFlow()
+
     fun setCategory(text: String) {
         _category.value = text
     }
@@ -77,13 +79,13 @@ class TicketCreateViewModel @Inject constructor(
                         category = _category.value
                     )
                 ).collectLatest { response ->
-                    _createResponse.value = when (response) {
+                    when (response) {
                         is DomainResult.Success -> {
-                            response.data
+                            _createResponse.emit(response.data)
                         }
 
                         is DomainResult.Error -> {
-                            -1
+                            _createResponse.emit(-1)
                         }
                     }
                 }
