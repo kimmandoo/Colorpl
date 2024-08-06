@@ -2,7 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.domain.model.User
+import com.domain.model.Member
 import com.domain.usecaseimpl.sign.SignInUseCase
 import com.domain.util.DomainResult
 import com.presentation.sign.model.SignInEventState
@@ -26,7 +26,7 @@ class LoginViewModel @Inject constructor(
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
-            signInUseCase.signIn(User(email, password)).collectLatest {
+            signInUseCase.signIn(Member(email, password)).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
                         _signInEvent.emit(SignInEventState.SignInSuccess)
