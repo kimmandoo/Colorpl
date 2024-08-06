@@ -6,6 +6,7 @@ import com.data.repository.GeocodingRepository
 import com.data.repository.MemberRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
+import com.data.repository.ReviewRepository
 import com.data.repository.ReservationRepository
 import com.data.repository.SignRepository
 import com.data.repository.TicketRepository
@@ -17,6 +18,7 @@ import com.data.repositoryimpl.GeocodingRepositoryImpl
 import com.data.repositoryimpl.MemberRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
+import com.data.repositoryimpl.ReviewRepositoryImpl
 import com.data.repositoryimpl.ReservationRepositoryImpl
 import com.data.repositoryimpl.SignRepositoryImpl
 import com.data.repositoryimpl.TicketRepositoryImpl
@@ -35,55 +37,55 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun provideNotificationRepository(
+    fun bindsNotificationRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
     ): NotificationRepository
 
     @Singleton
     @Binds
-    fun provideTmapRouteRepository(
+    fun bindsTmapRouteRepository(
         tmapRouteRepositoryImpl: TmapRouteRepositoryImpl
     ): TmapRouteRepository
 
     @Singleton
     @Binds
-    fun provideOpenAiRepository(
+    fun bindsOpenAiRepository(
         openAiRepositoryImpl: OpenAiRepositoryImpl
     ): OpenAiRepository
 
     @Singleton
     @Binds
-    fun provideFeedPagingRepository(
+    fun bindsFeedPagingRepository(
         feedRepositoryImpl: FeedRepositoryImpl
     ): FeedRepository
 
     @Singleton
     @Binds
-    fun provideSignRepository(
+    fun bindsSignRepository(
         signRepositoryImpl: SignRepositoryImpl
     ): SignRepository
 
     @Singleton
     @Binds
-    fun provideTokenRepository(
+    fun bindsTokenRepository(
         tokenRepositoryImpl: TokenRepositoryImpl
     ): TokenRepository
 
     @Singleton
     @Binds
-    fun provideCommentPagingRepository(
+    fun bindsCommentPagingRepository(
         commentPagingRepositoryImpl: CommentRepositoryImpl
     ): CommentRepository
 
     @Singleton
     @Binds
-    fun provideTicketRepository(
+    fun bindsTicketRepository(
         ticketRepositoryImpl: TicketRepositoryImpl
     ): TicketRepository
 
     @Singleton
     @Binds
-    fun bindReservationRepository(
+    fun bindsReservationRepository(
         reservationRepositoryImpl: ReservationRepositoryImpl
     ): ReservationRepository
 
@@ -96,8 +98,13 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    fun bindGeocodingRepository(
+    fun bindsGeocodingRepository(
         geocodingRepositoryImpl: GeocodingRepositoryImpl
     ): GeocodingRepository
 
+    @Singleton
+    @Binds
+    fun bindsReviewRepository(
+        reviewRepositoryImpl: ReviewRepositoryImpl
+    ): ReviewRepository
 }

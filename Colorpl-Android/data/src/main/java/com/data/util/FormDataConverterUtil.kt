@@ -32,4 +32,14 @@ object FormDataConverterUtil {
             body = file.asRequestBody(MIME_TYPE_IMAGE.toMediaType()),
         )
     }
+
+    fun getNullableMultiPartBody(key: String, file: File?): MultipartBody.Part? {
+        return file?.asRequestBody(MIME_TYPE_IMAGE.toMediaType())?.let {
+            MultipartBody.Part.createFormData(
+                name = key,
+                filename = file.name,
+                body = it,
+            )
+        }
+    }
 }

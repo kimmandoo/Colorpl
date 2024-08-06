@@ -8,27 +8,27 @@ data class Feed(
     @SerialName("category")
     val category: String,
     @SerialName("commentpagesize")
-    val commentPageSize: Int,
+    val commentpagesize: Int,
     @SerialName("commentscount")
-    val commentsCount: Int,
+    val commentscount: Int,
     @SerialName("content")
     val content: String,
     @SerialName("createdate")
-    val createDate: String,
+    val createdate: String,
     @SerialName("emotion")
-    val emotionMode: Int,
+    val emotion: Int,
     @SerialName("empathy")
-    val empathyCount: Int,
+    val empathy: Int,
     @SerialName("id")
     val id: Int,
     @SerialName("imgurl")
-    val contentImgUrl: String,
+    val imgurl: String,
     @SerialName("myempathy")
-    val isEmpathy: Boolean,
+    val myempathy: Boolean,
     @SerialName("myreview")
-    val isMyReview: Boolean,
+    val myreview: Boolean,
     @SerialName("spoiler")
-    val isSpoiler: Boolean,
+    val spoiler: Boolean,
     @SerialName("ticketId")
     val ticketId: Int,
     @SerialName("title")

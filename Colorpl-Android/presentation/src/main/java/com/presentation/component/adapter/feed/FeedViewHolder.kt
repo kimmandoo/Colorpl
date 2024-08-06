@@ -1,6 +1,7 @@
 package com.presentation.component.adapter.feed
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.colorpl.presentation.databinding.ItemFeedBinding
 import com.domain.model.Feed
 
@@ -15,8 +16,18 @@ class FeedViewHolder(
 
     fun bind(data: Feed) {
         binding.apply {
-            ivContent.setOnClickListener {
-                onFeedContentClickListener()
+            val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
+            tvTitle.text = data.title
+            tvContent.text = data.content
+            tvEmotion.text = data.emotionMode.toString()
+            tvProfile.text = data.writer
+            tvCommentCnt.text = data.commentsCount.toString()
+            tvUploadDate.text = data.createDate
+            Glide.with(binding.root.context).load(data.contentImgUrl).centerCrop().into(ivContent)
+            clickScope.forEach {
+                it.setOnClickListener {
+                    onFeedContentClickListener()
+                }
             }
         }
     }

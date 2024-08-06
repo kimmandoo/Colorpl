@@ -9,7 +9,7 @@ import javax.inject.Inject
 class FeedDataSourceImpl @Inject constructor(
     private val feedApi: FeedApi
 ) : FeedDataSource {
-    override suspend fun getFeed(page: Int, size: Int): List<Feed> {
+    override suspend fun getFeed(page: Int, size: Int): ResponsePagedFeed {
         return feedApi.getAllFeedData(memberId = 1, page, size)
     }
 }

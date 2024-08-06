@@ -22,6 +22,7 @@ suspend fun <T> safeApiCall(
                     throwable.printStackTrace()
                     ApiResult.error(Exception(NETWORK_ERROR))
                 }
+
                 is HttpException -> {
                     throwable.printStackTrace()
                     val code = throwable.code()

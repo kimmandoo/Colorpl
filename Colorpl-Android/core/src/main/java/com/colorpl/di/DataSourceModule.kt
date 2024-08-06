@@ -8,6 +8,7 @@ import com.data.datasource.remote.MemberDataSource
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
 import com.data.datasource.remote.ReservationDataSource
+import com.data.datasource.remote.ReviewDataSource
 import com.data.datasource.remote.SignDataSource
 import com.data.datasource.remote.TicketDataSource
 import com.data.datasource.remote.TmapRouteDataSource
@@ -18,6 +19,7 @@ import com.data.datasourceimpl.MemberDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.ReservationDataSourceImpl
+import com.data.datasourceimpl.ReviewDataSourceImpl
 import com.data.datasourceimpl.SignDataSourceImpl
 import com.data.datasourceimpl.TicketDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
@@ -34,50 +36,50 @@ interface DataSourceModule {
 
     @Singleton
     @Binds
-    fun provideTokenDataSource(
+    fun bindsTokenDataSource(
         tokenDataSourceImpl: TokenDataSourceImpl
     ): TokenDataSource
 
     @Singleton
     @Binds
-    fun bindGeoCodingDataSource(
+    fun bindsGeoCodingDataSource(
         geocodingDataSourceImpl: GeocodingDataSourceImpl
     ): GeocodingDataSource
 
 
     @Singleton
     @Binds
-    fun provideNotificationDataSource(
+    fun bindsNotificationDataSource(
         notificationDataSourceImpl: NotificationDataSourceImpl
     ): NotificationDataSource
 
     @Singleton
     @Binds
-    fun provideTmapRouteDataSource(
+    fun bindsTmapRouteDataSource(
         tmapRouteDataSourceImpl: TmapRouteDataSourceImpl
     ): TmapRouteDataSource
 
     @Singleton
     @Binds
-    fun provideOpenAiDataSource(
+    fun bindsOpenAiDataSource(
         openAiDataSourceImpl: OpenAiDataSourceImpl
     ): OpenAiDataSource
 
     @Singleton
     @Binds
-    fun provideFeedDataSource(
+    fun bindsFeedDataSource(
         feedDataSourceImpl: FeedDataSourceImpl
     ): FeedDataSource
 
     @Singleton
     @Binds
-    fun provideCommentDataSource(
+    fun bindsCommentDataSource(
         commentDataSourceImpl: CommentDataSourceImpl
     ): CommentDataSource
 
     @Singleton
     @Binds
-    fun provideTicketDataSource(
+    fun bindsTicketDataSource(
         ticketDataSourceImpl: TicketDataSourceImpl
     ): TicketDataSource
 
@@ -98,5 +100,11 @@ interface DataSourceModule {
     fun bindsMemberDataSource(
         memberDataSourceImpl: MemberDataSourceImpl
     ): MemberDataSource
+
+    @Singleton
+    @Binds
+    fun bindsReviewDataSource(
+        reviewDataSourceImpl: ReviewDataSourceImpl
+    ): ReviewDataSource
 
 }
