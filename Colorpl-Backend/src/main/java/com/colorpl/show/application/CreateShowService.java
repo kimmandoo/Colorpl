@@ -1,6 +1,6 @@
 package com.colorpl.show.application;
 
-import com.colorpl.show.application.ShowListApiResponse.Item;
+import com.colorpl.global.common.exception.ShowAlreadyExistsException;
 import com.colorpl.show.domain.detail.CreateShowDetailService;
 import com.colorpl.show.domain.detail.ShowDetail;
 import com.colorpl.show.domain.detail.ShowDetailRepository;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Service
@@ -27,44 +28,57 @@ public class CreateShowService {
     @Value("${days.to.add}")
     private Long daysToAdd;
 
-    @Scheduled(cron = "0 27 17 * * *")
-    public void create() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    @Scheduled(cron = "0 0 0 * * *")
+    public void createScheduled() {
+        createByDate(LocalDate.now(), LocalDate.now().plusDays(daysToAdd));
+    }
+
+    public void createByDate(LocalDate from, LocalDate to) {
+
         int page = 1;
-        while (true) {
-            ShowListApiResponse showListApiResponse = retrieveShowListApiService.retrieve(
-                LocalDate.now(), LocalDate.now().plusDays(daysToAdd), page++);
-            if (showListApiResponse.getItems().isEmpty()) {
-                break;
-            }
-            for (Item item : showListApiResponse.getItems()) {
-                if (showDetailRepository.findByApiId(item.getApiId()).isEmpty()) {
-                    ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
-                        item.getApiId());
-                    ShowDetail showDetail = createShowDetailService.create(
-                        showDetailApiResponse.getItem());
-                    createShowScheduleService.create(showDetail,
-                        LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
-                        LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
-                        showDetailApiResponse.getItem().getSchedule());
+
+        ShowListApiResponse response = retrieveShowListApiService.retrieve(from, to, page++);
+
+        while (!response.getItems().isEmpty()) {
+
+            response.getItems().forEach(i -> {
+                try {
+                    create(i.getApiId());
+                } catch (ShowAlreadyExistsException ignored) {
+
                 }
-            }
+            });
+
+            response = retrieveShowListApiService.retrieve(from, to, page++);
         }
     }
 
-    public Long createByShowApiId(String showApiId) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        if (showDetailRepository.findByApiId(showApiId).isEmpty()) {
-            ShowDetailApiResponse showDetailApiResponse = retrieveShowDetailApiService.retrieve(
-                showApiId);
-            ShowDetail showDetail = createShowDetailService.create(
-                showDetailApiResponse.getItem());
-            createShowScheduleService.create(showDetail,
-                LocalDate.parse(showDetailApiResponse.getItem().getStartDate(), formatter),
-                LocalDate.parse(showDetailApiResponse.getItem().getEndDate(), formatter),
-                showDetailApiResponse.getItem().getSchedule());
-            return showDetail.getId();
+    public Long createByApiId(String apiId) {
+        return create(apiId);
+    }
+
+    private Long create(String apiId) {
+
+        if (showDetailRepository.existsByApiId(apiId)) {
+            throw new ShowAlreadyExistsException();
         }
-        return null;
+
+        ShowDetailApiResponse response = retrieveShowDetailApiService.retrieve(apiId);
+
+        ShowDetail showDetail = createShowDetailService.create(response.getItem());
+
+        if (StringUtils.hasText(response.getItem().getStartDate()) &&
+            StringUtils.hasText(response.getItem().getEndDate()) &&
+            StringUtils.hasText(response.getItem().getSchedule())) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            LocalDate startDate = LocalDate.parse(response.getItem().getStartDate(), formatter);
+            LocalDate endDate = LocalDate.parse(response.getItem().getEndDate(), formatter);
+            String schedule = response.getItem().getSchedule();
+
+            createShowScheduleService.create(showDetail, startDate, endDate, schedule);
+        }
+
+        return showDetail.getId();
     }
 }
