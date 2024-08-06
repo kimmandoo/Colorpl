@@ -1,6 +1,7 @@
 package com.colorpl.di
 
 import com.data.api.FeedApi
+import com.data.api.NaverApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
 import com.data.api.ReservationApi
@@ -40,6 +41,13 @@ object ApiModule {
         @GptRetrofit
         retrofit: Retrofit
     ): OpenAiApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideNaverApi(
+        @NaverRetrofit
+        retrofit: Retrofit
+    ): NaverApi = retrofit.create()
 
     @Singleton
     @Provides

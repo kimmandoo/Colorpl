@@ -20,3 +20,8 @@ annotation class GptOkHttp
 @Qualifier
 annotation class GptRetrofit
 
+@Qualifier
+annotation class NaverOkHttp
+
+@Qualifier
+annotation class NaverRetrofit
