@@ -4,6 +4,7 @@ import com.data.api.safeApiCall
 import com.data.datasource.remote.ReviewDataSource
 import com.data.model.request.RequestReviewCreate
 import com.data.model.response.ResponseReviewCreate
+import com.data.model.response.ResponseReviewDetail
 import com.data.repository.ReviewRepository
 import com.data.util.ApiResult
 import com.data.util.FormDataConverterUtil
@@ -34,4 +35,11 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
             )
         })
     }
+
+    override suspend fun getReviewDetail(reviewId: Int): Flow<ApiResult<ResponseReviewDetail>> =
+        flow {
+            emit(safeApiCall {
+                reviewDataSource.getReviewDetail(reviewId)
+            })
+        }
 }

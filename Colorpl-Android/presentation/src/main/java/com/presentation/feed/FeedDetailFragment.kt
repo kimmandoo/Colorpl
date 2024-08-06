@@ -12,8 +12,6 @@ import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -21,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
 class FeedDetailFragment :
     BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
 
-    private val viewModel: FeedViewModel by viewModels()
+    private val feedViewModel: FeedViewModel by viewModels()
 
     private val commentAdapter by lazy {
         CommentAdapter(
@@ -34,11 +32,16 @@ class FeedDetailFragment :
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        feedViewModel.getComment(feedId = 1)
+        initAdapter()
+
+    }
+
+    private fun initAdapter(){
+        val loading = LoadingDialog(requireContext())
         binding.apply {
-            val loading = LoadingDialog(requireContext())
-            viewModel.getComment(feedId = 1)
             rvComment.adapter = commentAdapter
-            viewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            feedViewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { pagingData ->
                     pagingData?.let { comment ->
                         commentAdapter.submitData(comment)
@@ -51,6 +54,13 @@ class FeedDetailFragment :
                     if (!isLoading) loading.dismiss() else loading.show()
                 }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
+    }
+
+    private fun observeReviewDetail() {
+        feedViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun onEditClickListener() {
