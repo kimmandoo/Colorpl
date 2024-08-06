@@ -3,10 +3,15 @@ package com.data.api
 import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
+import com.data.model.response.ResponseReviewCreate
+import com.data.model.response.ResponseTicketCreate
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -18,6 +23,14 @@ interface FeedApi {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): List<Feed>
+
+    @POST("reviews/members/{memberId}/tickets/{ticketId}")
+    suspend fun createUserFeedData(
+        @Path("memberId") memberId: Int,
+        @Path("ticketId") reviewId: Int,
+        @Part file: MultipartBody.Part,
+        @Part("request") request: RequestBody,
+    ): ResponseReviewCreate
 
     @GET("reviews/members/{memberId}")
     suspend fun getUserFeedData(
@@ -36,12 +49,6 @@ interface FeedApi {
     suspend fun editUserFeedData(
         @Path("memberId") memberId: Int,
         @Path("reviewId") reviewId: Int,
-    ): ResponsePagedFeed
-
-    @POST("reviews/members/{memberId}/tickets/{ticketId}")
-    suspend fun createUserFeedData(
-        @Path("memberId") memberId: Int,
-        @Path("ticketId") reviewId: Int,
     ): ResponsePagedFeed
 
     @DELETE("reviews/{reviewId}")
