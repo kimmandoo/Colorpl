@@ -1,16 +1,21 @@
 package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.domain.model.Seat
 import com.domain.model.TimeTable
+import com.domain.usecase.ReservationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class ReservationViewModel @Inject constructor(
+    private val getReservationUseCase: ReservationUseCase,
 
 ) : ViewModel() {
     private val _reservationImg = MutableStateFlow("")
@@ -56,6 +61,4 @@ class ReservationViewModel @Inject constructor(
     fun setReservationSeat(seatList: List<Seat>) {
         _reservationSeat.value = seatList
     }
-
-
 }

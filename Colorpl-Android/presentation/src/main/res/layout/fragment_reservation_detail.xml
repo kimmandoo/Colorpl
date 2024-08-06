@@ -4,11 +4,11 @@
 
     <data>
         <variable
-            name="reservationInfo"
-            type="com.domain.model.ReservationInfo" />
-        <variable
             name="type"
             type="com.presentation.util.TopButtonsStatus" />
+        <variable
+            name="viewModel"
+            type="com.presentation.viewmodel.ReservationDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:type="@{type}"
-            app:title="@{reservationInfo.title}" />
+            app:title="@{viewModel.reservationInfo.title}" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nsv_content"
@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="600dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/test_reservation_info"
+                    app:loadImageToReservationDetail="@{viewModel.reservationInfo.contentImg}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -73,7 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="@{reservationInfo.category}"
+                    android:text="@{viewModel.reservationInfo.category}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_category"
@@ -101,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="판타지, 드라마, 액션"
+                    android:text="@{viewModel.reservationInfo.category}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_genre"
@@ -129,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="하정우, 차태현, 주지훈, 김향기 외"
+                    android:text="@{viewModel.reservationInfo.cast}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_cast"
@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="2시간 00분"
+                    android:text="@{viewModel.reservationInfo.runtime}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_runtime"
@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{`S석 : ` + reservationInfo.price + `원`}"
+                    android:text="@{@string/reservation_seat_type_price(`S석 :`, viewModel.reservationInfo.price)}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat"
@@ -227,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{`R석 : ` + reservationInfo.price + `원`}"
+                    android:text="@{@string/reservation_seat_type_price(`R석 :`, viewModel.reservationInfo.price)}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_s"
@@ -239,7 +239,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{`A석 : ` + reservationInfo.price + `원`}"
+                    android:text="@{@string/reservation_seat_type_price(`A석 :`, viewModel.reservationInfo.price)}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_r"

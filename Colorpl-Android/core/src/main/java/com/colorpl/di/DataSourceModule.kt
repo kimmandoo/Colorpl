@@ -7,6 +7,7 @@ import com.data.datasource.remote.GeocodingDataSource
 import com.data.datasource.remote.MemberDataSource
 import com.data.datasource.remote.NotificationDataSource
 import com.data.datasource.remote.OpenAiDataSource
+import com.data.datasource.remote.ReservationDataSource
 import com.data.datasource.remote.SignDataSource
 import com.data.datasource.remote.TicketDataSource
 import com.data.datasource.remote.TmapRouteDataSource
@@ -16,6 +17,7 @@ import com.data.datasourceimpl.GeocodingDataSourceImpl
 import com.data.datasourceimpl.MemberDataSourceImpl
 import com.data.datasourceimpl.NotificationDataSourceImpl
 import com.data.datasourceimpl.OpenAiDataSourceImpl
+import com.data.datasourceimpl.ReservationDataSourceImpl
 import com.data.datasourceimpl.SignDataSourceImpl
 import com.data.datasourceimpl.TicketDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
@@ -84,6 +86,12 @@ interface DataSourceModule {
     fun bindsSignDataSource(
         signDataSourceImpl: SignDataSourceImpl
     ): SignDataSource
+
+    @Singleton
+    @Binds
+    fun bindsReservationDataSource(
+        reservationDataSourceImpl: ReservationDataSourceImpl
+    ): ReservationDataSource
 
     @Singleton
     @Binds

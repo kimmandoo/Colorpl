@@ -68,7 +68,7 @@ class ReservationFragment :
         repeat(10) {
             testReservationInfo.add(
                 ReservationInfo(
-                    reservationInfoId = 1230,
+                    reservationInfoId = 2,
                     contentImg = null,
                     title = "님과함께 : 테스트",
                     category = "사극",
