@@ -10,8 +10,9 @@ fun com.data.model.response.ReservationInfo.toEntity(): ReservationInfo {
         reservationInfoId = this.id,
         contentImg = this.posterImagePath,
         title = this.name,
-        category = "연극",
+        cast = this.cast,
+        category = this.category,
         runtime = this.runtime,
-        price = "10,000"
+        price = this.priceBySeatClass.gradeA.toString()
     )
 }

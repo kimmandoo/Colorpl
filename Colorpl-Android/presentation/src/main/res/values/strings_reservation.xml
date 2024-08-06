@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="reservation_seat_type_price">%s %s원"</string>
     <string name="reservation">예매하기</string>
 
     <!-- 예매 시작-->

@@ -29,7 +29,6 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
 
     private fun initUi() {
         binding.apply {
-            reservationInfo = args.reservationDetail
             type = TopButtonsStatus.BACK
             viewModel = this@ReservationDetailFragment.viewModel
         }

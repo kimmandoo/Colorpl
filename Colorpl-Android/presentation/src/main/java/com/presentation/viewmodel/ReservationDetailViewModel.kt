@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.ReservationInfo
 import com.domain.usecase.ReservationUseCase
+import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,25 +16,23 @@ import javax.inject.Inject
 class ReservationDetailViewModel @Inject constructor(
     private val getReservationUseCase: ReservationUseCase,
 ) : ViewModel() {
-    private val _reservationInfo = MutableStateFlow<ReservationInfo>(
-        ReservationInfo(
-            reservationInfoId = 0,
-            contentImg = "",
-            title = "",
-            category = "",
-            runtime = "",
-            price = ""
-        )
-    )
+    private val _reservationInfo = MutableStateFlow<ReservationInfo>(ReservationInfo())
     val reservationInfo: MutableStateFlow<ReservationInfo> = _reservationInfo
 
     /** showId로 예매 아이템 정보 단건 조회.
      * @param showId DB의 showId */
     fun getReservationInfo(showId: Int) {
         viewModelScope.launch {
-            val data = getReservationUseCase.getReservationInfo(showId)
-            _reservationInfo.value = data
-            Timber.d(data.toString())
+            getReservationUseCase(showId).collectLatest { response ->
+                when (response) {
+                    is DomainResult.Success -> {
+                        _reservationInfo.value = response.data
+                    }
+                    is DomainResult.Error -> {
+                        Timber.d("예매 정보 조회 실패")
+                    }
+                }
+            }
         }
     }
 }

@@ -9,25 +9,26 @@ data class ResponseReservationShows(
 
 
 data class ReservationInfo(
-    @SerialName("id") val id: Int,
-    @SerialName("apiId") val apiId: String,
-    @SerialName("name") val name: String,
-    @SerialName("cast") val cast: String,
-    @SerialName("runtime") val runtime: String,
-    @SerialName("priceBySeatClass") val priceBySeatClass: PriceBySeatClass,
-    @SerialName("posterImagePath") val posterImagePath: String,
-    @SerialName("area") val area: String,
-    @SerialName("category") val category: String?,
-    @SerialName("state") val state: String,
-    @SerialName("seats") val seats: List<Seat>,
-    @SerialName("hall") val hall: String,
+    val id: Int,
+    val apiId: String,
+    val name: String,
+    val cast: String,
+    val runtime: String,
+    val priceBySeatClass: PriceBySeatClass,
+    val posterImagePath: String,
+    val area: String,
+    val category: String?,
+    val state: String,
+    val seats: List<Seat>,
+    val hall: String,
 )
 
+
 data class PriceBySeatClass(
-    val gradeR: Int? = -1,
-    val gradeS: Int? = -1,
-    val gradeA: Int? = -1,
-    val gradeB: Int? = -1,
+    val gradeR: Int?,
+    val gradeS: Int?,
+    val gradeA: Int?,
+    val gradeB: Int?,
 )
 
 data class Seat(
