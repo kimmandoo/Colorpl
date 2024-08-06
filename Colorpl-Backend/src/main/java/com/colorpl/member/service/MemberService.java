@@ -3,6 +3,8 @@ package com.colorpl.member.service;
 import static com.colorpl.member.dto.MemberDTO.toMemberDTO;
 
 import com.colorpl.global.common.exception.*;
+import com.colorpl.global.common.storage.StorageService;
+import com.colorpl.global.common.storage.UploadFile;
 import com.colorpl.global.config.TokenProvider;
 import com.colorpl.member.Member;
 import com.colorpl.member.MemberRefreshToken;
@@ -11,9 +13,13 @@ import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInResponse;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
 import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.show.domain.detail.Category;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -31,16 +38,41 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
+    private final StorageService storageService;
 
 
+
+    private static final int MAX_CATEGORIES = 2;
     @Transactional
-    public Member registerMember(MemberDTO memberDTO) {
+    public Member registerOauthMember(MemberDTO memberDTO) {
 
         if (memberRepository.findByEmail(memberDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException();
         }
 
+
         Member member = Member.toMember(memberDTO, passwordEncoder);
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public Member registerMember(MemberDTO memberDTO, MultipartFile profileImage) {
+
+        if (memberRepository.findByEmail(memberDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+
+        // 프로필 이미지를 업로드하고 파일 이름을 얻습니다.
+        String profileFilename = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            UploadFile uploadFile = storageService.storeFile(profileImage);
+            profileFilename = uploadFile.getStoreFilename();
+        }
+
+        // Member 객체를 생성하고 프로필 파일 이름을 설정합니다.
+        memberDTO.setProfile(profileFilename);
+        Member member = Member.toMember(memberDTO, passwordEncoder);
+
         return memberRepository.save(member);
     }
 
@@ -86,7 +118,7 @@ public class MemberService {
             memberDTO.setPassword(randomPassword); // 비밀번호 설정
 
             // 필요한 경우 추가 정보 설정
-            Member newMember = registerMember(memberDTO);
+            Member newMember = registerOauthMember(memberDTO);
             String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", newMember.getId(), newMember.getType()));
             String refreshToken = tokenProvider.createRefreshToken();
             memberRefreshTokenRepository.save(new MemberRefreshToken(newMember, refreshToken));
@@ -103,28 +135,44 @@ public class MemberService {
 //        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
 //        return memberRepository.save(existingMember);
 //    }
-
-
     @Transactional
-    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
+    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO, MultipartFile profileImage) {
+        // 1. 멤버 존재 확인
         Member existingMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+
         String email = existingMember.getEmail();
 
-        // Ensure only nickname and password can be updated
+        // 2. 이메일 변경 불가 검증
         if (memberDTO.getEmail() != null && !memberDTO.getEmail().equals(email)) {
-            throw new IllegalArgumentException("이메일은 변경할 수 없습니다.");
+            throw new EmailNotEditException();
         }
+
+        // 3. 닉네임 업데이트
         if (memberDTO.getNickname() != null) {
             existingMember.updateNickname(memberDTO.getNickname());
         }
+
+        // 4. 비밀번호 업데이트
         if (memberDTO.getPassword() != null) {
             existingMember.updatePassword(passwordEncoder.encode(memberDTO.getPassword()));
         }
-        if (memberDTO.getProfile() != null) {
-            existingMember.updateNickname(memberDTO.getProfile());
+
+        // 5. 프로필 이미지 처리
+        if (profileImage != null && !profileImage.isEmpty()) {
+            UploadFile uploadFile = storageService.storeFile(profileImage);
+            String profileFilename = uploadFile.getStoreFilename();
+            existingMember.updateProfile(profileFilename);
+        } else if (memberDTO.getProfile() != null) {
+            // 프로필 이미지 파일명이 주어진 경우 데이터베이스 업데이트
+            existingMember.updateProfile(memberDTO.getProfile());
         }
 
+        // 6. 카테고리 업데이트
+        if (memberDTO.getCategories() != null) {
+            existingMember.updateCategories(memberDTO.getCategories());
+        }
+        // 7. 멤버 정보 저장
         return memberRepository.save(existingMember);
     }
 
@@ -225,16 +273,17 @@ public class MemberService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return Integer.parseInt(userDetails.getUsername());
     }
-
-    //리뷰 조회는 querydsl
-//    @Transactional
-//    public List<Review> getMyReviews(Integer memberId) {
-//        // 리뷰 엔티티가 Member와 연관된다고 가정
-//        Member member = memberRepository.findById(memberId)
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
-//        return member.getReviews();  // Member 엔티티에 getReviews() 메서드 추가
-//    }
-    //결제 내역 조회는 완성된 이후에
+    // nickname으로 멤버를 조회하는 메서드
+    @Transactional
+    public List<MemberDTO> findMembersByNickname(String nickname) {
+        List<Member> members = memberRepository.findByNickname(nickname);
+        if (members.isEmpty()) {
+            throw new MemberNotFoundException();
+        }
+        return members.stream()
+            .map(MemberDTO::toMemberDTO)
+            .collect(Collectors.toList());
+    }
 
 
 }
