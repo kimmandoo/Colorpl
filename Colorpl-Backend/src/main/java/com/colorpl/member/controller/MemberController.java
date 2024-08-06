@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -36,12 +37,22 @@ public class MemberController {
         this.blackListService = blackListService;
     }
 
-    @PostMapping("/register")
-    @Operation(summary = "회원가입", description = "회원 가입을 진행하는 API")
-    public ResponseEntity<MemberDTO> registerMember(@RequestBody MemberDTO memberDTO) {
-        Member member = memberService.registerMember(memberDTO);
+    @PostMapping("/register/Oauth")
+    @Operation(summary = "Oauth 회원가입", description = "Oauth 회원 가입을 진행하는 API, multipart 이미지가 필요 없음")
+    public ResponseEntity<MemberDTO> registerOauthMember(@RequestPart MemberDTO memberDTO) {
+        Member member = memberService.registerOauthMember(memberDTO);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(member));
     }
+
+    @PostMapping("/register")
+    @Operation(summary = "회원가입", description = "회원 가입을 진행하는 API")
+    public ResponseEntity<MemberDTO> registerMember(
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        Member member = memberService.registerMember(memberDTO, profileImage);
+        return ResponseEntity.ok(MemberDTO.toMemberDTO(member));
+    }
+
 
     @PostMapping("/sign-in")
     @Operation(summary = "로그인", description = "로그인을 진행하는 API")
@@ -51,12 +62,23 @@ public class MemberController {
     }
 
 
+//    @PutMapping
+//    @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
+//    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO) {
+//        Integer memberId = memberService.getCurrentMemberId();
+//
+//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
+//    }
+
     @PutMapping
     @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
-    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<MemberDTO> updateMember(
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         Integer memberId = memberService.getCurrentMemberId();
 
-        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO,profileImage);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
     }
 
@@ -183,10 +205,22 @@ public class MemberController {
 
 //
 ////------------------------관리자용--------------------------//
+//    @PutMapping("/{memberId}")
+//    @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")
+//    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
+//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
+//    }
+
+
+
     @PutMapping("/{memberId}")
     @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
-        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
+    public ResponseEntity<MemberDTO> updateMember(
+        @PathVariable Integer memberId,
+        @RequestPart("memberDTO") MemberDTO memberDTO,
+        @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
+        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO, profileImage);
         return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
     }
 
