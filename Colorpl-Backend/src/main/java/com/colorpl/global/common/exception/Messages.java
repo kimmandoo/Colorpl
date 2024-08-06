@@ -16,4 +16,6 @@ public class Messages {
     public static final String INVALID_GOOGLE_ID_TOKEN = "유효하지 않은 구글 id 토큰입니다.";
     public static final String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
     public static final String SHOW_ALREADY_EXISTS = "이미 등록된 공연입니다.";
+    public static final String EMAIL_NOT_EDIT = "이메일은 변경할 수 없습니다.";
+    public static final String CATEGORY_LIMIT = "카테고리는 최대 2개까지만 허용됩니다.";
 }
