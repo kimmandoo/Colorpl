@@ -24,6 +24,10 @@ class FeedViewModel @Inject constructor(
     private val _pagedComment = MutableStateFlow<PagingData<Comment>?>(null)
     val pagedComment = _pagedComment
 
+    init {
+        getFeed()
+    }
+
     fun getFeed() {
         viewModelScope.launch {
             getPagedFeedUseCase().cachedIn(viewModelScope).collectLatest { pagedData ->
