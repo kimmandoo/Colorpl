@@ -81,13 +81,12 @@ interface RepositoryModule {
 
     @Singleton
     @Binds
-    <<<< <<< HEAD
     fun bindsMemberRepository(
         memberRepositoryImpl: MemberRepositoryImpl
     ): MemberRepository
-    =======
+
     fun bindGeocodingRepository(
         geocodingRepositoryImpl: GeocodingRepositoryImpl
     ): GeocodingRepository
-    >>>>>>> develop-android
+
 }
