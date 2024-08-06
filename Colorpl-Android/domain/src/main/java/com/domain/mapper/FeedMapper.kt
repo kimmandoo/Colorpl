@@ -5,19 +5,20 @@ import com.data.model.paging.Feed
 fun Feed.toEntity(): com.domain.model.Feed {
     return com.domain.model.Feed(
         category = category,
-        commentPageSize = commentPageSize,
-        commentsCount = commentsCount,
+        commentPageSize = this.commentpagesize,
+        commentsCount = this.commentscount,
         content = content,
-        createDate = createDate,
-        emotionMode = emotionMode,
-        empathyCount = empathyCount,
+        createDate = createdate,
+        emotionMode = emotion,
+        empathyCount = empathy,
         id = id,
-        contentImgUrl = contentImgUrl,
-        isEmpathy = isEmpathy,
-        isMyReview = isMyReview,
-        isSpoiler = isSpoiler,
+        contentImgUrl = imgurl,
+        isEmpathy = myempathy,
+        isMyReview = myreview,
+        isSpoiler = spoiler,
         ticketId = ticketId,
         title = title,
         writer = writer
+
     )
 }

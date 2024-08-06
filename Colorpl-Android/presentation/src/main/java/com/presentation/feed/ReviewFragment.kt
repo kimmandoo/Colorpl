@@ -76,7 +76,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         viewModel.createReview(
             review = Review(
                 1,
-                5,
+                2,
                 binding.etContent.text.toString(),
                 false,
                 viewModel.selectedEmotion.value

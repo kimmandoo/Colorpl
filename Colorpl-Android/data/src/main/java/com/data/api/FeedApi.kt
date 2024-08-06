@@ -22,7 +22,7 @@ interface FeedApi {
         @Path("memberId") memberId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
-    ): List<Feed>
+    ): ResponsePagedFeed
 
     @Multipart
     @POST("reviews/members/{memberId}/tickets/{ticketId}")
