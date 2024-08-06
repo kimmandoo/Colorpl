@@ -29,7 +29,7 @@ public class CommentController {
 
     // 특정 리뷰의 모든 댓글 가져오기
     @GetMapping("/reviews/{reviewId}")
-    @Operation(summary = "특정 리뷰의 댓글 가져오기", description = "특정 리뷰의 댓글을 조회할 때 사용하는 API(url의 리뷰id 사용)")
+    @Operation(summary = "특정 리뷰의 댓글 가져오기(무한 스크롤)", description = "특정 리뷰의 댓글을 조회할 때 사용하는 API(url의 리뷰id 사용)")
     public ResponseEntity<ReadCommentResponse> getCommentsByReviewId(
             @PathVariable Long reviewId,
             @RequestParam(defaultValue = "0") int page,
@@ -47,7 +47,7 @@ public class CommentController {
 
     // 리뷰에 댓글 작성
     @PostMapping("/reviews/{reviewId}")
-    @Operation(summary = "특정 리뷰에 댓글 작성하기", description = "특정 리뷰의 댓글을 작성할 때 사용하는 API(url의 리뷰id, 멤버id 사용)")
+    @Operation(summary = "특정 리뷰에 댓글 작성하기(토큰 사용)", description = "특정 리뷰의 댓글을 작성할 때 사용하는 API(url의 리뷰id 사용)")
 //    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<CommentResponse> createComment(@PathVariable Long reviewId, @RequestBody CommentDTO commentDTO) {
         Integer memberId = memberService.getCurrentMemberId();
@@ -59,7 +59,7 @@ public class CommentController {
 
     // 특정 댓글 수정
     @PutMapping("/{commentId}")
-    @Operation(summary = "특정 댓글 수정하기", description = "특정 댓글을 수정할 때 사용하는 API(url의 댓글id, 멤버id 사용)")
+    @Operation(summary = "특정 댓글 수정하기(토큰 사용)", description = "특정 댓글을 수정할 때 사용하는 API(url의 댓글id, 멤버id 사용)")
 //    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
 
