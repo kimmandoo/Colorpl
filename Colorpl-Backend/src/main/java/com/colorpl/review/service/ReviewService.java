@@ -20,13 +20,19 @@ import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -138,11 +144,24 @@ public class ReviewService {
         Ticket ticket = ticketRepository.findById(requestDTO.getTicketId())
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
-        UploadFile uploadFile = storageService.storeFile(file);
 
+
+        String filename;
+        UploadFile uploadFile = null;
+
+        if (file != null && !file.isEmpty()) {
+            // Store the provided file
+            uploadFile = storageService.storeFile(file);
+            filename = uploadFile.getStoreFilename();
+        } else {
+            // No file provided, use a placeholder filename or null
+            filename = "noimg"; // Placeholder filename
+        }
+
+        System.out.println("uploaded image name" + uploadFile);
         // Build review entity from DTO
         Review review = Review.builder()
-                .filename(uploadFile.getStoreFilename())
+                .filename(filename)
                 .ticket(ticket)
                 .content(requestDTO.getContent())
                 .spoiler(requestDTO.getSpoiler())
@@ -200,13 +219,35 @@ public class ReviewService {
 
         boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId)).isPresent();
 
+        String basePath = "images/";
+        String filename = review.getFilename();
+        String filepath;
+
+        if ("noimg".equals(filename)) {
+            // Special case for "noimg"
+            filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(basePath)
+                    .path("noimg.png") // or any specific path for placeholder image
+                    .build()
+                    .toUriString();
+        } else {
+            // Standard case
+            filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(basePath)
+                    .path(filename)
+                    .build()
+                    .toUriString();
+        }
+
+
+
         return ReviewDTO.builder()
                 .id(review.getId())
                 .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
                 .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
                 .title(review.getTicket() != null ? review.getTicket().getName() : null)
                 .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
-                .imgurl(review.getFilename())
+                .imgurl(filepath)
                 .content(review.getContent())
                 .spoiler(review.getSpoiler())
                 .emotion(review.getEmotion())
