@@ -1,12 +1,10 @@
-package com.data.model.paging
+package com.data.model.request
 
-import java.util.Date
-
-data class Comment(
+data class RequestCreateComment(
     val id: Int,
     val reviewId: Int,
     val memberId: Int,
     val writer: String,
     val commentContent: String,
-    val createdate: String,
+    val createdate: String
 )

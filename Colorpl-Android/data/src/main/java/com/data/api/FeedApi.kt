@@ -2,7 +2,9 @@ package com.data.api
 
 import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
+import com.data.model.request.RequestCreateComment
 import com.data.model.request.RequestReviewEdit
+import com.data.model.response.ResponseCommentEdit
 import com.data.model.response.ResponseReviewCreate
 import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
@@ -60,17 +62,11 @@ interface FeedApi {
         @Path("reviewId") reviewId: Int,
     ): ResponseReviewEdit
 
-    @PUT("comments/{commentId}/members/{memberId}")
-    suspend fun editCommentData(
-        @Path("commentId") commentId: Int,
-        @Path("memberId") memberId: Int,
-    ): ResponsePagedComment
-
-    @POST("comments/reviews/{reviewId}/members/{memberId}")
+    @POST("comments/reviews/{reviewId}")
     suspend fun createCommentData(
         @Path("reviewId") reviewId: Int,
-        @Path("memberId") memberId: Int,
-    ): ResponsePagedComment
+        @Body requestCreateComment: RequestCreateComment
+    ): ResponseCommentEdit
 
     @GET("comments/reviews/{reviewId}")
     suspend fun getCommentData(
@@ -79,8 +75,14 @@ interface FeedApi {
         @Query("size") size: Int
     ): ResponsePagedComment
 
+    @PUT("comments/{commentId}")
+    suspend fun editCommentData(
+        @Path("commentId") commentId: Int,
+        @Body requestEditComment: RequestCreateComment
+    ): ResponseCommentEdit
+
     @GET("comments/{commentId}")
     suspend fun deleteCommentData(
         @Path("commentId") commentId: Int,
-    ): ResponsePagedComment
+    ): ResponseCommentEdit
 }

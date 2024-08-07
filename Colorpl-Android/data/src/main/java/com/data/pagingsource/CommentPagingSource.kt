@@ -27,12 +27,12 @@ class CommentPagingSource (
             safeApiCall { commentDataSource.getComment(feedId, nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
-                Timber.tag("pager").d("${response.items.firstOrNull()?.commentId}")
+                Timber.tag("pager").d("${response.items.firstOrNull()?.id}")
 
                 LoadResult.Page(
                     data = response.items,
                     prevKey = if (nextPage == 1) null else nextPage - 1,
-                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPages) null else nextPage + 1
+                    nextKey = if (response.items.isEmpty() || nextPage >= response.totalPage) null else nextPage + 1
                 )
             }
 
