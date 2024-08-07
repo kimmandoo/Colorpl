@@ -15,16 +15,4 @@ fun List<com.data.model.response.ReservationInfo>.toEntity(): List<ReservationIn
             price = it.priceBySeatClass.getOrDefault("R석", 10000).toString()
         )
     }
-
-//    return this.items.map {
-//        ReservationInfo(
-//            reservationInfoId = it.id,
-//            contentImg = it.posterImagePath,
-//            title = it.name,
-//            category = it.category,
-//            price = it.priceBySeatClass.getOrDefault("R석", "기본값").toString()
-//        )
-//    }
-
-
 }

@@ -57,12 +57,15 @@ class ReservationFragment :
         initReservationInfo()
         initClickListener()
         initReservationList()
+        observeReservationList()
     }
 
     private fun initReservationList() {
         reservationListViewModel.getReservationList()
+    }
+
+    private fun observeReservationList() {
         reservationListViewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationList ->
-            reservationListViewModel.reservationList.value = reservationList
             reservationInfoAdapter.submitList(reservationList)
             Timber.tag("reservationList").d(reservationList.toString())
         }.launchIn(viewLifecycleOwner.lifecycleScope)
