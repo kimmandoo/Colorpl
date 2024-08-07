@@ -39,7 +39,7 @@ class SignInUseCase @Inject constructor(
         signRepository.signIn(member.toSignInParam()).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    tokenRepository.setSignToken(member.toSignTokenParam(true))
+                    tokenRepository.setSignToken(member.toSignTokenParam())
                     emit(DomainResult.success(result.data))
                 }
 
@@ -55,8 +55,7 @@ class SignInUseCase @Inject constructor(
             Timber.d("구글 로그인 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    val data = DomainResult.success(result.data)
-                    tokenRepository.setAccessToken(data.data.accessToken)
+                    tokenRepository.setSignToken(idToken.toSignTokenParam())
                     emit(DomainResult.success(result.data))
                 }
 

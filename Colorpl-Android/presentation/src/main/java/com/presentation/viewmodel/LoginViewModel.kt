@@ -3,7 +3,6 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Member
-import com.domain.model.SignToken
 import com.domain.usecaseimpl.sign.SignInUseCase
 import com.domain.util.DomainResult
 import com.presentation.sign.model.SignInEventState
@@ -24,7 +23,7 @@ class LoginViewModel @Inject constructor(
     private val _signInEvent = MutableSharedFlow<SignInEventState>()
     val signInEvent: SharedFlow<SignInEventState> get() = _signInEvent
 
-    init{
+    init {
         autoLogin()
     }
 
@@ -53,7 +52,9 @@ class LoginViewModel @Inject constructor(
                         val data = it.data
                         if (data.email.isNotEmpty() && data.password.isNotEmpty()) {
                             signIn(data.email.toString(), data.password.toString())
-                        }else{
+                        } else if (data.idToken.isNotEmpty()) {
+                            googleSignIn(data.idToken)
+                        } else {
                             _signInEvent.emit(SignInEventState.NoSign)
                         }
                     }

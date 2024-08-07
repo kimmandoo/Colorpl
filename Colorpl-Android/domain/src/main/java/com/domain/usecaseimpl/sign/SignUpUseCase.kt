@@ -22,7 +22,7 @@ class SignUpUseCase @Inject constructor(
             Timber.d("회원 가입 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    tokenRepository.setSignToken(member.toSignTokenParam(true))
+                    tokenRepository.setSignToken(member.toSignTokenParam())
                     emit(DomainResult.success(result.data))
                 }
 
