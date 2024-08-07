@@ -76,7 +76,6 @@ class TicketFinishFragment :
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.createTicket(
                         ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!,
-                        viewModel.geocodingLatLng.last()
                     )
                     tvConfirm.isEnabled = false
                 }

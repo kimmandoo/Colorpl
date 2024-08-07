@@ -14,8 +14,8 @@ interface TicketApi {
     @Multipart
     @POST("schedules/custom")
     suspend fun createTicket(
-        @Part file: MultipartBody.Part,
         @Part("request") request: RequestBody,
+        @Part file: MultipartBody.Part,
     ): Int
 
     @GET("schedules/")

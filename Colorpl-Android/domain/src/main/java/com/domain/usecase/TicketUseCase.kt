@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface TicketUseCase {
-    suspend fun createTicket(
+    fun createTicket(
         image: File,
         ticket: Ticket
     ): Flow<DomainResult<Int>>

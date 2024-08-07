@@ -15,7 +15,8 @@ import javax.inject.Inject
 class TicketUseCaseImpl @Inject constructor(
     private val ticketRepository: TicketRepository,
 ) : TicketUseCase {
-    override suspend fun createTicket(image: File, ticket: Ticket): Flow<DomainResult<Int>> = flow {
+    override fun createTicket(image: File, ticket: Ticket): Flow<DomainResult<Int>> = flow {
+        Timber.d("$ticket")
         ticketRepository.createTicket(
             image, ticket.toEntity()
         ).collect { result ->
