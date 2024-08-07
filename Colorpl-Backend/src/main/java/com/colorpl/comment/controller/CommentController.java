@@ -5,6 +5,9 @@ import com.colorpl.comment.dto.CommentResponse;
 import com.colorpl.comment.dto.FailCommentResponse;
 import com.colorpl.comment.dto.ReadCommentResponse;
 import com.colorpl.comment.service.CommentService;
+import com.colorpl.global.common.exception.CommentNotFoundException;
+import com.colorpl.global.common.exception.MemberNotFoundException;
+import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.service.MemberService;
 import com.colorpl.review.dto.ReadReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -34,59 +39,76 @@ public class CommentController {
             @PathVariable Long reviewId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<CommentDTO> commentPage = commentService.getCommentsByReviewId(reviewId, pageable);
+            List<CommentDTO> comments = commentPage.getContent();
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CommentDTO> commentPage = commentService.getCommentsByReviewId(reviewId, pageable);
-        List<CommentDTO> comments = commentPage.getContent();
+            int totalPages = (int) Math.ceil((double) comments.size() / size);
+            ReadCommentResponse response = ReadCommentResponse.builder().items(comments).totalPage(totalPages).build();
 
-        int totalPages = (int) Math.ceil((double) comments.size() / size);
-        ReadCommentResponse response = ReadCommentResponse.builder().items(comments).totalPage(totalPages).build();
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (ReviewNotFoundException e) {
+            ReadCommentResponse response = ReadCommentResponse.builder().items(Collections.emptyList()).totalPage(-1).build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
     }
 
     // 리뷰에 댓글 작성
     @PostMapping("/reviews/{reviewId}")
     @Operation(summary = "특정 리뷰에 댓글 작성하기(토큰 사용)", description = "특정 리뷰의 댓글을 작성할 때 사용하는 API(url의 리뷰id 사용)")
-//    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<CommentResponse> createComment(@PathVariable Long reviewId, @RequestBody CommentDTO commentDTO) {
-        Integer memberId = memberService.getCurrentMemberId();
+        try {
+            Integer memberId = memberService.getCurrentMemberId();
 
-        CommentDTO createdComment = commentService.createComment(reviewId, memberId, commentDTO);
-        CommentResponse response = CommentResponse.builder().commentId(createdComment.getId()).failPoint("none").build();
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            CommentDTO createdComment = commentService.createComment(reviewId, memberId, commentDTO);
+            CommentResponse response = CommentResponse.builder().commentId(createdComment.getId()).failPoint("none").build();
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (MemberNotFoundException e) {
+            CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("member not found").build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        } catch (ReviewNotFoundException e) {
+            CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("review not found").build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
     }
 
     // 특정 댓글 수정
     @PutMapping("/{commentId}")
-    @Operation(summary = "특정 댓글 수정하기(토큰 사용)", description = "특정 댓글을 수정할 때 사용하는 API(url의 댓글id, 멤버id 사용)")
-//    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "특정 댓글 수정하기(토큰 사용)", description = "특정 댓글을 수정할 때 사용하는 API(url의 댓글id 사용)")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
-
-        Integer memberId = memberService.getCurrentMemberId();
-
-        if (commentDTO.getMemberId() == null) {
-
+        try {
+            Integer memberId = memberService.getCurrentMemberId();
+            CommentDTO updatedComment = commentService.updateComment(commentId, memberId, commentDTO);
+            CommentResponse response = CommentResponse.builder().commentId(updatedComment.getId()).failPoint("none").build();
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (MemberNotFoundException e) {
             CommentResponse response = CommentResponse.builder()
                     .commentId(null)
-                    .failPoint("Member ID는 필수입니다")
+                    .failPoint("Member ID가 없습니다.")
                     .build();
             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
-//            throw new IllegalArgumentException("Member ID는 필수입니다");
+        } catch (ReviewNotFoundException e) {
+            CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("review가 없습니다.").build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        } catch (CommentNotFoundException e) {
+            CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("comment가 없습니다.").build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }
-
-        CommentDTO updatedComment = commentService.updateComment(commentId, memberId, commentDTO);
-        CommentResponse response = CommentResponse.builder().commentId(updatedComment.getId()).failPoint("none").build();
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // 특정 댓글 삭제
     @DeleteMapping("/{commentId}")
     @Operation(summary = "특정 댓글 삭제하기", description = "특정 댓글을 삭제할 때 사용하는 API(url의 댓글id 사용)")
-//    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<CommentResponse> deleteCommentById(@PathVariable Long commentId) {
-        commentService.deleteById(commentId);
-        CommentResponse response = CommentResponse.builder().commentId(commentId).failPoint("none").build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            commentService.deleteById(commentId);
+            CommentResponse response = CommentResponse.builder().commentId(commentId).failPoint("none").build();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (CommentNotFoundException e){
+            CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("comment가 없습니다.").build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }
+
     }
 }

@@ -112,6 +112,7 @@ public class ReviewController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     // 특정 리뷰에 공감 삭제
+    // 수정 필요!
     @DeleteMapping("/members/{memberId}/empathize/{reviewId}")
     @Operation(summary = "특정 리뷰에 공감 취소", description = "특정 리뷰에 공감 취소할 때 사용하는 API")
     public ResponseEntity<NonReadReviewResponse> removeEmpathy(@PathVariable Long reviewId) {

@@ -49,13 +49,26 @@ public class CommentServiceTest {
 
     @Test
     void testGetCommentsByReviewId() {
+
         Long reviewId = 1L;
         Pageable pageable = PageRequest.of(0, 10);
+        Integer memberId = 1;
+        CommentDTO commentDTO = CommentDTO.builder()
+                .commentContent("New comment")
+                .build();
+        Review review = Review.builder().id(reviewId).build();
+        Member member = Member.builder().id(memberId).build();
         Comment comment = Comment.builder()
-                .id(1L)
-                .comment_content("Test comment")
+                .review(review)
+                .member(member)
+                .comment_content(commentDTO.getCommentContent())
                 .build();
         Page<Comment> commentPage = new PageImpl<>(List.of(comment));
+
+        // 리뷰와 댓글이 존재할 때의 동작을 설정
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+        when(commentRepository.findByReviewId(reviewId, pageable)).thenReturn(commentPage);
+
         when(commentRepository.findByReviewId(reviewId, pageable)).thenReturn(commentPage);
 
         Page<CommentDTO> result = commentService.getCommentsByReviewId(reviewId, pageable);

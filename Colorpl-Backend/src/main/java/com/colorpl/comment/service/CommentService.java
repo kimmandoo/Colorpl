@@ -3,6 +3,7 @@ package com.colorpl.comment.service;
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
+import com.colorpl.global.common.exception.CommentNotFoundException;
 import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
@@ -36,13 +37,12 @@ public class CommentService {
         this.memberRepository = memberRepository;
     }
 
-//    public Page<Comment> getCommentsByReview(Review review, Pageable pageable) {
-//        return commentRepository.findByReview(review, pageable);
-//    }
-
     // 각 리뷰의 댓글 조회
     @Transactional(readOnly = true)
     public Page<CommentDTO> getCommentsByReviewId(Long reviewId, Pageable pageable) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+
         Page<Comment> commentPage = commentRepository.findByReviewId(reviewId, pageable);
         return commentPage.map(CommentDTO::fromComment);
     }
@@ -61,7 +61,6 @@ public class CommentService {
                 .member(member)
                 .review(review)
                 .comment_content(commentDTO.getCommentContent())
-
                 .build();
 
         Comment createdComment = commentRepository.save(comment);
@@ -76,16 +75,12 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 // 댓글 작성자와 동일한지 확인
                 .filter(c -> c.getMember().getId().equals(memberId))
-                .orElseThrow(MemberMismatchException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         Review review = reviewRepository.findById(commentDTO.getReviewId())
                 .orElseThrow(ReviewNotFoundException::new);
         Member member = memberRepository.findById(commentDTO.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
-        // 혹시 멤버나 리뷰 id 없으면 예외처리
-        if (commentDTO.getReviewId() == null || commentDTO.getMemberId() == null) {
-            throw new IllegalArgumentException("Review ID service must not be null");
-        }
 
         // 댓글 필드 수정
         comment.updateComment(
@@ -105,6 +100,8 @@ public class CommentService {
         // 존재 확인 후 삭제
         if (commentRepository.existsById(commentId)) {
             commentRepository.deleteById(commentId);
+        } else {
+            throw new CommentNotFoundException();
         }
     }
 }
