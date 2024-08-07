@@ -8,6 +8,7 @@ import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
+import com.presentation.util.getPattern
 import com.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +45,7 @@ class ScheduleViewModel @Inject constructor(
     val calendarMode: StateFlow<CalendarMode> = _calendarMode
 
     init {
+        getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
         updateCalendar(Calendar.CURRENT)
     }
 
@@ -74,6 +76,7 @@ class ScheduleViewModel @Inject constructor(
 
                     is DomainResult.Success -> {
                         _tickets.value = it.data
+                        matchTicketsToCalendar(_calendarItems.value, it.data)
                     }
                 }
             }
@@ -141,7 +144,6 @@ class ScheduleViewModel @Inject constructor(
             Calendar.CHANGE -> {
                 val changedYear = year - _selectedDate.value.year
                 val changedMonth = month - _selectedDate.value.monthValue
-
                 _selectedDate.value.plusYears(changedYear).plusMonths(changedMonth)
             }
 
@@ -150,6 +152,7 @@ class ScheduleViewModel @Inject constructor(
                 _clickedDate.value?.date
             }
         }
+        getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
 
         val updateList = if (state == Calendar.RESTORE) {
             createCalendar(_selectedDate.value).map { item ->
@@ -162,7 +165,7 @@ class ScheduleViewModel @Inject constructor(
             createCalendar(_selectedDate.value)
         }
         _calendarItems.value = updateList
-        matchTicketsToCalendar(_calendarItems.value, _tickets.value)
+        _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.value)
         _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
     }

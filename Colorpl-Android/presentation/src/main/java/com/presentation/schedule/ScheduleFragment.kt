@@ -24,7 +24,6 @@ import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 private const val TAG = "ScheduleFragment"
@@ -73,12 +72,18 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.calendarItems.collectLatest { calendarList ->
-                    calendarAdapter.submitList(viewModel.matchTicketsToCalendar(calendarList, viewModel.tickets.value))
+                    calendarAdapter.submitList(
+                        viewModel.matchTicketsToCalendar(
+                            calendarList,
+                            viewModel.tickets.value
+                        )
+                    )
                 }
             }
             launch {
                 viewModel.tickets.collectLatest { tickets ->
-                    ticketAdapter.submitList(tickets.toList())
+                    calendarAdapter.submitList(viewModel.matchTicketsToCalendar(viewModel.calendarItems.value, tickets))
+                    ticketAdapter.submitList(tickets)
                 }
             }
             launch {
@@ -130,7 +135,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initTicketView() {
         binding.apply {
-            viewModel.getAllTicket()
             rvTicket.adapter = ticketAdapter
             rvTicket.overScrollControl { direction, deltaDistance ->
                 if (viewModel.clickedDate.value != null) {
