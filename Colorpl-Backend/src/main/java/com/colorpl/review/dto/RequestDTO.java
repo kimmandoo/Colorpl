@@ -2,6 +2,7 @@ package com.colorpl.review.dto;
 
 import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.review.domain.Review;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class RequestDTO {
     private Long scheduleId;
     private String content;
     private Boolean spoiler;
+    @Schema(implementation = Integer.class)
     private Byte emotion;
 
 }
