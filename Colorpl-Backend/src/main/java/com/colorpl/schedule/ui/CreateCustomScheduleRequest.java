@@ -1,4 +1,4 @@
-package com.colorpl.schedule.command.application;
+package com.colorpl.schedule.ui;
 
 import com.colorpl.show.domain.detail.Category;
 import java.time.LocalDateTime;
@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class CreateCustomScheduleRequest {
 
-    private Integer memberId;
     private String seat;
     private LocalDateTime dateTime;
     private String name;

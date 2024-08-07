@@ -23,14 +23,18 @@ public class CreateTicketController {
         @RequestPart CreateTicketRequest request,
         @RequestPart(required = false) MultipartFile file
     ) {
+
         Long id = createTicketService.create(request, file);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/tickets/{id}")
             .buildAndExpand(id)
             .toUri();
+
         CreateTicketResponse response = CreateTicketResponse.builder()
             .ticketId(id)
             .build();
+
         return ResponseEntity.created(uri).body(response);
     }
 }
