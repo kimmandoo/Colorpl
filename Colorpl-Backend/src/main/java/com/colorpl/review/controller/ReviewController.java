@@ -53,19 +53,10 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    // 특정 멤버의 리뷰 개수
-    @GetMapping("/members/{memberId}")
-    @Operation(summary = "특정 멤버의 모든 리뷰 조회", description = "특정 멤버의 모든 리뷰 조회 할 때 사용하는 API(url의 멤버id, 사용)")
-    public ResponseEntity<NonReadReviewResponse> findReviewNumbersOfMember(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
-        NonReadReviewResponse reviews = reviewService.findReviewNumbersOfMember(memberId, page, size);
-
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
-    }
-
     // 리뷰 한 개만 *디테일 리뷰
     @GetMapping("/details/{reviewId}")
     @Operation(summary = "특정 리뷰 조회", description = "특정 리뷰 조회 할 때 사용하는 API(url의 리뷰id 및 (*주의!) param으로 memberId 사용)")
-    public ResponseEntity<ReviewDTO> findReviewsOfMembers(@PathVariable Long reviewId) {
+    public ResponseEntity<ReviewDTO> findOneReview(@PathVariable Long reviewId) {
         Integer memberId = memberService.getCurrentMemberId();
         ReviewDTO reviews = reviewService.findById(reviewId, memberId);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
