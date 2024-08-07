@@ -15,29 +15,26 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.dto.ReviewDTO.ReviewDTOBuilder;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.ticket.domain.Ticket;
-import com.colorpl.ticket.domain.TicketRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
-import java.io.InputStream;
+import com.colorpl.schedule.command.domain.CustomSchedule;
+import com.colorpl.schedule.command.domain.ReservationSchedule;
+import com.colorpl.schedule.command.domain.Schedule;
+import com.colorpl.schedule.command.domain.ScheduleRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 //@RequiredArgsConstructor
 @Service
@@ -46,17 +43,20 @@ public class ReviewService {
 
     private final StorageService storageService;
     private final ReviewRepository reviewRepository;
-//    private final CommentRepository commentRepository;
-    private final TicketRepository ticketRepository;
+    //    private final CommentRepository commentRepository;
+    private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
     private final EmpathyRepository empathyRepository;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+        "yyyy년 MM월 dd일 HH:mm");
 
     @Autowired
-    public ReviewService(StorageService storageService, ReviewRepository reviewRepository, CommentRepository commentRepository, TicketRepository ticketRepository, MemberRepository memberRepository, EmpathyRepository empathyRepository) {
+    public ReviewService(StorageService storageService, ReviewRepository reviewRepository,
+        CommentRepository commentRepository, ScheduleRepository scheduleRepository,
+        MemberRepository memberRepository, EmpathyRepository empathyRepository) {
         this.storageService = storageService;
         this.reviewRepository = reviewRepository;
-        this.ticketRepository = ticketRepository;
+        this.scheduleRepository = scheduleRepository;
 //        this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.empathyRepository = empathyRepository;
@@ -67,10 +67,11 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Review> reviews = reviewRepository.findAll(pageable);
         List<ReviewDTO> reviewDTOS = reviews.stream()
-                .map(review -> toReviewDTO(memberId, review))
-                .collect(Collectors.toList());
+            .map(review -> toReviewDTO(memberId, review))
+            .collect(Collectors.toList());
         int totalPages = (int) Math.ceil((double) reviewRepository.count() / size);
-        ReadReviewResponse response = ReadReviewResponse.builder().items(reviewDTOS).totalPage(totalPages).build();
+        ReadReviewResponse response = ReadReviewResponse.builder().items(reviewDTOS)
+            .totalPage(totalPages).build();
         return response;
     }
 
@@ -78,18 +79,18 @@ public class ReviewService {
     public ReadReviewResponse findReviewsOfMember(Integer memberId, int page, int size) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
-        // 관련 티켓 추출
-        List<Ticket> tickets = member.getTickets();
+        // 관련 일정 추출
+        List<Schedule> schedules = member.getSchedules();
 
-        // null인 리뷰 외 모두 추출
-        List<Review> reviews = tickets.stream()
-                .map(Ticket::getReview) // 각 티켓의 리뷰 추출
-                .filter(Optional::isPresent) // null 확인
-                .map(Optional::get) // Optional 제거
-                .distinct() // 중복 리뷰 방지
-                .collect(Collectors.toList());
+        // null 인 일정 외 모두 추출
+        List<Review> reviews = schedules.stream()
+            .map(Schedule::getReview)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .distinct()
+            .toList();
 
         // 페이지화
         int start = page * size;
@@ -97,26 +98,26 @@ public class ReviewService {
 
         if (start >= reviews.size()) {
             return ReadReviewResponse.builder()
-                    .items(Collections.emptyList())
-                    .totalPage(0)
-                    .build(); // Return empty response if page is out of bounds
+                .items(Collections.emptyList())
+                .totalPage(0)
+                .build(); // Return empty response if page is out of bounds
         }
 
         List<Review> paginatedReviews = reviews.subList(start, end);
 
         // DTO로 반환
         List<ReviewDTO> reviewDTOS = paginatedReviews.stream()
-                .map(review -> toReviewDTO(memberId, review))
-                .collect(Collectors.toList());
+            .map(review -> toReviewDTO(memberId, review))
+            .collect(Collectors.toList());
 
         // Calculate total pages
         int totalPages = (int) Math.ceil((double) reviews.size() / size);
 
         // Create and return response
         ReadReviewResponse response = ReadReviewResponse.builder()
-                .items(reviewDTOS)
-                .totalPage(totalPages)
-                .build();
+            .items(reviewDTOS)
+            .totalPage(totalPages)
+            .build();
 
         return response;
     }
@@ -125,26 +126,25 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(ReviewNotFoundException::new);
+            .orElseThrow(ReviewNotFoundException::new);
         return toReviewDTO(memberId, review);
     }
 
-    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review, Member member) {
+    private List<Comment> convertToComments(List<CommentDTO> commentDTOs, Review review,
+        Member member) {
         return commentDTOs.stream()
-                .map(dto -> dto.toComment(member, review))
-                .collect(Collectors.toList());
+            .map(dto -> dto.toComment(member, review))
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public Long createReview(RequestDTO requestDTO, MultipartFile file) {
         // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(requestDTO.getMemberId())
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
-        Ticket ticket = ticketRepository.findById(requestDTO.getTicketId())
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-
+        Schedule schedule = scheduleRepository.findById(requestDTO.getTicketId())
+            .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
         String filename;
         UploadFile uploadFile = null;
@@ -161,13 +161,13 @@ public class ReviewService {
         System.out.println("uploaded image name" + uploadFile);
         // Build review entity from DTO
         Review review = Review.builder()
-                .filename(filename)
-                .ticket(ticket)
-                .content(requestDTO.getContent())
-                .spoiler(requestDTO.getSpoiler())
-                .emotion(requestDTO.getEmotion())
-                .emphathy(0)
-                .build();
+            .filename(filename)
+            .schedule(schedule)
+            .content(requestDTO.getContent())
+            .spoiler(requestDTO.getSpoiler())
+            .emotion(requestDTO.getEmotion())
+            .emphathy(0)
+            .build();
 
         // 저장 및 id 반환
         return reviewRepository.save(review).getId();
@@ -177,10 +177,11 @@ public class ReviewService {
     public ReviewDTO updateReview(Integer memberId, Long reviewId, RequestDTO detailReviewDTO) {
         // 리뷰 가져오기
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(ReviewNotFoundException::new);
+            .orElseThrow(ReviewNotFoundException::new);
 
         // 리뷰 업데이트
-        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(), detailReviewDTO.getEmotion());
+        review.updateReview(detailReviewDTO.getContent(), detailReviewDTO.getSpoiler(),
+            detailReviewDTO.getEmotion());
         Review updatedReview = reviewRepository.save(review);
         return toReviewDTO(memberId, updatedReview);
     }
@@ -203,21 +204,23 @@ public class ReviewService {
 
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
         List<CommentDTO> commentDTOs = review.getComments().stream()
-                .map(CommentDTO::toCommentDTO)
-                .toList();
+            .map(CommentDTO::toCommentDTO)
+            .toList();
         int totalComments = commentDTOs.size();
 
-        boolean myReviewCheck = review.getTicket() != null &&
-                review.getTicket().getMember() != null &&
-                review.getTicket().getMember().getId() != null &&
-                review.getTicket().getMember().getId().equals(memberId);
+        boolean myReviewCheck = review.getSchedule() != null &&
+            review.getSchedule().getMember() != null &&
+            review.getSchedule().getMember().getId() != null &&
+            review.getSchedule().getMember().getId().equals(memberId);
 
         int size = 10; // Assuming fixed size for comment pages
         int pages = (int) Math.ceil((double) totalComments / size);
 
-        String formattedDate = review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+        String formattedDate =
+            review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
-        boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId)).isPresent();
+        boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId))
+            .isPresent();
 
         String basePath = "images/";
         String filename = review.getFilename();
@@ -226,37 +229,53 @@ public class ReviewService {
         if ("noimg".equals(filename)) {
             // Special case for "noimg"
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(basePath)
-                    .path("noimg.png") // or any specific path for placeholder image
-                    .build()
-                    .toUriString();
+                .path(basePath)
+                .path("noimg.png") // or any specific path for placeholder image
+                .build()
+                .toUriString();
         } else {
             // Standard case
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(basePath)
-                    .path(filename)
-                    .build()
-                    .toUriString();
+                .path(basePath)
+                .path(filename)
+                .build()
+                .toUriString();
         }
 
+        ReviewDTOBuilder builder = ReviewDTO.builder()
+            .id(review.getId())
+            .ticketId(review.getSchedule() != null ? review.getSchedule().getId() : null)
+            .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
+                ? review.getSchedule().getMember().getNickname() : null)
+            .imgurl(filepath)
+            .content(review.getContent())
+            .spoiler(review.getSpoiler())
+            .emotion(review.getEmotion())
+            .createdate(formattedDate)
+            .empathy(review.getEmphathy())
+            .myempathy(myEmpathy)
+            .commentpagesize(pages)
+            .commentscount(totalComments)
+            .myreview(myReviewCheck);
 
-
-        return ReviewDTO.builder()
-                .id(review.getId())
-                .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
-                .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
-                .title(review.getTicket() != null ? review.getTicket().getName() : null)
-                .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
-                .imgurl(filepath)
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .createdate(formattedDate)
-                .empathy(review.getEmphathy())
-                .myempathy(myEmpathy)
-                .commentpagesize(pages)
-                .commentscount(totalComments)
-                .myreview(myReviewCheck)
+        if (review.getSchedule() != null
+            && review.getSchedule() instanceof CustomSchedule customSchedule) {
+            return builder
+                .title(customSchedule.getName() != null ? customSchedule.getName() : null)
+                .category(
+                    customSchedule.getCategory() != null ? customSchedule.getCategory().toString()
+                        : null)
                 .build();
+        } else if (review.getSchedule() != null
+            && review.getSchedule() instanceof ReservationSchedule reservationSchedule) {
+            return builder
+                .title(reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                    .getName())
+                .category(
+                    reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                        .getCategory().toString())
+                .build();
+        }
+        return null;
     }
 }

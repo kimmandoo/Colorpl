@@ -2,14 +2,24 @@ package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.global.common.BaseEntity;
-import com.colorpl.ticket.domain.Ticket;
-import jakarta.persistence.*;
-import lombok.*;
-
+import com.colorpl.schedule.command.domain.Schedule;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -28,26 +38,26 @@ public class Review extends BaseEntity {
     private String filename;
 
     @Column(name = "REVIEW_CONTENT")
-    private  String content;
+    private String content;
 
     @Column(name = "IS_SPOILER")
-    private  Boolean spoiler;
+    private Boolean spoiler;
 
     @Column(name = "REVIEW_EMOTION")
-    private  Byte emotion;
+    private Byte emotion;
 
     @Column(name = "EMPHATHY_NUMBER")
     @Builder.Default
-    private  Integer emphathy = 0;
+    private Integer emphathy = 0;
 
     @OneToMany(mappedBy = "review", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TICKET_ID", referencedColumnName = "TICKET_ID")
-    private Ticket ticket;
-    
+    @JoinColumn(name = "SCHEDULE_ID", referencedColumnName = "SCHEDULE_ID")
+    private Schedule schedule;
+
     // 공감 유저 추적
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
