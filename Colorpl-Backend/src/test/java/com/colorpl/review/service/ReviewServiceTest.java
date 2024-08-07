@@ -20,9 +20,9 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.schedule.command.domain.CustomSchedule;
-import com.colorpl.schedule.command.domain.Schedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.domain.Schedule;
+import com.colorpl.schedule.repository.ScheduleRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 class ReviewServiceTest {
 
     @Mock
-
     private StorageService storageService;
 
     @Mock
@@ -73,7 +72,10 @@ class ReviewServiceTest {
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder().id(1L).build();
+        Schedule schedule = CustomSchedule.builder()
+            .member(member)
+            .id(1L)
+            .build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
         MultipartFile file = mock(MultipartFile.class);
         UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName")
@@ -99,11 +101,14 @@ class ReviewServiceTest {
         // Create test data
         Integer memberID = 1;
         RequestDTO requestDTO = RequestDTO.builder()
-                .scheduleId(1L)
+            .scheduleId(1L)
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder().id(1L).build();
+        Schedule schedule = CustomSchedule.builder()
+            .member(member)
+            .id(1L)
+            .build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
 
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));

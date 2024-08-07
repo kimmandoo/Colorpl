@@ -1,4 +1,4 @@
-package com.colorpl.schedule.command.domain;
+package com.colorpl.schedule.domain;
 
 import com.colorpl.member.Member;
 import com.colorpl.review.domain.Review;
@@ -14,24 +14,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
-@Entity
 @Getter
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Entity
 public abstract class Schedule {
 
-    @Column(name = "SCHEDULE_ID")
-    @GeneratedValue
     @Id
+    @GeneratedValue
+    @Column(name = "SCHEDULE_ID")
     private Long id;
 
-    @JoinColumn(name = "MEMBER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @Column(name = "SCHEDULE_IMAGE")

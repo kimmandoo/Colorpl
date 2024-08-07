@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
-import com.colorpl.schedule.command.domain.CustomSchedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.dto.SearchScheduleCondition;
+import com.colorpl.schedule.repository.CustomScheduleRepository;
+import com.colorpl.schedule.repository.ScheduleRepository;
 import com.colorpl.show.domain.detail.Category;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -46,8 +48,13 @@ class CustomScheduleRepositoryTest {
             .build();
         scheduleRepository.save(createCustomSchedule);
 
-        CustomSchedule findCustomSchedule = customScheduleRepository.findByMemberAndDateTimeBetween(
-            member, now.minusDays(1), now.plusDays(1)).get(0);
+        SearchScheduleCondition condition = SearchScheduleCondition.builder()
+            .member(member)
+            .from(now.minusDays(1))
+            .to(now.plusDays(1))
+            .build();
+
+        CustomSchedule findCustomSchedule = customScheduleRepository.search(condition).get(0);
 
         assertThat(findCustomSchedule.getSeat()).isEqualTo("seat");
         assertThat(findCustomSchedule.getDateTime()).isEqualTo(now);

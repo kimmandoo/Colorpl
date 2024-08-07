@@ -1,4 +1,4 @@
-package com.colorpl.schedule.query.dto;
+package com.colorpl.schedule.dto;
 
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.domain.ReservationSchedule;
