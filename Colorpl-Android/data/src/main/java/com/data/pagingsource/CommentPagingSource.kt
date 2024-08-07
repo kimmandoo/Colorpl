@@ -8,7 +8,7 @@ import com.data.model.paging.Comment
 import com.data.util.ApiResult
 import timber.log.Timber
 
-class CommentPagingSource (
+class CommentPagingSource(
     private val feedId: Int,
     private val commentDataSource: CommentDataSource
 ) :
@@ -21,7 +21,7 @@ class CommentPagingSource (
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
-        val nextPage = params.key ?: 1
+        val nextPage = params.key ?: 0
 
         return when (val result =
             safeApiCall { commentDataSource.getComment(feedId, nextPage, params.loadSize) }) {
@@ -31,7 +31,7 @@ class CommentPagingSource (
 
                 LoadResult.Page(
                     data = response.items,
-                    prevKey = if (nextPage == 1) null else nextPage - 1,
+                    prevKey = if (nextPage == 0) null else nextPage - 1,
                     nextKey = if (response.items.isEmpty() || nextPage >= response.totalPage) null else nextPage + 1
                 )
             }
