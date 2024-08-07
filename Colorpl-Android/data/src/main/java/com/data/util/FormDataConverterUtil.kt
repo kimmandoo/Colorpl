@@ -17,7 +17,7 @@ object FormDataConverterUtil {
         return value.toRequestBody(MIME_TYPE_TEXT.toMediaType())
     }
 
-    fun getJsonRequestBody(value: Any): RequestBody {
+    fun getJsonRequestBody(value: Any?): RequestBody {
         return Gson().toJson(value).toRequestBody(MIME_TYPE_JSON.toMediaType())
     }
 

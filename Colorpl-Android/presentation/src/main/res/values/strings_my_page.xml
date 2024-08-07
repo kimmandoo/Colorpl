@@ -9,6 +9,7 @@
     <string name="my_page_search_user">유저찾기</string>
 
     <string name="my_page_nick_name">닉네임</string>
+    <string name="my_page_nick_name_error">닉네임을 입력해주세요.</string>
     <string name="my_page_update_complete">수정 완료</string>
     <string name="my_page_user_search">유저찾기</string>
     <string name="my_page_review_count">리뷰수</string>

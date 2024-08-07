@@ -24,7 +24,7 @@ interface MemberApi {
     @Multipart
     @PUT("members")
     suspend fun updateMemberInfo(
-        @Part("memberDTO") memberDTO : RequestBody,
+        @Part("memberDTO") memberDTO : RequestBody?,
         @Part profileImage : MultipartBody.Part?
     ) : ResponseMemberInfo
 }

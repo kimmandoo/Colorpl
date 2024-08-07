@@ -45,14 +45,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
         LoadingDialog(requireActivity())
     }
 
-    override fun onStart() {
-        super.onStart()
-        val firebase = Firebase.auth
-        if (firebase.currentUser != null) {
-//            startActivity(Intent(requireActivity(), MainActivity::class.java))
-//            requireActivity().finish()
-        }
-    }
 
     override fun initView() {
         initGoogleLogin()

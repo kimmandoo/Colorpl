@@ -1,24 +1,28 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.gradle.plugin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.navigation.safe.args)
+
 }
 
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.colorpl.presentation"
     compileSdk = 34
 
 
-
-
     defaultConfig {
         minSdk = 28
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
+        buildConfigField("String", "IMAGE_BASE", properties["IMAGE_BASE"] as String)
     }
 
     buildTypes {

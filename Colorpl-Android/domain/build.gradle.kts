@@ -5,9 +5,13 @@ plugins {
     alias(libs.plugins.hilt.gradle.plugin)
 }
 
+
+
 android {
     namespace = "com.colorpl.domain"
     compileSdk = 34
+
+
 
     defaultConfig {
         minSdk = 28
