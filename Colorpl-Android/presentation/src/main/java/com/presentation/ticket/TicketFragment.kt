@@ -9,7 +9,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketBinding
 import com.naver.maps.geometry.LatLng
@@ -24,6 +23,8 @@ import com.presentation.util.checkLocationPermission
 import com.presentation.util.distanceChange
 import com.presentation.util.ignoreParentScroll
 import com.presentation.util.roadTimeChange
+import com.presentation.util.setImageCenterCrop
+import com.presentation.util.setImageCircleCrop
 import com.presentation.util.setup
 import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,7 +57,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     private fun initUi() {
         binding.apply {
             binding.titleText = ticket.name
-            Glide.with(root.context).load(ticket.imgUrl).centerCrop().into(ivPoster)
+            ivPoster.setImageCenterCrop(ticket.imgUrl)
             includeDate.tvTitle.text = ticket.dateTime
             includePlace.tvTitle.text = ticket.location
             includeSeat.tvTitle.text = ticket.seat
