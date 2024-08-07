@@ -44,10 +44,8 @@ interface FeedApi {
     ): ResponsePagedFeed
 
     @GET("reviews/details/{reviewId}")
-
     suspend fun getDetailFeedData(
         @Path("reviewId") reviewId: Int,
-        @Query("memberId") memberId: Int = 0
     ): ResponseReviewDetail
 
     @PUT("reviews/reviews/{reviewId}")
