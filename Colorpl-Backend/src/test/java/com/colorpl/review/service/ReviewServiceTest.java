@@ -66,9 +66,10 @@ class ReviewServiceTest {
     @Test
     void createReview_ShouldReturnReviewIdWithFile() {
         // Create test data
+        Integer memberID = 1;
         RequestDTO requestDTO = RequestDTO.builder()
-            .memberId(1)
-            .ticketId(1L)
+//            .memberId(1)
+            .scheduleId(1L)
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
@@ -83,7 +84,7 @@ class ReviewServiceTest {
         when(storageService.storeFile(file)).thenReturn(uploadFile);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        Long result = reviewService.createReview(requestDTO, file);
+        Long result = reviewService.createReview(memberID, requestDTO, file);
 
         assertNotNull(result);
         assertEquals(1L, result);
@@ -96,9 +97,9 @@ class ReviewServiceTest {
     @Test
     void createReview_ShouldReturnReviewIdWithoutFile() {
         // Create test data
+        Integer memberID = 1;
         RequestDTO requestDTO = RequestDTO.builder()
-            .memberId(1)
-            .ticketId(1L)
+                .scheduleId(1L)
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
@@ -109,7 +110,7 @@ class ReviewServiceTest {
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        Long result = reviewService.createReview(requestDTO, null);
+        Long result = reviewService.createReview(memberID, requestDTO, null);
 
         assertNotNull(result);
         assertEquals(1L, result);

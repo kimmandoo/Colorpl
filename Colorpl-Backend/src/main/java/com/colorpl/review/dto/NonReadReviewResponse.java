@@ -10,4 +10,5 @@ import lombok.Getter;
 @Getter
 public class NonReadReviewResponse {
     private Long reviewId;
+    private int numbers;
 }

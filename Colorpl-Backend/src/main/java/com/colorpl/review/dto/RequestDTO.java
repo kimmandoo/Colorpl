@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class RequestDTO {
-    private Integer memberId;
-    private Long ticketId;
+//    private Integer memberId;
+    private Long scheduleId;
     private String content;
     private Boolean spoiler;
     private Byte emotion;

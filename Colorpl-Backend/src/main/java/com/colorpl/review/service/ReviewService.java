@@ -12,6 +12,7 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.NonReadReviewResponse;
 import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
@@ -140,6 +141,32 @@ public class ReviewService {
         return response;
     }
 
+    // 특정 멤버의 리뷰들만 조회
+    public NonReadReviewResponse findReviewNumbersOfMember(Integer memberId, int page, int size) {
+        // id로 멤버 찾기
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        // 관련 일정 추출
+        List<Schedule> schedules = member.getSchedules();
+
+        // null 인 일정 외 모두 추출
+        List<Review> reviews = schedules.stream()
+                .map(Schedule::getReview)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinct()
+                .toList();
+
+        // Create and return response
+        NonReadReviewResponse response = NonReadReviewResponse.builder()
+                .reviewId(1L)
+                .numbers(reviews.size())
+                .build();
+
+        return response;
+    }
+
     // 특정 리뷰 찾기
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
@@ -156,12 +183,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public Long createReview(RequestDTO requestDTO, MultipartFile file) {
+    public Long createReview(Integer memberId, RequestDTO requestDTO, MultipartFile file) {
         // 멤버 및 티켓 가져오기
-        Member member = memberRepository.findById(requestDTO.getMemberId())
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::new);
 
-        Schedule schedule = scheduleRepository.findById(requestDTO.getTicketId())
+        Schedule schedule = scheduleRepository.findById(requestDTO.getScheduleId())
             .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
         String filename;
