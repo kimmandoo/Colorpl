@@ -4,14 +4,30 @@ import com.colorpl.global.common.BaseEntity;
 import com.colorpl.global.common.exception.CategoryLimitException;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
+import com.colorpl.schedule.command.domain.Schedule;
 import com.colorpl.show.domain.detail.Category;
-import com.colorpl.ticket.domain.Ticket;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +37,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id
     @Column(name = "MEMBER_ID")
@@ -44,7 +60,7 @@ public class Member extends BaseEntity{
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> tickets;
+    private List<Schedule> schedules;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -56,17 +72,11 @@ public class Member extends BaseEntity{
 //    private List<Review> reviews;
 
     @ManyToMany
-    @JoinTable(
-            name = "member_following",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id")
-    )
+    @JoinTable(name = "member_following", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
     private Set<Member> followingList;
 
     @ManyToMany(mappedBy = "followingList")
     private Set<Member> followerList;
-
-
 
 
     // 연관관계 편의 메서드
@@ -85,20 +95,21 @@ public class Member extends BaseEntity{
         reservations.remove(reservation);
         reservation.updateMember(null);
     }
-    public void addTicket(Ticket ticket) {
-        if (tickets.contains(ticket)) {
-            throw new IllegalArgumentException("이미 추가된 티켓입니다.");
+
+    public void addSchedule(Schedule schedule) {
+        if (schedules.contains(schedule)) {
+            throw new IllegalArgumentException("이미 등록된 일정입니다.");
         }
-        tickets.add(ticket);
-        ticket.updateMember(this);
+        schedules.add(schedule);
+        schedule.updateMember(this);
     }
 
-    public void removeTicket(Ticket ticket) {
-        if (!tickets.contains(ticket)) {
-            throw new IllegalArgumentException("삭제할 티켓이 없습니다.");
+    public void removeSchedule(Schedule schedule) {
+        if (!schedules.contains(schedule)) {
+            throw new IllegalArgumentException("삭제할 일정이 없습니다.");
         }
-        tickets.remove(ticket);
-        ticket.updateMember(null);
+        schedules.remove(schedule);
+        schedule.updateMember(null);
     }
 
     public void addFollowing(Member member) {
@@ -131,12 +142,9 @@ public class Member extends BaseEntity{
     }
 
     public static Member toMember(MemberDTO memberDTO, PasswordEncoder encoder) {
-        return Member.builder()
-            .email(memberDTO.getEmail())
-            .password(encoder.encode(memberDTO.getPassword()))
-            .nickname(memberDTO.getNickname())
-            .categories(memberDTO.getCategories())
-            .profile(memberDTO.getProfile())
+        return Member.builder().email(memberDTO.getEmail())
+            .password(encoder.encode(memberDTO.getPassword())).nickname(memberDTO.getNickname())
+            .categories(memberDTO.getCategories()).profile(memberDTO.getProfile())
             .type(MemberType.USER)  // 기본 값으로 USER 설정
             .build();
     }
@@ -150,11 +158,9 @@ public class Member extends BaseEntity{
         this.type = member.getType();
     }
 
-
     public String getUsername() {
         return email;
     }
-
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + type.name()));
