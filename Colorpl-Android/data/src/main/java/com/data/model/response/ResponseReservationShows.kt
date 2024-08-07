@@ -10,17 +10,17 @@ data class ResponseReservationShows(
 
 data class ReservationInfo(
     val id: Int,
-    val apiId: String,
+    val apiId: String?,
     val name: String,
-    val cast: String,
+    val cast: String?,
     val runtime: String,
-    val priceBySeatClass: PriceBySeatClass,
+    val priceBySeatClass: Map<String, Int>,
     val posterImagePath: String,
     val area: String,
     val category: String?,
-    val state: String,
-    val seats: List<Seat>,
-    val hall: String,
+    val state: String?,
+    val seats: List<Seat>?,
+    val hall: String?,
 )
 
 

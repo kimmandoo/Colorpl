@@ -19,13 +19,12 @@ import timber.log.Timber
 @AndroidEntryPoint
 class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBinding>(R.layout.fragment_reservation_progress) {
     private val args: ReservationProgressFragmentArgs by navArgs()
-    private val viewModel: ReservationViewModel by viewModels()
+    private val reservationViewModel: ReservationViewModel by viewModels()
 
 
     override fun initView() {
         initUi()
 //        backEvent()
-//        viewModel.getReservationShows(2)
     }
 
     private fun initUi() {
@@ -38,8 +37,8 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
 
     private fun initViewModelData() {
         with(args.reservationDetail) {
-            contentImg?.let { viewModel.setReservationImg(it) }
-            viewModel.setReservationTitle(title)
+            contentImg?.let { reservationViewModel.setReservationImg(it) }
+            reservationViewModel.setReservationTitle(title)
         }
     }
 
