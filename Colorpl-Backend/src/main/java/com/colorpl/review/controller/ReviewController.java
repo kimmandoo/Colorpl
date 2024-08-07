@@ -44,11 +44,21 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
+    // 특정 멤버의 리뷰 수 구하기
+    @GetMapping("/members/{memberId}/numbers")
+    @Operation(summary = "특정 멤버의 모든 리뷰 개수 조회", description = "특정 멤버의 모든 리뷰 개수 조회할 때 사용하는 API(memberId 49,50확인)")
+    public ResponseEntity<NonReadReviewResponse> findReviewNumbersOfRespectiveMember(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
+//        Integer memberId = memberService.getCurrentMemberId();
+        NonReadReviewResponse reviews = reviewService.findReviewNumbersOfMember(memberId, page, size);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+
     // 로그인 멤버의 모든 리뷰 조회
-    @GetMapping("/myReviews")
+    @GetMapping("/myreviews")
     @Operation(summary = "로그인 멤버의 모든 리뷰 조회", description = "로그인 한 멤버의 모든 리뷰 조회 할 때 사용하는 API")
     public ResponseEntity<ReadReviewResponse> findReviewNumbersOfMembers( @RequestParam int page, @RequestParam int size) {
         Integer memberId = memberService.getCurrentMemberId();
+        System.out.println(memberId);
         ReadReviewResponse reviews = reviewService.findReviewsOfMember(memberId, page, size);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
@@ -66,7 +76,6 @@ public class ReviewController {
     @PostMapping("/create")
     @Operation(summary = "새로운 리뷰 작성", description = "리뷰 생성 시 사용하는 API(url의 멤버id, 티켓 id 사용)")
     public ResponseEntity<NonReadReviewResponse> createReview(
-            @PathVariable Long ticketId,
             @RequestPart RequestDTO request,
             @RequestPart(required = false) MultipartFile file
     ) {
