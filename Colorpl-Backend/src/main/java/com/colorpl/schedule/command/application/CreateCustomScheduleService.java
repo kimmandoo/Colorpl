@@ -9,6 +9,9 @@ import com.colorpl.member.service.MemberService;
 import com.colorpl.schedule.command.domain.CustomSchedule;
 import com.colorpl.schedule.command.domain.ScheduleRepository;
 import com.colorpl.schedule.ui.CreateCustomScheduleRequest;
+import com.colorpl.show.domain.detail.Category;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +39,15 @@ public class CreateCustomScheduleService {
 
         UploadFile uploadFile = storageService.storeFile(attachFile);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+
         CustomSchedule customSchedule = CustomSchedule.builder()
             .member(member)
             .image(uploadFile.getStoreFilename())
             .seat(request.getSeat())
-            .dateTime(request.getDateTime())
+            .dateTime(LocalDateTime.parse(request.getDateTime(), formatter))
             .name(request.getName())
-            .category(request.getCategory())
+            .category(Category.fromString(request.getCategory()).orElseThrow())
             .location(request.getLocation())
             .latitude(request.getLatitude())
             .longitude(request.getLongitude())
