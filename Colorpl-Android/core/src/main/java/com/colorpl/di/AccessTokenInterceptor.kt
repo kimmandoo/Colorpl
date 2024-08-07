@@ -11,7 +11,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AccessTokenInterceptor @Inject constructor(
-    private val accessTokenUseCase: AccessTokenUseCase
+    private val accessTokenUseCase: AccessTokenUseCase,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originRequest = chain.request()

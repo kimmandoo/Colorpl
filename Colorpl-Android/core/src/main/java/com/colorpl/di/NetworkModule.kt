@@ -40,6 +40,16 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @NoHeaderRetrofit
+    fun provideNoHeaderRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .baseUrl(baseUrl)
+            .build()
+    }
+
+    @Singleton
+    @Provides
     @NormalOkHttp
     fun provideOkHttpClient(interceptor: AccessTokenInterceptor) = OkHttpClient.Builder().run {
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -49,6 +59,7 @@ object NetworkModule {
         writeTimeout(120, TimeUnit.SECONDS)
         build()
     }
+
 
     @Singleton
     @Provides
