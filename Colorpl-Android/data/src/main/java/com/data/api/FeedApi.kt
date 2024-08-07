@@ -29,9 +29,8 @@ interface FeedApi {
     ): ResponsePagedFeed
 
     @Multipart
-    @POST("reviews/tickets/{ticketId}")
+    @POST("reviews/create")
     suspend fun createUserFeedData(
-        @Path("ticketId") ticketId: Int,
         @Part file: MultipartBody.Part?,
         @Part("request") request: RequestBody,
     ): ResponseReviewCreate
@@ -48,7 +47,7 @@ interface FeedApi {
         @Path("reviewId") reviewId: Int,
     ): ResponseReviewDetail
 
-    @PUT("reviews/reviews/{reviewId}")
+    @PUT("reviews/update/{reviewId}")
     suspend fun editUserFeedData(
         @Path("reviewId") reviewId: Int,
         @Body requestReviewEdit: RequestReviewEdit

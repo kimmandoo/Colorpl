@@ -29,7 +29,6 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
                 FormDataConverterUtil.getNullableMultiPartBody("file", file)
             Timber.d("review: ${filePart}\n request:$requestPart")
             reviewDataSource.createReview(
-                ticketId = request.ticketId,
                 review = filePart,
                 request = requestPart
             )

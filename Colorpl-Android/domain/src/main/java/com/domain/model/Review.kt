@@ -1,8 +1,8 @@
 package com.domain.model
 
 data class Review(
-    val ticketId: Int,
+    val scheduleId: Int,
     val content: String,
     val spoiler: Boolean,
-    val emotion: Int,
+    val emotion: String,
 )

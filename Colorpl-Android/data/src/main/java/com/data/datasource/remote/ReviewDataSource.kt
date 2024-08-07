@@ -12,7 +12,6 @@ interface ReviewDataSource {
     suspend fun deleteReview(reviewId: Int): ResponseReviewEdit
     suspend fun editReview(reviewId: Int, requestReviewEdit: RequestReviewEdit): ResponseReviewEdit
     suspend fun createReview(
-        ticketId: Int,
         review: MultipartBody.Part?,
         request: RequestBody
     ): ResponseReviewCreate
