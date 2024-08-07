@@ -10,6 +10,6 @@ class FeedDataSourceImpl @Inject constructor(
     private val feedApi: FeedApi
 ) : FeedDataSource {
     override suspend fun getFeed(page: Int, size: Int): ResponsePagedFeed {
-        return feedApi.getAllFeedData(memberId = 1, page, size)
+        return feedApi.getAllFeedData(page, size)
     }
 }

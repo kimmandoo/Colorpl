@@ -11,4 +11,13 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
     override fun initView() {
 
     }
+
+
+    private fun initClickEvent(){
+        binding.apply {
+            tvLogout.setOnClickListener{
+
+            }
+        }
+    }
 }

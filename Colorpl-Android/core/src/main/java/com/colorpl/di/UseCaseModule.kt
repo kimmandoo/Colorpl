@@ -11,7 +11,7 @@ import com.domain.usecase.ReviewCreateUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.usecase.ReviewDeleteUseCase
 import com.domain.usecase.ReviewEditUseCase
-import com.domain.usecase.TicketCreateUseCase
+import com.domain.usecase.TicketUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.feed.CommentUseCaseImpl
 import com.domain.usecaseimpl.feed.FeedUseCaseImpl
@@ -24,7 +24,7 @@ import com.domain.usecaseimpl.reservation.ReservationUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewCreateUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewDeleteUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewEditUseCaseImpl
-import com.domain.usecaseimpl.ticket.TicketCreateUseCaseImpl
+import com.domain.usecaseimpl.ticket.TicketUseCaseImpl
 import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -75,9 +75,9 @@ interface UseCaseModule {
 
     @Binds
     @Singleton
-    fun bindsTicketCreateUseCase(
-        ticketCreateUseCaseImpl: TicketCreateUseCaseImpl
-    ): TicketCreateUseCase
+    fun bindsTicketUseCase(
+        ticketUseCaseImpl: TicketUseCaseImpl
+    ): TicketUseCase
 
     @Binds
     @Singleton

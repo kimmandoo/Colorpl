@@ -11,8 +11,9 @@ class CommentViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(data: Comment) {
         binding.apply {
-            tvContent.text = data.content
-            tvName.text = data.name
+            tvContent.text = data.commentContent
+            tvName.text = data.writer
+            tvUploadDate.text = data.createdate
         }
     }
 }

@@ -42,6 +42,7 @@ class MyPageViewModel @Inject constructor(
             getMemberInfoUseCase.getMemberInfo().collectLatest { result ->
                 when (result) {
                     is DomainResult.Success -> {
+                        Timber.d("멤버 가져오기 성공 ${result.data}")
                         setMemberInfo(result.data)
                     }
 

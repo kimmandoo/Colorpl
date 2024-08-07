@@ -6,7 +6,7 @@ import com.domain.model.Description
 import com.domain.model.Ticket
 import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.OpenAiUseCase
-import com.domain.usecase.TicketCreateUseCase
+import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,15 +24,15 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketCreateViewModel @Inject constructor(
     private val openAiUseCase: OpenAiUseCase,
-    private val ticketCreateUseCase: TicketCreateUseCase,
+    private val ticketUseCase: TicketUseCase,
     private val geocodingUseCase: GeocodingUseCase
 ) : ViewModel() {
     private val _description = MutableStateFlow<Description?>(null)
     val description: StateFlow<Description?> = _description
     private val _category = MutableStateFlow("")
     val category: StateFlow<String> = _category
-    private val _geocodingLatLng = MutableSharedFlow<LatLng>()
-    val geocodingLatLng = _geocodingLatLng.asSharedFlow()
+    private val _geocodingLatLng = MutableStateFlow<LatLng>(LatLng(0.0, 0.0))
+    val geocodingLatLng: StateFlow<LatLng> = _geocodingLatLng
     private val _createResponse = MutableSharedFlow<Int>()
     val createResponse: SharedFlow<Int> = _createResponse.asSharedFlow()
 
@@ -42,7 +42,6 @@ class TicketCreateViewModel @Inject constructor(
 
     fun getAddress(address: String) {
         viewModelScope.launch {
-            _geocodingLatLng.emit(LatLng(0.0, 0.0))
             geocodingUseCase(address).collectLatest { response ->
                 when (response) {
                     is DomainResult.Error -> {
@@ -60,7 +59,7 @@ class TicketCreateViewModel @Inject constructor(
 
     fun cancelGetAddress() {
         viewModelScope.launch {
-            _geocodingLatLng.emit(LatLng(0.0, 0.0))
+            _geocodingLatLng.value = LatLng(0.0, 0.0)
         }
     }
 
@@ -68,15 +67,15 @@ class TicketCreateViewModel @Inject constructor(
     fun createTicket(image: File) {
         viewModelScope.launch {
             _description.value?.let { ticket ->
-                ticketCreateUseCase(
+                ticketUseCase.createTicket(
                     image, Ticket(
-                        file = null,
-                        ticketId = -1,
                         name = ticket.title,
-                        theater = ticket.detail,
-                        date = ticket.schedule,
+                        location = ticket.detail,
+                        dateTime = ticket.schedule,
                         seat = ticket.seat!!,
-                        category = _category.value
+                        category = _category.value,
+                        latitude = _geocodingLatLng.value.latitude,
+                        longitude = _geocodingLatLng.value.longitude
                     )
                 ).collectLatest { response ->
                     when (response) {
@@ -109,9 +108,6 @@ class TicketCreateViewModel @Inject constructor(
         }
     }
 
-    // view에서 viewmodel로 주는 방향은 안좋은 걸로 알고있는데, 일단 이렇게 해둠
-    // domain 모듈에서 serializable 어노테이션 사용가능하면 safe args로 처리할 것임
-    // string 5개를 넘기는 건 좀 아닌 것 같아서 일단 이렇게
     fun setTicketInfo(description: Description) {
         _description.value = description
     }

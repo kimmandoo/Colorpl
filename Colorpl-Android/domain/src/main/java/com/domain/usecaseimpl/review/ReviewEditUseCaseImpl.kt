@@ -19,7 +19,6 @@ class ReviewEditUseCaseImpl @Inject constructor(private val reviewRepository: Re
         requestReviewEdit: Review
     ): Flow<DomainResult<Int>> = flow {
         reviewRepository.editReview(
-            requestReviewEdit.memberId,
             reviewId,
             requestReviewEdit.toEditEntity()
         ).collect { result ->

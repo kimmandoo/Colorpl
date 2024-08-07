@@ -11,5 +11,6 @@ data class Member(
     val followerCount: Int = 0,
     val followingCount: Int = 0,
     val id: Int = 0,
-    val categories: List<String> = emptyList()
+    val categories: List<String> = emptyList(),
+    val idToken : String  = ""
 )

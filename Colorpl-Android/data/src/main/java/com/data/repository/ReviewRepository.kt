@@ -21,7 +21,7 @@ interface ReviewRepository {
 
     suspend fun deleteReview(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>>
 
-    suspend fun editReview(memberId: Int, reviewId: Int, requestReviewEdit: RequestReviewEdit): Flow<ApiResult<ResponseReviewEdit>>
+    suspend fun editReview(reviewId: Int, requestReviewEdit: RequestReviewEdit): Flow<ApiResult<ResponseReviewEdit>>
 
 
 }

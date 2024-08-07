@@ -7,7 +7,8 @@ interface MemberDataSource {
 
     suspend fun getMemberInfo(): ResponseMemberInfo
 
-    suspend fun getFollowingCount() : ResponseFollowCount
+    suspend fun getFollowingCount(): ResponseFollowCount
 
-    suspend fun getFollowerCount() : ResponseFollowCount
+    suspend fun getFollowerCount(): ResponseFollowCount
+    
 }

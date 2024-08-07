@@ -74,8 +74,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task: Task<String> ->
-                val token = task.result
-                Timber.d("FCM Log ${token}")
                 if (!task.isSuccessful) {
                     Timber.d("호요요")
                     return@addOnCompleteListener
