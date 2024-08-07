@@ -5,6 +5,7 @@ import com.data.datasource.remote.ReviewDataSource
 import com.data.model.request.RequestReviewCreate
 import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
+import com.data.model.response.ResponseReviewDetail
 import com.data.model.response.ResponseReviewEdit
 import com.data.repository.ReviewRepository
 import com.data.util.ApiResult
@@ -37,6 +38,12 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
         })
     }
 
+    override suspend fun getReviewDetail(reviewId: Int): Flow<ApiResult<ResponseReviewDetail>> =
+        flow {
+            emit(safeApiCall {
+                reviewDataSource.getReviewDetail(reviewId)
+            })
+        }
     override suspend fun deleteReview(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>> = flow {
         emit(safeApiCall {
             reviewDataSource.deleteReview(reviewId)
@@ -52,4 +59,5 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
             reviewDataSource.editReview(memberId, reviewId, requestReviewEdit)
         })
     }
+
 }

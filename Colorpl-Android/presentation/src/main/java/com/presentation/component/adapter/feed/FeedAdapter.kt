@@ -9,7 +9,7 @@ import com.domain.model.Feed
 import com.presentation.base.BaseDiffUtil
 
 class FeedAdapter(
-    private val onFeedContentClickListener: () -> Unit,
+    private val onFeedContentClickListener: (Int) -> Unit,
     private val onCommentClickListener: () -> Unit,
     private val onEmotionClickListener: () -> Unit,
     private val onReportClickListener: () -> Unit,
