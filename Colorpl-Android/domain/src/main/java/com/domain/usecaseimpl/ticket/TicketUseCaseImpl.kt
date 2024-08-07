@@ -3,7 +3,8 @@ package com.domain.usecaseimpl.ticket
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
-import com.domain.model.Ticket
+import com.domain.model.TicketRequest
+import com.domain.model.TicketResponse
 import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class TicketUseCaseImpl @Inject constructor(
     private val ticketRepository: TicketRepository,
 ) : TicketUseCase {
-    override fun createTicket(image: File, ticket: Ticket): Flow<DomainResult<Int>> = flow {
+    override fun createTicket(image: File, ticket: TicketRequest): Flow<DomainResult<Int>> = flow {
         Timber.d("$ticket")
         ticketRepository.createTicket(
             image, ticket.toEntity()
@@ -35,7 +36,7 @@ class TicketUseCaseImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllTicket(): Flow<DomainResult<List<Ticket>>> = flow {
+    override suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>> = flow {
         ticketRepository.getAllTicket().collect { result ->
             when (result) {
                 is ApiResult.Success -> {
@@ -51,19 +52,20 @@ class TicketUseCaseImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMonthlyTicket(date: String): Flow<DomainResult<List<Ticket>>> = flow {
-        ticketRepository.getMonthlyTicket(date).collect { result ->
-            when (result) {
-                is ApiResult.Success -> {
-                    val response = result.data.map { it.toEntity() }
-                    Timber.d("$response")
-                    emit(DomainResult.success(response))
-                }
+    override suspend fun getMonthlyTicket(date: String): Flow<DomainResult<List<TicketResponse>>> =
+        flow {
+            ticketRepository.getMonthlyTicket(date).collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        val response = result.data.map { it.toEntity() }
+                        Timber.d("$response")
+                        emit(DomainResult.success(response))
+                    }
 
-                is ApiResult.Error -> {
-                    emit(DomainResult.error(result.exception))
+                    is ApiResult.Error -> {
+                        emit(DomainResult.error(result.exception))
+                    }
                 }
             }
         }
-    }
 }

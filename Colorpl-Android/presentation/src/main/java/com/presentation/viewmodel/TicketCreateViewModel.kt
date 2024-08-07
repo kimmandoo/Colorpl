@@ -3,7 +3,7 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Description
-import com.domain.model.Ticket
+import com.domain.model.TicketRequest
 import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TicketUseCase
@@ -68,14 +68,14 @@ class TicketCreateViewModel @Inject constructor(
         viewModelScope.launch {
             _description.value?.let { ticket ->
                 ticketUseCase.createTicket(
-                    image, Ticket(
+                    image, TicketRequest(
                         name = ticket.title,
                         location = ticket.detail,
                         dateTime = ticket.schedule,
                         seat = ticket.seat!!,
                         category = _category.value,
                         latitude = _geocodingLatLng.value.latitude,
-                        longitude = _geocodingLatLng.value.longitude
+                        longitude = _geocodingLatLng.value.longitude,
                     )
                 ).collectLatest { response ->
                     when (response) {
