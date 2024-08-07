@@ -53,6 +53,8 @@ class LoginViewModel @Inject constructor(
                         val data = it.data
                         if (data.email.isNotEmpty() && data.password.isNotEmpty()) {
                             signIn(data.email.toString(), data.password.toString())
+                        }else{
+                            _signInEvent.emit(SignInEventState.NoSign)
                         }
                     }
 

@@ -116,6 +116,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     is SignInEventState.Error -> {
                         Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
                     }
+                    is SignInEventState.NoSign -> {
+                        
+                    }
                 }
 
             }
