@@ -6,9 +6,3 @@ services:
       - "5000:5000"
     volumes:
       - /home/ubuntu/backend/images:/var/images
-    Networks:
-      - colorpl
-
-networks:
-  colorpl:
-    External: true
