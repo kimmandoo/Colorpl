@@ -4,6 +4,7 @@ import com.colorpl.global.common.exception.BusinessException;
 import com.colorpl.global.common.exception.EmailNotFoundException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.member.Member;
+import com.colorpl.member.dto.FindMemberResponse;
 import com.colorpl.member.dto.FollowCountDTO;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInRequest;
@@ -201,13 +202,20 @@ public class MemberController {
         return ResponseEntity.ok(followingCount);
     }
 
-    @GetMapping("/search/{nickname}")
-    @Operation(summary = "닉네임으로 멤버 검색", description = "특정 닉네임을 가진 모든 멤버를 조회하는 API")
-    public ResponseEntity<List<MemberDTO>> getMembersByNickname(@PathVariable String nickname) {
-        List<MemberDTO> members = memberService.findMembersByNickname(nickname);
-        return ResponseEntity.ok(members);
-    }
+//    @GetMapping("/search/{nickname}")
+//    @Operation(summary = "닉네임으로 멤버 검색", description = "특정 닉네임을 가진 모든 멤버를 조회하는 API")
+//    public ResponseEntity<List<MemberDTO>> getMembersByNickname(@PathVariable String nickname) {
+//        List<MemberDTO> members = memberService.findMembersByNickname(nickname);
+//        return ResponseEntity.ok(members);
+//    }
 
+
+    @GetMapping("/search/{nickname}")
+    @Operation(summary = "닉네임으로 멤버 검색", description = "닉네임으로 멤버를 검색하고 해당 멤버의 정보를 조회하는 API")
+    public ResponseEntity<List<FindMemberResponse>> findMembersByNickname(@PathVariable String nickname) {
+        List<FindMemberResponse> members = memberService.findMembersByNickname(nickname);
+        return new ResponseEntity<>(members, HttpStatus.OK);
+    }
 
 
 //
