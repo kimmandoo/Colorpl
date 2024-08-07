@@ -12,6 +12,7 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.NonReadReviewResponse;
 import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
@@ -57,7 +58,6 @@ public class ReviewService {
         this.storageService = storageService;
         this.reviewRepository = reviewRepository;
         this.scheduleRepository = scheduleRepository;
-//        this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.empathyRepository = empathyRepository;
     }
@@ -74,24 +74,6 @@ public class ReviewService {
             .totalPage(totalPages).build();
         return response;
     }
-
-//    public int getReviewsCountOfMember(Integer memberId) {
-//        // 멤버의 리뷰 수를 직접 계산하기 위해 멤버 정보를 가져옵니다.
-//        Member member = memberRepository.findById(memberId)
-//            .orElseThrow(MemberNotFoundException::new);
-//
-//        // 멤버의 티켓을 통해 리뷰를 가져옵니다.
-//        List<Ticket> tickets = member.getTickets();
-//        List<Review> reviews = tickets.stream()
-//            .map(Ticket::getReview) // 각 티켓의 리뷰 추출
-//            .filter(Optional::isPresent) // null 확인
-//            .map(Optional::get) // Optional 제거
-//            .distinct() // 중복 리뷰 방지
-//            .collect(Collectors.toList());
-//
-//        // 리뷰 수 반환
-//        return reviews.size();
-//    }
 
     // 특정 멤버의 리뷰들만 조회
     public ReadReviewResponse findReviewsOfMember(Integer memberId, int page, int size) {
@@ -140,6 +122,32 @@ public class ReviewService {
         return response;
     }
 
+    // 특정 멤버의 리뷰 개수 조회
+    public NonReadReviewResponse findReviewNumbersOfMember(Integer memberId, int page, int size) {
+        // id로 멤버 찾기
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        // 관련 일정 추출
+        List<Schedule> schedules = member.getSchedules();
+
+        // null 인 일정 외 모두 추출
+        List<Review> reviews = schedules.stream()
+                .map(Schedule::getReview)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinct()
+                .toList();
+
+        // Create and return response
+        NonReadReviewResponse response = NonReadReviewResponse.builder()
+                .reviewId(1L)
+                .numbers(reviews.size())
+                .build();
+
+        return response;
+    }
+
     // 특정 리뷰 찾기
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
@@ -156,12 +164,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public Long createReview(RequestDTO requestDTO, MultipartFile file) {
+    public Long createReview(Integer memberId, RequestDTO requestDTO, MultipartFile file) {
         // 멤버 및 티켓 가져오기
-        Member member = memberRepository.findById(requestDTO.getMemberId())
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::new);
 
-        Schedule schedule = scheduleRepository.findById(requestDTO.getTicketId())
+        Schedule schedule = scheduleRepository.findById(requestDTO.getScheduleId())
             .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
         String filename;
@@ -262,7 +270,7 @@ public class ReviewService {
 
         ReviewDTOBuilder builder = ReviewDTO.builder()
             .id(review.getId())
-            .ticketId(review.getSchedule() != null ? review.getSchedule().getId() : null)
+            .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
             .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
                 ? review.getSchedule().getMember().getNickname() : null)
             .imgurl(filepath)

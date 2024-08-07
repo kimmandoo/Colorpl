@@ -20,9 +20,9 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.schedule.domain.CustomSchedule;
-import com.colorpl.schedule.domain.Schedule;
-import com.colorpl.schedule.repository.ScheduleRepository;
+import com.colorpl.schedule.command.domain.CustomSchedule;
+import com.colorpl.schedule.command.domain.Schedule;
+import com.colorpl.schedule.command.domain.ScheduleRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,17 +65,15 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldReturnReviewIdWithFile() {
-        // Create search data
+        // Create test data
+        Integer memberID = 1;
         RequestDTO requestDTO = RequestDTO.builder()
-            .memberId(1)
-            .ticketId(1L)
+//            .memberId(1)
+            .scheduleId(1L)
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder()
-            .id(1L)
-            .member(member)
-            .build();
+        Schedule schedule = CustomSchedule.builder().id(1L).build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
         MultipartFile file = mock(MultipartFile.class);
         UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName")
@@ -86,7 +84,7 @@ class ReviewServiceTest {
         when(storageService.storeFile(file)).thenReturn(uploadFile);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        Long result = reviewService.createReview(requestDTO, file);
+        Long result = reviewService.createReview(memberID, requestDTO, file);
 
         assertNotNull(result);
         assertEquals(1L, result);
@@ -98,24 +96,21 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldReturnReviewIdWithoutFile() {
-        // Create search data
+        // Create test data
+        Integer memberID = 1;
         RequestDTO requestDTO = RequestDTO.builder()
-            .memberId(1)
-            .ticketId(1L)
+                .scheduleId(1L)
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder()
-            .id(1L)
-            .member(member)
-            .build();
+        Schedule schedule = CustomSchedule.builder().id(1L).build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
 
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        Long result = reviewService.createReview(requestDTO, null);
+        Long result = reviewService.createReview(memberID, requestDTO, null);
 
         assertNotNull(result);
         assertEquals(1L, result);

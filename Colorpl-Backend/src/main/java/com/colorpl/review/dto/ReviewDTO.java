@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 public class ReviewDTO {
     private Long id;
-    private Long ticketId;
+    private Long scheduleId;
     private String writer;
     private boolean myreview;
     private String title;
@@ -39,7 +39,7 @@ public class ReviewDTO {
     // Constructor
     public ReviewDTO(Long id, Long ticketId, String writer, boolean myreview, String title, String createdate, String category, String imgurl, String content, Boolean spoiler, Byte emotion, Integer empathy, Boolean myempathy, Integer commentpagesize, Integer commentscount) {
         this.id = id;
-        this.ticketId = ticketId;
+        this.scheduleId = ticketId;
         this.writer = writer;
         this.myreview = myreview;
         this.title = title;
