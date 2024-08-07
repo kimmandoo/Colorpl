@@ -1,12 +1,10 @@
 package com.colorpl.schedule.ui;
 
-import com.colorpl.schedule.command.application.CreateCustomScheduleRequest;
 import com.colorpl.schedule.command.application.CreateCustomScheduleService;
-import com.colorpl.schedule.command.application.CreateReservationScheduleRequest;
 import com.colorpl.schedule.command.application.CreateReservationScheduleService;
+import com.colorpl.schedule.query.application.MonthlyScheduleListRequest;
 import com.colorpl.schedule.query.application.MonthlyScheduleListService;
 import com.colorpl.schedule.query.application.ScheduleListService;
-import com.colorpl.schedule.query.application.MonthlyScheduleListRequest;
 import com.colorpl.schedule.query.dto.ScheduleListResponse;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -16,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,7 +46,8 @@ public class ScheduleController {
     }
 
     @PostMapping("/custom")
-    public ResponseEntity<Long> createCustomSchedule(CreateCustomScheduleRequest request) {
+    public ResponseEntity<Long> createCustomSchedule(
+        @RequestBody CreateCustomScheduleRequest request) {
 
         Long scheduleId = createCustomScheduleService.createCustomSchedule(request);
 
@@ -61,7 +61,7 @@ public class ScheduleController {
 
     @PostMapping("/reservation")
     public ResponseEntity<Long> createReservationSchedule(
-        CreateReservationScheduleRequest request) {
+        @RequestBody CreateReservationScheduleRequest request) {
 
         Long scheduleId = createReservationScheduleService.createReservationSchedule(request);
 

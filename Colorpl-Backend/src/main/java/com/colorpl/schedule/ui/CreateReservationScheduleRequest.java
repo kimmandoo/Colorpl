@@ -1,10 +1,9 @@
-package com.colorpl.schedule.command.application;
+package com.colorpl.schedule.ui;
 
 import lombok.Getter;
 
 @Getter
 public class CreateReservationScheduleRequest {
 
-    private Integer memberId;
     private Long reservationDetailId;
 }
