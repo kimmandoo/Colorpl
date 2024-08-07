@@ -1,5 +1,6 @@
 package com.data.model.paging
 
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,7 +17,7 @@ data class Feed(
     @SerialName("createdate")
     val createdate: String,
     @SerialName("emotion")
-    val emotion: Int,
+    val emotion: String,
     @SerialName("empathy")
     val empathy: Int,
     @SerialName("id")
@@ -27,10 +28,10 @@ data class Feed(
     val myempathy: Boolean,
     @SerialName("myreview")
     val myreview: Boolean,
+    @SerialName("scheduleId")
+    val scheduleId: Int,
     @SerialName("spoiler")
     val spoiler: Boolean,
-    @SerialName("ticketId")
-    val ticketId: Int,
     @SerialName("title")
     val title: String,
     @SerialName("writer")
