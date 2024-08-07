@@ -22,6 +22,7 @@ import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.domain.Schedule;
+import com.colorpl.schedule.repository.ScheduleRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +72,10 @@ class ReviewServiceTest {
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder().id(1L).build();
+        Schedule schedule = CustomSchedule.builder()
+            .id(1L)
+            .member(member)
+            .build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
         MultipartFile file = mock(MultipartFile.class);
         UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName")
@@ -101,7 +105,10 @@ class ReviewServiceTest {
             .content("Test content")
             .build();
         Member member = Member.builder().id(1).build();
-        Schedule schedule = CustomSchedule.builder().id(1L).build();
+        Schedule schedule = CustomSchedule.builder()
+            .id(1L)
+            .member(member)
+            .build();
         Review review = Review.builder().id(1L).content("Test content").schedule(schedule).build();
 
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));
