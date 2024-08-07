@@ -35,9 +35,9 @@ class SignUpPreferenceFragment :
         binding.apply {
             val item = hashMapOf(
                 includeMovie to Category.MOVIE,
-                includeCircus to Category.CIRCUS,
+                includeCircus to Category.CIRCUS_MAGIC,
                 includeMusical to Category.MUSICAL,
-                includeTheatre to Category.THEATRE,
+                includeTheatre to Category.PLAY,
                 includeExhibition to Category.EXHIBITION
             )
 

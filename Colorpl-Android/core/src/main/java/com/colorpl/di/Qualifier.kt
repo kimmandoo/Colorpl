@@ -6,6 +6,9 @@ import javax.inject.Qualifier
 annotation class NormalOkHttp
 
 @Qualifier
+annotation class NoHeaderRetrofit
+
+@Qualifier
 annotation class NormalRetrofit
 
 @Qualifier
