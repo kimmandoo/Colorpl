@@ -122,7 +122,7 @@ public class ReviewService {
         return response;
     }
 
-    // 특정 멤버의 리뷰들만 조회
+    // 특정 멤버의 리뷰 개수 조회
     public NonReadReviewResponse findReviewNumbersOfMember(Integer memberId, int page, int size) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
@@ -270,7 +270,7 @@ public class ReviewService {
 
         ReviewDTOBuilder builder = ReviewDTO.builder()
             .id(review.getId())
-            .ticketId(review.getSchedule() != null ? review.getSchedule().getId() : null)
+            .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
             .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
                 ? review.getSchedule().getMember().getNickname() : null)
             .imgurl(filepath)
