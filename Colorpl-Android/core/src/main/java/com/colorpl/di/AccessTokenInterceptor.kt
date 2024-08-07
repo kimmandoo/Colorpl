@@ -18,9 +18,9 @@ class AccessTokenInterceptor @Inject constructor(
         val requestBuilder = originRequest.newBuilder()
         val accessToken: String? = runBlocking {
             var token: String? = ""
-            accessTokenUseCase.getAccessToken().collectLatest { response ->
+            accessTokenUseCase.getSignToken().collectLatest { response ->
                 response.onSuccess { data ->
-                    token = data
+                    token = data.accessToken
                 }
                 response.onFailure {
                     token = null
