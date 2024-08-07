@@ -1,5 +1,7 @@
 package com.domain.model
 
+import java.io.Serializable
+
 data class TicketResponse(
     val id: Int,
     val seat: String,
@@ -10,4 +12,4 @@ data class TicketResponse(
     val latitude: Double,
     val longitude: Double,
     val imgUrl: String
-)
+): Serializable

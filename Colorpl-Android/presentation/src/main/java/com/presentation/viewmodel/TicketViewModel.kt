@@ -48,8 +48,10 @@ class TicketViewModel @Inject constructor(
                     for (route in data.legs) {
                         when (route.mode) {
                             Mode.WALK.mode -> {
-                                for (lineString in route.steps!!) {
-                                    routeData.addAll(parseLatLng(lineString.linestring))
+                                route.steps?.let { steps ->
+                                    for (lineString in steps) {
+                                        routeData.addAll(parseLatLng(lineString.linestring))
+                                    }
                                 }
                             }
 
