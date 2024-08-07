@@ -1,9 +1,12 @@
 package com.domain.mapper
 
 import com.data.model.request.RequestSignIn
+import com.data.model.request.RequestSignToken
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
+import com.data.model.response.ResponseSignToken
 import com.domain.model.Member
+import com.domain.model.SignToken
 
 fun ResponseSignIn.toEntity(): Member {
     return Member(
@@ -13,6 +16,30 @@ fun ResponseSignIn.toEntity(): Member {
         password = "",
         accessToken = this.accessToken,
         refreshToken = this.refreshToken
+    )
+}
+
+fun ResponseSignToken.toEntity(): SignToken {
+    return SignToken(
+        email = this.email,
+        password = this.password,
+        accessToken = this.accessToken,
+        refreshToken = this.refreshToken,
+        loginType = this.loginType
+    )
+}
+
+/**
+ * loginType -> true : 일반, false : 구글 로그인
+ */
+
+fun Member.toSignTokenParam(type: Boolean): RequestSignToken {
+    return RequestSignToken(
+        email = this.email,
+        password = this.password,
+        accessToken = this.accessToken,
+        refreshToken = this.refreshToken,
+        loginType = type
     )
 }
 

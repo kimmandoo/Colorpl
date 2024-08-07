@@ -20,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.presentation.MainActivity
 import com.presentation.base.BaseFragment
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.sign.model.SignInEventState
 import com.presentation.util.setPasswordTransformation
 import com.presentation.viewmodel.LoginViewModel
@@ -39,6 +40,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private lateinit var googleRequest: GetCredentialRequest
 
     private val loginViewModel: LoginViewModel by viewModels()
+
+    val loading by lazy {
+        LoadingDialog(requireActivity())
+    }
 
     override fun onStart() {
         super.onStart()
@@ -97,8 +102,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun observeLoginSuccess() {
+        loading.show()
         loginViewModel.signInEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
+                loading.dismiss()
                 when (it) {
                     is SignInEventState.SignInSuccess -> {
                         Timber.d("로그인 성공")

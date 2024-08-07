@@ -9,4 +9,6 @@ class LoadingDialog(context: Context): BaseDialog<DialogLoadingBinding>(context,
     override fun onCreateDialog() {
         this.setCancelable(false)
     }
+
+
 }

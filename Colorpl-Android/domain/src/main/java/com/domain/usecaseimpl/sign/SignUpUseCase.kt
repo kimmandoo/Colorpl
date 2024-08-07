@@ -3,6 +3,7 @@ package com.domain.usecaseimpl.sign
 import com.data.repository.SignRepository
 import com.data.repository.TokenRepository
 import com.data.util.ApiResult
+import com.domain.mapper.toSignTokenParam
 import com.domain.mapper.toSignUpParam
 import com.domain.model.Member
 import com.domain.util.DomainResult
@@ -21,11 +22,11 @@ class SignUpUseCase @Inject constructor(
             Timber.d("회원 가입 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
+                    tokenRepository.setSignToken(member.toSignTokenParam(true))
                     emit(DomainResult.success(result.data))
                 }
 
                 is ApiResult.Error -> {
-                    result.exception.printStackTrace()
                     emit(DomainResult.error(result.exception))
                 }
             }

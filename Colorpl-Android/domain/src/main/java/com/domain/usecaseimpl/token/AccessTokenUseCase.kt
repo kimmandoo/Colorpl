@@ -9,6 +9,20 @@ import javax.inject.Inject
 class AccessTokenUseCase @Inject constructor(
     private val tokenRepository: TokenRepository
 ) {
+    suspend fun getSignToken() = flow{
+        tokenRepository.getSignToken().collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    emit(DomainResult.success(result.data))
+                }
+
+                is ApiResult.Error -> {
+                    emit(DomainResult.error(result.exception))
+                }
+            }
+        }
+    }
+
 
     suspend fun getAccessToken() = flow {
         tokenRepository.getAccessToken().collect { result ->
