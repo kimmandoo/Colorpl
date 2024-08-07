@@ -35,9 +35,9 @@ class SignUpPreferenceFragment :
         binding.apply {
             val item = hashMapOf(
                 includeMovie to Category.MOVIE,
-                includeCircus to Category.CIRCUS,
+                includeCircus to Category.CIRCUS_MAGIC,
                 includeMusical to Category.MUSICAL,
-                includeTheatre to Category.THEATRE,
+                includeTheatre to Category.PLAY,
                 includeExhibition to Category.EXHIBITION
             )
 
@@ -45,13 +45,21 @@ class SignUpPreferenceFragment :
             item.keys.forEach { view ->
                 view.clPreference.setOnClickListener {
                     val selected = if (signUpViewModel.userPreference.getItemCount() < 2) {
-                        item[view]?.let { item -> signUpViewModel.userPreference.addOrRemove(item) }
+                        item[view]?.let { item ->
+                            signUpViewModel.userPreference.addOrRemove(
+                                item.getTitle()
+                            )
+                        }
                         !it.isSelected
                     } else {
-                        item[view]?.let { item -> signUpViewModel.userPreference.remove(item) }
+                        item[view]?.let { item ->
+                            signUpViewModel.userPreference.remove(
+                                item.getTitle()
+                            )
+                        }
                         false
                     }
-                    listOf(it, view.ivIcon, view.tvType).forEach {child ->
+                    listOf(it, view.ivIcon, view.tvType).forEach { child ->
                         child.isSelected = selected
                     }
                     view.isSelected = selected
@@ -67,6 +75,7 @@ class SignUpPreferenceFragment :
             }
         }
     }
+
 
     private fun observeCompleteButton() { //완료 버튼 활성화
         signUpViewModel.completeButton.flowWithLifecycle(viewLifecycleOwner.lifecycle)

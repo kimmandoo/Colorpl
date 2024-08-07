@@ -115,12 +115,32 @@ enum class Sign {
     LOGIN
 }
 
-enum class Category {
-    MOVIE,
-    THEATRE,
-    MUSICAL,
-    CIRCUS,
-    EXHIBITION
+enum class Category(val resourceId: Int) {
+    MOVIE(R.string.sign_up_category_movie) {
+        override fun getTitle(): String {
+            return "MOVIE"
+        }
+    },
+    PLAY(R.string.sign_up_category_theater) {
+        override fun getTitle(): String = "PLAY"
+    },
+    MUSICAL(R.string.sign_up_category_musical) {
+        override fun getTitle(): String = "MUSICAL"
+    },
+    CIRCUS_MAGIC(R.string.sign_up_category_circus) {
+        override fun getTitle(): String = "CIRCUS_MAGIC"
+    },
+    EXHIBITION(R.string.sign_up_category_exhibition) {
+        override fun getTitle(): String = "EXHIBITION"
+    };
+
+    abstract fun getTitle(): String
+
+    fun getText(context: Context): String {
+        return context.getString(resourceId)
+    }
+
+
 }
 
 enum class PaymentResult(val value: Int) {

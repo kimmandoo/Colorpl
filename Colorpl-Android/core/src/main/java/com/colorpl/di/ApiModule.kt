@@ -67,7 +67,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideSignApi(
-        @NormalRetrofit
+        @NoHeaderRetrofit
         retrofit: Retrofit
     ): SignApi = retrofit.create()
 

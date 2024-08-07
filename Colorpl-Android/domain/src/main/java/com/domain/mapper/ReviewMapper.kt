@@ -1,6 +1,7 @@
 package com.domain.mapper
 
 import com.data.model.request.RequestReviewCreate
+import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewDetail
 import com.domain.model.Review
 import com.domain.model.ReviewDetail
@@ -14,6 +15,7 @@ fun Review.toEntity(): RequestReviewCreate {
         emotion = emotion
     )
 }
+
 
 fun ResponseReviewDetail.toEntity(): ReviewDetail {
     return ReviewDetail(
@@ -32,5 +34,11 @@ fun ResponseReviewDetail.toEntity(): ReviewDetail {
         ticketId = this.ticketId,
         title = this.title,
         writer = this.writer
+    )
+}
+
+fun Review.toEditEntity(): RequestReviewEdit {
+    return RequestReviewEdit(
+        content = content, spoiler = spoiler, emotion = emotion
     )
 }

@@ -1,15 +1,14 @@
 package com.presentation.component.adapter
 
 import android.graphics.drawable.Drawable
-import android.provider.Settings.Global.getString
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.colorpl.presentation.R
 import com.domain.model.Seat
 import com.presentation.util.Category
@@ -136,7 +135,7 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
                 context.getString(R.string.sign_up_category_movie)
             }
 
-            Category.THEATRE -> {
+            Category.PLAY -> {
                 context.getString(R.string.sign_up_category_theater)
             }
 
@@ -144,7 +143,7 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
                 context.getString(R.string.sign_up_category_musical)
             }
 
-            Category.CIRCUS -> {
+            Category.CIRCUS_MAGIC -> {
                 context.getString(R.string.sign_up_category_circus)
             }
 
@@ -165,7 +164,7 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_movie)
             }
 
-            Category.THEATRE -> {
+            Category.PLAY -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_theatre)
             }
 
@@ -173,7 +172,7 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_musical)
             }
 
-            Category.CIRCUS -> {
+            Category.CIRCUS_MAGIC -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_circus)
             }
 
@@ -257,8 +256,8 @@ fun loadImageToReservationDetail(view: ImageView, url: String?) {
             .load(it)
             .apply(
                 RequestOptions()
-                .placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
-                .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
+                    .placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
+                    .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
             )
             .into(view)
     }
