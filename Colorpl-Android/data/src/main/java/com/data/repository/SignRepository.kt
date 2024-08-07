@@ -7,6 +7,7 @@ import com.data.model.response.ResponseSignIn
 import com.data.model.response.ResponseSignUp
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 interface SignRepository {
 
@@ -17,7 +18,8 @@ interface SignRepository {
 
 
     suspend fun signUp(
-        requestSignUp: RequestSignUp
+        requestSignUp: RequestSignUp,
+        file : File?
     ): Flow<ApiResult<ResponseSignUp>>
 
     suspend fun googleSignIn(

@@ -7,7 +7,6 @@ import com.domain.usecaseimpl.sign.SignUpUseCase
 import com.domain.util.DomainResult
 import com.presentation.component.custom.ListStateFlow
 import com.presentation.sign.model.SignUpEventState
-import com.presentation.util.Category
 import com.presentation.util.Sign
 import com.presentation.util.emailCheck
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,8 +49,9 @@ class SignUpViewModel @Inject constructor(
     private val _userPassWord = MutableStateFlow("")
     val userPassWord: StateFlow<String> get() = _userPassWord
 
-    private val _userImage = MutableStateFlow("")
-    val userImage: StateFlow<String> get() = _userImage
+
+    private val _userImageFile = MutableStateFlow<File?>(null)
+    val userImageFile : StateFlow<File?> get() = _userImageFile
 
     fun setUserEmail(value: String) {
         _userEmail.value = value
@@ -64,15 +65,15 @@ class SignUpViewModel @Inject constructor(
         _userPassWord.value = value
     }
 
-    fun setUserImage(value: String) {
-        _userImage.value = value
+    fun setUserImageFile(value : File?){
+        _userImageFile.value = value
     }
 
     private val _nextButton = MutableSharedFlow<Boolean>(1)
     val nextButton: SharedFlow<Boolean> get() = _nextButton
 
 
-    val userPreference = ListStateFlow<Category>()
+    val userPreference = ListStateFlow<String>()
 
     private val _completeButton = MutableSharedFlow<Boolean>(1)
     val completeButton: SharedFlow<Boolean> get() = _completeButton
@@ -87,12 +88,12 @@ class SignUpViewModel @Inject constructor(
 
     private fun checkSignNext() {
         combine(
-            _userEmail,
-            _userNickName,
-            _userImage,
-            _userPassWord
+            userEmail,
+            userNickName,
+            userImageFile,
+            userPassWord
         ) { email, nickname, image, password ->
-            email.isNotEmpty() && email.emailCheck() && nickname.isNotEmpty() && image.isNotEmpty() && password.isNotEmpty()
+            email.isNotEmpty() && email.emailCheck() && nickname.isNotEmpty() && image != null && password.isNotEmpty()
         }.onEach { isEnabled ->
             _nextButton.emit(isEnabled)
         }.launchIn(viewModelScope)
@@ -116,10 +117,10 @@ class SignUpViewModel @Inject constructor(
             email = userEmail.value,
             password = userPassWord.value,
             nickName = userNickName.value,
-            profileImage = userImage.value
+            categories = userPreference.items.value
         )
         viewModelScope.launch {
-            signUpUseCase.signUp(member).collectLatest {
+            signUpUseCase.signUp(member, userImageFile.value).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
                         _signUpEvent.emit(SignUpEventState.SignUpSuccess)
@@ -138,7 +139,6 @@ class SignUpViewModel @Inject constructor(
 
     fun clearData() {
         Timber.d("삭제가 왜 호출됨")
-        setUserImage("")
         setUserEmail("")
         setUserNickName("")
         setPassWord("")
