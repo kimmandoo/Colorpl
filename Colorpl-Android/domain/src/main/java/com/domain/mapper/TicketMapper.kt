@@ -3,26 +3,29 @@ package com.domain.mapper
 import com.data.model.request.RequestTicketCreate
 import com.data.model.response.ResponseTicket
 import com.data.model.response.ResponseTicketCreate
-import com.domain.model.Ticket
+import com.domain.model.TicketRequest
+import com.domain.model.TicketResponse
 
 
 fun ResponseTicketCreate.toEntity(): Int {
     return this.ticketId
 }
 
-fun ResponseTicket.toEntity(): Ticket {
-    return Ticket(
-        name = name,
-        location = location,
-        dateTime = dateTime,
+fun ResponseTicket.toEntity(): TicketResponse {
+    return TicketResponse(
+        id = id,
         seat = seat,
+        dateTime = dateTime,
+        name = name,
         category = category,
+        location = location,
         latitude = latitude,
-        longitude = longitude
+        longitude = longitude,
+        imgUrl = imgUrl
     )
 }
 
-fun Ticket.toEntity(): RequestTicketCreate {
+fun TicketRequest.toEntity(): RequestTicketCreate {
     return RequestTicketCreate(
         category = category,
         name = name,

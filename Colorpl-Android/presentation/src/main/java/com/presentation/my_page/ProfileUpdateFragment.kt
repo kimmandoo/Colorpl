@@ -43,8 +43,9 @@ class ProfileUpdateFragment :
         val safeArgs: ProfileUpdateFragmentArgs by navArgs()
         val data = safeArgs.member
         binding.apply {
+            profileUpdateViewModel.setUpdateNickName(data.nickName.toString())
             tiEtNickName.setText(data.nickName.toString())
-            ivProfileImg.setImage(data.profileImage.toString())
+            ivProfileImg.setImage(data.profileImage.toString(), true)
         }
     }
 

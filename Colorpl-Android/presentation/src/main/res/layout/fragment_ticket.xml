@@ -10,6 +10,10 @@
         <variable
             name="totalTime"
             type="String" />
+
+        <variable
+            name="titleText"
+            type="String" />
     </data>
 
     <ScrollView
@@ -28,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="@{`여기 제목 들어감`}" />
+                app:title="@{titleText}" />
 
             <ImageView
                 android:id="@+id/iv_poster"
