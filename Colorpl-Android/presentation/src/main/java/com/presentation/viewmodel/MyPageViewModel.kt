@@ -33,9 +33,7 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    init {
-        getMemberInfo()
-    }
+
 
     fun getMemberInfo() {
         viewModelScope.launch {

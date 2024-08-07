@@ -1,5 +1,8 @@
 package com.domain.model
 
+import java.io.Serializable
+
+
 data class Member(
     val email: String = "",
     val password: String = "",
@@ -12,5 +15,5 @@ data class Member(
     val followingCount: Int = 0,
     val id: Int = 0,
     val categories: List<String> = emptyList(),
-    val idToken : String  = ""
-)
+    val idToken: String = ""
+) : Serializable

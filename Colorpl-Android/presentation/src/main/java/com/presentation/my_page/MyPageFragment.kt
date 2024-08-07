@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +15,6 @@ import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import java.util.Date
 
 @AndroidEntryPoint
@@ -30,12 +30,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         )
     }
 
-
     override fun initView() {
         initTicket()
         initClickEvent()
         observeUiState()
     }
+
+    override fun onResume() {
+        super.onResume()
+        myPageViewModel.getMemberInfo()
+    }
+
 
     private fun initTicket() {
         binding.rcTicket.apply {
@@ -110,8 +115,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 indicator.setTransactionX(distance)
             }
             tvProfileImg.setOnClickListener { //프로필 수정 이동
-                navigateDestination(
-                    R.id.action_fragment_my_page_to_fragment_profile_update
+                navigateDestinationBundle(
+                    R.id.action_fragment_my_page_to_fragment_profile_update, bundleOf(
+                        "member" to myPageViewModel.memberUiState.value.memberInfo
+                    )
                 )
             }
             includeSearchUser.clMenu.setOnClickListener { // 유저 찾기 이동

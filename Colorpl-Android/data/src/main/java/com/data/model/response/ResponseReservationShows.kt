@@ -1,8 +1,5 @@
 package com.data.model.response
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 data class ResponseReservationShows(
     val items: List<ReservationInfo>
 )
