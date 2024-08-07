@@ -8,11 +8,13 @@ import com.colorpl.global.common.storage.UploadFile;
 import com.colorpl.global.config.TokenProvider;
 import com.colorpl.member.Member;
 import com.colorpl.member.MemberRefreshToken;
+import com.colorpl.member.dto.FindMemberResponse;
 import com.colorpl.member.dto.FollowCountDTO;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.member.dto.SignInResponse;
 import com.colorpl.member.repository.MemberRefreshTokenRepository;
 import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.review.service.ReviewService;
 import com.colorpl.show.domain.detail.Category;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -34,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final ReviewService reviewService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
@@ -273,17 +276,30 @@ public class MemberService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return Integer.parseInt(userDetails.getUsername());
     }
-    // nickname으로 멤버를 조회하는 메서드
+
     @Transactional
-    public List<MemberDTO> findMembersByNickname(String nickname) {
+    public List<FindMemberResponse> findMembersByNickname(String nickname) {
         List<Member> members = memberRepository.findByNickname(nickname);
         if (members.isEmpty()) {
             throw new MemberNotFoundException();
         }
         return members.stream()
-            .map(MemberDTO::toMemberDTO)
+            .map(FindMemberResponse::toFindMemberResponse)
             .collect(Collectors.toList());
     }
-
+//    @Transactional
+//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
+//        List<Member> members = memberRepository.findByNickname(nickname);
+//        if (members.isEmpty()) {
+//            throw new MemberNotFoundException();
+//        }
+//
+//        return members.stream()
+//            .map(member -> {
+//                int reviewCount = reviewService.getReviewsCountOfMember(member.getId());
+//                return FindMemberResponse.toFindMemberResponse(member, reviewCount);
+//            })
+//            .collect(Collectors.toList());
+//    }
 
 }
