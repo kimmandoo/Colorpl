@@ -21,12 +21,13 @@ class TicketUseCaseImpl @Inject constructor(
         ).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    val description = result.data.toEntity()
+                    val description = result.data
                     Timber.d("$description")
                     emit(DomainResult.success(description))
                 }
 
                 is ApiResult.Error -> {
+                    Timber.d("${result.exception}")
                     emit(DomainResult.error(result.exception))
                 }
             }

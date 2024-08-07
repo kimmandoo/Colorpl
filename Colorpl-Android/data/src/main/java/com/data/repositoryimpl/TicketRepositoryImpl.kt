@@ -21,7 +21,7 @@ class TicketRepositoryImpl @Inject constructor(
     override suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
-    ): Flow<ApiResult<ResponseTicketCreate>> = flow {
+    ): Flow<ApiResult<Int>> = flow {
         emit(safeApiCall {
             Timber.d("ticket: ${ticket}\n request:$request")
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)

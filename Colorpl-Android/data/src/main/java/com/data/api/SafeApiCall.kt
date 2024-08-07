@@ -36,6 +36,7 @@ suspend fun <T> safeApiCall(
                 }
 
                 else -> {
+                    throwable.printStackTrace()
                     ApiResult.error(Exception("알 수 없는 에러: ${throwable.message}"))
                 }
             }

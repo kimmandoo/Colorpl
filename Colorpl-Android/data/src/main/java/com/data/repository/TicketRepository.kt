@@ -11,7 +11,7 @@ interface TicketRepository {
     suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
-    ): Flow<ApiResult<ResponseTicketCreate>>
+    ): Flow<ApiResult<Int>>
     suspend fun getAllTicket(): Flow<ApiResult<List<ResponseTicket>>>
     suspend fun getMonthlyTicket(date: String): Flow<ApiResult<List<ResponseTicket>>>
 }

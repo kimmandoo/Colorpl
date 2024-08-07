@@ -9,7 +9,7 @@ interface TicketDataSource {
     suspend fun createTicket(
         ticket: MultipartBody.Part,
         request: RequestBody
-    ): ResponseTicketCreate
+    ): Int
 
     suspend fun getAllTicket(): List<ResponseTicket>
     suspend fun getMonthlyTicket(date: String): List<ResponseTicket>

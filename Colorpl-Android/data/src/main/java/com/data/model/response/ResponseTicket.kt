@@ -2,6 +2,7 @@ package com.data.model.response
 
 
 data class ResponseTicket(
+    val id: Int,
     val seat: String,
     val dateTime: String,
     val name: String,
