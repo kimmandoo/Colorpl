@@ -77,7 +77,7 @@
                             style="@style/suite_extra_bold_25"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{member.email}"
+                            android:text="@{member.nickName}"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_img"
                             app:layout_constraintEnd_toEndOf="parent"
