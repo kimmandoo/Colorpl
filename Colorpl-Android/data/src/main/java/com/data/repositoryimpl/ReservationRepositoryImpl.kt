@@ -19,4 +19,12 @@ class ReservationRepositoryImpl @Inject constructor(
             })
         }
     }
+
+    override suspend fun getReservationAllShows(): Flow<ApiResult<List<ReservationInfo>>> {
+        return flow {
+            emit(safeApiCall {
+                reservationDataSource.getReservationAllShow()
+            })
+        }
+    }
 }
