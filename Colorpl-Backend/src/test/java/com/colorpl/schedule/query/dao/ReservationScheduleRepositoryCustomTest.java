@@ -7,8 +7,10 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.repository.ReservationRepository;
-import com.colorpl.schedule.command.domain.ReservationSchedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
+import com.colorpl.schedule.domain.ReservationSchedule;
+import com.colorpl.schedule.dto.SearchScheduleCondition;
+import com.colorpl.schedule.repository.ReservationScheduleRepository;
+import com.colorpl.schedule.repository.ScheduleRepository;
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.show.domain.detail.ShowDetail;
 import com.colorpl.show.domain.detail.ShowDetailRepository;
@@ -76,8 +78,15 @@ class ReservationScheduleRepositoryCustomTest {
             .build();
         scheduleRepository.save(createReservationSchedule);
 
-        ReservationSchedule findReservationSchedule = reservationScheduleRepository.monthlyReservationScheduleList(
-            member, now.minusDays(1), now.plusDays(1)).get(0);
+        SearchScheduleCondition condition = SearchScheduleCondition.builder()
+            .member(member)
+            .from(now.minusDays(1))
+            .to(now.plusDays(1))
+            .build();
+
+        ReservationSchedule findReservationSchedule = reservationScheduleRepository.search(
+                condition)
+            .get(0);
 
         assertThat(findReservationSchedule.getReservationDetail().getRow()).isEqualTo(
             Byte.valueOf("0"));

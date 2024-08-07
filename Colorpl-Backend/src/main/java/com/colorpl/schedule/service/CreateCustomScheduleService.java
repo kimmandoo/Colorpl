@@ -1,17 +1,17 @@
-package com.colorpl.schedule.command.application;
+package com.colorpl.schedule.service;
 
 import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
 import com.colorpl.global.common.storage.StorageService;
 import com.colorpl.global.common.storage.UploadFile;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.member.service.MemberService;
-import com.colorpl.reservation.domain.ReservationDetail;
-import com.colorpl.reservation.repository.ReservationRepository;
-import com.colorpl.schedule.command.domain.ReservationSchedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
-import com.colorpl.schedule.ui.CreateReservationScheduleRequest;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.repository.ScheduleRepository;
+import com.colorpl.schedule.dto.CreateCustomScheduleRequest;
+import com.colorpl.show.domain.detail.Category;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,16 +20,17 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class CreateReservationScheduleService {
+public class CreateCustomScheduleService {
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
-    private final ReservationRepository reservationRepository;
     private final ScheduleRepository scheduleRepository;
     private final StorageService storageService;
 
-    public Long createReservationSchedule(CreateReservationScheduleRequest request,
-        MultipartFile attachFile) {
+    public Long create(
+        CreateCustomScheduleRequest request,
+        MultipartFile attachFile
+    ) {
 
         Integer memberId = memberService.getCurrentMemberId();
 
@@ -38,17 +39,21 @@ public class CreateReservationScheduleService {
 
         UploadFile uploadFile = storageService.storeFile(attachFile);
 
-        ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(
-            request.getReservationDetailId(), memberId).orElseThrow(
-            ReservationDetailNotFoundException::new);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
-        ReservationSchedule reservationSchedule = ReservationSchedule.builder()
+        CustomSchedule customSchedule = CustomSchedule.builder()
             .member(member)
             .image(uploadFile.getStoreFilename())
-            .reservationDetail(reservationDetail)
+            .seat(request.getSeat())
+            .dateTime(LocalDateTime.parse(request.getDateTime(), formatter))
+            .name(request.getName())
+            .category(Category.fromString(request.getCategory()).orElseThrow())
+            .location(request.getLocation())
+            .latitude(request.getLatitude())
+            .longitude(request.getLongitude())
             .build();
-        scheduleRepository.save(reservationSchedule);
+        scheduleRepository.save(customSchedule);
 
-        return reservationSchedule.getId();
+        return customSchedule.getId();
     }
 }

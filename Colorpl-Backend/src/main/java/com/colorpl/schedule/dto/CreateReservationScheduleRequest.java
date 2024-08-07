@@ -1,4 +1,4 @@
-package com.colorpl.schedule.ui;
+package com.colorpl.schedule.dto;
 
 import lombok.Getter;
 
