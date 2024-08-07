@@ -75,23 +75,23 @@ public class ReviewService {
         return response;
     }
 
-    public int getReviewsCountOfMember(Integer memberId) {
-        // 멤버의 리뷰 수를 직접 계산하기 위해 멤버 정보를 가져옵니다.
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(MemberNotFoundException::new);
-
-        // 멤버의 티켓을 통해 리뷰를 가져옵니다.
-        List<Ticket> tickets = member.getTickets();
-        List<Review> reviews = tickets.stream()
-            .map(Ticket::getReview) // 각 티켓의 리뷰 추출
-            .filter(Optional::isPresent) // null 확인
-            .map(Optional::get) // Optional 제거
-            .distinct() // 중복 리뷰 방지
-            .collect(Collectors.toList());
-
-        // 리뷰 수 반환
-        return reviews.size();
-    }
+//    public int getReviewsCountOfMember(Integer memberId) {
+//        // 멤버의 리뷰 수를 직접 계산하기 위해 멤버 정보를 가져옵니다.
+//        Member member = memberRepository.findById(memberId)
+//            .orElseThrow(MemberNotFoundException::new);
+//
+//        // 멤버의 티켓을 통해 리뷰를 가져옵니다.
+//        List<Ticket> tickets = member.getTickets();
+//        List<Review> reviews = tickets.stream()
+//            .map(Ticket::getReview) // 각 티켓의 리뷰 추출
+//            .filter(Optional::isPresent) // null 확인
+//            .map(Optional::get) // Optional 제거
+//            .distinct() // 중복 리뷰 방지
+//            .collect(Collectors.toList());
+//
+//        // 리뷰 수 반환
+//        return reviews.size();
+//    }
 
     // 특정 멤버의 리뷰들만 조회
     public ReadReviewResponse findReviewsOfMember(Integer memberId, int page, int size) {

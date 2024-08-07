@@ -14,7 +14,7 @@ public class FindMemberResponse {
     private int followingCount;
     private int reviewCount;
 
-    public static  FindMemberResponse toFindMemberResponse(Member member, int reviewCount) {
+    public static  FindMemberResponse toFindMemberResponse(Member member) {
         int followerCount = member.getFollowerList().size();
         int followingCount = member.getFollowingList().size();
 
@@ -24,7 +24,7 @@ public class FindMemberResponse {
             .nickname(member.getNickname())
             .followerCount(followerCount)
             .followingCount(followingCount)
-            .reviewCount(reviewCount)
+//            .reviewCount(reviewCount)
             .build();
     }
 }

@@ -124,13 +124,13 @@ public class ReviewController {
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
-    // 특정 멤버의 리뷰 수 조회
-    @GetMapping("/members/{memberId}/count")
-    @Operation(summary = "특정 멤버의 리뷰 수 조회", description = "특정 멤버의 리뷰 수를 조회하는 API")
-    public ResponseEntity<Integer> getReviewsCountOfMember(@PathVariable Integer memberId) {
-        int reviewCount = reviewService.getReviewsCountOfMember(memberId);
-        return ResponseEntity.ok(reviewCount);
-    }
+//    // 특정 멤버의 리뷰 수 조회
+//    @GetMapping("/members/{memberId}/count")
+//    @Operation(summary = "특정 멤버의 리뷰 수 조회", description = "특정 멤버의 리뷰 수를 조회하는 API")
+//    public ResponseEntity<Integer> getReviewsCountOfMember(@PathVariable Integer memberId) {
+//        int reviewCount = reviewService.getReviewsCountOfMember(memberId);
+//        return ResponseEntity.ok(reviewCount);
+//    }
 
 
 }

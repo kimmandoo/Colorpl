@@ -277,29 +277,29 @@ public class MemberService {
         return Integer.parseInt(userDetails.getUsername());
     }
 
-//    @Transactional
-//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
-//        List<Member> members = memberRepository.findByNickname(nickname);
-//        if (members.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//        return members.stream()
-//            .map(FindMemberResponse::toFindMemberResponse)
-//            .collect(Collectors.toList());
-//    }
     @Transactional
     public List<FindMemberResponse> findMembersByNickname(String nickname) {
         List<Member> members = memberRepository.findByNickname(nickname);
         if (members.isEmpty()) {
             throw new MemberNotFoundException();
         }
-
         return members.stream()
-            .map(member -> {
-                int reviewCount = reviewService.getReviewsCountOfMember(member.getId());
-                return FindMemberResponse.toFindMemberResponse(member, reviewCount);
-            })
+            .map(FindMemberResponse::toFindMemberResponse)
             .collect(Collectors.toList());
     }
+//    @Transactional
+//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
+//        List<Member> members = memberRepository.findByNickname(nickname);
+//        if (members.isEmpty()) {
+//            throw new MemberNotFoundException();
+//        }
+//
+//        return members.stream()
+//            .map(member -> {
+//                int reviewCount = reviewService.getReviewsCountOfMember(member.getId());
+//                return FindMemberResponse.toFindMemberResponse(member, reviewCount);
+//            })
+//            .collect(Collectors.toList());
+//    }
 
 }
