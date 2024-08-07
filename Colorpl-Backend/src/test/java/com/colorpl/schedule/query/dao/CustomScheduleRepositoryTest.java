@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
-import com.colorpl.schedule.command.domain.CustomSchedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.repository.CustomScheduleRepository;
 import com.colorpl.show.domain.detail.Category;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;

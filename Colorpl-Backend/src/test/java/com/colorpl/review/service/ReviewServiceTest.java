@@ -20,9 +20,8 @@ import com.colorpl.review.domain.Review;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
-import com.colorpl.schedule.command.domain.CustomSchedule;
-import com.colorpl.schedule.command.domain.Schedule;
-import com.colorpl.schedule.command.domain.ScheduleRepository;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.domain.Schedule;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +64,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldReturnReviewIdWithFile() {
-        // Create test data
+        // Create search data
         RequestDTO requestDTO = RequestDTO.builder()
             .memberId(1)
             .ticketId(1L)
@@ -95,7 +94,7 @@ class ReviewServiceTest {
 
     @Test
     void createReview_ShouldReturnReviewIdWithoutFile() {
-        // Create test data
+        // Create search data
         RequestDTO requestDTO = RequestDTO.builder()
             .memberId(1)
             .ticketId(1L)

@@ -4,7 +4,7 @@ import com.colorpl.global.common.BaseEntity;
 import com.colorpl.global.common.exception.CategoryLimitException;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
-import com.colorpl.schedule.command.domain.Schedule;
+import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.detail.Category;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

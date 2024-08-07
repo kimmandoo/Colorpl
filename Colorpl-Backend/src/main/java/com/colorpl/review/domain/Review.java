@@ -2,7 +2,7 @@ package com.colorpl.review.domain;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.global.common.BaseEntity;
-import com.colorpl.schedule.command.domain.Schedule;
+import com.colorpl.schedule.domain.Schedule;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -86,5 +86,4 @@ public class Review extends BaseEntity {
             this.emphathy = this.emphathy - 1;
         }
     }
-
 }
