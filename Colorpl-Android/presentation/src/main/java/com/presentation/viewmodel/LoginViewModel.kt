@@ -3,6 +3,7 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Member
+import com.domain.model.SignToken
 import com.domain.usecaseimpl.sign.SignInUseCase
 import com.domain.util.DomainResult
 import com.presentation.sign.model.SignInEventState
@@ -23,6 +24,9 @@ class LoginViewModel @Inject constructor(
     private val _signInEvent = MutableSharedFlow<SignInEventState>()
     val signInEvent: SharedFlow<SignInEventState> get() = _signInEvent
 
+    init{
+        autoLogin()
+    }
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
@@ -41,13 +45,34 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun googleSignIn(idToken : String) {
+    fun autoLogin() {
+        viewModelScope.launch {
+            signInUseCase.getSignToken().collectLatest {
+                when (it) {
+                    is DomainResult.Success -> {
+                        val data = it.data
+                        if (data.email.isNotEmpty() && data.password.isNotEmpty()) {
+                            signIn(data.email.toString(), data.password.toString())
+                        }
+                    }
+
+                    is DomainResult.Error -> {
+                        _signInEvent.emit(SignInEventState.Error(it.exception.toString()))
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun googleSignIn(idToken: String) {
         viewModelScope.launch {
             signInUseCase.googleSignIn(idToken).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
                         _signInEvent.emit(SignInEventState.SignInSuccess)
                     }
+
                     is DomainResult.Error -> {
                         Timber.d("구글 로그인 에러 확인 ${it.exception}")
                         _signInEvent.emit(SignInEventState.Error(it.exception.toString()))
