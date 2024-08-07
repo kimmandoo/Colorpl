@@ -35,33 +35,29 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
         ticketAdapter.submitList(
             listOf( // testcode
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
+                    dateTime = Date().toString(),
                     location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
+                    dateTime = Date().toString(),
                     location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
+                    dateTime = Date().toString(),
                     location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
+                    dateTime = Date().toString(),
                     location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"

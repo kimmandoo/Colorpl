@@ -6,7 +6,7 @@ import com.domain.model.Description
 import com.domain.model.Ticket
 import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.OpenAiUseCase
-import com.domain.usecase.TicketCreateUseCase
+import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketCreateViewModel @Inject constructor(
     private val openAiUseCase: OpenAiUseCase,
-    private val ticketCreateUseCase: TicketCreateUseCase,
+    private val ticketUseCase: TicketUseCase,
     private val geocodingUseCase: GeocodingUseCase
 ) : ViewModel() {
     private val _description = MutableStateFlow<Description?>(null)
@@ -68,12 +68,11 @@ class TicketCreateViewModel @Inject constructor(
     fun createTicket(image: File, latLng: LatLng) {
         viewModelScope.launch {
             _description.value?.let { ticket ->
-                ticketCreateUseCase(
+                ticketUseCase.createTicket(
                     image, Ticket(
-                        ticketId = -1,
                         name = ticket.title,
                         location = ticket.detail,
-                        date = ticket.schedule,
+                        dateTime = ticket.schedule,
                         seat = ticket.seat!!,
                         category = _category.value,
                         latitude = latLng.latitude,

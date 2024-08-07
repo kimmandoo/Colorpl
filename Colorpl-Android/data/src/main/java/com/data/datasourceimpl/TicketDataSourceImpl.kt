@@ -2,6 +2,7 @@ package com.data.datasourceimpl
 
 import com.data.api.TicketApi
 import com.data.datasource.remote.TicketDataSource
+import com.data.model.response.ResponseTicket
 import com.data.model.response.ResponseTicketCreate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -18,5 +19,13 @@ class TicketDataSourceImpl @Inject constructor(
             request = request,
             file = ticket
         )
+    }
+
+    override suspend fun getAllTicket(): List<ResponseTicket> {
+        return api.getAllTicket()
+    }
+
+    override suspend fun getMonthlyTicket(date: String): List<ResponseTicket> {
+        return api.getMonthlyTicket(date)
     }
 }

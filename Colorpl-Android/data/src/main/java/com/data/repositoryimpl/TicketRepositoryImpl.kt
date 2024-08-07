@@ -3,6 +3,7 @@ package com.data.repositoryimpl
 import com.data.api.safeApiCall
 import com.data.datasource.remote.TicketDataSource
 import com.data.model.request.RequestTicketCreate
+import com.data.model.response.ResponseTicket
 import com.data.model.response.ResponseTicketCreate
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
@@ -29,4 +30,13 @@ class TicketRepositoryImpl @Inject constructor(
             ticketDataSource.createTicket(ticket = filePart, request = requestPart)
         })
     }
+
+    override suspend fun getAllTicket(): Flow<ApiResult<List<ResponseTicket>>> = flow {
+        emit(safeApiCall { ticketDataSource.getAllTicket() })
+    }
+
+    override suspend fun getMonthlyTicket(date: String): Flow<ApiResult<List<ResponseTicket>>> =
+        flow {
+            emit(safeApiCall { ticketDataSource.getMonthlyTicket(date) })
+        }
 }
