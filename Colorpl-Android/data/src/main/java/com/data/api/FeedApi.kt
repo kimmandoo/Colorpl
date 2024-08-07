@@ -21,17 +21,15 @@ import retrofit2.http.Query
 
 interface FeedApi {
 
-    @GET("reviews/members/{memberId}/all")
+    @GET("reviews/all")
     suspend fun getAllFeedData(
-        @Path("memberId") memberId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): ResponsePagedFeed
 
     @Multipart
-    @POST("reviews/members/{memberId}/tickets/{ticketId}")
+    @POST("reviews/tickets/{ticketId}")
     suspend fun createUserFeedData(
-        @Path("memberId") memberId: Int,
         @Path("ticketId") ticketId: Int,
         @Part file: MultipartBody.Part?,
         @Part("request") request: RequestBody,
@@ -50,9 +48,8 @@ interface FeedApi {
         @Query("memberId") memberId: Int,
     ): ResponsePagedFeed
 
-    @PUT("reviews/members/{memberId}/reviews/{reviewId}")
+    @PUT("reviews/reviews/{reviewId}")
     suspend fun editUserFeedData(
-        @Path("memberId") memberId: Int,
         @Path("reviewId") reviewId: Int,
         @Body requestReviewEdit: RequestReviewEdit
     ): ResponseReviewEdit
