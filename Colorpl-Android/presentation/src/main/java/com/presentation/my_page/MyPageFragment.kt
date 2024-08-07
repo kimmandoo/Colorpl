@@ -1,13 +1,16 @@
 package com.presentation.my_page
 
 import androidx.core.os.bundleOf
+import androidx.core.view.postDelayed
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
+import com.domain.model.TicketResponse
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
+import com.presentation.my_page.model.MyPageEventState
 import com.presentation.util.setDistanceX
 import com.presentation.util.setImage
 import com.presentation.util.setTransactionX
@@ -23,8 +26,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(
-            onTicketClickListener = {
-
+            onTicketClickListener = { ticket ->
+                onTicketClickListener(ticket = ticket)
             }
         )
     }
@@ -33,6 +36,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         initTicket()
         initClickEvent()
         observeUiState()
+        observeTicket()
+        observeEvent()
     }
 
     override fun onResume() {
@@ -48,12 +53,21 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         }
 
 
-        ticketAdapter.submitList(
-            listOf(
-
-            )
-        )
     }
+
+
+    private fun observeTicket() {
+        myPageViewModel.useTickets.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                ticketAdapter.submitList(it)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        myPageViewModel.unUseTickets.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                ticketAdapter.submitList(it)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
 
     private fun observeUiState() {
         myPageViewModel.memberUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
@@ -64,23 +78,51 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
+    private fun observeEvent() {
+        myPageViewModel.myPageEventState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when (it) {
+                    is MyPageEventState.UseTicket -> {
+                        binding.apply {
+                            ticketTitle = true
+                            ticketCount = it.data.size.toString()
+                            ticketAdapter.submitList(it.data)
+                            ivTicketExpire.isSelected = true
+                            ivTicketStar.isSelected = false
+                            val distance =
+                                setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
+                            indicator.setTransactionX(distance)
+                        }
+
+                    }
+
+                    is MyPageEventState.UnUseTicket -> {
+                        binding.apply {
+                            ticketTitle = false
+                            ticketCount = it.data.size.toString()
+                            ticketAdapter.submitList(it.data)
+                            ivTicketStar.isSelected = true
+                            ivTicketExpire.isSelected = false
+                            indicator.setTransactionX(0f)
+                        }
+                    }
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
+    }
 
     private fun initClickEvent() {
-        val star = binding.ivTicketStar
-        val expire = binding.ivTicketExpire
-        star.isSelected = true
-
+        binding.ivTicketStar.postDelayed(300L) {
+            binding.ivTicketStar.performClick()
+        }
         binding.apply {
             ivTicketStar.setOnClickListener {
-                it.isSelected = !it.isSelected
-                expire.isSelected = false
-                indicator.setTransactionX(0f)
+                myPageViewModel.ticketEvent(UN_USE)
+
             }
             ivTicketExpire.setOnClickListener {
-                it.isSelected = !it.isSelected
-                star.isSelected = false
-                val distance = setDistanceX(binding.ivTicketStar, binding.ivTicketExpire)
-                indicator.setTransactionX(distance)
+                myPageViewModel.ticketEvent(USE)
             }
             tvProfileImg.setOnClickListener { //프로필 수정 이동
                 navigateDestinationBundle(
@@ -108,6 +150,18 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 navigateDestination(R.id.action_fragment_my_page_to_fragment_feed_ticket_select)
             }
         }
+    }
+
+    private fun onTicketClickListener(ticket: TicketResponse) {
+        navigateDestinationBundle(
+            R.id.action_fragment_my_page_to_fragment_ticket,
+            bundleOf("ticket" to ticket)
+        )
+    }
+
+    companion object {
+        const val USE = true
+        const val UN_USE = false
     }
 
 }
