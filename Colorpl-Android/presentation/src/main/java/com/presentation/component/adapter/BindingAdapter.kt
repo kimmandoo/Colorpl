@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.colorpl.presentation.BuildConfig
 import com.colorpl.presentation.R
 import com.domain.model.Seat
 import com.presentation.util.Category
@@ -31,7 +32,6 @@ fun loadImage(imageView: ImageView, image: String?) {
     Glide.with(imageView.context)
         .load(image)
         .transform(CircleCrop())
-        .placeholder(R.drawable.ic_profile_circle)
         .into(imageView)
 }
 

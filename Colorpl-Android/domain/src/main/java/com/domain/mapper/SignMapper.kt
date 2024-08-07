@@ -19,27 +19,34 @@ fun ResponseSignIn.toEntity(): Member {
     )
 }
 
+fun ResponseSignIn.toSignTokenParam(password: String = "", idToken: String = ""): RequestSignToken {
+    return RequestSignToken(
+        email = this.email,
+        password = password,
+        accessToken = this.accessToken,
+        refreshToken = this.refreshToken,
+        idToken = idToken
+    )
+}
+
 fun ResponseSignToken.toEntity(): SignToken {
     return SignToken(
         email = this.email,
         password = this.password,
         accessToken = this.accessToken,
         refreshToken = this.refreshToken,
-        loginType = this.loginType
+        idToken = this.idToken
     )
 }
 
-/**
- * loginType -> true : 일반, false : 구글 로그인
- */
 
-fun Member.toSignTokenParam(type: Boolean): RequestSignToken {
+fun Member.toSignTokenParam(): RequestSignToken {
     return RequestSignToken(
         email = this.email,
         password = this.password,
         accessToken = this.accessToken,
         refreshToken = this.refreshToken,
-        loginType = type
+        idToken = this.idToken
     )
 }
 

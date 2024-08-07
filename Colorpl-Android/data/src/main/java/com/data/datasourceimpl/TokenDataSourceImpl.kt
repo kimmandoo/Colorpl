@@ -2,7 +2,6 @@ package com.data.datasourceimpl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.data.datasource.local.TokenDataSource
@@ -23,7 +22,7 @@ class TokenDataSourceImpl @Inject constructor(
             prefs[PASSWORD] = requestSignToken.password
             prefs[ACCESS_TOKEN_KEY] = requestSignToken.accessToken
             prefs[REFRESH_TOKEN_KEY] = requestSignToken.refreshToken
-            prefs[LOGIN_TYPE] = requestSignToken.loginType
+            prefs[ID_TOKEN] = requestSignToken.idToken
         }
     }
 
@@ -33,7 +32,7 @@ class TokenDataSourceImpl @Inject constructor(
             prefs[PASSWORD] ?: "",
             prefs[ACCESS_TOKEN_KEY] ?: "",
             prefs[REFRESH_TOKEN_KEY] ?: "",
-            prefs[LOGIN_TYPE] == true
+            prefs[ID_TOKEN] ?: ""
         )
 
     }.first()
@@ -54,6 +53,6 @@ class TokenDataSourceImpl @Inject constructor(
         val PASSWORD = stringPreferencesKey("password")
         val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
         val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
-        val LOGIN_TYPE = booleanPreferencesKey("login_type")
+        val ID_TOKEN = stringPreferencesKey("id_token")
     }
 }

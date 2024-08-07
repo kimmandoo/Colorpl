@@ -5,5 +5,5 @@ data class SignToken(
     val password: String,
     val accessToken: String,
     val refreshToken: String,
-    val loginType : Boolean
+    val idToken : String
 )
