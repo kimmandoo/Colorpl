@@ -14,7 +14,9 @@ public enum Category {
     POPULAR_MUSIC("대중음악"),
     COMPLEX("복합"),
     CIRCUS_MAGIC("서커스/마술"),
-    MUSICAL("뮤지컬");
+    MUSICAL("뮤지컬"),
+    MOVIE("영화"),
+    EXHIBITION("전시회");
 
     private final String name;
 

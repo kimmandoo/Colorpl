@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class ReviewResponse {
+public class NonReadReviewResponse {
     private Long reviewId;
 }

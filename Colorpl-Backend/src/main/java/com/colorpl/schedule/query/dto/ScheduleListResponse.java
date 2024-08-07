@@ -6,8 +6,10 @@ import com.colorpl.schedule.command.domain.Schedule;
 import com.colorpl.show.domain.detail.Category;
 import java.time.LocalDateTime;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
+@Getter
 public class ScheduleListResponse {
 
     private String seat;

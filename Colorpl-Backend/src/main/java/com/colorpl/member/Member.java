@@ -1,6 +1,7 @@
 package com.colorpl.member;
 
 import com.colorpl.global.common.BaseEntity;
+import com.colorpl.global.common.exception.CategoryLimitException;
 import com.colorpl.member.dto.MemberDTO;
 import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.show.domain.detail.Category;
@@ -48,6 +49,8 @@ public class Member extends BaseEntity{
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Category> categories;
+
+    private static final int MAX_CATEGORIES = 2;
 
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
 //    private List<Review> reviews;
@@ -120,11 +123,20 @@ public class Member extends BaseEntity{
         this.profile = profile;
     }
 
+    public void updateCategories(Set<Category> categories) {
+        if (categories.size() > MAX_CATEGORIES) {
+            throw new CategoryLimitException();
+        }
+        this.categories = categories;
+    }
+
     public static Member toMember(MemberDTO memberDTO, PasswordEncoder encoder) {
         return Member.builder()
             .email(memberDTO.getEmail())
             .password(encoder.encode(memberDTO.getPassword()))
             .nickname(memberDTO.getNickname())
+            .categories(memberDTO.getCategories())
+            .profile(memberDTO.getProfile())
             .type(MemberType.USER)  // 기본 값으로 USER 설정
             .build();
     }
@@ -134,6 +146,7 @@ public class Member extends BaseEntity{
         this.password = encoder.encode(member.getPassword());
         this.nickname = member.getNickname();
         this.profile = member.getProfile();
+        this.categories = member.getCategories();
         this.type = member.getType();
     }
 

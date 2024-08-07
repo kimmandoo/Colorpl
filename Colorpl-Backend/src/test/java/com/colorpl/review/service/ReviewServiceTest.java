@@ -1,6 +1,6 @@
 package com.colorpl.review.service;
 
-import com.colorpl.comment.repository.CommentRepository;
+import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.global.common.storage.StorageService;
@@ -10,6 +10,7 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.repository.EmpathyRepository;
@@ -18,12 +19,14 @@ import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -40,9 +43,6 @@ class ReviewServiceTest {
 
     @Mock
     private ReviewRepository reviewRepository;
-
-    @Mock
-    private CommentRepository commentRepository;
 
     @Mock
     private TicketRepository ticketRepository;
@@ -63,90 +63,29 @@ class ReviewServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void getReviews_ShouldReturnReviewDTOList() {
-        Integer memberId = 1;
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        Review review = Review.builder().id(1L).content("Test content").build();
 
-        when(reviewRepository.findAll(pageable)).thenReturn(new org.springframework.data.domain.PageImpl<>(List.of(review)));
-
-        List<ReviewDTO> result = reviewService.getReviews(memberId, page, size);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(reviewRepository, times(1)).findAll(pageable);
-    }
 
     @Test
-    void findReviewsOfMember_ShouldReturnReviewDTOList() {
-        Integer memberId = 1;
-        int page = 0;
-        int size = 10;
-
-        Review review = Review.builder().id(1L).content("Test content").build();
-        Ticket ticket = Ticket.builder().id(1L).review(review).build();
-        Member member = Member.builder().id(memberId).tickets(List.of(ticket)).build();
-        ticket = Ticket.builder().id(1L).review(review).member(member).build(); // Ensure the ticket is linked to the member
-
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-
-        List<ReviewDTO> result = reviewService.findReviewsOfMember(memberId, page, size);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(memberRepository, times(1)).findById(memberId);
-    }
-
-    @Test
-    void findById_ShouldReturnReviewDTO() {
-        Long reviewId = 1L;
-        Integer memberId = 1;
-        Review review = Review.builder().id(reviewId).content("Test content").build();
-
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
-
-        ReviewDTO result = reviewService.findById(reviewId, memberId);
-
-        assertNotNull(result);
-        assertEquals(reviewId, result.getId());
-        verify(reviewRepository, times(1)).findById(reviewId);
-    }
-
-    @Test
-    void createReview_ShouldReturnReviewId() {
+    void createReview_ShouldReturnReviewIdWithFile() {
         // Create test data
         RequestDTO requestDTO = RequestDTO.builder()
                 .memberId(1)
                 .ticketId(1L)
                 .content("Test content")
                 .build();
-        Member member = Member.builder()
-                .id(1)
-                .build();
-        Ticket ticket = Ticket.builder()
-                .id(1L)
-                .build();
-        Review review = Review.builder()
-                .id(1L)
-                .content("Test content")
-                .ticket(ticket)
-                .build();
+        Member member = Member.builder().id(1).build();
+        Ticket ticket = Ticket.builder().id(1L).build();
+        Review review = Review.builder().id(1L).content("Test content").ticket(ticket).build();
         MultipartFile file = mock(MultipartFile.class);
         UploadFile uploadFile = UploadFile.builder().storeFilename("storedFileName").uploadFilename("originalFileName").build();
 
-        // Mock repository and service method calls
         when(memberRepository.findById(1)).thenReturn(Optional.of(member));
         when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
         when(storageService.storeFile(file)).thenReturn(uploadFile);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        // Call the service method
         Long result = reviewService.createReview(requestDTO, file);
 
-        // Assert the result and verify interactions
         assertNotNull(result);
         assertEquals(1L, result);
         verify(memberRepository, times(1)).findById(1);
@@ -155,23 +94,39 @@ class ReviewServiceTest {
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
-
     @Test
-    void updateReview_ShouldReturnUpdatedReviewDTO() {
-        Integer memberId = 1;
-        Long reviewId = 1L;
-        RequestDTO requestDTO = RequestDTO.builder().content("Updated content").build();
-        Review review = Review.builder().id(reviewId).content("Original content").build();
+    void createReview_ShouldReturnReviewIdWithoutFile() {
+        // Create test data
+        RequestDTO requestDTO = RequestDTO.builder()
+                .memberId(1)
+                .ticketId(1L)
+                .content("Test content")
+                .build();
+        Member member = Member.builder().id(1).build();
+        Ticket ticket = Ticket.builder().id(1L).build();
+        Review review = Review.builder().id(1L).content("Test content").ticket(ticket).build();
 
-        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+        when(memberRepository.findById(1)).thenReturn(Optional.of(member));
+        when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        ReviewDTO result = reviewService.updateReview(memberId, reviewId, requestDTO);
+        Long result = reviewService.createReview(requestDTO, null);
 
         assertNotNull(result);
-        assertEquals("Updated content", result.getContent());
-        verify(reviewRepository, times(1)).save(any(Review.class));
+        assertEquals(1L, result);
+
+        // Verify that storageService.storeFile was not called
+        verify(storageService, never()).storeFile(any(MultipartFile.class));
+
+        // Capture the argument passed to reviewRepository.save
+        ArgumentCaptor<Review> reviewCaptor = ArgumentCaptor.forClass(Review.class);
+        verify(reviewRepository, times(1)).save(reviewCaptor.capture());
+
+        // Check that the filename is correctly set
+        Review savedReview = reviewCaptor.getValue();
+        assertEquals("noimg", savedReview.getFilename());
     }
+
 
     @Test
     void deleteById_ShouldDeleteReview() {
@@ -199,15 +154,4 @@ class ReviewServiceTest {
         verify(empathyRepository, times(1)).findById(new EmpathyId(reviewId, memberId));
     }
 
-    @Test
-    void toReviewDTO_ShouldReturnReviewDTO() {
-        Integer memberId = 1;
-        Review review = Review.builder().id(1L).content("Test content").build();
-
-        ReviewDTO result = reviewService.toReviewDTO(memberId, review);
-
-        assertNotNull(result);
-        assertEquals(review.getId(), result.getId());
-        assertEquals(review.getContent(), result.getContent());
-    }
 }

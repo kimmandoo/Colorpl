@@ -12,21 +12,27 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
+import com.colorpl.review.dto.ReadReviewResponse;
 import com.colorpl.review.dto.RequestDTO;
 import com.colorpl.review.dto.ReviewDTO;
-import com.colorpl.review.dto.ReviewResponse;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
 import com.colorpl.ticket.domain.Ticket;
 import com.colorpl.ticket.domain.TicketRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -56,17 +62,20 @@ public class ReviewService {
         this.empathyRepository = empathyRepository;
     }
 
-    // 리뷰 무한 스크롤
-    public List<ReviewDTO> getReviews(Integer memberId, int page, int size) {
+    // 전체 리뷰 무한 스크롤
+    public ReadReviewResponse getReviews(Integer memberId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Review> reviews = reviewRepository.findAll(pageable).getContent();
-        return reviews.stream()
+        Page<Review> reviews = reviewRepository.findAll(pageable);
+        List<ReviewDTO> reviewDTOS = reviews.stream()
                 .map(review -> toReviewDTO(memberId, review))
                 .collect(Collectors.toList());
+        int totalPages = (int) Math.ceil((double) reviewRepository.count() / size);
+        ReadReviewResponse response = ReadReviewResponse.builder().items(reviewDTOS).totalPage(totalPages).build();
+        return response;
     }
 
-    // 특정 멤버 리뷰 리스트
-    public List<ReviewDTO> findReviewsOfMember(Integer memberId, int page, int size) {
+    // 특정 멤버의 리뷰들만 조회
+    public ReadReviewResponse findReviewsOfMember(Integer memberId, int page, int size) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
@@ -87,17 +96,32 @@ public class ReviewService {
         int end = Math.min(start + size, reviews.size());
 
         if (start >= reviews.size()) {
-            return Collections.emptyList(); // Return empty list if page is out of bounds
+            return ReadReviewResponse.builder()
+                    .items(Collections.emptyList())
+                    .totalPage(0)
+                    .build(); // Return empty response if page is out of bounds
         }
 
         List<Review> paginatedReviews = reviews.subList(start, end);
 
         // DTO로 반환
-        return paginatedReviews.stream()
+        List<ReviewDTO> reviewDTOS = paginatedReviews.stream()
                 .map(review -> toReviewDTO(memberId, review))
                 .collect(Collectors.toList());
+
+        // Calculate total pages
+        int totalPages = (int) Math.ceil((double) reviews.size() / size);
+
+        // Create and return response
+        ReadReviewResponse response = ReadReviewResponse.builder()
+                .items(reviewDTOS)
+                .totalPage(totalPages)
+                .build();
+
+        return response;
     }
 
+    // 특정 리뷰 찾기
     @Transactional(readOnly = true)
     public ReviewDTO findById(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
@@ -120,11 +144,24 @@ public class ReviewService {
         Ticket ticket = ticketRepository.findById(requestDTO.getTicketId())
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
-        UploadFile uploadFile = storageService.storeFile(file);
 
+
+        String filename;
+        UploadFile uploadFile = null;
+
+        if (file != null && !file.isEmpty()) {
+            // Store the provided file
+            uploadFile = storageService.storeFile(file);
+            filename = uploadFile.getStoreFilename();
+        } else {
+            // No file provided, use a placeholder filename or null
+            filename = "noimg"; // Placeholder filename
+        }
+
+        System.out.println("uploaded image name" + uploadFile);
         // Build review entity from DTO
         Review review = Review.builder()
-                .filename(uploadFile.getStoreFilename())
+                .filename(filename)
                 .ticket(ticket)
                 .content(requestDTO.getContent())
                 .spoiler(requestDTO.getSpoiler())
@@ -182,13 +219,35 @@ public class ReviewService {
 
         boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId)).isPresent();
 
+        String basePath = "images/";
+        String filename = review.getFilename();
+        String filepath;
+
+        if ("noimg".equals(filename)) {
+            // Special case for "noimg"
+            filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(basePath)
+                    .path("noimg.png") // or any specific path for placeholder image
+                    .build()
+                    .toUriString();
+        } else {
+            // Standard case
+            filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(basePath)
+                    .path(filename)
+                    .build()
+                    .toUriString();
+        }
+
+
+
         return ReviewDTO.builder()
                 .id(review.getId())
                 .ticketId(review.getTicket() != null ? review.getTicket().getId() : null)
                 .writer(review.getTicket() != null && review.getTicket().getMember() != null ? review.getTicket().getMember().getNickname() : null)
                 .title(review.getTicket() != null ? review.getTicket().getName() : null)
                 .category(review.getTicket() != null && review.getTicket().getCategory() != null ? review.getTicket().getCategory().name() : null)
-                .imgurl(review.getFilename())
+                .imgurl(filepath)
                 .content(review.getContent())
                 .spoiler(review.getSpoiler())
                 .emotion(review.getEmotion())

@@ -54,9 +54,15 @@ public class Review extends BaseEntity {
     private List<Empathy> empathies = new ArrayList<>();
 
     public void updateReview(String content, Boolean spoiler, Byte emotion) {
-        this.content = content;
-        this.spoiler = spoiler;
-        this.emotion = emotion;
+        if (content != null) {
+            this.content = content;
+        }
+        if (spoiler != null) {
+            this.spoiler = spoiler;
+        }
+        if (emotion != null) {
+            this.emotion = emotion;
+        }
     }
 
     // 공감 수 증가
