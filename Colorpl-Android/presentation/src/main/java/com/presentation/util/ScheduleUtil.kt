@@ -2,8 +2,11 @@ package com.presentation.util
 
 import android.widget.EdgeEffect
 import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-fun RecyclerView.overScrollControl(logic: (Int, Float)-> Unit){
+fun RecyclerView.overScrollControl(logic: (Int, Float) -> Unit) {
     edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
         override fun createEdgeEffect(
             recyclerView: RecyclerView,
@@ -24,3 +27,12 @@ fun RecyclerView.overScrollControl(logic: (Int, Float)-> Unit){
     }
 }
 
+fun LocalDate.getPattern(pattern: String): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern)
+    return this.format(formatter)
+}
+
+fun String.toLocalDate(): LocalDate {
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    return LocalDateTime.parse(this, formatter).toLocalDate()
+}

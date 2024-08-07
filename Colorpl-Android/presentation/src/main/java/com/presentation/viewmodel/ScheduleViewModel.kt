@@ -8,6 +8,7 @@ import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
+import com.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,12 +47,46 @@ class ScheduleViewModel @Inject constructor(
         updateCalendar(Calendar.CURRENT)
     }
 
+    fun matchTicketsToCalendar(
+        calendarItems: List<CalendarItem>,
+        tickets: List<TicketResponse>
+    ): List<CalendarItem> {
+        val ticketMap = tickets.associateBy { it.dateTime.toLocalDate() }
+
+        return calendarItems.map { calendarItem ->
+            val matchingTicket = ticketMap[calendarItem.date]
+            if (matchingTicket != null) {
+                calendarItem.copy(imgUrl = matchingTicket.imgUrl)
+            } else {
+                calendarItem
+            }
+        }
+    }
+
+
+    fun getMonthlyTicket(pattern: String) {
+        viewModelScope.launch {
+            ticketUseCase.getMonthlyTicket(pattern).collect {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.tag("tickets").d("${it.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        _tickets.value = it.data
+                    }
+                }
+            }
+        }
+    }
+
     fun getAllTicket() {
         viewModelScope.launch {
             ticketUseCase.getAllTicket().collect {
                 when (it) {
                     is DomainResult.Success -> {
                         _tickets.value = it.data
+                        _calendarItems.value = matchTicketsToCalendar(_calendarItems.value, it.data)
                         Timber.tag("tickets").d("${it.data}")
                     }
 
@@ -127,6 +162,7 @@ class ScheduleViewModel @Inject constructor(
             createCalendar(_selectedDate.value)
         }
         _calendarItems.value = updateList
+        matchTicketsToCalendar(_calendarItems.value, _tickets.value)
         _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
     }

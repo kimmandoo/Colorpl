@@ -18,11 +18,13 @@ import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
 import com.presentation.util.TicketState
 import com.presentation.util.TicketType
+import com.presentation.util.getPattern
 import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 private const val TAG = "ScheduleFragment"
@@ -71,7 +73,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.calendarItems.collectLatest { calendarList ->
-                    calendarAdapter.submitList(calendarList)
+                    calendarAdapter.submitList(viewModel.matchTicketsToCalendar(calendarList, viewModel.tickets.value))
                 }
             }
             launch {
@@ -89,6 +91,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                         CalendarMode.WEEK -> {
                             setWeekMode()
                         }
+                    }
+                }
+            }
+            launch {
+                viewModel.clickedDate.collectLatest { calendarItem ->
+                    calendarItem?.let {
+                        viewModel.getMonthlyTicket(it.date.getPattern("yyyy-MM-dd"))
                     }
                 }
             }

@@ -9,4 +9,5 @@ data class CalendarItem(
     val isToday: Boolean = false,
     val isSelected: Boolean = false,
     val isWeek: Boolean = false,
+    val imgUrl: String = "",
 )
