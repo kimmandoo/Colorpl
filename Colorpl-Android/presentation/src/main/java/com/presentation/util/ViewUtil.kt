@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.colorpl.presentation.BuildConfig
 import timber.log.Timber
 import kotlin.math.abs
 
@@ -51,10 +52,19 @@ fun EditText.setPasswordTransformation() {
     }
 }
 
-// ImageView
-fun ImageView.setImage(image: Any) {
+//
+/*
+    ImageView -> 서버 통신 용임
+    type -> true : 서버 -> false : 로컬
+ */
+fun ImageView.setImage(image: Any?, type : Boolean = false) {
+    val data = if(type){
+        BuildConfig.IMAGE_BASE+image
+    }else{
+        image
+    }
     Glide.with(this)
-        .load(image)
+        .load(data)
         .circleCrop()
         .into(this)
 }
