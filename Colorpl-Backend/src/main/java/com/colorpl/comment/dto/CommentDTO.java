@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
@@ -16,7 +17,7 @@ public class CommentDTO {
     private Integer memberId; // Changed to Long for consistency
     private String writer;
     private String commentContent;
-    private LocalDateTime createdate;
+    private String createdate;
 
     // Static method to create a CommentDTO from a Comment entity
     public static CommentDTO fromComment(Comment comment) {
@@ -28,16 +29,20 @@ public class CommentDTO {
                 .build();
     }
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+
     // Static method to create a CommentDTO from a Comment entity
     public static CommentDTO toCommentDTO(Comment comment) {
-        System.out.println(comment.getCreateDate());
+
+        String formattedDate = comment.getCreateDate() != null ? comment.getCreateDate().format(formatter) : null;
+
         return CommentDTO.builder()
                 .id(comment.getId())
                 .reviewId(comment.getReview() != null ? comment.getReview().getId() : null)
                 .memberId(comment.getMember() != null ? comment.getMember().getId() : null)
                 .writer(comment.getMember().getNickname())
                 .commentContent(comment.getComment_content())
-                .createdate(comment.getCreateDate())
+                .createdate(formattedDate)
                 .build();
     }
 

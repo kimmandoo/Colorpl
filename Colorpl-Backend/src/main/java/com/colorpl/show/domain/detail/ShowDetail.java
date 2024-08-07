@@ -1,5 +1,6 @@
 package com.colorpl.show.domain.detail;
 
+import com.colorpl.show.domain.schedule.ShowSchedule;
 import com.colorpl.theater.domain.Theater;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -76,4 +77,8 @@ public class ShowDetail {
     @Builder.Default
     @OneToMany(mappedBy = "showDetail")
     private List<Seat> seats = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "showDetail")
+    private List<ShowSchedule> showSchedules = new ArrayList<>();
 }
