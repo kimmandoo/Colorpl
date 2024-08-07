@@ -45,7 +45,7 @@ public class CreateShowService {
                 try {
                     create(i.getApiId());
                 } catch (ShowAlreadyExistsException ignored) {
-
+                    System.out.println(i.getApiId() + "duplicated");
                 }
             });
 
