@@ -1,6 +1,7 @@
 package com.domain.usecaseimpl.sign
 
 import com.data.repository.SignRepository
+import com.data.repository.TokenRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toSignUpParam
 import com.domain.model.Member
@@ -11,7 +12,8 @@ import java.io.File
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
-    private val signRepository: SignRepository
+    private val signRepository: SignRepository,
+    private val tokenRepository: TokenRepository
 ) {
 
     suspend fun signUp(member: Member, file: File?) = flow {
