@@ -18,6 +18,7 @@ public class RequestDTO {
     private Long scheduleId;
     private String content;
     private Boolean spoiler;
+    // to fix swagger error
     @Schema(implementation = Integer.class)
     private Byte emotion;
 
