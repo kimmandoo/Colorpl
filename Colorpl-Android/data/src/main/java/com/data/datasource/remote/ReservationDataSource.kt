@@ -1,14 +1,12 @@
 package com.data.datasource.remote
 
-import com.data.api.ReservationApi
 import com.data.model.response.ReservationInfo
-import com.data.model.response.ResponseReservationShows
-import javax.inject.Inject
+import retrofit2.http.QueryMap
 
 interface ReservationDataSource {
     suspend fun getReservationShow(
         showsId: Int,
     ): ReservationInfo
 
-    suspend fun getReservationAllShow(): List<ReservationInfo>
+    suspend fun getReservationListShows(filters: Map<String, String>): List<ReservationInfo>
 }

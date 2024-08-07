@@ -14,8 +14,12 @@ import javax.inject.Inject
 class ReservationListUseCaseImpl @Inject constructor(
     private val reservationRepository: ReservationRepository
 ) : ReservationListUseCase {
-    override suspend fun invoke(): Flow<DomainResult<List<ReservationInfo>>> = flow {
-        reservationRepository.getReservationAllShows().collect { result ->
+    override suspend fun invoke(
+        filters: Map<String, String>
+    ): Flow<DomainResult<List<ReservationInfo>>> = flow {
+        reservationRepository.getReservationAllShows(
+            filters = filters
+        ).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
                     val reservationListInfo = result.data.toEntity()

@@ -8,5 +8,5 @@ interface ReservationRepository {
 
     suspend fun getReservationShows(showsId: Int): Flow<ApiResult<ReservationInfo>>
 
-    suspend fun getReservationAllShows(): Flow<ApiResult<List<ReservationInfo>>>
+    suspend fun getReservationAllShows(filters: Map<String, String>): Flow<ApiResult<List<ReservationInfo>>>
 }

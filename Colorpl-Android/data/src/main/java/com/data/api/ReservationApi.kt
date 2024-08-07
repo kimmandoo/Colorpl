@@ -1,9 +1,10 @@
 package com.data.api
 
 import com.data.model.response.ReservationInfo
-import com.data.model.response.ResponseReservationShows
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface ReservationApi {
 
@@ -13,6 +14,6 @@ interface ReservationApi {
     ): ReservationInfo
 
     @GET("shows/")
-    suspend fun getReservationAllShows(): List<ReservationInfo>
+    suspend fun getReservationListShows(@QueryMap filters: Map<String, String>): List<ReservationInfo>
 
 }
