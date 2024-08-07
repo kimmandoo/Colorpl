@@ -14,7 +14,6 @@ import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import java.util.Date
 
 @AndroidEntryPoint
@@ -51,7 +50,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date().toString(),
-                    theater = "ignota",
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
@@ -59,7 +58,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date().toString(),
-                    theater = "ignota",
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
@@ -67,7 +66,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date().toString(),
-                    theater = "ignota",
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
@@ -75,7 +74,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                     ticketId = 4706,
                     name = "Elijah Merritt",
                     date = Date().toString(),
-                    theater = "ignota",
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),

@@ -65,18 +65,19 @@ class TicketCreateViewModel @Inject constructor(
     }
 
 
-    fun createTicket(image: File) {
+    fun createTicket(image: File, latLng: LatLng) {
         viewModelScope.launch {
             _description.value?.let { ticket ->
                 ticketCreateUseCase(
                     image, Ticket(
-                        file = null,
                         ticketId = -1,
                         name = ticket.title,
-                        theater = ticket.detail,
+                        location = ticket.detail,
                         date = ticket.schedule,
                         seat = ticket.seat!!,
-                        category = _category.value
+                        category = _category.value,
+                        latitude = latLng.latitude,
+                        longitude = latLng.longitude
                     )
                 ).collectLatest { response ->
                     when (response) {

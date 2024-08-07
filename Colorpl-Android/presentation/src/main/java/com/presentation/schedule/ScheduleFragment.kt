@@ -125,7 +125,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                         ticketId = 4706,
                         name = "Elijah Merritt",
                         date = Date().toString(),
-                        theater = "ignota",
+                        location = "ignota",
                         seat = "commune",
                         category = "뮤지컬"
                     ),
