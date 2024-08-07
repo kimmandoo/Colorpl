@@ -62,10 +62,15 @@ class ReservationFragment :
         initReservationInfo()
         initClickListener()
         initReservationList()
+        initViewModel()
+
         observeReservationList()
 
         initSearchWindow()
         observeSearchKeyword()
+        observeSearchDate()
+        observeSearchArea()
+        observeSearchCategory()
     }
 
     private fun initReservationList() {
@@ -85,6 +90,10 @@ class ReservationFragment :
             itemAnimator = null
         }
         filterAdapter.submitList(binding.root.context.getFilterItems())
+    }
+
+    private fun initViewModel() {
+        binding.viewModel = reservationListViewModel
     }
 
     private fun initReservationInfo() {
@@ -142,7 +151,8 @@ class ReservationFragment :
 
     private fun observeSearchDate() {
         reservationListViewModel.searchDate.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { date ->
-            binding.tvSelectDate.text = date
+            Timber.tag("선택한 날짜").d(date.toString())
+            reservationListViewModel.getReservationList()
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -199,14 +209,15 @@ class ReservationFragment :
         Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
         val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
             // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-            val selectedDate = LocalDate.of(year.toInt(), month.toInt() + 1, day.toInt())
+            val selectedDate = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
 
             Toast.makeText(
                 binding.root.context,
-                "년: $year, 월: ${month + 1}, 일: $day",
+                "년: $year, 월: ${month}, 일: $day",
                 Toast.LENGTH_SHORT
             ).show()
             updateDateTextView(year.toInt(), month.toInt(), day.toInt())
+            reservationListViewModel.setDate(selectedDate)
 //            binding.tvSelectDate.text = "$year.${month + 1}.$day"
         }
         dateRangePickerDialog.show()
@@ -214,6 +225,7 @@ class ReservationFragment :
 
     private fun updateDateTextView(year: Int, month: Int, day: Int) {
         val calendar = Calendar.getInstance()
+        Timber.tag("date").d("$year, $month, $day")
         calendar.set(year, month, day)
         val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
         binding.tvSelectDate.text = dateFormat.format(calendar.time)

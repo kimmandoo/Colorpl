@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +21,8 @@ class ReservationListViewModel @Inject constructor(
     private val _reservationList = MutableStateFlow<List<ReservationInfo>>(listOf())
     val reservationList: MutableStateFlow<List<ReservationInfo>> = _reservationList
 
-    private val _searchDate = MutableStateFlow("")
-    val searchDate: MutableStateFlow<String> = _searchDate
+    private val _searchDate = MutableStateFlow<LocalDate?>(null)
+    val searchDate: MutableStateFlow<LocalDate?> = _searchDate
 
     private val _searchArea = MutableStateFlow("")
     val searchArea: MutableStateFlow<String> = _searchArea
@@ -35,7 +37,10 @@ class ReservationListViewModel @Inject constructor(
     fun getReservationList() {
         viewModelScope.launch {
             val filters = mutableMapOf<String, String>()
-            _searchDate.value.takeIf { it.isNotEmpty() }?.let { filters["date"] = it }
+            _searchDate.value?.let {
+                val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
+                filters["date"] = it.format(dateFormat)
+            }
             _searchArea.value.takeIf { it.isNotEmpty() }?.let { filters["area"] = it }
             _searchKeyword.value.takeIf { it.isNotEmpty() }?.let { filters["keyword"] = it }
             _searchCategory.value.takeIf { it.isNotEmpty() }?.let { filters["category"] = it }
@@ -55,7 +60,7 @@ class ReservationListViewModel @Inject constructor(
     }
 
     fun setDate(date: LocalDate) {
-        _searchDate.value = date.toString()
+        _searchDate.value = date
     }
 
     fun setArea(area: String) {
