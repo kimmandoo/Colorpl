@@ -6,7 +6,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyPageBinding
-import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.util.setDistanceX
@@ -16,7 +15,6 @@ import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.util.Date
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
@@ -52,35 +50,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
         ticketAdapter.submitList(
             listOf(
-                // testcode
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
+
             )
         )
     }

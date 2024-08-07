@@ -108,6 +108,50 @@ class ImageProcessingUtil(private val context: Context) {
         return null
     }
 
+    fun uriToCompressedFile(uri: Uri, maxFileSizeBytes: Long = 1024 * 1024): File? {
+        val fileName = getFileName(uri)
+        val cacheDir = context.externalCacheDir
+        val file = File(cacheDir, fileName)
+
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            var quality = 100
+            var fileSize: Long
+            var compressedData: ByteArray
+
+            do {
+                val outputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+                compressedData = outputStream.toByteArray()
+                fileSize = compressedData.size.toLong()
+                quality -= 5
+            } while (fileSize > maxFileSizeBytes && quality > 5)
+
+            if (fileSize <= maxFileSizeBytes) {
+                FileOutputStream(file).use { it.write(compressedData) }
+                return file
+            } else {
+                // 사이즈가 큰 경우 다시 줄이도록
+                val scaleFactor = Math.sqrt(maxFileSizeBytes.toDouble() / fileSize.toDouble())
+                val newWidth = (bitmap.width * scaleFactor).toInt()
+                val newHeight = (bitmap.height * scaleFactor).toInt()
+                val resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+
+                FileOutputStream(file).use { outputStream ->
+                    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+                }
+
+                return file
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     @SuppressLint("Range")
     fun getFileName(uri: Uri): String {
         var fileName = ""

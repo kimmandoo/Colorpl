@@ -1,6 +1,7 @@
 package com.domain.usecase
 
-import com.domain.model.Ticket
+import com.domain.model.TicketRequest
+import com.domain.model.TicketResponse
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -8,13 +9,13 @@ import java.io.File
 interface TicketUseCase {
     fun createTicket(
         image: File,
-        ticket: Ticket
+        ticket: TicketRequest
     ): Flow<DomainResult<Int>>
 
-    suspend fun getAllTicket(): Flow<DomainResult<List<Ticket>>>
+    suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>>
 
     suspend fun getMonthlyTicket(
         date: String
-    ): Flow<DomainResult<List<Ticket>>>
+    ): Flow<DomainResult<List<TicketResponse>>>
 
 }

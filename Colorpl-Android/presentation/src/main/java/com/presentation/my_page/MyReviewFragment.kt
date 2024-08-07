@@ -2,13 +2,11 @@ package com.presentation.my_page
 
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyReviewBinding
-import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.util.setDistanceX
 import com.presentation.util.setTransactionX
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Date
 
 @AndroidEntryPoint
 class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment_my_review) {
@@ -34,34 +32,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
 
         ticketAdapter.submitList(
             listOf( // testcode
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
-                Ticket(
-                    name = "Elijah Merritt",
-                    dateTime = Date().toString(),
-                    location = "ignota",
-                    seat = "commune",
-                    category = "뮤지컬"
-                ),
+
             )
         )
 

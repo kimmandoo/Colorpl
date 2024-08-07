@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
-import com.domain.model.Ticket
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.component.adapter.schedule.CustomPopupAdapter
@@ -23,7 +22,6 @@ import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Date
 
 
 private const val TAG = "ScheduleFragment"
@@ -71,6 +69,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                 }
             }
             launch {
+                viewModel.tickets.collectLatest { tickets ->
+                    ticketAdapter.submitList(tickets.toList())
+                }
+            }
+            launch {
                 viewModel.calendarMode.collectLatest { mode ->
                     when (mode) {
                         CalendarMode.MONTH -> {
@@ -112,24 +115,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initTicketView() {
         binding.apply {
+            viewModel.getAllTicket()
             rvTicket.adapter = ticketAdapter
             rvTicket.overScrollControl { direction, deltaDistance ->
                 if (viewModel.clickedDate.value != null) {
                     handlePull(direction)
                 }
             }
-            ticketAdapter.submitList(
-                listOf(
-                    // testcode
-                    Ticket(
-                        name = "Elijah Merritt",
-                        dateTime = Date().toString(),
-                        location = "ignota",
-                        seat = "commune",
-                        category = "뮤지컬"
-                    ),
-                )
-            )
         }
     }
 

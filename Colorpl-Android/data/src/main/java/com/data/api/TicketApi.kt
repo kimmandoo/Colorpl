@@ -18,7 +18,7 @@ interface TicketApi {
         @Part file: MultipartBody.Part,
     ): Int
 
-    @GET("schedules/")
+    @GET("schedules")
     suspend fun getAllTicket(): List<ResponseTicket>
 
     @GET("schedules/monthly")
