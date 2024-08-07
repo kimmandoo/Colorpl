@@ -1,8 +1,8 @@
 package com.colorpl.schedule.query.dto;
 
-import com.colorpl.schedule.command.domain.CustomSchedule;
-import com.colorpl.schedule.command.domain.ReservationSchedule;
-import com.colorpl.schedule.command.domain.Schedule;
+import com.colorpl.schedule.domain.CustomSchedule;
+import com.colorpl.schedule.domain.ReservationSchedule;
+import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.detail.Category;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -23,6 +23,8 @@ public class ScheduleListResponse {
     private String location;
     private Double latitude;
     private Double longitude;
+    private Boolean reviewExists;
+    private Long reviewId;
 
     public static ScheduleListResponse from(Schedule schedule) {
 
@@ -33,10 +35,19 @@ public class ScheduleListResponse {
             .buildAndExpand(schedule.getImage())
             .toUri();
 
+        ScheduleListResponseBuilder builder = ScheduleListResponse.builder()
+            .id(schedule.getId())
+            .imgUrl(uri.toString());
+
+        if (schedule.getReview().isPresent()) {
+            builder.reviewExists(true);
+            builder.reviewId(schedule.getReview().get().getId());
+        } else {
+            builder.reviewExists(false);
+        }
+
         if (schedule instanceof CustomSchedule customSchedule) {
-            response = ScheduleListResponse.builder()
-                .id(customSchedule.getId())
-                .imgUrl(uri.toString())
+            response = builder
                 .seat(customSchedule.getSeat())
                 .dateTime(customSchedule.getDateTime())
                 .name(customSchedule.getName())
@@ -46,9 +57,7 @@ public class ScheduleListResponse {
                 .longitude(customSchedule.getLongitude())
                 .build();
         } else if (schedule instanceof ReservationSchedule reservationSchedule) {
-            response = ScheduleListResponse.builder()
-                .id(reservationSchedule.getId())
-                .imgUrl(reservationSchedule.getImage())
+            response = builder
                 .seat(reservationSchedule.getReservationDetail().getRow() + " "
                     + reservationSchedule.getReservationDetail().getCol())
                 .dateTime(
@@ -60,6 +69,7 @@ public class ScheduleListResponse {
                         .getCategory())
                 .build();
         }
+
         return response;
     }
 }
