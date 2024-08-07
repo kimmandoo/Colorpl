@@ -30,7 +30,8 @@ fun loadImage(imageView: ImageView, image: Drawable?) {
 @BindingAdapter("setImageCircleString")
 fun loadImage(imageView: ImageView, image: String?) {
     Glide.with(imageView.context)
-        .load(image)
+        //이부분 서버에서 바꿔주신데
+        .load("https://i11d109.p.ssafy.io/image/"+image)
         .transform(CircleCrop())
         .into(imageView)
 }

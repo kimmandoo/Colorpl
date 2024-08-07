@@ -167,7 +167,12 @@
     <fragment
         android:id="@+id/fragment_profile_update"
         android:name="com.presentation.my_page.ProfileUpdateFragment"
-        tools:layout="@layout/fragment_profile_update" />
+        tools:layout="@layout/fragment_profile_update" >
+
+        <argument
+            android:name="member"
+            app:argType="com.domain.model.Member"/>
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_user_search"
