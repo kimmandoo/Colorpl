@@ -7,7 +7,7 @@ import com.domain.model.Feed
 
 class FeedViewHolder(
     private val binding: ItemFeedBinding,
-    private val onFeedContentClickListener: () -> Unit,
+    private val onFeedContentClickListener: (Int) -> Unit,
     private val onCommentClickListener: () -> Unit,
     private val onEmotionClickListener: () -> Unit,
     private val onReportClickListener: () -> Unit,
@@ -26,7 +26,11 @@ class FeedViewHolder(
             Glide.with(binding.root.context).load(data.contentImgUrl).centerCrop().into(ivContent)
             clickScope.forEach {
                 it.setOnClickListener {
-                    onFeedContentClickListener()
+                    when (it) {
+                        tvContent -> {
+                            onFeedContentClickListener(data.id)
+                        }
+                    }
                 }
             }
         }

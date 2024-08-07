@@ -16,7 +16,15 @@
             android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:exitAnim="@android:anim/slide_out_right" >
+
+            <argument
+                android:name="reviewId"
+                app:argType="integer"
+                android:defaultValue="0"/>
+
+
+        </action>
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
             app:destination="@id/fragment_feed_ticket_select"

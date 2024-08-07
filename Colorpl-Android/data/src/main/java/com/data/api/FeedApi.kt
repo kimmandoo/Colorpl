@@ -4,6 +4,7 @@ import com.data.model.paging.ResponsePagedComment
 import com.data.model.paging.ResponsePagedFeed
 import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
+import com.data.model.response.ResponseReviewDetail
 import com.data.model.response.ResponseReviewEdit
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -43,10 +44,11 @@ interface FeedApi {
     ): ResponsePagedFeed
 
     @GET("reviews/details/{reviewId}")
+
     suspend fun getDetailFeedData(
         @Path("reviewId") reviewId: Int,
-        @Query("memberId") memberId: Int,
-    ): ResponsePagedFeed
+        @Query("memberId") memberId: Int = 0
+    ): ResponseReviewDetail
 
     @PUT("reviews/members/{memberId}/reviews/{reviewId}")
     suspend fun editUserFeedData(
