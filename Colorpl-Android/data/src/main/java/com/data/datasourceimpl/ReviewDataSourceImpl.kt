@@ -12,12 +12,11 @@ import javax.inject.Inject
 
 class ReviewDataSourceImpl @Inject constructor(private val feedApi: FeedApi) : ReviewDataSource {
     override suspend fun createReview(
-        memberId: Int,
         ticketId: Int,
         review: MultipartBody.Part?,
         request: RequestBody
     ): ResponseReviewCreate {
-        return feedApi.createUserFeedData(memberId, ticketId, request = request, file = review)
+        return feedApi.createUserFeedData(ticketId, request = request, file = review)
     }
 
 
@@ -30,10 +29,9 @@ class ReviewDataSourceImpl @Inject constructor(private val feedApi: FeedApi) : R
     }
 
     override suspend fun editReview(
-        memberId: Int,
         reviewId: Int,
         requestReviewEdit: RequestReviewEdit
     ): ResponseReviewEdit {
-        return feedApi.editUserFeedData(memberId, reviewId, requestReviewEdit)
+        return feedApi.editUserFeedData(reviewId, requestReviewEdit)
     }
 }

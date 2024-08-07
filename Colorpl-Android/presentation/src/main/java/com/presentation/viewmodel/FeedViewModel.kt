@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val getPagedFeedUseCase: FeedUseCase,
-    private val getPagedCommentUseCase: CommentUseCase,
+    private val commentUseCase: CommentUseCase,
     private val getReviewDetailUseCase: GetReviewDetailUseCase
 ) : ViewModel() {
     private val _pagedFeed = MutableStateFlow<PagingData<Feed>?>(null)
@@ -49,9 +49,10 @@ class FeedViewModel @Inject constructor(
 
     fun getComment(feedId: Int) {
         viewModelScope.launch {
-            getPagedCommentUseCase(feedId).cachedIn(viewModelScope).collectLatest { pagedData ->
-                _pagedComment.value = pagedData
-            }
+            commentUseCase.getComment(feedId).cachedIn(viewModelScope)
+                .collectLatest { pagedData ->
+                    _pagedComment.value = pagedData
+                }
         }
     }
 

@@ -31,7 +31,7 @@ class FeedUserPagingSource(
 
                 LoadResult.Page(
                     data = response,
-                    prevKey = if (nextPage == 1) null else nextPage - 1,
+                    prevKey = if (nextPage == 0) null else nextPage - 1,
                     nextKey = if (response.isEmpty() || result.data.totalPage == nextPage) null else nextPage + 1
                 )
             }

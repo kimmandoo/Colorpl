@@ -53,34 +53,30 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             listOf(
                 // testcode
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
-                    theater = "ignota",
+                    dateTime = Date().toString(),
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
-                    theater = "ignota",
+                    dateTime = Date().toString(),
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
-                    theater = "ignota",
+                    dateTime = Date().toString(),
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),
                 Ticket(
-                    ticketId = 4706,
                     name = "Elijah Merritt",
-                    date = Date().toString(),
-                    theater = "ignota",
+                    dateTime = Date().toString(),
+                    location = "ignota",
                     seat = "commune",
                     category = "뮤지컬"
                 ),

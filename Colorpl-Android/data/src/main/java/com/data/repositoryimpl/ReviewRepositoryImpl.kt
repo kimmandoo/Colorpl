@@ -30,7 +30,6 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
                 FormDataConverterUtil.getNullableMultiPartBody("file", file)
             Timber.d("review: ${filePart}\n request:$requestPart")
             reviewDataSource.createReview(
-                memberId = request.memberId,
                 ticketId = request.ticketId,
                 review = filePart,
                 request = requestPart
@@ -51,12 +50,11 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
     }
 
     override suspend fun editReview(
-        memberId: Int,
         reviewId: Int,
         requestReviewEdit: RequestReviewEdit
     ): Flow<ApiResult<ResponseReviewEdit>> = flow {
         emit(safeApiCall {
-            reviewDataSource.editReview(memberId, reviewId, requestReviewEdit)
+            reviewDataSource.editReview(reviewId, requestReviewEdit)
         })
     }
 

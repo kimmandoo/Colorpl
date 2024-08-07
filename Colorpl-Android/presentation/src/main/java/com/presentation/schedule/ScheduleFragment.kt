@@ -122,10 +122,9 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                 listOf(
                     // testcode
                     Ticket(
-                        ticketId = 4706,
                         name = "Elijah Merritt",
-                        date = Date().toString(),
-                        theater = "ignota",
+                        dateTime = Date().toString(),
+                        location = "ignota",
                         seat = "commune",
                         category = "뮤지컬"
                     ),

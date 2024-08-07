@@ -15,6 +15,7 @@ import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -73,7 +74,9 @@ class TicketFinishFragment :
                     }"
                 )
                 viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.createTicket(ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!)
+                    viewModel.createTicket(
+                        ImageProcessingUtil(binding.root.context).uriToFile(args.imageUrl!!)!!,
+                    )
                     tvConfirm.isEnabled = false
                 }
             }

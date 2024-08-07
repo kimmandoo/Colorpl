@@ -9,20 +9,15 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 interface ReviewDataSource {
+    suspend fun deleteReview(reviewId: Int): ResponseReviewEdit
+    suspend fun editReview(reviewId: Int, requestReviewEdit: RequestReviewEdit): ResponseReviewEdit
     suspend fun createReview(
-        memberId: Int,
         ticketId: Int,
         review: MultipartBody.Part?,
         request: RequestBody
     ): ResponseReviewCreate
 
-
     suspend fun getReviewDetail(
         reviewId: Int
     ) : ResponseReviewDetail
-
-    suspend fun deleteReview(reviewId: Int): ResponseReviewEdit
-
-    suspend fun editReview(memberId: Int, reviewId: Int, requestReviewEdit: RequestReviewEdit): ResponseReviewEdit
-
 }
