@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequestMapping("/schedules")
@@ -29,7 +31,7 @@ public class ScheduleController {
     private final MonthlyScheduleListService monthlyScheduleListService;
     private final ScheduleListService scheduleListService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<ScheduleListResponse>> scheduleList() {
         return ResponseEntity.ok(scheduleListService.scheduleList());
     }
@@ -42,14 +44,15 @@ public class ScheduleController {
         LocalDateTime to = from.plusMonths(1);
 
         return ResponseEntity.ok(
-            monthlyScheduleListService.monthlyScheduleList(request.getMemberId(), from, to));
+            monthlyScheduleListService.monthlyScheduleList(from, to));
     }
 
     @PostMapping("/custom")
     public ResponseEntity<Long> createCustomSchedule(
-        @RequestBody CreateCustomScheduleRequest request) {
-
-        Long scheduleId = createCustomScheduleService.createCustomSchedule(request);
+        @RequestPart CreateCustomScheduleRequest request,
+        @RequestPart(required = false) MultipartFile file
+    ) {
+        Long scheduleId = createCustomScheduleService.createCustomSchedule(request, file);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/schedules/{scheduleId}")
@@ -61,9 +64,11 @@ public class ScheduleController {
 
     @PostMapping("/reservation")
     public ResponseEntity<Long> createReservationSchedule(
-        @RequestBody CreateReservationScheduleRequest request) {
+        @RequestBody CreateReservationScheduleRequest request,
+        @RequestPart(required = false) MultipartFile file
+    ) {
 
-        Long scheduleId = createReservationScheduleService.createReservationSchedule(request);
+        Long scheduleId = createReservationScheduleService.createReservationSchedule(request, file);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/schedules/{scheduleId}")

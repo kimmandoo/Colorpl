@@ -6,6 +6,5 @@ import lombok.Getter;
 @Getter
 public class MonthlyScheduleListRequest {
 
-    private Integer memberId;
     private LocalDate date;
 }

@@ -3,6 +3,7 @@ package com.colorpl.schedule.query.application;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
+import com.colorpl.member.service.MemberService;
 import com.colorpl.schedule.command.domain.CustomSchedule;
 import com.colorpl.schedule.command.domain.ReservationSchedule;
 import com.colorpl.schedule.query.dao.CustomScheduleRepository;
@@ -22,10 +23,12 @@ public class MonthlyScheduleListService {
 
     private final CustomScheduleRepository customScheduleRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final ReservationScheduleRepository reservationScheduleRepository;
 
-    public List<ScheduleListResponse> monthlyScheduleList(Integer memberId, LocalDateTime from,
-        LocalDateTime to) {
+    public List<ScheduleListResponse> monthlyScheduleList(LocalDateTime from, LocalDateTime to) {
+
+        Integer memberId = memberService.getCurrentMemberId();
 
         Member member = memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::new);
