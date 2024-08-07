@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
+import com.domain.model.TicketResponse
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.CalendarAdapter
 import com.presentation.component.adapter.schedule.CustomPopupAdapter
@@ -47,8 +48,8 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     }
     private val ticketAdapter by lazy {
         TicketAdapter(
-            onTicketClickListener = {
-                findNavController().navigate(R.id.fragment_ticket)
+            onTicketClickListener = { ticket ->
+                onTicketClickListener(ticket)
             }
         )
     }
@@ -59,6 +60,11 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         initCalendar()
         initFAB()
         initTicketView()
+    }
+
+    private fun onTicketClickListener(ticket: TicketResponse) {
+        val action = ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicket(ticket)
+        findNavController().navigate(action)
     }
 
     private fun observeViewModel() {

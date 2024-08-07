@@ -7,7 +7,7 @@ import com.domain.model.TicketResponse
 
 class TicketViewHolder(
     private val binding: ItemTicketBinding,
-    private val onTicketClickListener: () -> Unit
+    private val onTicketClickListener: (TicketResponse) -> Unit
 ) : ViewHolder(binding.root) {
     fun bind(data: TicketResponse) {
         binding.apply {
@@ -17,7 +17,7 @@ class TicketViewHolder(
             tvWhen.text = data.dateTime
         }
         itemView.setOnClickListener {
-            onTicketClickListener()
+            onTicketClickListener(data)
         }
     }
 }

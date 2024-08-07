@@ -8,7 +8,7 @@ import com.colorpl.presentation.databinding.ItemTicketBinding
 import com.domain.model.TicketResponse
 import com.presentation.base.BaseDiffUtil
 
-class TicketAdapter(private val onTicketClickListener: () -> Unit) :
+class TicketAdapter(private val onTicketClickListener: (TicketResponse) -> Unit) :
     ListAdapter<TicketResponse, ViewHolder>(BaseDiffUtil<TicketResponse>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
