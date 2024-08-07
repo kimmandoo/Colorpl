@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,6 +51,7 @@ public class ScheduleController {
         @RequestPart CreateCustomScheduleRequest request,
         @RequestPart(required = false) MultipartFile file
     ) {
+
         Long scheduleId = createCustomScheduleService.createCustomSchedule(request, file);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -64,7 +64,7 @@ public class ScheduleController {
 
     @PostMapping("/reservation")
     public ResponseEntity<Long> createReservationSchedule(
-        @RequestBody CreateReservationScheduleRequest request,
+        @RequestPart CreateReservationScheduleRequest request,
         @RequestPart(required = false) MultipartFile file
     ) {
 
