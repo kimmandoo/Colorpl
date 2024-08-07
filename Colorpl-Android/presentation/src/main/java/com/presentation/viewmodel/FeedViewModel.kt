@@ -38,7 +38,7 @@ class FeedViewModel @Inject constructor(
 
     fun getComment(feedId: Int) {
         viewModelScope.launch {
-            getPagedCommentUseCase(feedId).cachedIn(viewModelScope).collectLatest { pagedData ->
+            getPagedCommentUseCase.getComment(feedId).cachedIn(viewModelScope).collectLatest { pagedData ->
                 _pagedComment.value = pagedData
             }
         }
