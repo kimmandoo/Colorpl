@@ -9,8 +9,12 @@ import com.data.model.response.ResponseSignIn
 import com.data.model.response.ResponseSignUp
 import com.data.repository.SignRepository
 import com.data.util.ApiResult
+import com.data.util.FormDataConverterUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
+import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 class SignRepositoryImpl @Inject constructor(
@@ -25,13 +29,24 @@ class SignRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signUp(requestSignUp: RequestSignUp): Flow<ApiResult<ResponseSignUp>> {
+    override suspend fun signUp(
+        requestSignUp: RequestSignUp,
+        file: File?
+    ): Flow<ApiResult<ResponseSignUp>> {
         return flow {
             emit(safeApiCall {
-                signDataSource.postSignUp(requestSignUp)
+                val requestPart = FormDataConverterUtil.getJsonRequestBody(requestSignUp)
+                val filePart: MultipartBody.Part? =
+                    FormDataConverterUtil.getNullableMultiPartBody("profileImage", file)
+
+                signDataSource.postSignUp(
+                    requestSignUp = requestPart,
+                    profileImage = filePart
+                )
             })
         }
     }
+
 
     override suspend fun googleSignIn(requestGoogleSignIn: RequestGoogleSignIn): Flow<ApiResult<ResponseSignIn>> {
         return flow {

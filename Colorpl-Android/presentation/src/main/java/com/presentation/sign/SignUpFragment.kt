@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpBinding
 import com.presentation.base.BaseFragment
+import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.Sign
 import com.presentation.util.emailCheck
 import com.presentation.util.getPhotoGallery
@@ -140,7 +141,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
-                        signUpViewModel.setUserImage(uri.toString())
+                        signUpViewModel.setUserImageFile(ImageProcessingUtil(requireActivity()).uriToFile(uri))
                         binding.ivProfile.setImage(uri)
                     }
                 }
