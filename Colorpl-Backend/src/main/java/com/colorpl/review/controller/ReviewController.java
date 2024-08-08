@@ -94,11 +94,10 @@ public class ReviewController {
             .buildAndExpand(id)
             .toUri();
         System.out.println(uri);
-
         NonReadReviewResponse response = NonReadReviewResponse.builder()
             .reviewId(id)
             .build();
-
+//        throw new RuntimeException("at least schedule");
         return ResponseEntity.created(uri).body(response);
     }
 
@@ -125,7 +124,7 @@ public class ReviewController {
             .reviewId(reviewId)
             .build();
 
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 특정 리뷰에 공감 추가
@@ -150,7 +149,7 @@ public class ReviewController {
         NonReadReviewResponse response = NonReadReviewResponse.builder()
             .reviewId(reviewId)
             .build();
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
