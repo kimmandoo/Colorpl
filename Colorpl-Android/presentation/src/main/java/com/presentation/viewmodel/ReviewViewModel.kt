@@ -33,7 +33,7 @@ class ReviewViewModel @Inject constructor(
     }
 
     fun checkEditText(length: Int?) {
-        _editTextCheck.value = (length != null) && (length > 50)
+        _editTextCheck.value = (length != null) && (length > 20)
         checkConfirm()
     }
 

@@ -6,7 +6,7 @@ import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 
 interface CommentUseCase {
-    fun getComment(feedId: Int): Flow<PagingData<com.domain.model.Comment>>
+    fun getComment(reviewId: Int): Flow<PagingData<com.domain.model.Comment>>
     suspend fun editComment(
         requestEditComment: RequestCreateComment
     ): Flow<DomainResult<Int>>

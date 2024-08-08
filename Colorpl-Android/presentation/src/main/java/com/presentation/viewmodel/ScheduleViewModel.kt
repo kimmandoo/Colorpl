@@ -123,6 +123,20 @@ class ScheduleViewModel @Inject constructor(
         updateDisplayDate()
     }
 
+    fun swipeUpdateCalendar(direction: Int){
+        if(direction == 1){
+            when(_calendarMode.value){
+                CalendarMode.MONTH -> updateCalendar(Calendar.NEXT)
+                CalendarMode.WEEK -> updateCalendarWeekMode(Calendar.NEXT)
+            }
+        }else{
+            when(_calendarMode.value){
+                CalendarMode.MONTH -> updateCalendar(Calendar.PREVIOUS)
+                CalendarMode.WEEK -> updateCalendarWeekMode(Calendar.PREVIOUS)
+            }
+        }
+    }
+
     fun updateCalendar(
         state: Calendar,
         month: Long = 0,
