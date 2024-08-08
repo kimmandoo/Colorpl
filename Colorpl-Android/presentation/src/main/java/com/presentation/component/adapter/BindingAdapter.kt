@@ -260,7 +260,7 @@ fun setSearchDate(view: TextView, date: LocalDate?) {
         val formattedDate = dateFormat.format(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()))
         view.text = formattedDate
     } ?: run {
-        view.text = ""
+        view.text = "날짜"
     }
 }
 

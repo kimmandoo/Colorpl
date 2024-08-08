@@ -206,29 +206,14 @@ class ReservationFragment :
 
     /** 날짜 선택 캘린더 Dialog */
     private fun showDateRangePickerDialog() {
-        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-        val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
+        val initialDate = reservationListViewModel.searchDate.value ?: LocalDate.now()
+        Timber.tag("date").d(initialDate.toString())
+        val dateRangePickerDialog = DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
             // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-            val selectedDate = LocalDate.of(year.toInt(), month.toInt(), day.toInt())
-
-            Toast.makeText(
-                binding.root.context,
-                "년: $year, 월: ${month}, 일: $day",
-                Toast.LENGTH_SHORT
-            ).show()
-            updateDateTextView(year.toInt(), month.toInt(), day.toInt())
+            val selectedDate = LocalDate.of(year, month, day)
             reservationListViewModel.setDate(selectedDate)
-//            binding.tvSelectDate.text = "$year.${month + 1}.$day"
         }
         dateRangePickerDialog.show()
-    }
-
-    private fun updateDateTextView(year: Int, month: Int, day: Int) {
-        val calendar = Calendar.getInstance()
-        Timber.tag("date").d("$year, $month, $day")
-        calendar.set(year, month, day)
-        val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
-        binding.tvSelectDate.text = dateFormat.format(calendar.time)
     }
 
     /** 지역 선택 리스트 Dialog */
@@ -243,7 +228,7 @@ class ReservationFragment :
         locationPickerDialog.show()
     }
 
-    //
+
     /**
      * 결제할 아이템 하나에 대한 return
      * 이걸 각 아이템별로 호출해서 List로 만들어 결제요청
