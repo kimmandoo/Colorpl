@@ -8,7 +8,6 @@ import com.domain.model.ReviewDetail
 
 fun Review.toEntity(): RequestReviewCreate {
     return RequestReviewCreate(
-        memberId = memberId,
         ticketId = ticketId,
         content = content,
         spoiler = spoiler,

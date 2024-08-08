@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketBinding
 import com.naver.maps.geometry.LatLng
@@ -35,7 +37,8 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     override var mapView: MapView? = null
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
-
+    private val args: TicketFragmentArgs by navArgs()
+    private val ticket by lazy { args.ticket }
     var currentLocation: LatLng? = null
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -52,6 +55,11 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
 
     private fun initUi() {
         binding.apply {
+            binding.titleText = ticket.name
+            Glide.with(root.context).load(ticket.imgUrl).centerCrop().into(ivPoster)
+            includeDate.tvTitle.text = ticket.dateTime
+            includePlace.tvTitle.text = ticket.location
+            includeSeat.tvTitle.text = ticket.seat
             includePlace.tvTitleHint.text = getString(R.string.ticket_place)
             includeDate.tvTitleHint.text = getString(R.string.ticket_date)
             includeSeat.tvTitleHint.text = getString(R.string.ticket_seat)
@@ -71,7 +79,10 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             }
             tvFindRoad.setOnClickListener {
                 ticketViewModel.getRoute(
-                    LatLng(DEFAULT_LAT, DEFAULT_LONG)
+                    LatLng(
+                        if (ticket.latitude == 0.0) DEFAULT_LAT else ticket.latitude,
+                        if (ticket.longitude == 0.0) DEFAULT_LONG else ticket.longitude,
+                    )
                 )
             }
         }
@@ -106,7 +117,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 routeOverlay.apply {
                     coords = routeData.second
                     color = ContextCompat.getColor(binding.root.context, R.color.imperial_red)
-                    outlineWidth = 4
+                    outlineWidth = 5
                     map = naverMap
                 }
                 binding.apply {

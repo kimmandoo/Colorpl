@@ -20,7 +20,6 @@ import javax.inject.Inject
 class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: ReviewDataSource) :
     ReviewRepository {
     override suspend fun createReview(
-        ticketId: Int,
         request: RequestReviewCreate,
         file: File?
     ): Flow<ApiResult<ResponseReviewCreate>> = flow {

@@ -11,7 +11,6 @@ import java.io.File
 
 interface ReviewRepository {
     suspend fun createReview(
-        ticketId: Int,
         request: RequestReviewCreate,
         file: File?
     ): Flow<ApiResult<ResponseReviewCreate>>

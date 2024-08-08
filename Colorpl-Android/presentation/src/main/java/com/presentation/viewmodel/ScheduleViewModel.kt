@@ -1,13 +1,18 @@
 package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.domain.model.CalendarItem
-import com.domain.model.Ticket
+import com.domain.model.TicketResponse
+import com.domain.usecase.TicketUseCase
+import com.domain.util.DomainResult
 import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -18,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
-
+    private val ticketUseCase: TicketUseCase
 ) : ViewModel() {
 
     private val _selectedDate = MutableStateFlow(LocalDate.now())
@@ -28,8 +33,8 @@ class ScheduleViewModel @Inject constructor(
     private val _calendarItems = MutableStateFlow<List<CalendarItem>>(emptyList())
     val calendarItems: StateFlow<List<CalendarItem>> = _calendarItems
 
-    private val _tickets = MutableStateFlow<List<Ticket>>(emptyList())
-    val tickets: StateFlow<List<Ticket>> = _tickets
+    private val _tickets = MutableStateFlow<List<TicketResponse>>(emptyList())
+    val tickets: StateFlow<List<TicketResponse>> = _tickets
 
     private val _displayDate = MutableStateFlow("")
     val displayDate: StateFlow<String> = _displayDate
@@ -39,6 +44,23 @@ class ScheduleViewModel @Inject constructor(
 
     init {
         updateCalendar(Calendar.CURRENT)
+    }
+
+    fun getAllTicket() {
+        viewModelScope.launch {
+            ticketUseCase.getAllTicket().collect {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _tickets.value = it.data
+                        Timber.tag("tickets").d("${it.data}")
+                    }
+
+                    is DomainResult.Error -> {
+                        Timber.tag("tickets").d("${it.exception}")
+                    }
+                }
+            }
+        }
     }
 
     fun setClickedDate(calendarItem: CalendarItem) {

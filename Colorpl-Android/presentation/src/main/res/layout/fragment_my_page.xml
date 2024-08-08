@@ -6,6 +6,13 @@
         <variable
             name="member"
             type="com.domain.model.Member" />
+        <variable
+            name="ticketTitle"
+            type="boolean" />
+
+        <variable
+            name="ticketCount"
+            type="String" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -53,7 +60,6 @@
                             android:layout_height="100dp"
                             android:layout_marginStart="30dp"
                             android:layout_marginTop="42dp"
-                            app:setImageCircleString="@{member.profileImage}"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -264,10 +270,45 @@
                                 app:layout_constraintStart_toStartOf="@+id/iv_ticket_star"
                                 app:layout_constraintTop_toBottomOf="@+id/iv_ticket_star" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_ticket_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@+id/ml_ticket_tab"
+                            >
+
+                            <TextView
+                                android:id="@+id/tv_ticket_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:layout_marginTop="20dp"
+                                style="@style/suite_bold_20"
+                                android:text="@{ticketTitle ? @string/my_page_ticket_use : @string/my_page_ticket_un_use}"
+                                android:textColor="@color/timber_wolf"
+                                android:layout_marginStart="10dp"/>
+
+                            <TextView
+                                android:id="@+id/tv_ticket_value"
+                                android:layout_width="wrap_content"
+                                style="@style/suite_bold_20"
+                                android:textColor="@color/imperial_red"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="@+id/tv_ticket_title"
+                                app:layout_constraintBottom_toBottomOf="@+id/tv_ticket_title"
+                                app:layout_constraintStart_toEndOf="@+id/tv_ticket_title"
+                                android:text="@{ticketCount}"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
+
+
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_ticket"
