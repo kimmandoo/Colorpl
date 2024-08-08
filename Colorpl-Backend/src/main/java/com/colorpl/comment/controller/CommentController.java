@@ -107,7 +107,7 @@ public class CommentController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CommentNotFoundException e){
             CommentResponse response = CommentResponse.builder().commentId(-1L).failPoint("comment가 없습니다.").build();
-            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
 
     }

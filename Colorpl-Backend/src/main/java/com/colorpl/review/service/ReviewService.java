@@ -28,6 +28,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -228,25 +231,38 @@ public class ReviewService {
         return empathyRepository.findById(empathyId);
     }
 
+
+
+
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
+
+
+
         List<CommentDTO> commentDTOs = review.getComments().stream()
-            .map(CommentDTO::toCommentDTO)
-            .toList();
+                .map(CommentDTO::toCommentDTO)
+                .toList();
         int totalComments = commentDTOs.size();
 
+        System.out.println("//////////////////////////////////////////////////////////////////////");
+        // testing
+        String getClass = review.getSchedule().getClass().getName();
+        System.out.println(getClass);
+
+//        Schedule schedule = review.getSchedule();
+
         boolean myReviewCheck = review.getSchedule() != null &&
-            review.getSchedule().getMember() != null &&
-            review.getSchedule().getMember().getId() != null &&
-            review.getSchedule().getMember().getId().equals(memberId);
+                review.getSchedule().getMember() != null &&
+                review.getSchedule().getMember().getId() != null &&
+                review.getSchedule().getMember().getId().equals(memberId);
 
         int size = 10; // Assuming fixed size for comment pages
         int pages = (int) Math.ceil((double) totalComments / size);
 
         String formattedDate =
-            review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+                review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
         boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId))
-            .isPresent();
+                .isPresent();
 
         String basePath = "images/";
         String filename = review.getFilename();
@@ -255,53 +271,65 @@ public class ReviewService {
         if ("noimg".equals(filename)) {
             // Special case for "noimg"
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(basePath)
-                .path("noimg.png") // or any specific path for placeholder image
-                .build()
-                .toUriString();
+                    .path(basePath)
+                    .path("noimg.png") // or any specific path for placeholder image
+                    .build()
+                    .toUriString();
         } else {
             // Standard case
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(basePath)
-                .path(filename)
-                .build()
-                .toUriString();
+                    .path(basePath)
+                    .path(filename)
+                    .build()
+                    .toUriString();
         }
+
+        Schedule schedule = review.getSchedule();
+        if (schedule instanceof HibernateProxy) {
+            schedule = (Schedule) ((HibernateProxy) schedule).getHibernateLazyInitializer().getImplementation();
+        }
+
 
         ReviewDTOBuilder builder = ReviewDTO.builder()
-            .id(review.getId())
-            .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
-            .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
-                ? review.getSchedule().getMember().getNickname() : null)
-            .imgurl(filepath)
-            .content(review.getContent())
-            .spoiler(review.getSpoiler())
-            .emotion(review.getEmotion())
-            .createdate(formattedDate)
-            .empathy(review.getEmphathy())
-            .myempathy(myEmpathy)
-            .commentpagesize(pages)
-            .commentscount(totalComments)
-            .myreview(myReviewCheck);
+                .id(review.getId())
+                .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
+                .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
+                        ? review.getSchedule().getMember().getNickname() : null)
+                .imgurl(filepath)
+                .content(review.getContent())
+                .spoiler(review.getSpoiler())
+                .emotion(review.getEmotion())
+                .createdate(formattedDate)
+                .empathy(review.getEmphathy())
+                .myempathy(myEmpathy)
+                .commentpagesize(pages)
+                .commentscount(totalComments)
+                .myreview(myReviewCheck);
 
-        if (review.getSchedule() != null
-            && review.getSchedule() instanceof CustomSchedule customSchedule) {
+        if (schedule != null
+                && schedule instanceof CustomSchedule customSchedule) {
             return builder
-                .title(customSchedule.getName() != null ? customSchedule.getName() : null)
-                .category(
-                    customSchedule.getCategory() != null ? customSchedule.getCategory().toString()
-                        : null)
-                .build();
-        } else if (review.getSchedule() != null
-            && review.getSchedule() instanceof ReservationSchedule reservationSchedule) {
+                    .title(customSchedule.getName() != null ? customSchedule.getName() : null)
+                    .category(
+                            customSchedule.getCategory() != null ? customSchedule.getCategory().toString()
+                                    : null)
+                    .build();
+        } else if (schedule != null
+                && schedule instanceof ReservationSchedule reservationSchedule) {
             return builder
-                .title(reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
-                    .getName())
-                .category(
-                    reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
-                        .getCategory().toString())
-                .build();
+                    .title(reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                            .getName())
+                    .category(
+                            reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                                    .getCategory().toString())
+                    .build();
         }
+
+        System.out.println("//////////////////////////////////////////////////////////////////////");
+        // testing
+        String getClass2 = review.getSchedule().getClass().getName();
+        System.out.println(getClass2);
+
         return builder.build();
     }
 }
