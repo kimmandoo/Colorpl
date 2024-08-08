@@ -6,6 +6,8 @@ import com.colorpl.show.domain.detail.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,6 +30,7 @@ public class CustomSchedule extends Schedule {
     private String name;
 
     @Column(name = "SCHEDULE_CATEGORY")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Column(name = "SCHEDULE_LOCATION")
