@@ -1,6 +1,7 @@
 package com.presentation.reservation
 
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -26,6 +27,10 @@ import kr.co.bootpay.android.models.BootItem
 import kr.co.bootpay.android.models.BootUser
 import kr.co.bootpay.android.models.Payload
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -57,7 +62,15 @@ class ReservationFragment :
         initReservationInfo()
         initClickListener()
         initReservationList()
+        initViewModel()
+
         observeReservationList()
+
+        initSearchWindow()
+        observeSearchKeyword()
+        observeSearchDate()
+        observeSearchArea()
+        observeSearchCategory()
     }
 
     private fun initReservationList() {
@@ -77,6 +90,10 @@ class ReservationFragment :
             itemAnimator = null
         }
         filterAdapter.submitList(binding.root.context.getFilterItems())
+    }
+
+    private fun initViewModel() {
+        binding.viewModel = reservationListViewModel
     }
 
     private fun initReservationInfo() {
@@ -132,17 +149,69 @@ class ReservationFragment :
         Navigation.findNavController(binding.root).navigate(action)
     }
 
+    private fun observeSearchDate() {
+        reservationListViewModel.searchDate.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { date ->
+            Timber.tag("선택한 날짜").d(date.toString())
+            reservationListViewModel.getReservationList()
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeSearchArea() {
+        reservationListViewModel.searchArea.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { location ->
+            binding.tvSelectLocation.text = location
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeSearchKeyword() {
+        reservationListViewModel.searchKeyword.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { keyword ->
+                reservationListViewModel.getReservationList()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeSearchCategory() {
+        reservationListViewModel.searchCategory.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { category ->
+
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun initSearchWindow() {
+        binding.apply {
+            svSearch.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    // 검색 버튼을 눌렀을 때 호출
+                    query?.let {
+                        Timber.tag("click").d(it)
+                        reservationListViewModel.setKeyword(it)
+                    } ?: run {
+                        // query가 null인 경우에도 빈 문자열로 검색을 트리거
+                        Timber.tag("click").d("")
+                        reservationListViewModel.setKeyword("")
+                    }
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    // 검색 쿼리가 변경될 때 호출
+                    newText?.let {
+                        Timber.tag("search").d(it)
+                    }
+                    return true
+                }
+
+            })
+        }
+    }
+
     /** 날짜 선택 캘린더 Dialog */
     private fun showDateRangePickerDialog() {
-        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-        val dateRangePickerDialog = DateRangePickerDialog(requireContext()) { year, month, day ->
+        val initialDate = reservationListViewModel.searchDate.value ?: LocalDate.now()
+        Timber.tag("date").d(initialDate.toString())
+        val dateRangePickerDialog = DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
             // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-            Toast.makeText(
-                binding.root.context,
-                "년: $year, 월: ${month + 1}, 일: $day",
-                Toast.LENGTH_SHORT
-            ).show()
-            binding.tvSelectDate.text = "$year.${month + 1}.$day"
+            val selectedDate = LocalDate.of(year, month, day)
+            reservationListViewModel.setDate(selectedDate)
         }
         dateRangePickerDialog.show()
     }
@@ -154,6 +223,7 @@ class ReservationFragment :
         val locationPickerDialog =
             LocationPickerDialog(requireContext(), locationList) { selectedCity ->
                 binding.tvSelectLocation.text = selectedCity
+                reservationListViewModel.setArea(selectedCity)
             }
         locationPickerDialog.show()
     }

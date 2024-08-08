@@ -9,6 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,10 +21,31 @@ class ReservationListViewModel @Inject constructor(
     private val _reservationList = MutableStateFlow<List<ReservationInfo>>(listOf())
     val reservationList: MutableStateFlow<List<ReservationInfo>> = _reservationList
 
+    private val _searchDate = MutableStateFlow<LocalDate?>(null)
+    val searchDate: MutableStateFlow<LocalDate?> = _searchDate
+
+    private val _searchArea = MutableStateFlow("")
+    val searchArea: MutableStateFlow<String> = _searchArea
+
+    private val _searchKeyword = MutableStateFlow("")
+    val searchKeyword: MutableStateFlow<String> = _searchKeyword
+
+    private val _searchCategory = MutableStateFlow("")
+    val searchCategory: MutableStateFlow<String> = _searchCategory
+
     /** 예매 아이템 전체 조회. */
     fun getReservationList() {
         viewModelScope.launch {
-            getReservationListUseCase().collect { response ->
+            val filters = mutableMapOf<String, String>()
+            _searchDate.value?.let {
+                val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
+                filters["date"] = it.format(dateFormat)
+            }
+            _searchArea.value.takeIf { it.isNotBlank() }?.let { filters["area"] = it }
+            _searchKeyword.value.takeIf { it.isNotBlank() }?.let { filters["keyword"] = it }
+            _searchCategory.value.takeIf { it.isNotBlank() }?.let { filters["category"] = it }
+            Timber.tag("검색").d("${searchDate.value}, ${searchArea.value}, ${searchKeyword.value}, ${searchCategory.value}")
+            getReservationListUseCase(filters = filters).collect { response ->
                 when (response) {
                     is DomainResult.Success -> {
                         _reservationList.value = response.data
@@ -33,5 +57,21 @@ class ReservationListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setDate(date: LocalDate) {
+        _searchDate.value = date
+    }
+
+    fun setArea(area: String) {
+        _searchArea.value = area
+    }
+
+    fun setKeyword(keyword: String) {
+        _searchKeyword.value = keyword
+    }
+
+    fun setCategory(category: String) {
+        _searchCategory.value = category
     }
 }

@@ -15,9 +15,12 @@ import com.domain.model.Seat
 import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
+import java.util.Date
 import java.util.Locale
 
 @BindingAdapter("setImage")
@@ -235,19 +238,30 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
     val today = LocalDate.now()
     val tomorrow = today.plusDays(1)
     val selectedDateTitle = "${view.context.getString(R.string.reservation_selected_title)} : "
-    val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-    val dayOfWeek = " (${date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)})"
+    val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
+    val formattedDate = dateFormat.format(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
     view.text = if (setTitle) {
         val subText = when (date) {
             today -> " ${view.context.getString(R.string.reservation_date_today)}"
             tomorrow -> " ${view.context.getString(R.string.reservation_date_tomorrow)}"
             else -> ""
         }
-        selectedDateTitle + formattedDate + dayOfWeek + subText
+        selectedDateTitle + formattedDate + subText
     } else {
-        formattedDate + dayOfWeek
+        formattedDate
     }
 
+}
+
+@BindingAdapter("searchDate")
+fun setSearchDate(view: TextView, date: LocalDate?) {
+    date?.let {
+        val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
+        val formattedDate = dateFormat.format(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+        view.text = formattedDate
+    } ?: run {
+        view.text = "날짜"
+    }
 }
 
 @BindingAdapter("loadImageToReservationDetail")
