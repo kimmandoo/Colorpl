@@ -83,12 +83,14 @@ interface FeedApi {
         @Path("reviewId") reviewId: Int,
     ): ResponseReviewEdit
 
+    // 특정 리뷰 댓글 달기
     @POST("comments/reviews/{reviewId}")
     suspend fun createCommentData(
         @Path("reviewId") reviewId: Int,
         @Body requestCreateComment: RequestCreateComment
     ): ResponseCommentEdit
 
+    // 특정 리뷰 댓글 가져오기
     @GET("comments/reviews/{reviewId}")
     suspend fun getCommentData(
         @Path("reviewId") reviewId: Int,
@@ -96,13 +98,15 @@ interface FeedApi {
         @Query("size") size: Int
     ): ResponsePagedComment
 
+    // 특정 댓글 수정
     @PUT("comments/{commentId}")
     suspend fun editCommentData(
         @Path("commentId") commentId: Int,
         @Body requestEditComment: RequestCreateComment
     ): ResponseCommentEdit
 
-    @GET("comments/{commentId}")
+    // 특정 댓글 삭제
+    @DELETE("comments/{commentId}")
     suspend fun deleteCommentData(
         @Path("commentId") commentId: Int,
     ): ResponseCommentEdit
