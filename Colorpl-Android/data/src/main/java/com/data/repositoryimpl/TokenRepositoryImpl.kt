@@ -30,6 +30,11 @@ class TokenRepositoryImpl @Inject constructor(
         })
     }
 
+    override suspend fun clearToken() {
+        return tokenDataSource.clearToken()
+    }
+
+
     override suspend fun setAccessToken(accessToken: String) {
         return tokenDataSource.setAccessToken(accessToken)
     }

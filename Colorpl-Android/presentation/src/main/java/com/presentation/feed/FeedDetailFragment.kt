@@ -7,13 +7,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
+import com.domain.model.Review
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
+import com.presentation.component.dialog.ReviewEditDialog
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -34,14 +38,49 @@ class FeedDetailFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         initData()
+        initEdit()
         initAdapter()
         observeReviewDetail()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                feedViewModel.reviewDeleteResponse.collectLatest { reviewId ->
+                    if (reviewId > 0) {
+                        Timber.d("리뷰 삭제 성공 $reviewId")
+                    }
+                }
+            }
+        }
     }
 
     private fun initData() {
-
         feedViewModel.getComment(feedId = 1)
         feedViewModel.getReviewDetail(1)
+    }
+
+    private fun initEdit() {
+        binding.apply {
+            tvEdit.setOnClickListener {
+                val dialog = ReviewEditDialog(requireContext(), binding.tvEdit.text.toString()) {
+                    feedViewModel.editReview(
+                        feedViewModel.reviewDetail.value.id,
+                        Review(
+                            feedViewModel.reviewDetail.value.id,
+                            it,
+                            feedViewModel.reviewDetail.value.spoiler,
+                            feedViewModel.reviewDetail.value.emotion
+                        )
+                    )
+                }
+                dialog.show()
+            }
+            tvDelete.setOnClickListener {
+                feedViewModel.deleteReview(feedViewModel.reviewDetail.value.id)
+            }
+        }
     }
 
     private fun initAdapter() {

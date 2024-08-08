@@ -13,7 +13,6 @@ import com.data.util.FormDataConverterUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -27,6 +26,12 @@ class SignRepositoryImpl @Inject constructor(
                 signDataSource.postSignIn(requestSignIn)
             })
         }
+    }
+
+    override suspend fun signOut(refreshToken: String): Flow<ApiResult<Any?>> = flow {
+        emit(safeApiCall {
+            signDataSource.postSignOut(refreshToken)
+        })
     }
 
     override suspend fun signUp(

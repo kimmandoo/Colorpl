@@ -3,7 +3,9 @@ package com.presentation.component.adapter.mypage
 import androidx.recyclerview.widget.RecyclerView
 import com.colorpl.presentation.databinding.ItemUserSearchBinding
 import com.domain.model.MemberSearch
-import com.presentation.util.setImageCenterCrop
+
+import com.presentation.util.setImageCircleCrop
+
 
 class UserSearchViewHolder(
     val binding: ItemUserSearchBinding
@@ -11,9 +13,7 @@ class UserSearchViewHolder(
     fun bind(data: MemberSearch) {
         binding.apply {
             memberSearch = data
-            ivProfileImg.setImageCenterCrop(data.profileImage, true)
+            ivProfileImg.setImageCircleCrop(data.profileImage, true)
         }
     }
-
-
 }

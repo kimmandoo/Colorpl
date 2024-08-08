@@ -98,7 +98,7 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
-
+    implementation(libs.retrofit.converter.sclars)
     // Maps
     implementation(libs.play.services.location)
     implementation(libs.naver.maps)

@@ -5,8 +5,10 @@ import com.data.model.response.ResponseMemberInfo
 import com.data.model.response.ResponseMemberSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
@@ -34,4 +36,29 @@ interface MemberApi {
     suspend fun getMemberSearch(
         @Path("nickname") nickname: String
     ): List<ResponseMemberSearch>
+
+    @GET("members/{memberId}")
+    suspend fun getOtherMember(
+        @Path("memberId") memberId: Int
+    ): ResponseMemberInfo
+
+    @GET("members/{memberId}/following/count")
+    suspend fun getOtherFollowingCount(
+        @Path("memberId") memberId: Int
+    ): ResponseFollowCount
+
+    @GET("members/{memberId}/followers/count")
+    suspend fun getOtherFollowersCount(
+        @Path("memberId") memberId: Int
+    ): ResponseFollowCount
+
+    @POST("members/follow/{followId}")
+    suspend fun postFollow(
+        @Path("followId") followId: Int
+    ): String
+
+    @DELETE("members/unfollow/{followId}")
+    suspend fun postUnFollow(
+        @Path("followId") followId: Int
+    ): String
 }
