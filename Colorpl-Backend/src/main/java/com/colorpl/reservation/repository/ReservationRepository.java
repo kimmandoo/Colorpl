@@ -11,6 +11,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     //유저로 조회 추가
     List<Reservation> findByMemberId(Integer memberId);
     Optional<ReservationDetail> findDetailByIdAndMemberId(Long detailId, Integer memberId);
+    List<Reservation> findByReservationDetailsShowScheduleId(Long showScheduleId);
 
 
 }
