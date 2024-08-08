@@ -9,6 +9,8 @@ import okhttp3.RequestBody
 
 interface SignDataSource {
 
+    suspend fun postSignOut(refreshToken: String): Any?
+
     suspend fun postSignIn(
         requestSignIn: RequestSignIn
     ): ResponseSignIn
