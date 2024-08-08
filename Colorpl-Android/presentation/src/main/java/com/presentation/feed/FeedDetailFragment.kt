@@ -7,9 +7,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
+import com.domain.model.Review
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
+import com.presentation.component.dialog.ReviewEditDialog
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -62,7 +64,18 @@ class FeedDetailFragment :
     private fun initEdit() {
         binding.apply {
             tvEdit.setOnClickListener {
-
+                val dialog = ReviewEditDialog(requireContext(), binding.tvEdit.text.toString()) {
+                    feedViewModel.editReview(
+                        feedViewModel.reviewDetail.value.id,
+                        Review(
+                            feedViewModel.reviewDetail.value.id,
+                            it,
+                            feedViewModel.reviewDetail.value.spoiler,
+                            feedViewModel.reviewDetail.value.emotion
+                        )
+                    )
+                }
+                dialog.show()
             }
             tvDelete.setOnClickListener {
                 feedViewModel.deleteReview(feedViewModel.reviewDetail.value.id)
