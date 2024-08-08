@@ -6,8 +6,9 @@ import com.data.repository.GeocodingRepository
 import com.data.repository.MemberRepository
 import com.data.repository.NotificationRepository
 import com.data.repository.OpenAiRepository
-import com.data.repository.ReviewRepository
+import com.data.repository.PayRepository
 import com.data.repository.ReservationRepository
+import com.data.repository.ReviewRepository
 import com.data.repository.SignRepository
 import com.data.repository.TicketRepository
 import com.data.repository.TmapRouteRepository
@@ -18,8 +19,9 @@ import com.data.repositoryimpl.GeocodingRepositoryImpl
 import com.data.repositoryimpl.MemberRepositoryImpl
 import com.data.repositoryimpl.NotificationRepositoryImpl
 import com.data.repositoryimpl.OpenAiRepositoryImpl
-import com.data.repositoryimpl.ReviewRepositoryImpl
+import com.data.repositoryimpl.PayRepositoryImpl
 import com.data.repositoryimpl.ReservationRepositoryImpl
+import com.data.repositoryimpl.ReviewRepositoryImpl
 import com.data.repositoryimpl.SignRepositoryImpl
 import com.data.repositoryimpl.TicketRepositoryImpl
 import com.data.repositoryimpl.TmapRouteRepositoryImpl
@@ -107,4 +109,10 @@ interface RepositoryModule {
     fun bindsReviewRepository(
         reviewRepositoryImpl: ReviewRepositoryImpl
     ): ReviewRepository
+
+    @Singleton
+    @Binds
+    fun bindsPayRepository(
+        payRepositoryImpl: PayRepositoryImpl
+    ): PayRepository
 }

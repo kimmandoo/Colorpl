@@ -8,6 +8,7 @@ import com.presentation.util.Payment
 import com.presentation.util.getBootUser
 import com.presentation.util.requestPayment
 import com.presentation.util.selectItemToPay
+import com.presentation.viewmodel.PayViewModel
 import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -18,6 +19,7 @@ import javax.inject.Named
 class ReservationPaymentFragment :
     BaseFragment<FragmentReservationPaymentBinding>(R.layout.fragment_reservation_payment) {
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
+    private val payViewModel: PayViewModel by viewModels()
 
     @Inject
     @Named("bootpay")
@@ -63,7 +65,7 @@ class ReservationPaymentFragment :
                     orderId = "123",
                     context = requireActivity(),
                     manager = requireActivity().supportFragmentManager,
-                ) {data ->
+                ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
 
                     false
