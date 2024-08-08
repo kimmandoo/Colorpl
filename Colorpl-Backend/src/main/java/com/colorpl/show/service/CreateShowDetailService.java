@@ -1,18 +1,16 @@
 package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.CategoryNotFoundException;
-import com.colorpl.show.domain.detail.Category;
-import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.detail.ShowState;
+import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.domain.ShowState;
 import com.colorpl.show.dto.ShowDetailApiResponse.Item;
 import com.colorpl.show.repository.ShowDetailRepository;
-import com.colorpl.theater.domain.CreateTheaterService;
-import com.colorpl.theater.domain.Theater;
-import com.colorpl.theater.domain.TheaterRepository;
+import com.colorpl.theater.repository.TheaterRepository;
+import com.colorpl.theater.service.CreateTheaterService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +29,7 @@ public class CreateShowDetailService {
     public ShowDetail create(Item item) {
         int pos = item.getHall().lastIndexOf('(');
         String hall = item.getHall().substring(pos + 1, item.getHall().length() - 1);
-        Optional<Theater> optional = theaterRepository.findByApiId(item.getTheaterApiId());
-        Theater theater = optional.isPresent() ? optional.get()
-            : createTheaterService.create(item.getTheaterApiId());
+        createTheaterService.createTheater(item.getTheaterApiId());
 
         ShowDetail showDetail = ShowDetail.builder()
             .apiId(item.getShowApiId())
@@ -47,7 +43,7 @@ public class CreateShowDetailService {
                 .orElseThrow(() -> new CategoryNotFoundException(item.getCategory())))
             .state(ShowState.from(item.getState()))
 //            .theater(theater)
-            .hall(hall)
+//            .hall(hall)
             .build();
         createSeatService.create(showDetail);
         showDetailRepository.save(showDetail);

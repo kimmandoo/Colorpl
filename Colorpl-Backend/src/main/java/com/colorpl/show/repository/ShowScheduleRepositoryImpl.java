@@ -1,9 +1,9 @@
 package com.colorpl.show.repository;
 
-import static com.colorpl.show.domain.schedule.QShowSchedule.showSchedule;
+import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
-import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.dto.SearchShowScheduleCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

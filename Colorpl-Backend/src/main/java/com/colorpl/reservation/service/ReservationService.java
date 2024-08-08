@@ -12,7 +12,7 @@ import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationRepository;
-import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import java.util.ArrayList;
 import java.util.List;

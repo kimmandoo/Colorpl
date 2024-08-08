@@ -1,7 +1,7 @@
 package com.colorpl.member.dto;
 
 import com.colorpl.member.Member;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

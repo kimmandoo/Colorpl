@@ -9,7 +9,7 @@ import com.colorpl.member.service.MemberService;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.repository.ScheduleRepository;
 import com.colorpl.schedule.dto.CreateCustomScheduleRequest;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;

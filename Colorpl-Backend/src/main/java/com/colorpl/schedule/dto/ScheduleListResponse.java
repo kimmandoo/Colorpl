@@ -3,7 +3,7 @@ package com.colorpl.schedule.dto;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.domain.ReservationSchedule;
 import com.colorpl.schedule.domain.Schedule;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import java.net.URI;
 import java.time.LocalDateTime;
 import lombok.Builder;
