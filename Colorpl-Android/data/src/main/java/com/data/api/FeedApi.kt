@@ -33,8 +33,8 @@ interface FeedApi {
     @Multipart
     @POST("reviews/create")
     suspend fun createUserFeedData(
-        @Part file: MultipartBody.Part?,
         @Part("request") request: RequestBody,
+        @Part file: MultipartBody.Part?,
     ): ResponseReviewCreate
 
     // 특정멤버의 모든 리뷰 조회
