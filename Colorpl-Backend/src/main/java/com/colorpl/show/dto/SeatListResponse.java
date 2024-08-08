@@ -1,6 +1,6 @@
 package com.colorpl.show.dto;
 
-import com.colorpl.show.domain.detail.Seat;
+import com.colorpl.show.domain.Seat;
 import lombok.Builder;
 import lombok.Getter;
 

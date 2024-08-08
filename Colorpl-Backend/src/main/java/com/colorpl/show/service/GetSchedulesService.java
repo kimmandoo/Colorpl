@@ -1,10 +1,10 @@
 package com.colorpl.show.service;
 
-import com.colorpl.show.domain.detail.ShowDetail;
+import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.dto.GetSchedulesResponse;
 import com.colorpl.show.dto.HallListResponse;
 import com.colorpl.show.dto.SearchShowScheduleCondition;
 import com.colorpl.show.dto.ShowScheduleListItem;
-import com.colorpl.show.dto.TheaterListResponse;
 import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class SearchShowScheduleService {
+public class GetSchedulesService {
 
     private final ShowDetailRepository showDetailRepository;
     private final ShowScheduleRepository showScheduleRepository;
@@ -26,7 +26,7 @@ public class SearchShowScheduleService {
     @Value("${seat.cols}")
     private int cols;
 
-    public TheaterListResponse search(Long showDetailId, LocalDate date) {
+    public GetSchedulesResponse getSchedules(Long showDetailId, LocalDate date) {
 
         ShowDetail showDetail = showDetailRepository.findById(showDetailId).orElseThrow();
         LocalDateTime from = date.atStartOfDay();
@@ -56,7 +56,7 @@ public class SearchShowScheduleService {
             .timetable(timetable)
             .build();
 
-        return TheaterListResponse.builder()
+        return GetSchedulesResponse.builder()
             .name(null)
             .hall(hallListResponse)
             .build();

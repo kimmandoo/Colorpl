@@ -1,11 +1,11 @@
 package com.colorpl.show.repository;
 
-import static com.colorpl.show.domain.detail.QShowDetail.showDetail;
-import static com.colorpl.show.domain.schedule.QShowSchedule.showSchedule;
+import static com.colorpl.show.domain.QShowDetail.showDetail;
+import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
-import com.colorpl.show.domain.detail.Category;
-import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.dto.SearchShowDetailCondition;
+import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.dto.SearchShowsRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -14,23 +14,23 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-@RequiredArgsConstructor
 @Repository
+@RequiredArgsConstructor
 public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> search(SearchShowDetailCondition condition) {
+    public List<ShowDetail> searchShows(SearchShowsRequest request) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
             .leftJoin(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
-                dateEq(condition.getDate()),
-                areaEq(condition.getArea()),
-                nameContains(condition.getKeyword()),
-                categoryEq(condition.getCategory())
+                dateEq(request.getDate()),
+                areaEq(request.getArea()),
+                nameContains(request.getKeyword()),
+                categoryEq(request.getCategory())
             )
             .fetch();
     }

@@ -1,6 +1,5 @@
-package com.colorpl.show.domain.schedule;
+package com.colorpl.show.domain;
 
-import com.colorpl.show.domain.detail.ShowDetail;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,6 +1,5 @@
-package com.colorpl.show.domain.detail;
+package com.colorpl.show.domain;
 
-import com.colorpl.show.domain.schedule.ShowSchedule;
 import com.colorpl.theater.domain.Theater;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
