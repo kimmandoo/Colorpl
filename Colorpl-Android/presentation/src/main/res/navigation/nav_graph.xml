@@ -171,6 +171,9 @@
         <action
             android:id="@+id/action_fragment_my_page_to_fragment_feed_ticket_select"
             app:destination="@id/fragment_feed_ticket_select" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_ticket"
+            app:destination="@id/fragment_ticket" />
     </fragment>
 
 
