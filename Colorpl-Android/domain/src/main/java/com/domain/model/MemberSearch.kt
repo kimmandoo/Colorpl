@@ -6,5 +6,6 @@ data class MemberSearch(
     val memberId: Int,
     val nickname: String,
     val profileImage: String,
-    val reviewCount: Int
+    val reviewCount: Int,
+    val isFollowing : Boolean
 )
