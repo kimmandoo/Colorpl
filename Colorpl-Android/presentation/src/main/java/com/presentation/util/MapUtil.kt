@@ -2,8 +2,13 @@ package com.presentation.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleCoroutineScope
+import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
@@ -20,7 +25,10 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.map.model.MapMarker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 /** Naver map 셋팅 */
@@ -105,10 +113,12 @@ suspend fun deleteMarker(marker: Clusterer<MapMarker>) {
     }
 }
 
-suspend fun clickMarker(
+fun clickMarker(
     builder: Clusterer.Builder<MapMarker>,
     context: Context,
+    lifecycleScope : LifecycleCoroutineScope,
     markerInfo: (MapMarker) -> Unit?,
+
 ) {
     builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
 
@@ -126,8 +136,16 @@ suspend fun clickMarker(
                 width = 200
                 height = 200
                 val markerData = info.key as MapMarker
-                val innerBitmap = convertBitmapFromURL(markerData.image)
-                icon = combineImages(context, R.drawable.ic_default_pin, innerBitmap!!)
+                Timber.d("데이터 확인 $markerData")
+                lifecycleScope.launch {
+                    val async = lifecycleScope.async(Dispatchers.IO) {
+                        convertBitmapFromURL(markerData.image.replace("http", "https"))
+                    }
+                    icon = combineImages(context, R.drawable.ic_default_pin, async.await() ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888))
+                }
+
+                Timber.tag(this::class.java.simpleName).d("markerData : $markerData")
+//                icon = createOverlayImageFromView(context, markerData.image)
                 onClickListener = Overlay.OnClickListener {
 
                     markerInfo(markerData)
@@ -136,4 +154,15 @@ suspend fun clickMarker(
             }
         }
     })
+}
+
+private fun createOverlayImageFromView(context: Context, imageUrl: String): OverlayImage {
+    val view = LayoutInflater.from(context).inflate(R.layout.item_marker, null)
+    val imageView = view.findViewById<ImageView>(R.id.iv_marker)
+    Glide.with(context)
+        .load(imageUrl)
+        .into(imageView)
+
+//    imageView.setImageBitmap(innerBitmap)
+    return OverlayImage.fromView(view)
 }

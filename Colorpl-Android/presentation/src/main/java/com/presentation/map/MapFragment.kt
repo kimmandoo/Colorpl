@@ -1,6 +1,7 @@
 package com.presentation.map
 
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMapBinding
@@ -21,8 +22,8 @@ import com.presentation.util.setup
 import com.presentation.util.setupOverlay
 import com.presentation.viewmodel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -32,20 +33,23 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
     private lateinit var markerBuilder: Clusterer.Builder<MapMarker>
+
+    //    private var markerBuilder: Clusterer.Builder<MapMarker>? = null
     private val mapViewModel: MapViewModel by viewModels()
 
     override fun initOnCreateView() {
         initNaverMap()
-//        mapViewModel.getTicketList()
+
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
         connectNaverMap(naverMap)
+        observeTicketList()
 
     }
 
     override fun iniViewCreated() {
-
+        mapViewModel.getTicketList()
     }
 
     /** Naver map 초기 셋팅. */
@@ -71,24 +75,43 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
             this@MapFragment.naverMap.cameraPosition =
                 CameraPosition(LatLng(location.latitude, location.longitude), DEFAULT_ZOOM)
         }
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            clickMarker(markerBuilder, requireActivity()){ markerData ->
-                Timber.d("markerData : $markerData")
 
-            }
-        }
-
-        setMarker()
+//        setMarker()
     }
 
     private fun setMarker() {
         val markers = makeMarker(
-//            mapViewModel.ticketList.value,
-            MapMarker.DEFAULT,
+            mapViewModel.ticketList.value,
+//            MapMarker.DEFAULT,
             markerBuilder
         )
         markers.map = naverMap
+//        markerBuilder?.let { builder ->
+//            val markers = makeMarker(mapViewModel.ticketList.value, builder)
+//            markers.map = naverMap
+//        }
     }
+
+    private fun observeTicketList() {
+        mapViewModel.ticketList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            Timber.d("이미지 확인 $it")
+            setMarker()
+            clickMarker(
+                markerBuilder,
+                requireActivity(),
+                viewLifecycleOwner.lifecycleScope
+            ) { markerData ->
+                Timber.d("markerData : $markerData")
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+//    private fun createOverlayImageFromView(context: Context, markerResId: Int, innerBitmap: Bitmap): OverlayImage {
+//        val view = LayoutInflater.from(context).inflate(R.layout.item_marker, null)
+//        val imageView = view.findViewById<ImageView>(R.id.iv_marker)
+//        imageView.setImageBitmap(innerBitmap)
+//        return OverlayImage.fromView(view)
+//    }
 
 
     companion object {

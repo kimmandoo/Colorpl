@@ -57,17 +57,17 @@ fun Fragment.setCameraLauncher(action: () -> Unit): ActivityResultLauncher<Uri> 
     }
 }
 
-fun combineImages(context: Context, markerResId: Int, innerBitmap: Bitmap): OverlayImage {
+fun combineImages(context: Context, markerResId: Int, innerImageBitmap: Bitmap): OverlayImage {
     // 첫 번째 이미지 비트맵 로드
 
     val markerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, markerResId)
-//    val innerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, innerImageResId)
+
 
 
     val combinedBitmap = Bitmap.createScaledBitmap(markerBitmap, 75.dpToPx, 75.dpToPx, true)
     val canvas = Canvas(combinedBitmap)
     //내부 그림 크기 조정
-    val scaledInnerBitmap = Bitmap.createScaledBitmap(innerBitmap, 45.dpToPx, 45.dpToPx, true)
+    val scaledInnerBitmap = Bitmap.createScaledBitmap(innerImageBitmap, 45.dpToPx, 45.dpToPx, true)
 
     // 내부 그림 그리기 (말풍선 중앙에 위치)
     val left = (combinedBitmap.width-scaledInnerBitmap.width) / 2
@@ -76,14 +76,12 @@ fun combineImages(context: Context, markerResId: Int, innerBitmap: Bitmap): Over
 
     canvas.drawBitmap(scaledInnerBitmap, left.toFloat(), top.toFloat(), null)
 
-
-
     return OverlayImage.fromBitmap(combinedBitmap)
 }
 
-fun convertBitmapFromURL(url: String): Bitmap? {
+fun convertBitmapFromURL(imageUrl: String): Bitmap? {
     try {
-        val url = URL(url)
+        val url = URL(imageUrl)
         val connection = url.openConnection() as HttpURLConnection
         connection.doInput = true
         connection.connect()
@@ -91,7 +89,7 @@ fun convertBitmapFromURL(url: String): Bitmap? {
         val bitmap = BitmapFactory.decodeStream(input)
         return bitmap
     } catch (e: IOException) {
-        Timber.e(e)
+        Timber.e("지도 데이터 에러 $e")
     }
     return null
 }
