@@ -302,6 +302,6 @@ public class ReviewService {
                         .getCategory().toString())
                 .build();
         }
-        return null;
+        return builder.build();
     }
 }
