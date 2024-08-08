@@ -2,31 +2,63 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.domain.model.Member
-import com.domain.model.TicketResponse
-import com.domain.usecase.TicketUseCase
-import com.domain.usecaseimpl.member.GetMemberInfoUseCase
+import com.domain.usecaseimpl.member.RequestFollowUnFollowUseCase
 import com.domain.util.DomainResult
-import com.presentation.my_page.model.MemberUiState
-import com.presentation.my_page.model.MyPageEventState
+import com.presentation.my_page.model.OtherMyPageEventState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.Instant
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class OtherMyPageViewModel @Inject constructor(
-    private val getMemberInfoUseCase: GetMemberInfoUseCase,
-    private val ticketUseCase: TicketUseCase
+    private val requestFollowUnFollowUseCase: RequestFollowUnFollowUseCase
 ) : ViewModel() {
 
+    private val _followerId = MutableStateFlow(0)
+    val followerId: StateFlow<Int> get() = _followerId
+
+    fun setFollowerId(value: Int) {
+        _followerId.value = value
+    }
+
+    private val _otherMyPageEventState = MutableSharedFlow<OtherMyPageEventState>()
+    val otherMyPageEventState: SharedFlow<OtherMyPageEventState> get() = _otherMyPageEventState
+
+    fun follow() {
+        viewModelScope.launch {
+            requestFollowUnFollowUseCase.follow(followerId.value).collectLatest { result ->
+                when (result) {
+                    is DomainResult.Success -> {
+                        _otherMyPageEventState.emit(OtherMyPageEventState.Follow)
+                    }
+
+                    is DomainResult.Error -> {
+                        Timber.d("팔로우 실패 ${result.exception}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun unFollow() {
+        viewModelScope.launch {
+            requestFollowUnFollowUseCase.unFollow(followerId.value).collectLatest { result ->
+                when (result) {
+                    is DomainResult.Success -> {
+                        _otherMyPageEventState.emit(OtherMyPageEventState.UnFollow)
+                    }
+
+                    is DomainResult.Error -> {
+                        Timber.d("언팔로우 실패 ${result.exception}")
+                    }
+                }
+            }
+        }
+    }
 }

@@ -7,12 +7,14 @@ import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentOtherMyPageBinding
 import com.presentation.base.BaseFragment
+import com.presentation.my_page.model.OtherMyPageEventState
 import com.presentation.util.setImageCircleCrop
 import com.presentation.viewmodel.MyPageViewModel
 import com.presentation.viewmodel.OtherMyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class OtherMyPageFragment :
@@ -22,13 +24,22 @@ class OtherMyPageFragment :
 
     override fun initView() {
         initData()
+        initClickEvent()
         observeUiState()
+        observeEventState()
     }
 
 
     private fun initData() {
         val safeArgs: OtherMyPageFragmentArgs by navArgs()
-        myPageViewModel.getMemberInfo(true, safeArgs.memberInfo.memberId)
+        safeArgs.memberInfo.apply {
+            Timber.d("데이ㅓㅌ 확인 $this")
+            binding.isFollow = isFollowing
+            binding.tvFollowRequest.isSelected = isFollowing
+            otherMyPageViewModel.setFollowerId(memberId)
+            myPageViewModel.getMemberInfo(true, memberId)
+        }
+
     }
 
 
@@ -39,6 +50,40 @@ class OtherMyPageFragment :
                 binding.ivProfileImg.setImageCircleCrop(it.memberInfo?.profileImage, true)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeEventState() {
+        otherMyPageViewModel.otherMyPageEventState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                myPageViewModel.getMemberInfo(true, otherMyPageViewModel.followerId.value)
+                when (it) {
+                    is OtherMyPageEventState.Follow -> {
+                        binding.isFollow = true
+                        binding.tvFollowRequest.isSelected = true
+                    }
+
+                    is OtherMyPageEventState.UnFollow -> {
+                        binding.isFollow = false
+                        binding.tvFollowRequest.isSelected = false
+                    }
+
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun initClickEvent() {
+        binding.apply {
+            tvFollowRequest.setOnClickListener {
+                if (!binding.tvFollowRequest.isSelected) {
+                    otherMyPageViewModel.follow()
+                } else {
+                    otherMyPageViewModel.unFollow()
+                }
+            }
+        }
+
+
     }
 
 }

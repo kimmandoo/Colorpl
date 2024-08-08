@@ -7,7 +7,9 @@
         <variable
             name="member"
             type="com.domain.model.Member" />
-
+        <variable
+            name="isFollow"
+            type="boolean" />
         <variable
             name="ticketTitle"
             type="boolean" />
@@ -55,16 +57,16 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/tv_profile_img"
+                            android:id="@+id/tv_follow_request"
                             style="@style/suite_medium_14"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="7dp"
-                            android:background="@drawable/rectangle_timber_wolf_5"
+                            android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
                             android:paddingHorizontal="9dp"
                             android:paddingVertical="2dp"
-                            android:text="@string/my_page_follow_request"
-                            android:textColor="@color/eerie_black"
+                            android:text="@{isFollow ? @string/my_page_follow_cancel : @string/my_page_follow_request}"
+                            android:textColor="@color/selector_eerie_black_to_white"
                             app:layout_constraintEnd_toEndOf="@+id/iv_profile_img"
                             app:layout_constraintStart_toStartOf="@+id/iv_profile_img"
                             app:layout_constraintTop_toBottomOf="@+id/iv_profile_img" />
@@ -90,10 +92,10 @@
                             android:layout_marginEnd="4dp"
                             android:text="@string/my_page_follower"
                             android:textColor="@color/timber_wolf"
-                            app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_follow_request"
                             app:layout_constraintEnd_toStartOf="@+id/tv_follower_value"
-                            app:layout_constraintStart_toEndOf="@+id/tv_profile_img"
-                            app:layout_constraintTop_toTopOf="@+id/tv_profile_img" />
+                            app:layout_constraintStart_toEndOf="@+id/tv_follow_request"
+                            app:layout_constraintTop_toTopOf="@+id/tv_follow_request" />
 
                         <TextView
                             android:id="@+id/tv_follower_value"
@@ -104,10 +106,10 @@
                             android:layout_marginEnd="12dp"
                             android:text="@{String.valueOf(member.followerCount)}"
                             android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_follow_request"
                             app:layout_constraintEnd_toStartOf="@+id/tv_following"
                             app:layout_constraintStart_toEndOf="@+id/tv_follower"
-                            app:layout_constraintTop_toTopOf="@+id/tv_profile_img" />
+                            app:layout_constraintTop_toTopOf="@+id/tv_follow_request" />
 
 
                         <TextView
@@ -119,10 +121,10 @@
                             android:layout_marginEnd="4dp"
                             android:text="@string/my_page_following"
                             android:textColor="@color/timber_wolf"
-                            app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_follow_request"
                             app:layout_constraintEnd_toStartOf="@+id/tv_following_value"
                             app:layout_constraintStart_toEndOf="@+id/tv_follower_value"
-                            app:layout_constraintTop_toTopOf="@+id/tv_profile_img" />
+                            app:layout_constraintTop_toTopOf="@+id/tv_follow_request" />
 
                         <TextView
                             android:id="@+id/tv_following_value"
@@ -133,10 +135,10 @@
                             android:layout_marginEnd="30dp"
                             android:text="@{String.valueOf(member.followingCount)}"
                             android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="@+id/tv_profile_img"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_follow_request"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/tv_following"
-                            app:layout_constraintTop_toTopOf="@+id/tv_profile_img" />
+                            app:layout_constraintTop_toTopOf="@+id/tv_follow_request" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -93,4 +93,20 @@ class MemberRepositoryImpl @Inject constructor(
             })
         }
     }
+
+    override suspend fun postFollow(followId: Int): Flow<ApiResult<String>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.postFollow(followId)
+            })
+        }
+    }
+
+    override suspend fun postUnFollow(followId: Int): Flow<ApiResult<String>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.postUnFollow(followId)
+            })
+        }
+    }
 }

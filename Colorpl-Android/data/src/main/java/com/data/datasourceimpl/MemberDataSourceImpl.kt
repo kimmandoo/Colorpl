@@ -47,4 +47,12 @@ class MemberDataSourceImpl @Inject constructor(
     override suspend fun getOtherFollowersCount(memberId: Int): ResponseFollowCount {
         return memberApi.getOtherFollowersCount(memberId)
     }
+
+    override suspend fun postFollow(followId: Int): String {
+        return memberApi.postFollow(followId)
+    }
+
+    override suspend fun postUnFollow(followId: Int): String {
+        return memberApi.postUnFollow(followId)
+    }
 }

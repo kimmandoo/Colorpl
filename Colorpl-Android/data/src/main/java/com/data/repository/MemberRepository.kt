@@ -30,4 +30,8 @@ interface MemberRepository {
     suspend fun getOtherFollowingCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>>
 
     suspend fun getOtherFollowersCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>>
+
+    suspend fun postFollow(followId : Int) : Flow<ApiResult<String>>
+
+    suspend fun postUnFollow(followId : Int) : Flow<ApiResult<String>>
 }

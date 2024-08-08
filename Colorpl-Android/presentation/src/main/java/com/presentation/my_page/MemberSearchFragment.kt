@@ -28,9 +28,18 @@ class MemberSearchFragment :
         observeMemberSearch()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val text = binding.etSearch.text
+        if (text.isNotEmpty()) {
+            memberSearchViewModel.getMemberSearchInfo(text.toString())
+        }
+    }
+
     private fun observeSearchText() {
         binding.etSearch.imeOptionsActionCheck {
-            memberSearchViewModel.getMemberSearchInfo(binding.etSearch.text.toString())
+            val text = binding.etSearch.text.toString()
+            memberSearchViewModel.getMemberSearchInfo(text.toString())
             binding.etSearch.clearFocus()
         }
     }
@@ -57,7 +66,8 @@ class MemberSearchFragment :
             navigatePopBackStack()
         }
         userSearchAdapter.setOnItemClickListener { data ->
-            navigateDestinationBundle(R.id.action_fragment_user_search_to_fragment_other_my_page,
+            navigateDestinationBundle(
+                R.id.action_fragment_user_search_to_fragment_other_my_page,
                 bundleOf("memberInfo" to data)
             )
         }

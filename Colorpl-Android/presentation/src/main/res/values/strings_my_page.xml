@@ -17,6 +17,7 @@
     <string name="my_page_un_review_count">미등록 리뷰 : </string>
     <string name="my_page_use_review_count">등록 리뷰 : </string>
     <string name="my_page_follow_request">팔로우 신청</string>
+    <string name="my_page_follow_cancel">팔로우 취소</string>
     <string name="my_page_payment_title">작품명</string>
     <string name="my_page_payment_price">결제금액</string>
     <string name="my_page_payment_sit">좌석</string>

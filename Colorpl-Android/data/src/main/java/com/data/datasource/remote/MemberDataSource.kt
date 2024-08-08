@@ -27,4 +27,8 @@ interface MemberDataSource {
 
     suspend fun getOtherFollowersCount(memberId: Int): ResponseFollowCount
 
+    suspend fun postFollow(followId : Int) : String
+
+    suspend fun postUnFollow(followId : Int) : String
+
 }
