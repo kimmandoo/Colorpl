@@ -36,7 +36,7 @@ class FeedTicketSelectFragment :
     var ticketPosition = 0
 
     override fun initView(savedInstanceState: Bundle?) {
-        observeViewModel() c
+        observeViewModel()
         initAdapter()
         initClickEvent()
     }
