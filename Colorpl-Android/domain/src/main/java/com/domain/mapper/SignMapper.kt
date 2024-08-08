@@ -5,6 +5,7 @@ import com.data.model.request.RequestSignToken
 import com.data.model.request.RequestSignUp
 import com.data.model.response.ResponseSignIn
 import com.data.model.response.ResponseSignToken
+import com.data.model.response.ResponseSignUp
 import com.domain.model.Member
 import com.domain.model.SignToken
 
@@ -28,6 +29,8 @@ fun ResponseSignIn.toSignTokenParam(password: String = "", idToken: String = "")
         idToken = idToken
     )
 }
+
+
 
 fun ResponseSignToken.toEntity(): SignToken {
     return SignToken(
