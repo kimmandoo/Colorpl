@@ -7,6 +7,7 @@ import com.data.model.response.ResponseSignUp
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -17,6 +18,11 @@ interface SignApi {
     suspend fun postSignIn(
         @Body requestSignIn: RequestSignIn
     ): ResponseSignIn
+
+    @POST("members/sign-out")
+    suspend fun postSignOut(
+        @Header("Refresh-Token") refreshToken: String
+    ): Unit
 
     @Multipart
     @POST("members/register")
