@@ -16,11 +16,16 @@ interface ReviewRepository {
     ): Flow<ApiResult<ResponseReviewCreate>>
 
 
-    suspend fun getReviewDetail(reviewId : Int) : Flow<ApiResult<ResponseReviewDetail>>
+    suspend fun getReviewDetail(reviewId: Int): Flow<ApiResult<ResponseReviewDetail>>
 
     suspend fun deleteReview(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>>
 
-    suspend fun editReview(reviewId: Int, requestReviewEdit: RequestReviewEdit): Flow<ApiResult<ResponseReviewEdit>>
+    suspend fun editReview(
+        reviewId: Int,
+        requestReviewEdit: RequestReviewEdit
+    ): Flow<ApiResult<ResponseReviewEdit>>
 
+    suspend fun addEmpathize(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>>
+    suspend fun deleteEmpathize(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>>
 
 }

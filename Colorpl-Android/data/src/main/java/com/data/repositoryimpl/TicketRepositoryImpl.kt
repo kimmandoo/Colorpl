@@ -2,6 +2,7 @@ package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
 import com.data.datasource.remote.TicketDataSource
+import com.data.model.request.RequestReservationTicketCreate
 import com.data.model.request.RequestTicketCreate
 import com.data.model.response.ResponseTicket
 import com.data.model.response.ResponseTicketCreate
@@ -24,6 +25,19 @@ class TicketRepositoryImpl @Inject constructor(
     ): Flow<ApiResult<Int>> = flow {
         emit(safeApiCall {
             Timber.d("ticket: ${ticket}\n request:$request")
+            val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
+            val filePart: MultipartBody.Part =
+                FormDataConverterUtil.getMultiPartBody("file", ticket)
+            ticketDataSource.createTicket(ticket = filePart, request = requestPart)
+        })
+    }
+
+    override suspend fun createReservationTicket(
+        ticket: File,
+        request: RequestReservationTicketCreate
+    ): Flow<ApiResult<Int>> = flow {
+        emit(safeApiCall {
+            Timber.d("reservation ticket: ${ticket}\n request:$request")
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
             val filePart: MultipartBody.Part =
                 FormDataConverterUtil.getMultiPartBody("file", ticket)

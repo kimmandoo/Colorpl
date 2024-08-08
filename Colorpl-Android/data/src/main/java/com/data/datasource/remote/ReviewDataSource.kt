@@ -12,12 +12,20 @@ interface ReviewDataSource {
     suspend fun deleteReview(reviewId: Int): ResponseReviewEdit
     suspend fun editReview(reviewId: Int, requestReviewEdit: RequestReviewEdit): ResponseReviewEdit
     suspend fun createReview(
-        ticketId: Int,
         review: MultipartBody.Part?,
         request: RequestBody
     ): ResponseReviewCreate
 
     suspend fun getReviewDetail(
         reviewId: Int
-    ) : ResponseReviewDetail
+    ): ResponseReviewDetail
+
+    suspend fun addEmpathize(
+        reviewId: Int
+    ): ResponseReviewEdit
+
+    suspend fun deleteEmpathize(
+        reviewId: Int
+    ): ResponseReviewEdit
+
 }

@@ -1,6 +1,5 @@
 package com.data.datasource.remote
 
-import com.data.model.paging.Feed
 import com.data.model.paging.ResponsePagedFeed
 
 interface FeedUserDataSource {

@@ -12,7 +12,7 @@ import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.schedule.TicketAdapter
 import com.presentation.my_page.model.MyPageEventState
 import com.presentation.util.setDistanceX
-import com.presentation.util.setImage
+import com.presentation.util.setImageCircleCrop
 import com.presentation.util.setTransactionX
 import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -73,7 +73,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         myPageViewModel.memberUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 binding.member = it.memberInfo
-                binding.ivProfileImg.setImage(it.memberInfo?.profileImage, true)
+                binding.ivProfileImg.setImageCircleCrop(it.memberInfo?.profileImage, true)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }

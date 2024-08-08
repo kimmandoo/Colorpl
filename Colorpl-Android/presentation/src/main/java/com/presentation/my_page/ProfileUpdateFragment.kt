@@ -16,7 +16,7 @@ import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.getPhotoGallery
 import com.presentation.util.imeOptionsActionCheck
-import com.presentation.util.setImage
+import com.presentation.util.setImageCircleCrop
 import com.presentation.viewmodel.ProfileUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -45,7 +45,7 @@ class ProfileUpdateFragment :
         binding.apply {
             profileUpdateViewModel.setUpdateNickName(data.nickName.toString())
             tiEtNickName.setText(data.nickName.toString())
-            ivProfileImg.setImage(data.profileImage.toString(), true)
+            ivProfileImg.setImageCircleCrop(data.profileImage.toString())
         }
     }
 
@@ -73,7 +73,7 @@ class ProfileUpdateFragment :
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
                         Timber.d("uri 확인 $uri")
-                        binding.ivProfileImg.setImage(uri)
+                        binding.ivProfileImg.setImageCircleCrop(uri)
                         binding.tvComplete.isSelected = true
                         profileUpdateViewModel.setUpdateProfileImageFile(
                             ImageProcessingUtil(

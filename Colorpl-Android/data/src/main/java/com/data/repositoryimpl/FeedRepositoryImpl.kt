@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class FeedRepositoryImpl @Inject constructor(
     private val feedDataSource: FeedDataSource,
-    private val feedUserDataSource: FeedUserDataSource
+    private val feedUserDataSource: FeedUserDataSource,
 ) : FeedRepository {
     override fun getPagedFeed(): Flow<PagingData<Feed>> {
         return Pager(

@@ -8,6 +8,8 @@ import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
+import com.presentation.util.getPattern
+import com.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +45,42 @@ class ScheduleViewModel @Inject constructor(
     val calendarMode: StateFlow<CalendarMode> = _calendarMode
 
     init {
+        getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
         updateCalendar(Calendar.CURRENT)
+    }
+
+    fun matchTicketsToCalendar(
+        calendarItems: List<CalendarItem>,
+        tickets: List<TicketResponse>
+    ): List<CalendarItem> {
+        val ticketMap = tickets.associateBy { it.dateTime.toLocalDate() }
+
+        return calendarItems.map { calendarItem ->
+            val matchingTicket = ticketMap[calendarItem.date]
+            if (matchingTicket != null) {
+                calendarItem.copy(imgUrl = matchingTicket.imgUrl)
+            } else {
+                calendarItem
+            }
+        }
+    }
+
+
+    fun getMonthlyTicket(pattern: String) {
+        viewModelScope.launch {
+            ticketUseCase.getMonthlyTicket(pattern).collect {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.tag("tickets").d("${it.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        _tickets.value = it.data
+                        matchTicketsToCalendar(_calendarItems.value, it.data)
+                    }
+                }
+            }
+        }
     }
 
     fun getAllTicket() {
@@ -52,6 +89,7 @@ class ScheduleViewModel @Inject constructor(
                 when (it) {
                     is DomainResult.Success -> {
                         _tickets.value = it.data
+                        _calendarItems.value = matchTicketsToCalendar(_calendarItems.value, it.data)
                         Timber.tag("tickets").d("${it.data}")
                     }
 
@@ -106,7 +144,6 @@ class ScheduleViewModel @Inject constructor(
             Calendar.CHANGE -> {
                 val changedYear = year - _selectedDate.value.year
                 val changedMonth = month - _selectedDate.value.monthValue
-
                 _selectedDate.value.plusYears(changedYear).plusMonths(changedMonth)
             }
 
@@ -115,6 +152,7 @@ class ScheduleViewModel @Inject constructor(
                 _clickedDate.value?.date
             }
         }
+        getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
 
         val updateList = if (state == Calendar.RESTORE) {
             createCalendar(_selectedDate.value).map { item ->
@@ -127,6 +165,7 @@ class ScheduleViewModel @Inject constructor(
             createCalendar(_selectedDate.value)
         }
         _calendarItems.value = updateList
+        _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.value)
         _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
     }
