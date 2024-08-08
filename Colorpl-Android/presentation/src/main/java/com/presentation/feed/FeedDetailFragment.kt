@@ -12,8 +12,10 @@ import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -34,14 +36,38 @@ class FeedDetailFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         initData()
+        initEdit()
         initAdapter()
         observeReviewDetail()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                feedViewModel.reviewDeleteResponse.collectLatest { reviewId ->
+                    if (reviewId > 0) {
+                        Timber.d("리뷰 삭제 성공 $reviewId")
+                    }
+                }
+            }
+        }
     }
 
     private fun initData() {
-
         feedViewModel.getComment(feedId = 1)
         feedViewModel.getReviewDetail(1)
+    }
+
+    private fun initEdit() {
+        binding.apply {
+            tvEdit.setOnClickListener {
+
+            }
+            tvDelete.setOnClickListener {
+                feedViewModel.deleteReview(feedViewModel.reviewDetail.value.id)
+            }
+        }
     }
 
     private fun initAdapter() {
