@@ -8,6 +8,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedTicketSelectBinding
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.FeedTicketSelectAdapter
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.addCustomItemDecoration
 import com.presentation.viewmodel.TicketSelectViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,22 +26,28 @@ class FeedTicketSelectFragment :
 
         }
     }
+
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext())
+    }
     private val viewModel: TicketSelectViewModel by viewModels()
 
     //얘도 ViewModel에서 따로 빼서 쓰면 될듯
     var ticketPosition = 0
 
     override fun initView(savedInstanceState: Bundle?) {
+        observeViewModel()
         initAdapter()
         initClickEvent()
-        observeViewModel()
     }
 
     private fun observeViewModel() {
+        loadingDialog.show()
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.tickets.collectLatest { unreviewedList ->
                     feedTicketSelectAdapter.submitList(unreviewedList)
+                    loadingDialog.dismiss()
                 }
             }
         }
