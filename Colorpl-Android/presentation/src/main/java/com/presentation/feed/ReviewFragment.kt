@@ -69,17 +69,16 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
     private fun createReview() {
         val image = if (::photoUri.isInitialized) {
-            ImageProcessingUtil(binding.root.context).uriToFile(photoUri)
+            ImageProcessingUtil(binding.root.context).uriToCompressedFile(photoUri)
         } else {
             null
         }
         viewModel.createReview(
             review = Review(
-                2302,
+                2802,
                 binding.etContent.text.toString(),
                 false,
-                "angry"
-//                viewModel.selectedEmotion.value
+                viewModel.selectedEmotion.value + 1
             ),
             image
         )

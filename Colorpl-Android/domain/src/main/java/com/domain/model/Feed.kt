@@ -6,7 +6,7 @@ data class Feed(
     val commentscount: Int = 0,
     val content: String = "",
     val createdate: String = "",
-    val emotion: String = "",
+    val emotion: Int = 0,
     val empathy: Int = 0,
     val id: Int = 0,
     val imgurl: String = "",

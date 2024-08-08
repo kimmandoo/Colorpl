@@ -8,6 +8,7 @@ import com.domain.model.Feed
 import com.domain.usecase.FeedUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class FeedUseCaseImpl @Inject constructor(private val feedRepository: FeedRepository) :
@@ -15,6 +16,7 @@ class FeedUseCaseImpl @Inject constructor(private val feedRepository: FeedReposi
     override fun invoke(): Flow<PagingData<Feed>> {
         return feedRepository.getPagedFeed()
             .map { pagingData ->
+                Timber.tag("pagerUseCase").d("$pagingData")
                 pagingData.map { feed ->
                     feed.toEntity()
                 }

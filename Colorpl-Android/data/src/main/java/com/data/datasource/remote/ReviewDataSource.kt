@@ -18,5 +18,14 @@ interface ReviewDataSource {
 
     suspend fun getReviewDetail(
         reviewId: Int
-    ) : ResponseReviewDetail
+    ): ResponseReviewDetail
+
+    suspend fun addEmpathize(
+        reviewId: Int
+    ): ResponseReviewEdit
+
+    suspend fun deleteEmpathize(
+        reviewId: Int
+    ): ResponseReviewEdit
+
 }

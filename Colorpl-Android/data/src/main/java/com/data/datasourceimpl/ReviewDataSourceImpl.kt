@@ -23,6 +23,14 @@ class ReviewDataSourceImpl @Inject constructor(private val feedApi: FeedApi) : R
         return feedApi.getDetailFeedData(reviewId)
     }
 
+    override suspend fun addEmpathize(reviewId: Int): ResponseReviewEdit {
+        return feedApi.createEmpathizeData(reviewId)
+    }
+
+    override suspend fun deleteEmpathize(reviewId: Int): ResponseReviewEdit {
+        return feedApi.deleteEmpathizeData(reviewId)
+    }
+
     override suspend fun deleteReview(reviewId: Int): ResponseReviewEdit {
         return feedApi.deleteFeedData(reviewId)
     }
