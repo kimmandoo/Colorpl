@@ -13,13 +13,28 @@
         <item name="android:fontFamily">@font/suite_bold</item>
     </style>
 
-    <style name="CustomDateRangePicker" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="CustomDateRangePicker" parent="CustomDatePicker">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/suite_bold</item>
         <item name="backgroundColor">@color/imperial_red</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:colorAccent">@color/imperial_red</item>
         <item name="colorControlHighlight">@color/timber_wolf</item>
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:headerBackground">@color/imperial_red</item>
+        <item name="android:calendarTextColor">@color/white</item>
+        <item name="android:dayOfWeekBackground">@color/imperial_red</item>
+        <item name="android:yearListSelectorColor">@color/timber_wolf</item>
+        <item name="android:datePickerStyle">@style/CustomDatePickerStyle</item>
+    </style>
+
+    <style name="CustomDatePickerStyle" parent="android:Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/imperial_red</item>
+        <item name="android:calendarTextColor">@color/white</item>
+        <item name="android:dayOfWeekBackground">@color/imperial_red</item>
+        <item name="android:yearListSelectorColor">@color/timber_wolf</item>
     </style>
 
     <style name="CustomAlertDialogListItem" parent="Theme.AppCompat.Dialog.Alert">
