@@ -1,5 +1,7 @@
 package com.presentation.map
 
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
@@ -17,7 +19,11 @@ import com.presentation.util.clickMarker
 import com.presentation.util.makeMarker
 import com.presentation.util.setup
 import com.presentation.util.setupOverlay
+import com.presentation.viewmodel.MapViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
@@ -26,9 +32,11 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
     private lateinit var markerBuilder: Clusterer.Builder<MapMarker>
+    private val mapViewModel: MapViewModel by viewModels()
 
     override fun initOnCreateView() {
         initNaverMap()
+//        mapViewModel.getTicketList()
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
@@ -63,14 +71,19 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
             this@MapFragment.naverMap.cameraPosition =
                 CameraPosition(LatLng(location.latitude, location.longitude), DEFAULT_ZOOM)
         }
-        clickMarker(markerBuilder, requireActivity()){
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            clickMarker(markerBuilder, requireActivity()){ markerData ->
+                Timber.d("markerData : $markerData")
 
+            }
         }
+
         setMarker()
     }
 
     private fun setMarker() {
         val markers = makeMarker(
+//            mapViewModel.ticketList.value,
             MapMarker.DEFAULT,
             markerBuilder
         )

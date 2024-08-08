@@ -105,7 +105,7 @@ suspend fun deleteMarker(marker: Clusterer<MapMarker>) {
     }
 }
 
-fun clickMarker(
+suspend fun clickMarker(
     builder: Clusterer.Builder<MapMarker>,
     context: Context,
     markerInfo: (MapMarker) -> Unit?,
@@ -126,7 +126,8 @@ fun clickMarker(
                 width = 200
                 height = 200
                 val markerData = info.key as MapMarker
-                icon = combineImages(context, R.drawable.ic_pin, R.drawable.dummy_ticket)
+                val innerBitmap = convertBitmapFromURL(markerData.image)
+                icon = combineImages(context, R.drawable.ic_default_pin, innerBitmap!!)
                 onClickListener = Overlay.OnClickListener {
 
                     markerInfo(markerData)

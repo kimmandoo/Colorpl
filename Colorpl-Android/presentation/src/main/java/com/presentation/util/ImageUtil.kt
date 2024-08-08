@@ -15,7 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.naver.maps.map.overlay.OverlayImage
+import okio.IOException
 import timber.log.Timber
+import java.net.HttpURLConnection
+import java.net.URL
 
 fun getPhotoGallery(launcher: ActivityResultLauncher<Intent>) { // 확장해서 쓸 수 있을듯
     val intentAction =
@@ -54,11 +57,12 @@ fun Fragment.setCameraLauncher(action: () -> Unit): ActivityResultLauncher<Uri> 
     }
 }
 
-fun combineImages(context: Context, markerResId: Int, innerImageResId: Int): OverlayImage {
+fun combineImages(context: Context, markerResId: Int, innerBitmap: Bitmap): OverlayImage {
     // 첫 번째 이미지 비트맵 로드
 
     val markerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, markerResId)
-    val innerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, innerImageResId)
+//    val innerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, innerImageResId)
+
 
     val combinedBitmap = Bitmap.createScaledBitmap(markerBitmap, 75.dpToPx, 75.dpToPx, true)
     val canvas = Canvas(combinedBitmap)
@@ -75,4 +79,19 @@ fun combineImages(context: Context, markerResId: Int, innerImageResId: Int): Ove
 
 
     return OverlayImage.fromBitmap(combinedBitmap)
+}
+
+fun convertBitmapFromURL(url: String): Bitmap? {
+    try {
+        val url = URL(url)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
+        val input = connection.inputStream
+        val bitmap = BitmapFactory.decodeStream(input)
+        return bitmap
+    } catch (e: IOException) {
+        Timber.e(e)
+    }
+    return null
 }
