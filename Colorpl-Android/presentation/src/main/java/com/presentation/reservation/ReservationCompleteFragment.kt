@@ -12,7 +12,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class ReservationCompleteFragment :
     BaseFragment<FragmentReservationCompleteBinding>(R.layout.fragment_reservation_complete) {
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
-    override fun initView() {
 
+    override fun initView() {
+        initClickEvent()
+    }
+
+    private fun initClickEvent() {
+        binding.apply {
+            ivComplete.setOnClickListener {
+                navigatePopBackStack()
+            }
+        }
     }
 }

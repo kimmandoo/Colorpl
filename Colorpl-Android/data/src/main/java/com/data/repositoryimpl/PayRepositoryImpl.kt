@@ -2,6 +2,7 @@ package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
 import com.data.datasource.remote.PayDataSource
+import com.data.model.response.ResponsePayResult
 import com.data.repository.PayRepository
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,17 @@ class PayRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 payDataSource.getPaymentToken()
+            })
+        }
+    }
+
+    override suspend fun postPayment(
+        header: String,
+        receiptId: String
+    ): Flow<ApiResult<ResponsePayResult>> {
+        return flow {
+            emit(safeApiCall {
+                payDataSource.postPayment(header, receiptId)
             })
         }
     }

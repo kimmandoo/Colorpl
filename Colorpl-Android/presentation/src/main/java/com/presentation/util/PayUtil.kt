@@ -1,6 +1,5 @@
 package com.presentation.util
 
-import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
@@ -43,7 +42,7 @@ private fun checkClientValidation(data: String): Boolean {
 }
 
 
- fun getBootUser(
+fun getBootUser(
     userId: String,
     email: String,
     phone: String,
@@ -65,9 +64,9 @@ fun requestPayment(
     itemList: MutableList<BootItem>,
     orderName: String,
     orderId: String,
-    context : Context,
-    manager : FragmentManager,
-    checkClientValidation : (String) -> Boolean
+    context: Context,
+    manager: FragmentManager,
+    checkClientValidation: (String) -> Boolean
 ) {
     val payload = Payload()
     var totalPrice: Double = 0.0
@@ -106,14 +105,8 @@ fun requestPayment(
 
             override fun onConfirm(data: String): Boolean {
                 Timber.tag("bootpay").d("receipt $data")
-                if (checkClientValidation(data)) {
-                    // 재고가 있으면 승인
-                    Bootpay.transactionConfirm(data)
-                    return false;
-                } else {
-                    Bootpay.dismissWindow()
-                    return false;
-                }
+                checkClientValidation(data)
+                return true
             }
 
             override fun onDone(data: String) {
@@ -121,3 +114,5 @@ fun requestPayment(
             }
         }).requestPayment()
 }
+
+
