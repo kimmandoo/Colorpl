@@ -1,14 +1,18 @@
 package com.colorpl.show.domain.detail;
 
+import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.theater.domain.Theater;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
@@ -30,13 +34,20 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_ID")
     @GeneratedValue
     @Id
-    private Integer id;
+    private Long id;
 
     @Column(name = "SHOW_DETAIL_API_ID")
     private String apiId;
 
     @Column(name = "SHOW_DETAIL_NAME")
     private String name;
+
+    @JoinColumn(name = "THEATER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Theater theater;
+
+    @Column(name = "SHOW_HALL")
+    private String hall;
 
     @Column(name = "SHOW_DETAIL_CAST")
     private String cast;
@@ -56,6 +67,10 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_AREA")
     private String area;
 
+    @Column(name = "SHOW_DETAIL_CATEGORY")
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     @Column(name = "SHOW_DETAIL_STATE")
     @Enumerated(EnumType.STRING)
     private ShowState state;
@@ -63,4 +78,8 @@ public class ShowDetail {
     @Builder.Default
     @OneToMany(mappedBy = "showDetail")
     private List<Seat> seats = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "showDetail")
+    private List<ShowSchedule> showSchedules = new ArrayList<>();
 }
