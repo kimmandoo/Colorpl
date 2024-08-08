@@ -4,6 +4,7 @@ import com.colorpl.show.dto.CreateByApiIdRequest;
 import com.colorpl.show.dto.CreateByDateRequest;
 import com.colorpl.show.dto.SearchShowDetailCondition;
 import com.colorpl.show.dto.ShowDetailListResponse;
+import com.colorpl.show.dto.ShowDetailResponse;
 import com.colorpl.show.service.CreateShowService;
 import com.colorpl.show.service.SearchShowDetailService;
 import java.net.URI;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,11 @@ public class ShowController {
         return ResponseEntity.ok(searchShowDetailService.search(condition));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ShowDetailResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(searchShowDetailService.getShowDetail(id));
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Void> createByDate(
         @RequestBody CreateByDateRequest request) {
@@ -41,7 +48,7 @@ public class ShowController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Long> createByApiId(@RequestBody CreateByApiIdRequest request) {
 
         Long id = createShowService.createByApiId(request.getApiId());
