@@ -5,6 +5,7 @@ import com.data.datasource.remote.MemberDataSource
 import com.data.model.request.RequestMemberInfo
 import com.data.model.response.ResponseFollowCount
 import com.data.model.response.ResponseMemberInfo
+import com.data.model.response.ResponseMemberSearch
 import com.data.repository.MemberRepository
 import com.data.util.ApiResult
 import com.data.util.FormDataConverterUtil
@@ -57,6 +58,14 @@ class MemberRepositoryImpl @Inject constructor(
                     requestPart,
                     filePart
                 )
+            })
+        }
+    }
+
+    override suspend fun getMemberSearch(nickname: String): Flow<ApiResult<List<ResponseMemberSearch>>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.getMemberSearch(nickname)
             })
         }
     }

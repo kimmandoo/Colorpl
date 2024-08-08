@@ -4,13 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.colorpl.presentation.databinding.ItemUserSearchBinding
+import com.domain.model.MemberSearch
 import com.presentation.base.BaseDiffUtil
 
-class UserSearchAdapter : ListAdapter<String, UserSearchViewHolder >(
-  BaseDiffUtil<String>()
+class UserSearchAdapter : ListAdapter<MemberSearch, UserSearchViewHolder>(
+    BaseDiffUtil<MemberSearch>()
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserSearchViewHolder {
-        val binding = ItemUserSearchBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemUserSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserSearchViewHolder(binding)
     }
 
