@@ -20,4 +20,11 @@ interface MemberDataSource {
     ): ResponseMemberInfo
 
     suspend fun getMemberSearch(nickname: String): List<ResponseMemberSearch>
+
+    suspend fun getOtherMember(memberId: Int): ResponseMemberInfo
+
+    suspend fun getOtherFollowingCount(memberId: Int): ResponseFollowCount
+
+    suspend fun getOtherFollowersCount(memberId: Int): ResponseFollowCount
+
 }

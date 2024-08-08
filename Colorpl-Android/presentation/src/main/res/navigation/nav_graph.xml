@@ -234,7 +234,6 @@
             android:name="memberInfo"
             app:argType="com.domain.model.MemberSearch"/>
 
-
     </fragment>
 
     <include app:graph="@navigation/nav_ticket_graph" />

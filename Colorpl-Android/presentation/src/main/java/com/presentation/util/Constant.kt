@@ -90,6 +90,7 @@ enum class Page(val hideBottomNav: Boolean) {
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
             ADDRESS -> R.id.dialog_ticket_address
+            
         }
 }
 

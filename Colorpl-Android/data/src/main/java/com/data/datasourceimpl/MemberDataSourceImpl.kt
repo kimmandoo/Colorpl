@@ -35,4 +35,16 @@ class MemberDataSourceImpl @Inject constructor(
     override suspend fun getMemberSearch(nickname: String): List<ResponseMemberSearch> {
         return memberApi.getMemberSearch(nickname)
     }
+
+    override suspend fun getOtherMember(memberId: Int): ResponseMemberInfo {
+        return memberApi.getOtherMember(memberId)
+    }
+
+    override suspend fun getOtherFollowingCount(memberId: Int): ResponseFollowCount {
+        return memberApi.getOtherFollowingCount(memberId)
+    }
+
+    override suspend fun getOtherFollowersCount(memberId: Int): ResponseFollowCount {
+        return memberApi.getOtherFollowersCount(memberId)
+    }
 }

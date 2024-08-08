@@ -69,4 +69,28 @@ class MemberRepositoryImpl @Inject constructor(
             })
         }
     }
+
+    override suspend fun getOtherMember(memberId: Int): Flow<ApiResult<ResponseMemberInfo>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.getOtherMember(memberId)
+            })
+        }
+    }
+
+    override suspend fun getOtherFollowingCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.getOtherFollowingCount(memberId)
+            })
+        }
+    }
+
+    override suspend fun getOtherFollowersCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>> {
+        return flow {
+            emit(safeApiCall {
+                memberDataSource.getOtherFollowersCount(memberId)
+            })
+        }
+    }
 }

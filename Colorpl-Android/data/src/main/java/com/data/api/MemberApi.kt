@@ -34,4 +34,19 @@ interface MemberApi {
     suspend fun getMemberSearch(
         @Path("nickname") nickname: String
     ): List<ResponseMemberSearch>
+
+    @GET("members/{memberId}")
+    suspend fun getOtherMember(
+        @Path("memberId") memberId: Int
+    ): ResponseMemberInfo
+
+    @GET("members/{memberId}/following/count")
+    suspend fun getOtherFollowingCount(
+        @Path("memberId") memberId: Int
+    ): ResponseFollowCount
+
+    @GET("members/{memberId}/followers/count")
+    suspend fun getOtherFollowersCount(
+        @Path("memberId") memberId: Int
+    ): ResponseFollowCount
 }

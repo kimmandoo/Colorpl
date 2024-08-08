@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -56,7 +57,9 @@ class MemberSearchFragment :
             navigatePopBackStack()
         }
         userSearchAdapter.setOnItemClickListener { data ->
-
+            navigateDestinationBundle(R.id.action_fragment_user_search_to_fragment_other_my_page,
+                bundleOf("memberInfo" to data)
+            )
         }
     }
 }
