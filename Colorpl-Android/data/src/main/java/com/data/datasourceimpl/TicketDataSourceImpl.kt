@@ -28,4 +28,14 @@ class TicketDataSourceImpl @Inject constructor(
     override suspend fun getMonthlyTicket(date: String): List<ResponseTicket> {
         return api.getMonthlyTicket(date)
     }
+
+    override suspend fun createReservationTicket(
+        ticket: MultipartBody.Part,
+        request: RequestBody
+    ): Int {
+        return api.createReservationTicket(
+            request = request,
+            file = ticket
+        )
+    }
 }

@@ -1,5 +1,6 @@
 package com.domain.usecaseimpl.ticket
 
+import com.data.model.request.RequestReservationTicketCreate
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
@@ -34,6 +35,26 @@ class TicketUseCaseImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun createReservationTicket(
+        image: File,
+        ticket: Int
+    ): Flow<DomainResult<Int>> = flow {
+        ticketRepository.createReservationTicket(image, RequestReservationTicketCreate(ticket))
+            .collect { result ->
+                when (result) {
+                    is ApiResult.Error -> {
+                        emit(DomainResult.error(result.exception))
+                    }
+
+                    is ApiResult.Success -> {
+                        val response = result.data
+                        Timber.d("$response")
+                        emit(DomainResult.success(response))
+                    }
+                }
+            }
     }
 
     override suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>> = flow {

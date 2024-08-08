@@ -23,6 +23,7 @@ class FeedPagingSource(private val feedDataSource: FeedDataSource) :
         return when (val result =
             safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
+                Timber.tag("pager").d("${result.data}")
                 val response = result.data.items
                 Timber.tag("pager").d("${response}")
 

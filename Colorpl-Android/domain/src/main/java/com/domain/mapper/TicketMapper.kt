@@ -21,7 +21,9 @@ fun ResponseTicket.toEntity(): TicketResponse {
         location = location,
         latitude = latitude,
         longitude = longitude,
-        imgUrl = imgUrl
+        imgUrl = imgUrl,
+        reviewExists = reviewExists,
+        reviewId = reviewId
     )
 }
 

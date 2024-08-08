@@ -18,6 +18,7 @@ import com.presentation.util.Calendar
 import com.presentation.util.CalendarMode
 import com.presentation.util.TicketState
 import com.presentation.util.TicketType
+import com.presentation.util.getPattern
 import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,12 +72,18 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.calendarItems.collectLatest { calendarList ->
-                    calendarAdapter.submitList(calendarList)
+                    calendarAdapter.submitList(
+                        viewModel.matchTicketsToCalendar(
+                            calendarList,
+                            viewModel.tickets.value
+                        )
+                    )
                 }
             }
             launch {
                 viewModel.tickets.collectLatest { tickets ->
-                    ticketAdapter.submitList(tickets.toList())
+                    calendarAdapter.submitList(viewModel.matchTicketsToCalendar(viewModel.calendarItems.value, tickets))
+                    ticketAdapter.submitList(tickets)
                 }
             }
             launch {
@@ -89,6 +96,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                         CalendarMode.WEEK -> {
                             setWeekMode()
                         }
+                    }
+                }
+            }
+            launch {
+                viewModel.clickedDate.collectLatest { calendarItem ->
+                    calendarItem?.let {
+                        viewModel.getMonthlyTicket(it.date.getPattern("yyyy-MM-dd"))
                     }
                 }
             }
@@ -121,7 +135,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initTicketView() {
         binding.apply {
-            viewModel.getAllTicket()
             rvTicket.adapter = ticketAdapter
             rvTicket.overScrollControl { direction, deltaDistance ->
                 if (viewModel.clickedDate.value != null) {
