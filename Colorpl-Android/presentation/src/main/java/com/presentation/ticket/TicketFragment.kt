@@ -24,7 +24,6 @@ import com.presentation.util.distanceChange
 import com.presentation.util.ignoreParentScroll
 import com.presentation.util.roadTimeChange
 import com.presentation.util.setImageCenterCrop
-import com.presentation.util.setImageCircleCrop
 import com.presentation.util.setup
 import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,6 +74,14 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
 
     private fun initClickEvent() {
         binding.apply {
+            includeMyReview.clFeedDetail.visibility = if (ticket.reviewExists) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            tvMyReview.setOnClickListener {
+                ticketViewModel.deleteReview(ticket.reviewId)
+            }
             includeMyReview.clFeedDetail.setOnClickListener {
                 findNavController().navigate(R.id.fragment_feed_detail)
             }
