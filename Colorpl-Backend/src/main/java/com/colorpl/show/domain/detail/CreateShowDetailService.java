@@ -1,5 +1,6 @@
 package com.colorpl.show.domain.detail;
 
+import com.colorpl.global.common.exception.CategoryNotFoundException;
 import com.colorpl.show.application.ShowDetailApiResponse.Item;
 import com.colorpl.theater.domain.CreateTheaterService;
 import com.colorpl.theater.domain.Theater;
@@ -38,6 +39,8 @@ public class CreateShowDetailService {
             .priceBySeatClass(parse(item.getPriceBySeatClass()))
             .posterImagePath(item.getPosterImagePath())
             .area(item.getArea())
+            .category(Category.fromString(item.getCategory()).orElseThrow(
+                CategoryNotFoundException::new))
             .state(ShowState.from(item.getState()))
 //            .theater(theater)
             .hall(hall)

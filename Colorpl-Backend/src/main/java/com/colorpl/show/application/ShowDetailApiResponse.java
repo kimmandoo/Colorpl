@@ -45,6 +45,9 @@ public class ShowDetailApiResponse {
         @JacksonXmlProperty(localName = "area")
         private String area;
 
+        @JacksonXmlProperty(localName = "genrenm")
+        private String category;
+
         @JacksonXmlProperty(localName = "prfstate")
         private String state;
 
