@@ -19,7 +19,6 @@ class FeedViewHolder(
     fun bind(data: Feed) {
         binding.apply {
             val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
-//            binding.img = data.imgurl
             tvTitle.text = data.title
             tvContent.text = data.content
             tvEmotion.text = data.emotion.toString()
