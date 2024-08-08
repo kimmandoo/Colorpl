@@ -45,7 +45,7 @@ class ProfileUpdateFragment :
         binding.apply {
             profileUpdateViewModel.setUpdateNickName(data.nickName.toString())
             tiEtNickName.setText(data.nickName.toString())
-            ivProfileImg.setImageCircleCrop(data.profileImage.toString())
+            ivProfileImg.setImageCircleCrop(data.profileImage.toString(),true)
         }
     }
 
