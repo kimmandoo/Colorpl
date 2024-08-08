@@ -19,11 +19,11 @@ class FeedViewHolder(
             val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
             tvTitle.text = data.title
             tvContent.text = data.content
-            tvEmotion.text = data.emotionMode.toString()
+            tvEmotion.text = data.emotion.toString()
             tvProfile.text = data.writer
-            tvCommentCnt.text = data.commentsCount.toString()
-            tvUploadDate.text = data.createDate
-            Glide.with(binding.root.context).load(data.contentImgUrl).centerCrop().into(ivContent)
+            tvCommentCnt.text = data.commentscount.toString()
+            tvUploadDate.text = data.createdate
+            Glide.with(binding.root.context).load(data.imgurl).centerCrop().into(ivContent)
             clickScope.forEach {
                 it.setOnClickListener {
                     when (it) {

@@ -14,12 +14,18 @@ class CalendarViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(data: CalendarItem) {
         binding.apply {
-//            Glide.with(binding.root.context).load("null").into(ivTicket)
-            ivTicket.visibility = if(data.isWeek){
+            Glide.with(binding.root.context).load(data.imgUrl).centerCrop().into(ivTicket)
+            ivTicket.visibility = if (data.isWeek) {
                 View.VISIBLE
-            }else{
+            } else {
                 View.GONE
             }
+            ivDot.visibility = if (data.isWeek || data.imgUrl == "") {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
+
             clItem.setBackgroundResource(
                 when {
                     data.isSelected -> R.drawable.rectangle_imperial_red_8

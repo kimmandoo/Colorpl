@@ -11,6 +11,7 @@ import com.domain.usecase.ReviewCreateUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.usecase.ReviewDeleteUseCase
 import com.domain.usecase.ReviewEditUseCase
+import com.domain.usecase.ReviewEmpathyUseCase
 import com.domain.usecase.TicketUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.feed.CommentUseCaseImpl
@@ -24,6 +25,7 @@ import com.domain.usecaseimpl.reservation.ReservationUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewCreateUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewDeleteUseCaseImpl
 import com.domain.usecaseimpl.review.ReviewEditUseCaseImpl
+import com.domain.usecaseimpl.review.ReviewEmpathyUseCaseImpl
 import com.domain.usecaseimpl.ticket.TicketUseCaseImpl
 import com.domain.usecaseimpl.tmap.TmapRouteUseCaseImpl
 import dagger.Binds
@@ -115,4 +117,11 @@ interface UseCaseModule {
     fun bindsReviewEditUseCase(
         reviewEditUseCaseImpl: ReviewEditUseCaseImpl
     ): ReviewEditUseCase
+
+    @Binds
+    @Singleton
+    fun bindsReviewEmpathyUseCase(
+        reviewEmpathyUseCaseImpl: ReviewEmpathyUseCaseImpl
+    ): ReviewEmpathyUseCase
+
 }

@@ -22,20 +22,22 @@ import retrofit2.http.Query
 
 interface FeedApi {
 
+    // 모든 리뷰 조회
     @GET("reviews/all")
     suspend fun getAllFeedData(
         @Query("page") page: Int,
         @Query("size") size: Int
     ): ResponsePagedFeed
 
+    // 리뷰 생성
     @Multipart
-    @POST("reviews/tickets/{ticketId}")
+    @POST("reviews/create")
     suspend fun createUserFeedData(
-        @Path("ticketId") ticketId: Int,
         @Part file: MultipartBody.Part?,
         @Part("request") request: RequestBody,
     ): ResponseReviewCreate
 
+    // 특정멤버의 모든 리뷰 조회
     @GET("reviews/members/{memberId}")
     suspend fun getUserFeedData(
         @Path("memberId") memberId: Int,
@@ -43,28 +45,52 @@ interface FeedApi {
         @Query("size") size: Int
     ): ResponsePagedFeed
 
+    // 특정멤버의 모든 리뷰 조회
+    @GET("reviews/myreviews")
+    suspend fun getMyFeedData(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): ResponsePagedFeed
+
+    // 특정 리뷰 상세 조회
     @GET("reviews/details/{reviewId}")
     suspend fun getDetailFeedData(
         @Path("reviewId") reviewId: Int,
     ): ResponseReviewDetail
 
-    @PUT("reviews/reviews/{reviewId}")
+    // 리뷰 수정
+    @PUT("reviews/update/{reviewId}")
     suspend fun editUserFeedData(
         @Path("reviewId") reviewId: Int,
         @Body requestReviewEdit: RequestReviewEdit
     ): ResponseReviewEdit
 
-    @DELETE("reviews/{reviewId}")
+    // 리뷰 삭제
+    @DELETE("reviews/delete/{reviewId}")
     suspend fun deleteFeedData(
         @Path("reviewId") reviewId: Int,
     ): ResponseReviewEdit
 
+    // 공감 추가
+    @POST("reviews/empathize/{reviewId}")
+    suspend fun createEmpathizeData(
+        @Path("reviewId") reviewId: Int,
+    ): ResponseReviewEdit
+
+    // 공감 취소
+    @DELETE("reviews/empathize/{reviewId}")
+    suspend fun deleteEmpathizeData(
+        @Path("reviewId") reviewId: Int,
+    ): ResponseReviewEdit
+
+    // 특정 리뷰 댓글 달기
     @POST("comments/reviews/{reviewId}")
     suspend fun createCommentData(
         @Path("reviewId") reviewId: Int,
         @Body requestCreateComment: RequestCreateComment
     ): ResponseCommentEdit
 
+    // 특정 리뷰 댓글 가져오기
     @GET("comments/reviews/{reviewId}")
     suspend fun getCommentData(
         @Path("reviewId") reviewId: Int,
@@ -72,13 +98,15 @@ interface FeedApi {
         @Query("size") size: Int
     ): ResponsePagedComment
 
+    // 특정 댓글 수정
     @PUT("comments/{commentId}")
     suspend fun editCommentData(
         @Path("commentId") commentId: Int,
         @Body requestEditComment: RequestCreateComment
     ): ResponseCommentEdit
 
-    @GET("comments/{commentId}")
+    // 특정 댓글 삭제
+    @DELETE("comments/{commentId}")
     suspend fun deleteCommentData(
         @Path("commentId") commentId: Int,
     ): ResponseCommentEdit

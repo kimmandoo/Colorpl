@@ -9,12 +9,10 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.BuildConfig
-import timber.log.Timber
 import kotlin.math.abs
 
 
@@ -57,7 +55,7 @@ fun EditText.setPasswordTransformation() {
     ImageView -> 서버 통신 용임
     type -> true : 서버 -> false : 로컬
  */
-fun ImageView.setImage(image: Any?, type : Boolean = false) {
+fun ImageView.setImageCircleCrop(image: Any?, type : Boolean = false) {
     val data = if(type){
         BuildConfig.IMAGE_BASE+image
     }else{
@@ -66,6 +64,18 @@ fun ImageView.setImage(image: Any?, type : Boolean = false) {
     Glide.with(this)
         .load(data)
         .circleCrop()
+        .into(this)
+}
+
+fun ImageView.setImageCenterCrop(image: Any?, type : Boolean = false) {
+    val data = if(type){
+        BuildConfig.IMAGE_BASE+image
+    }else{
+        image
+    }
+    Glide.with(this)
+        .load(data)
+        .centerCrop()
         .into(this)
 }
 
