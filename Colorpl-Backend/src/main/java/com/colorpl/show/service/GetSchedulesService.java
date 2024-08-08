@@ -2,7 +2,6 @@ package com.colorpl.show.service;
 
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetSchedulesResponse;
-import com.colorpl.show.dto.HallListResponse;
 import com.colorpl.show.dto.SearchShowScheduleCondition;
 import com.colorpl.show.dto.ShowScheduleListItem;
 import com.colorpl.show.repository.ShowDetailRepository;
@@ -50,15 +49,15 @@ public class GetSchedulesService {
             })
             .toList();
 
-        HallListResponse hallListResponse = HallListResponse.builder()
-            .name(showDetail.getHall())
-            .countSeats(rows * cols)
-            .timetable(timetable)
-            .build();
+//        HallListResponse hallListResponse = HallListResponse.builder()
+//            .name(showDetail.getHall())
+//            .countSeats(rows * cols)
+//            .timetable(timetable)
+//            .build();
 
         return GetSchedulesResponse.builder()
             .name(null)
-            .hall(hallListResponse)
+//            .hall(hallListResponse)
             .build();
     }
 }

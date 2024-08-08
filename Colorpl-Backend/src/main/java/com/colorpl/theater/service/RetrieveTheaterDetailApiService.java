@@ -1,5 +1,6 @@
 package com.colorpl.theater.service;
 
+import com.colorpl.theater.dto.RetrieveTheaterDetailApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.net.URI;

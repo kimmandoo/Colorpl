@@ -43,7 +43,7 @@ public class CreateShowDetailService {
                 .orElseThrow(() -> new CategoryNotFoundException(item.getCategory())))
             .state(ShowState.from(item.getState()))
 //            .theater(theater)
-            .hall(hall)
+//            .hall(hall)
             .build();
         createSeatService.create(showDetail);
         showDetailRepository.save(showDetail);

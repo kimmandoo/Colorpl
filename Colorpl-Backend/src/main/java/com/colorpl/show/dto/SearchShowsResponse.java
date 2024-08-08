@@ -13,7 +13,7 @@ import lombok.Getter;
 @Builder
 public class SearchShowsResponse {
 
-    private Long id;
+    private Integer id;
     private String name;
     private String runtime;
     private Map<String, Integer> priceBySeatClass;

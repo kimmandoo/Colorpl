@@ -1,6 +1,6 @@
 package com.colorpl.show.domain;
 
-import com.colorpl.theater.domain.Theater;
+import com.colorpl.theater.domain.Hall;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -33,7 +33,7 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_ID")
     @GeneratedValue
     @Id
-    private Long id;
+    private Integer id;
 
     @Column(name = "SHOW_DETAIL_API_ID")
     private String apiId;
@@ -41,12 +41,9 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_NAME")
     private String name;
 
-    @JoinColumn(name = "THEATER_ID")
+    @JoinColumn(name = "HALL_ID")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Theater theater;
-
-    @Column(name = "SHOW_HALL")
-    private String hall;
+    private Hall hall;
 
     @Column(name = "SHOW_DETAIL_CAST")
     private String cast;

@@ -1,9 +1,9 @@
 package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.ShowAlreadyExistsException;
+import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.ShowDetailApiResponse;
 import com.colorpl.show.dto.ShowListApiResponse;
-import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.repository.ShowDetailRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -53,11 +53,11 @@ public class CreateShowService {
         }
     }
 
-    public Long createByApiId(String apiId) {
+    public Integer createByApiId(String apiId) {
         return create(apiId);
     }
 
-    private Long create(String apiId) {
+    private Integer create(String apiId) {
 
         if (showDetailRepository.existsByApiId(apiId)) {
             throw new ShowAlreadyExistsException();
