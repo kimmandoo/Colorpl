@@ -37,9 +37,9 @@ public class ReviewDTO {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     // Constructor
-    public ReviewDTO(Long id, Long ticketId, String writer, boolean myreview, String title, String createdate, String category, String imgurl, String content, Boolean spoiler, Byte emotion, Integer empathy, Boolean myempathy, Integer commentpagesize, Integer commentscount) {
+    public ReviewDTO(Long id, Long scheduleId, String writer, boolean myreview, String title, String createdate, String category, String imgurl, String content, Boolean spoiler, Byte emotion, Integer empathy, Boolean myempathy, Integer commentpagesize, Integer commentscount) {
         this.id = id;
-        this.scheduleId = ticketId;
+        this.scheduleId = scheduleId;
         this.writer = writer;
         this.myreview = myreview;
         this.title = title;
