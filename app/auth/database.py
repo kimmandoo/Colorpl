@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from common.config import settings, ec2
+from app.utils.config import settings
 
-DATABASE_URL = f"mysql+pymysql://{ec2.EC2_DB_ID}:{ec2.EC2_DB_PW}@{ec2.EC2_DB_HOST}:{ec2.EC2_DB_PORT}/{ec2.EC2_DB_NAME}"
+DATABASE_URL = f"mysql+pymysql://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}"
 
 engine = create_engine(DATABASE_URL)
 
@@ -17,3 +17,5 @@ def get_db():
         yield db
     finally:
         db.close()
+
+Base.metadata.create_all(bind=engine)

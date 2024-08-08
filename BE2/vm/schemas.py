@@ -1,80 +1,81 @@
 from pydantic import BaseModel
-from datetime import datetime
 from typing import List, Optional
+from datetime import datetime
 
+class ShowDetailBase(BaseModel):
+    show_detail_api_id: str
+    show_detail_area: str
+    show_detail_cast: str
+    show_detail_category: Optional[int] = None
+    show_hall: str
+    show_detail_name: str
+    show_detail_poster_image_path: Optional[str] = None
+    show_detail_runtime: str
+    show_detail_state: str
+    theater_id: Optional[int] = None
 
-class ShowDateSchema(BaseModel):
-    SHOW_DATE_ID: int
-    SHOW_ID: int
-    SHOW_DATE: datetime
-    SHOW_TIME: str
+class ShowDetailCreate(ShowDetailBase):
+    pass
 
-    class Config:
-        orm_mode = True
-
-class ShowSchema(BaseModel):
-    SHOW_ID: int
-    SHOW_NAME: str
-    SHOW_START_DATE: datetime
-    SHOW_END_DATE: datetime
-    SHOW_CAST: str
-    SHOW_RUNTIME: str
-    SHOW_RATING: str
-    SHOW_POSTER_IMAGE_PATH: str
-    SHOW_AREA: str
-    SHOW_STATE: str
-    SHOW_SCHEDULE: str
-    show_dates: List[ShowDateSchema] = []
+class ShowDetail(ShowDetailBase):
+    show_detail_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
+class ShowScheduleBase(BaseModel):
+    show_schedule_date_time: datetime
+    show_detail_id: int
 
-class ShowCreateSchema(BaseModel):
-    HALL_ID: int
-    SHOW_NAME: str
-    SHOW_START_DATE: datetime
-    SHOW_END_DATE: datetime
-    SHOW_CAST: str
-    SHOW_RUNTIME: str
-    SHOW_RATING: str
-    SHOW_POSTER_IMAGE_PATH: str
-    SHOW_AREA: str
-    SHOW_STATE: str
-    SHOW_SCHEDULE: str
+class ShowScheduleCreate(ShowScheduleBase):
+    pass
+
+class ShowSchedule(ShowScheduleBase):
+    show_schedule_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class ShowUpdateSchema(BaseModel):
-    HALL_ID: Optional[int] = None
-    SHOW_NAME: Optional[str] = None
-    SHOW_START_DATE: Optional[datetime] = None
-    SHOW_END_DATE: Optional[datetime] = None
-    SHOW_CAST: Optional[str] = None
-    SHOW_RUNTIME: Optional[str] = None
-    SHOW_RATING: Optional[str] = None
-    SHOW_POSTER_IMAGE_PATH: Optional[str] = None
-    SHOW_AREA: Optional[str] = None
-    SHOW_STATE: Optional[str] = None
-    SHOW_SCHEDULE: Optional[str] = None
+class TheaterBase(BaseModel):
+    theater_address: str
+    theater_api_id: str
+    theater_latitude: float
+    theater_longitude: float
+    theater_name: str
 
-    class Config:
-        orm_mode = True
+class TheaterCreate(TheaterBase):
+    pass
 
-
-class SeatGradePriceSchema(BaseModel):
-    SEAT_PRICE: int
-    FIELD1: str
-    FIELD2: Optional[int] = None
+class Theater(TheaterBase):
+    theater_id: int
+    show_details: List[ShowDetail] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class SeatGradePriceUpdateSchema(BaseModel):
-    SEAT_PRICE: Optional[int] = None
-    FIELD1: Optional[str] = None
-    FIELD2: Optional[int] = None
+class SeatBase(BaseModel):
+    seat_col: int
+    seat_row: int
+    seat_class: str
+    show_detail_id: int
+
+class SeatCreate(SeatBase):
+    pass
+
+class Seat(SeatBase):
+    seat_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class PriceBySeatClassBase(BaseModel):
+    show_detail_id: int
+    price_by_seat_class_price: int
+    price_by_seat_class_seat_class: str
+
+class PriceBySeatClassCreate(PriceBySeatClassBase):
+    pass
+
+class PriceBySeatClass(PriceBySeatClassBase):
+    class Config:
+        from_attributes = True

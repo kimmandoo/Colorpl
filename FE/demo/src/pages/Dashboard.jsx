@@ -1,10 +1,9 @@
 // pages/Dashboard.jsx
 import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Sidebar from '../components/Sidebar';
-import SubSidebar from '../components/SubSidebar';
-import Header from '../components/Header';
+import TopRightIcons from '../components/TopRightIcons';
 import Members from './Members';
 import Reviews from './Reviews';
 import Comments from './Comments';
@@ -17,9 +16,8 @@ const Dashboard = () => {
   return (
     <Box display="flex">
       <Sidebar setSidebarExpanded={setSidebarExpanded} />
-      <SubSidebar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
       <Box component="main" flexGrow={1}>
-        <Header />
+        <TopRightIcons />
         <Box p={3}>
           <Routes>
             <Route path="/" element={<DashboardHome />} />
