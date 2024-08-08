@@ -8,6 +8,8 @@ interface TokenDataSource {
     suspend fun setSignToken(requestSignToken: RequestSignToken)
     suspend fun getSignToken(): ResponseSignToken
 
+    suspend fun clearToken()
+
     suspend fun getAccessToken(): String
     suspend fun setAccessToken(accessToken: String)
 }

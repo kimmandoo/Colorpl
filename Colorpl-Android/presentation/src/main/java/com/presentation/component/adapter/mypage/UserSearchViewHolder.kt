@@ -14,6 +14,4 @@ class UserSearchViewHolder(
             ivProfileImg.setImageCenterCrop(data.profileImage, true)
         }
     }
-
-
 }
