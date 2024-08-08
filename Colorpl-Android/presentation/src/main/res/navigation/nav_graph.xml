@@ -16,19 +16,18 @@
             android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" >
+            app:exitAnim="@android:anim/slide_out_right">
 
             <argument
                 android:name="reviewId"
-                app:argType="integer"
-                android:defaultValue="0"/>
+                android:defaultValue="0"
+                app:argType="integer" />
 
 
         </action>
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
-            app:destination="@id/fragment_feed_ticket_select"
-            />
+            app:destination="@id/fragment_feed_ticket_select" />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -72,12 +71,12 @@
     <dialog
         android:id="@+id/fragment_feed_ticket_select"
         android:name="com.presentation.feed.FeedTicketSelectFragment"
-        tools:layout="@layout/fragment_feed_ticket_select" >
+        tools:layout="@layout/fragment_feed_ticket_select">
         <action
             android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
+            app:destination="@id/fragment_review"
             app:popUpTo="@id/fragment_feed_ticket_select"
-            app:popUpToInclusive="true"
-            app:destination="@id/fragment_review" />
+            app:popUpToInclusive="true" />
     </dialog>
 
     <!-- Reservation -->
@@ -180,22 +179,26 @@
     <fragment
         android:id="@+id/fragment_profile_update"
         android:name="com.presentation.my_page.ProfileUpdateFragment"
-        tools:layout="@layout/fragment_profile_update" >
+        tools:layout="@layout/fragment_profile_update">
 
         <argument
             android:name="member"
-            app:argType="com.domain.model.Member"/>
+            app:argType="com.domain.model.Member" />
     </fragment>
 
     <fragment
         android:id="@+id/fragment_user_search"
         android:name="com.presentation.my_page.MemberSearchFragment"
-        tools:layout="@layout/fragment_user_search" />
+        tools:layout="@layout/fragment_user_search">
+        <action
+            android:id="@+id/action_fragment_user_search_to_fragment_other_my_page"
+            app:destination="@id/fragment_other_my_page" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_my_review"
         android:name="com.presentation.my_page.MyReviewFragment"
-        tools:layout="@layout/fragment_my_review" >
+        tools:layout="@layout/fragment_my_review">
 
         <action
             android:id="@+id/action_fragment_my_review_to_fragment_feed_ticket_select"
@@ -221,6 +224,18 @@
         android:id="@+id/fragment_review"
         android:name="com.presentation.feed.ReviewFragment"
         tools:layout="@layout/fragment_review" />
+
+    <fragment
+        android:id="@+id/fragment_other_my_page"
+        android:name="com.presentation.my_page.OtherMyPageFragment"
+        tools:layout="@layout/fragment_other_my_page">
+
+        <argument
+            android:name="memberInfo"
+            app:argType="com.domain.model.MemberSearch"/>
+
+
+    </fragment>
 
     <include app:graph="@navigation/nav_ticket_graph" />
 

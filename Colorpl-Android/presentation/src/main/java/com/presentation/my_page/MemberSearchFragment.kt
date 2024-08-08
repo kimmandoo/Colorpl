@@ -22,6 +22,7 @@ class MemberSearchFragment :
     override fun initView() {
         initAdapter()
         initClickEvent()
+
         observeSearchText()
         observeMemberSearch()
     }
@@ -47,13 +48,15 @@ class MemberSearchFragment :
             adapter = userSearchAdapter
             itemAnimator = null
         }
-
-
     }
+
 
     private fun initClickEvent() {
         binding.includeTop.ivBack.setOnClickListener {
             navigatePopBackStack()
+        }
+        userSearchAdapter.setOnItemClickListener { data ->
+
         }
     }
 }
