@@ -13,7 +13,7 @@ import com.colorpl.schedule.repository.ReservationScheduleRepository;
 import com.colorpl.schedule.repository.ScheduleRepository;
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.detail.ShowDetailRepository;
+import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.show.domain.schedule.ShowSchedule;
 import com.colorpl.show.domain.schedule.ShowScheduleRepository;
 import java.time.LocalDateTime;

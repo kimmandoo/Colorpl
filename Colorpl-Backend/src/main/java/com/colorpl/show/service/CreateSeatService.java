@@ -1,5 +1,7 @@
-package com.colorpl.show.domain.detail;
+package com.colorpl.show.service;
 
+import com.colorpl.show.domain.detail.Seat;
+import com.colorpl.show.domain.detail.ShowDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

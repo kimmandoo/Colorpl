@@ -15,8 +15,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class ReservationScheduleRepositoryImpl implements ReservationScheduleRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

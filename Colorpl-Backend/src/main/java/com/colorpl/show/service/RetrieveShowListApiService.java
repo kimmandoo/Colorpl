@@ -1,5 +1,6 @@
-package com.colorpl.show.application;
+package com.colorpl.show.service;
 
+import com.colorpl.show.dto.ShowListApiResponse;
 import java.time.LocalDate;
 
 public interface RetrieveShowListApiService {

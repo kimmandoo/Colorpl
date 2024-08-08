@@ -1,4 +1,4 @@
-package com.colorpl.show.ui;
+package com.colorpl.show.dto;
 
 import java.time.LocalDate;
 import lombok.Getter;

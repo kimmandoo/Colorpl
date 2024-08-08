@@ -1,4 +1,4 @@
-package com.colorpl.show.application;
+package com.colorpl.show.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
