@@ -5,5 +5,5 @@ import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 
 interface ReservationListUseCase {
-    suspend operator fun invoke(): Flow<DomainResult<List<ReservationInfo>>>
+    suspend operator fun invoke(filters: Map<String, String>): Flow<DomainResult<List<ReservationInfo>>>
 }

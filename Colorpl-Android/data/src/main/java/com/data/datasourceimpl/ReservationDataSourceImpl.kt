@@ -3,7 +3,6 @@ package com.data.datasourceimpl
 import com.data.api.ReservationApi
 import com.data.datasource.remote.ReservationDataSource
 import com.data.model.response.ReservationInfo
-import com.data.model.response.ResponseReservationShows
 import javax.inject.Inject
 
 class ReservationDataSourceImpl @Inject constructor(
@@ -13,7 +12,7 @@ class ReservationDataSourceImpl @Inject constructor(
         return reservationApi.getReservationShow(showId)
     }
 
-    override suspend fun getReservationAllShow(): List<ReservationInfo> {
-        return reservationApi.getReservationAllShows()
+    override suspend fun getReservationListShows(filters: Map<String, String>): List<ReservationInfo> {
+        return reservationApi.getReservationListShows(filters)
     }
 }
