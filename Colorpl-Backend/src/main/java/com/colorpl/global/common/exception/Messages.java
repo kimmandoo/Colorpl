@@ -19,6 +19,6 @@ public class Messages {
     public static final String EMAIL_NOT_EDIT = "이메일은 변경할 수 없습니다.";
     public static final String CATEGORY_LIMIT = "카테고리는 최대 2개까지만 허용됩니다.";
     public static final String COMMENT_NOT_FOUND = "존재하지 않는 댓글 입니다.";
-
-
+    public static final String SHOW_DETAIL_NOT_FOUND = "존재하지 않는 공연상세입니다.";
+    public static final String THEATER_ALREADY_EXISTS = "이미 등록된 공연시설입니다.";
 }

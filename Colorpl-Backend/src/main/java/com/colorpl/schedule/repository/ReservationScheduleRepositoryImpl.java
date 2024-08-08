@@ -2,8 +2,8 @@ package com.colorpl.schedule.repository;
 
 import static com.colorpl.reservation.domain.QReservationDetail.reservationDetail;
 import static com.colorpl.schedule.domain.QReservationSchedule.reservationSchedule;
-import static com.colorpl.show.domain.detail.QShowDetail.showDetail;
-import static com.colorpl.show.domain.schedule.QShowSchedule.showSchedule;
+import static com.colorpl.show.domain.QShowDetail.showDetail;
+import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
 import com.colorpl.member.Member;
 import com.colorpl.schedule.domain.ReservationSchedule;

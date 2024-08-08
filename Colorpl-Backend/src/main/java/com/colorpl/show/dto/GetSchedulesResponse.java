@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TheaterListResponse {
+public class GetSchedulesResponse {
 
     private String name;
     private HallListResponse hall;

@@ -2,7 +2,7 @@ package com.colorpl.schedule.domain;
 
 import com.colorpl.member.Member;
 import com.colorpl.review.domain.Review;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -43,7 +43,7 @@ public class CustomSchedule extends Schedule {
     private Double longitude;
 
     @Builder
-    public CustomSchedule(
+    private CustomSchedule(
         Long id,
         Member member,
         String image,
