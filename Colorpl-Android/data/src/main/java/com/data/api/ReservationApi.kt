@@ -13,7 +13,7 @@ interface ReservationApi {
         @Path("id") id: Int
     ): ReservationInfo
 
-    @GET("shows/")
+    @GET("shows")
     suspend fun getReservationListShows(@QueryMap filters: Map<String, String>): List<ReservationInfo>
 
 }
