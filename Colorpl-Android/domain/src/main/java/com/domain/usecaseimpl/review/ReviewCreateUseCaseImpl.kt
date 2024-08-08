@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ReviewCreateUseCaseImpl @Inject constructor(private val reviewRepository: ReviewRepository) :
     ReviewCreateUseCase {
     override fun invoke(image: File?, review: Review): Flow<DomainResult<Int>> = flow {
-        reviewRepository.createReview(review.ticketId, review.toEntity(), image)
+        reviewRepository.createReview(review.toEntity(), image)
             .collect {  result ->
                 when (result) {
                     is ApiResult.Error -> {
