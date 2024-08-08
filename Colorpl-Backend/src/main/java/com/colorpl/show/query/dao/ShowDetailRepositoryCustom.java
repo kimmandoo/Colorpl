@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ShowDetailRepositoryCustom {
 
-    List<ShowDetail> showList();
+    List<ShowDetail> showDetailList(ShowDetailSearchCondition condition);
 }

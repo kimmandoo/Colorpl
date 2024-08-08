@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ShowDetailRepository extends JpaRepository<ShowDetail, Long>,
     ShowDetailRepositoryCustom {
 
+    boolean existsByApiId(String apiId);
+
     Optional<ShowDetail> findByApiId(String apiId);
 }
