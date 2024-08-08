@@ -189,7 +189,7 @@
 
     <fragment
         android:id="@+id/fragment_user_search"
-        android:name="com.presentation.my_page.UserSearchFragment"
+        android:name="com.presentation.my_page.MemberSearchFragment"
         tools:layout="@layout/fragment_user_search" />
 
     <fragment
