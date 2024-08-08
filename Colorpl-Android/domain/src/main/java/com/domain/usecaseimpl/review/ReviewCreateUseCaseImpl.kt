@@ -16,11 +16,12 @@ import javax.inject.Inject
 class ReviewCreateUseCaseImpl @Inject constructor(private val reviewRepository: ReviewRepository) :
     ReviewCreateUseCase {
     override fun invoke(image: File?, review: Review): Flow<DomainResult<Int>> = flow {
+        Timber.tag("review").d("$image \n $review")
         reviewRepository.createReview(review.toEntity(), image)
             .collect {  result ->
                 when (result) {
                     is ApiResult.Error -> {
-                        Timber.tag("review").d("usecase create ${result.exception}")
+                        Timber.tag("review").d("usecase error ${result.exception}")
                         result.exception.printStackTrace()
                         emit(DomainResult.error(result.exception))
                     }

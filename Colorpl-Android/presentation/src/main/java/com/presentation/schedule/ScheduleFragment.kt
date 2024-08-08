@@ -1,10 +1,12 @@
 package com.presentation.schedule
 
+import android.view.MotionEvent
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentScheduleBinding
 import com.domain.model.TicketResponse
@@ -33,6 +35,9 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private val viewModel: ScheduleViewModel by viewModels()
     private var handlePullState = 0
+    private val swipeThreshold: Int = 100
+    private var startX: Float = 0f
+    private var startY: Float = 0f
     private val calendarAdapter by lazy {
         CalendarAdapter(onItemClick = { calendarItem ->
             viewModel.setClickedDate(calendarItem)
@@ -129,6 +134,32 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             rvCalendar.apply {
                 adapter = calendarAdapter
                 itemAnimator = null
+                addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+                    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                        when (e.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                startX = e.x
+                                startY = e.y
+                            }
+                            MotionEvent.ACTION_UP -> {
+                                val endX = e.x
+                                val endY = e.y
+                                val distanceX = Math.abs(endX - startX)
+                                val distanceY = Math.abs(endY - startY)
+
+                                if (distanceX > swipeThreshold && distanceX > distanceY) {
+                                    if (endX > startX) {
+                                        viewModel.swipeUpdateCalendar(-1) // 오른쪽으로 스와이프
+                                    } else {
+                                        viewModel.swipeUpdateCalendar(1) // 왼쪽으로 스와이프
+                                    }
+                                    return true
+                                }
+                            }
+                        }
+                        return false
+                    }
+                })
             }
         }
     }
