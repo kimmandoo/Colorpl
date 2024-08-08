@@ -41,9 +41,9 @@ class ReservationListViewModel @Inject constructor(
                 val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
                 filters["date"] = it.format(dateFormat)
             }
-            _searchArea.value.takeIf { it.isNotEmpty() }?.let { filters["area"] = it }
-            _searchKeyword.value.takeIf { it.isNotEmpty() }?.let { filters["keyword"] = it }
-            _searchCategory.value.takeIf { it.isNotEmpty() }?.let { filters["category"] = it }
+            _searchArea.value.takeIf { it.isNotBlank() }?.let { filters["area"] = it }
+            _searchKeyword.value.takeIf { it.isNotBlank() }?.let { filters["keyword"] = it }
+            _searchCategory.value.takeIf { it.isNotBlank() }?.let { filters["category"] = it }
             Timber.tag("검색").d("${searchDate.value}, ${searchArea.value}, ${searchKeyword.value}, ${searchCategory.value}")
             getReservationListUseCase(filters = filters).collect { response ->
                 when (response) {
