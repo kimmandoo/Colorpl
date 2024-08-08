@@ -1,4 +1,4 @@
-package com.colorpl.show.ui;
+package com.colorpl.show.dto;
 
 import lombok.Getter;
 

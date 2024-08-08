@@ -1,4 +1,4 @@
-package com.colorpl.show.application;
+package com.colorpl.show.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -44,6 +44,9 @@ public class ShowDetailApiResponse {
 
         @JacksonXmlProperty(localName = "area")
         private String area;
+
+        @JacksonXmlProperty(localName = "genrenm")
+        private String category;
 
         @JacksonXmlProperty(localName = "prfstate")
         private String state;
