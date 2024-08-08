@@ -13,7 +13,7 @@ import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.show.domain.schedule.ShowSchedule;
-import com.colorpl.show.domain.schedule.ShowScheduleRepository;
+import com.colorpl.show.repository.ShowScheduleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,13 +45,15 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public ReservationDTO getReservationByMemberIdAndReservationId(Integer memberId, Long reservationId) {
+    public ReservationDTO getReservationByMemberIdAndReservationId(Integer memberId,
+        Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
             .orElseThrow(ReservationNotFoundException::new);
 
         return ReservationDTO.toReservationDTO(reservation);
     }
+
     @Transactional(readOnly = true)
     public List<ReservationDTO> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
@@ -209,6 +211,4 @@ public class ReservationService {
         // Reservation 저장
         return ReservationDTO.toReservationDTO(createdReservation);
     }
-
-
 }
