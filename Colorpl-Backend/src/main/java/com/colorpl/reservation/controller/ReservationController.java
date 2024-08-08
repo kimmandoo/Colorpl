@@ -22,6 +22,7 @@ public class ReservationController {
     private final MemberService memberService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "멤버의 모든 예매 조회", description = "로그인 한 사용자의 모든 예매를 조회 할 때 사용하는 API")
     public ResponseEntity<List<ReservationDTO>> getReservationsByMemberId() {
         Integer memberId = memberService.getCurrentMemberId();
@@ -30,6 +31,7 @@ public class ReservationController {
     }
 
     @GetMapping("/{reservationId}")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 특정 예매 상세 조회", description = "특정 멤버의 특정 예매를 상세 조회 할 때 사용하는 API")
     public ResponseEntity<ReservationDTO> getReservationByMemberIdAndReservationId(@PathVariable Long reservationId) {
         Integer memberId = memberService.getCurrentMemberId();
@@ -38,6 +40,7 @@ public class ReservationController {
     }
 
     @PostMapping("/cancel/{reservationId}")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 특정 예매 취소", description = "로그인 된 사용자가 특정 예매를 취소할때 사용하는 API, is_refunded를 true로 변경")
     public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(@PathVariable Long reservationId) {
         Integer memberId = memberService.getCurrentMemberId();
@@ -47,6 +50,7 @@ public class ReservationController {
 
 
     @PutMapping("/{reservationId}")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 예매 업데이트", description = "로그인 된 사용자가 예매를 수정하는 API, 새로운 예매 상세 추가시 id를 빼고 in해야 정상 작동")
     public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
         Integer memberId = memberService.getCurrentMemberId();
@@ -55,6 +59,7 @@ public class ReservationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 예매 생성", description = "로그인 된 사용자의 예매를 생성하는 API")
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
         Integer memberId = memberService.getCurrentMemberId();
