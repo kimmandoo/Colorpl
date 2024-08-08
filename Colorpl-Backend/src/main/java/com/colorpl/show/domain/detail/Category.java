@@ -30,7 +30,7 @@ public enum Category {
         for (Category e : values()) {
             stringToEnum.put(e.toString(), e);
         }
-        stringToEnum.put("무용(서양/한국무용)", PERFORMANCE);
+        stringToEnum.put("무용", PERFORMANCE);
         stringToEnum.put("대중무용", PERFORMANCE);
         stringToEnum.put("서양음악(클래식)", CONCERT);
         stringToEnum.put("한국음악(국악)", CONCERT);

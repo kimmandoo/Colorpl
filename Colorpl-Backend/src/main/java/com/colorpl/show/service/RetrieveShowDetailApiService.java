@@ -1,4 +1,6 @@
-package com.colorpl.show.application;
+package com.colorpl.show.service;
+
+import com.colorpl.show.dto.ShowDetailApiResponse;
 
 public interface RetrieveShowDetailApiService {
 

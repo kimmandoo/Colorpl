@@ -1,7 +1,7 @@
 package com.colorpl.show.ui;
 
 import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.detail.ShowDetailRepository;
+import com.colorpl.show.repository.ShowDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

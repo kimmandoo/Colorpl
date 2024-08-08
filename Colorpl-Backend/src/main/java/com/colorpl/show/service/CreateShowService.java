@@ -1,10 +1,10 @@
-package com.colorpl.show.application;
+package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.ShowAlreadyExistsException;
-import com.colorpl.show.domain.detail.CreateShowDetailService;
+import com.colorpl.show.dto.ShowDetailApiResponse;
+import com.colorpl.show.dto.ShowListApiResponse;
 import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.detail.ShowDetailRepository;
-import com.colorpl.show.domain.schedule.CreateShowScheduleService;
+import com.colorpl.show.repository.ShowDetailRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;

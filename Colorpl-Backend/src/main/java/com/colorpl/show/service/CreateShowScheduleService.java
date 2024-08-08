@@ -1,6 +1,8 @@
-package com.colorpl.show.domain.schedule;
+package com.colorpl.show.service;
 
 import com.colorpl.show.domain.detail.ShowDetail;
+import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.show.domain.schedule.ShowScheduleRepository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

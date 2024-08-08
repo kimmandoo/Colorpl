@@ -1,10 +1,11 @@
-package com.colorpl.show.query.dao;
+package com.colorpl.show.repository;
 
 import static com.colorpl.show.domain.detail.QShowDetail.showDetail;
 import static com.colorpl.show.domain.schedule.QShowSchedule.showSchedule;
 
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.show.domain.detail.ShowDetail;
+import com.colorpl.show.dto.SearchShowDetailCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -13,20 +14,20 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> showDetailList(ShowDetailSearchCondition condition) {
+    public List<ShowDetail> search(SearchShowDetailCondition condition) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
-            .join(showDetail.showSchedules, showSchedule).fetchJoin()
+            .leftJoin(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
-                dateTimeBetween(condition.getDate()),
+                dateEq(condition.getDate()),
                 areaEq(condition.getArea()),
                 nameContains(condition.getKeyword()),
                 categoryEq(condition.getCategory())
@@ -34,7 +35,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .fetch();
     }
 
-    private BooleanExpression dateTimeBetween(LocalDate date) {
+    private BooleanExpression dateEq(LocalDate date) {
 
         if (date == null) {
             return null;
