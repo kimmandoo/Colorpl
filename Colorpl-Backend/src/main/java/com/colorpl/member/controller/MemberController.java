@@ -133,7 +133,6 @@ public class MemberController {
     }
 
     @PostMapping("/sign-out")
-    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "로그아웃", description = "로그인 된 사용자의 로그 아웃을 진행하는 API, Refresh Token을 BlackList 처리")
     public ResponseEntity<Void> signOut(@RequestHeader("Refresh-Token") String refreshToken) {
         try {
