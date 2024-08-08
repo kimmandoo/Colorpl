@@ -72,6 +72,7 @@ public class MemberController {
 //    }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
     public ResponseEntity<MemberDTO> updateMember(
         @RequestPart("memberDTO") MemberDTO memberDTO,
@@ -83,6 +84,7 @@ public class MemberController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "멤버 정보 조회", description = "로그인한 멤버의 정보를 조회하는 API")
     public ResponseEntity<MemberDTO> findMemberById() {
         try {
@@ -142,6 +144,7 @@ public class MemberController {
     }
 
     @PostMapping("/follow/{followId}")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "팔로우", description = "로그인 된 사용자가 다른 멤버를 팔로우하는 API")
     public ResponseEntity<String> followMember(@PathVariable Integer followId) {
         Integer memberId = memberService.getCurrentMemberId();
@@ -151,6 +154,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/unfollow/{followId}")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "언팔로우", description = "로그인 된 사용자가 다른 멤버의 팔로우를 취소하는 API")
     public ResponseEntity<String> unfollowMember(@PathVariable Integer followId) {
         Integer memberId = memberService.getCurrentMemberId();
