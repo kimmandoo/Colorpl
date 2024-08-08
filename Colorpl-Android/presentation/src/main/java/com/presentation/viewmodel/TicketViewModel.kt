@@ -3,7 +3,10 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Route
+import com.domain.usecase.ReviewDeleteUseCase
+import com.domain.usecase.TicketUseCase
 import com.domain.usecase.TmapRouteUseCase
+import com.domain.util.DomainResult
 import com.naver.maps.geometry.LatLng
 import com.presentation.util.Mode
 import com.domain.util.onFailure
@@ -22,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
+    private val testReviewUseCase: ReviewDeleteUseCase
 ) : ViewModel() {
 
     private val _routeData = MutableSharedFlow<Pair<Route,List<LatLng>>>()
@@ -32,6 +36,22 @@ class TicketViewModel @Inject constructor(
 
     fun setLatLng(value : LatLng){
         _latLng.value = value
+    }
+
+    fun deleteReview(reviewId: Int){
+        viewModelScope.launch {
+            testReviewUseCase(reviewId).collectLatest {
+                when(it){
+                    is DomainResult.Error -> {
+                        Timber.tag("error").d("$it")
+                    }
+                    is DomainResult.Success ->{
+                        Timber.tag("deleteReview").d("$it")
+
+                    }
+                }
+            }
+        }
     }
 
 

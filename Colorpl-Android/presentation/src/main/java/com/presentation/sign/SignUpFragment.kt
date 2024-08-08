@@ -21,7 +21,7 @@ import com.presentation.util.getPhotoGallery
 import com.presentation.util.hideKeyboard
 import com.presentation.util.imeOptionsActionCheck
 import com.presentation.util.onBackButtonPressed
-import com.presentation.util.setImage
+import com.presentation.util.setImageCircleCrop
 import com.presentation.util.setPasswordTransformation
 import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -142,7 +142,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
                         signUpViewModel.setUserImageFile(ImageProcessingUtil(requireActivity()).uriToFile(uri))
-                        binding.ivProfile.setImage(uri)
+                        binding.ivProfile.setImageCircleCrop(uri)
                     }
                 }
             }

@@ -8,7 +8,7 @@ import com.domain.model.ReviewDetail
 
 fun Review.toEntity(): RequestReviewCreate {
     return RequestReviewCreate(
-        ticketId = ticketId,
+        scheduleId = scheduleId,
         content = content,
         spoiler = spoiler,
         emotion = emotion
@@ -38,6 +38,6 @@ fun ResponseReviewDetail.toEntity(): ReviewDetail {
 
 fun Review.toEditEntity(): RequestReviewEdit {
     return RequestReviewEdit(
-        content = content, spoiler = spoiler, emotion = emotion
+        scheduleId = scheduleId, content = content, spoiler = spoiler, emotion = emotion
     )
 }

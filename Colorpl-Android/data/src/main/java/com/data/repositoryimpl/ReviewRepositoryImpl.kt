@@ -29,7 +29,6 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
                 FormDataConverterUtil.getNullableMultiPartBody("file", file)
             Timber.d("review: ${filePart}\n request:$requestPart")
             reviewDataSource.createReview(
-                ticketId = request.ticketId,
                 review = filePart,
                 request = requestPart
             )
@@ -55,6 +54,16 @@ class ReviewRepositoryImpl @Inject constructor(private val reviewDataSource: Rev
         emit(safeApiCall {
             reviewDataSource.editReview(reviewId, requestReviewEdit)
         })
+    }
+
+    override suspend fun addEmpathize(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>> = flow {
+        emit(safeApiCall {
+            reviewDataSource.addEmpathize(reviewId)
+        })
+    }
+
+    override suspend fun deleteEmpathize(reviewId: Int): Flow<ApiResult<ResponseReviewEdit>> = flow {
+        emit(safeApiCall { reviewDataSource.deleteEmpathize(reviewId) })
     }
 
 }

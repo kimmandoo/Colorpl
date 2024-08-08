@@ -18,6 +18,13 @@ interface TicketApi {
         @Part file: MultipartBody.Part,
     ): Int
 
+    @Multipart
+    @POST("schedules/reservation")
+    suspend fun createReservationTicket(
+        @Part("request") request: RequestBody,
+        @Part file: MultipartBody.Part,
+    ): Int
+
     @GET("schedules")
     suspend fun getAllTicket(): List<ResponseTicket>
 

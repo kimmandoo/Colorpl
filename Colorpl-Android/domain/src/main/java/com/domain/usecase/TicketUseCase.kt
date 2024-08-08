@@ -12,6 +12,11 @@ interface TicketUseCase {
         ticket: TicketRequest
     ): Flow<DomainResult<Int>>
 
+    fun createReservationTicket(
+        image: File,
+        ticket: Int
+    ): Flow<DomainResult<Int>>
+
     suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>>
 
     suspend fun getMonthlyTicket(

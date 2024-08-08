@@ -1,5 +1,6 @@
 package com.data.repository
 
+import com.data.model.request.RequestReservationTicketCreate
 import com.data.model.request.RequestTicketCreate
 import com.data.model.response.ResponseTicket
 import com.data.model.response.ResponseTicketCreate
@@ -11,6 +12,10 @@ interface TicketRepository {
     suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
+    ): Flow<ApiResult<Int>>
+    suspend fun createReservationTicket(
+        ticket: File,
+        request: RequestReservationTicketCreate
     ): Flow<ApiResult<Int>>
     suspend fun getAllTicket(): Flow<ApiResult<List<ResponseTicket>>>
     suspend fun getMonthlyTicket(date: String): Flow<ApiResult<List<ResponseTicket>>>
