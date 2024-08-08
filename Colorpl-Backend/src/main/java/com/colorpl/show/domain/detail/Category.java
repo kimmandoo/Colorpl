@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public enum Category {
-    MOVIE("영화"),
     PLAY("연극"),
+    MOVIE("영화"),
+    PERFORMANCE("공연"),
     CONCERT("콘서트"),
-    CIRCUS("서커스"),
-    EXHIBITION("전시회");
+    MUSICAL("뮤지컬"),
+    EXHIBITION("전시회"),
+    ETC("기타");
 
     private final String name;
 
@@ -28,14 +30,13 @@ public enum Category {
         for (Category e : values()) {
             stringToEnum.put(e.toString(), e);
         }
-        stringToEnum.put("무용(서양/한국무용)", PLAY);
-        stringToEnum.put("대중무용", CONCERT);
+        stringToEnum.put("무용(서양/한국무용)", PERFORMANCE);
+        stringToEnum.put("대중무용", PERFORMANCE);
         stringToEnum.put("서양음악(클래식)", CONCERT);
         stringToEnum.put("한국음악(국악)", CONCERT);
         stringToEnum.put("대중음악", CONCERT);
-        stringToEnum.put("복합", CIRCUS);
-        stringToEnum.put("서커스/마술", CIRCUS);
-        stringToEnum.put("뮤지컬", PLAY);
+        stringToEnum.put("복합", ETC);
+        stringToEnum.put("서커스/마술", PERFORMANCE);
     }
 
     public static Optional<Category> fromString(String name) {
