@@ -1,9 +1,11 @@
 package com.colorpl.show.ui;
 
-import com.colorpl.show.application.CreateShowService;
-import com.colorpl.show.query.application.ShowDetailListService;
-import com.colorpl.show.query.dao.ShowDetailSearchCondition;
-import com.colorpl.show.query.dto.ShowDetailListResponse;
+import com.colorpl.show.dto.CreateByApiIdRequest;
+import com.colorpl.show.dto.CreateByDateRequest;
+import com.colorpl.show.dto.SearchShowDetailCondition;
+import com.colorpl.show.dto.ShowDetailListResponse;
+import com.colorpl.show.service.CreateShowService;
+import com.colorpl.show.service.SearchShowDetailService;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +23,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class ShowController {
 
+    private final SearchShowDetailService searchShowDetailService;
     private final CreateShowService createShowService;
-    private final ShowDetailListService showDetailListService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<ShowDetailListResponse>> getShowDetailList(
-        @ModelAttribute ShowDetailSearchCondition condition) {
-
-        return ResponseEntity.ok(showDetailListService.showDetailList(condition));
+    @GetMapping
+    public ResponseEntity<List<ShowDetailListResponse>> search(
+        @ModelAttribute SearchShowDetailCondition condition) {
+        return ResponseEntity.ok(searchShowDetailService.search(condition));
     }
 
     @PostMapping("/create")

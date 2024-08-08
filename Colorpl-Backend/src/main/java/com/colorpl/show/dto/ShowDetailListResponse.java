@@ -1,4 +1,4 @@
-package com.colorpl.show.query.dto;
+package com.colorpl.show.dto;
 
 import com.colorpl.show.domain.detail.Category;
 import com.colorpl.show.domain.detail.ShowDetail;

@@ -10,7 +10,7 @@ public class CategoryFormatter implements Formatter<Category> {
 
     @Override
     public Category parse(String text, Locale locale) throws ParseException {
-        return Category.fromString(text).orElseThrow(CategoryNotFoundException::new);
+        return Category.fromString(text).orElseThrow(() -> new CategoryNotFoundException(text));
     }
 
     @Override
