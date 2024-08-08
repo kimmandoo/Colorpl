@@ -8,6 +8,7 @@
     <string name="my_page_my_review">나의리뷰</string>
     <string name="my_page_search_user">유저찾기</string>
 
+
     <string name="my_page_nick_name">닉네임</string>
     <string name="my_page_nick_name_error">닉네임을 입력해주세요.</string>
     <string name="my_page_update_complete">수정 완료</string>
@@ -15,7 +16,8 @@
     <string name="my_page_review_count">리뷰수</string>
     <string name="my_page_un_review_count">미등록 리뷰 : </string>
     <string name="my_page_use_review_count">등록 리뷰 : </string>
-
+    <string name="my_page_follow_request">팔로우 신청</string>
+    <string name="my_page_follow_cancel">팔로우 취소</string>
     <string name="my_page_payment_title">작품명</string>
     <string name="my_page_payment_price">결제금액</string>
     <string name="my_page_payment_sit">좌석</string>
