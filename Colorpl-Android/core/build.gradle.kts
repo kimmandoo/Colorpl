@@ -98,7 +98,7 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
-    implementation("com.squareup.retrofit2:converter-scalars:2.6.4")
+    implementation(libs.retrofit.converter.sclars)
     // Maps
     implementation(libs.play.services.location)
     implementation(libs.naver.maps)
