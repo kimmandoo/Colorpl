@@ -9,6 +9,9 @@ from app.routers.member import router as router_member
 from app.routers.schedule import router as router_schedule
 from app.routers.review import router as router_review
 from app.routers.comment import router as router_comment
+from app.routers.reservation import router as router_reservation
+from app.routers.show import router as router_show
+from app.routers.theater import router as router_theater
 
 app = FastAPI()
 
@@ -26,7 +29,9 @@ app.include_router(router_member, prefix='/cs', tags=["member"])
 app.include_router(router_schedule, prefix='/cs', tags=["schedule"])
 app.include_router(router_review, prefix='/cs', tags=["review"])
 app.include_router(router_comment, prefix='/cs', tags=["comment"])
-
+app.include_router(router_reservation, prefix='/vm', tags=["reservation"])
+app.include_router(router_show, prefix='/vm', tags=["show"])
+app.include_router(router_theater, prefix='/vm', tags=["theater"])
 
 @app.on_event("startup")
 def on_startup():

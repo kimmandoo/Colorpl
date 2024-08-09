@@ -9,11 +9,11 @@ class BaseEntity:
 
 class Comment(Base, BaseEntity):
     __tablename__ = 'comment'
-    comment_id = Column(BigInteger, primary_key=True, index=True)
-    content = Column(String(255))
     member_id = Column(Integer, ForeignKey('member.member_id'))
+    comment_id = Column(BigInteger, primary_key=True, index=True)
     review_id = Column(BigInteger, ForeignKey('review.review_id'))
-
+    content = Column(String(255))
+    
     member = relationship("Member", back_populates="comments")
     review = relationship("Review", back_populates="comments")
 
@@ -24,6 +24,16 @@ class Empathy(Base):
 
     member = relationship("Member", back_populates="empathies")
     review = relationship("Review", back_populates="empathies")
+
+class Hall(Base):
+    __tablename__ = 'hall'
+    hall_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    theater_id = Column(Integer, ForeignKey('theater.theater_id'), primary_key=True)
+    hall_api_id = Column(String(255))
+    hall_name = Column(String(255))
+
+    theater = relationship("Theater", back_populates="halls")
+    show_details = relationship("ShowDetail", back_populates="hall")
 
 class Member(Base, BaseEntity):
     __tablename__ = 'member'
@@ -56,21 +66,21 @@ class PriceBySeatClass(Base):
 
 class Reservation(Base, BaseEntity):
     __tablename__ = 'reservation'
+    is_refunded = Column(Boolean)
+    member_id = Column(Integer, ForeignKey('member.member_id'))
+    reserve_date = Column(DateTime)
     reserve_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     reserve_amount = Column(String(255))
     reserve_comment = Column(String(255))
-    reserve_date = Column(DateTime)
-    is_refunded = Column(Boolean)
-    member_id = Column(Integer, ForeignKey('member.member_id'))
 
     member = relationship("Member", back_populates="reservations")
     details = relationship("ReservationDetail", back_populates="reservation")
 
-class ReservationDetail(Base):
+class ReservationDetail(Base, BaseEntity):
     __tablename__ = 'reservation_detail'
-    reserve_detail_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     seat_col = Column(Integer)
     seat_row = Column(Integer)
+    reserve_detail_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     reserve_id = Column(BigInteger, ForeignKey('reservation.reserve_id'))
     show_schedule_id = Column(BigInteger, ForeignKey('show_schedule.show_schedule_id'))
 
@@ -79,13 +89,13 @@ class ReservationDetail(Base):
 
 class Review(Base, BaseEntity):
     __tablename__ = 'review'
-    review_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
-    review_content = Column(String(255))
-    review_emotion = Column(Integer)
     # empathy_number = Column(Integer)
-    review_filename = Column(String(255))
     is_spoiler = Column(Boolean)
+    review_emotion = Column(Integer)
+    review_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     schedule_id = Column(BigInteger, ForeignKey('schedule.schedule_id'))
+    review_content = Column(String(255))
+    review_filename = Column(String(255))
 
     comments = relationship("Comment", back_populates="review")
     empathies = relationship("Empathy", back_populates="review")
@@ -122,6 +132,7 @@ class Seat(Base):
 
 class ShowDetail(Base):
     __tablename__ = 'show_detail'
+    hall_id = Column(Integer, ForeignKey('hall.hall_id'))
     show_detail_id = Column(BigInteger, primary_key=True, index=True)
     show_detail_api_id = Column(String(255))
     show_detail_area = Column(String(255))
@@ -132,12 +143,13 @@ class ShowDetail(Base):
     show_detail_poster_image_path = Column(String(255))
     show_detail_runtime = Column(String(255))
     show_detail_state = Column(Enum('COMPLETED', 'SCHEDULED', 'SHOWING'))
-    theater_id = Column(BigInteger, ForeignKey('theater.theater_id'))
+    # theater_id = Column(BigInteger, ForeignKey('theater.theater_id'))
 
     price_by_seat_classes = relationship("PriceBySeatClass", back_populates="show_detail")
     schedules = relationship("ShowSchedule", back_populates="show_detail")
     seats = relationship("Seat", back_populates="show_detail")
-    theater = relationship("Theater", back_populates="show_details")
+    hall = relationship("Hall", back_populates="show_details")
+    # theater = relationship("Theater", back_populates="show_details")
 
 class ShowSchedule(Base):
     __tablename__ = 'show_schedule'
@@ -150,11 +162,12 @@ class ShowSchedule(Base):
 
 class Theater(Base):
     __tablename__ = 'theater'
-    theater_id = Column(BigInteger, primary_key=True, index=True)
-    theater_address = Column(String(255))
-    theater_api_id = Column(String(255))
+    theater_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     theater_latitude = Column(Float)
     theater_longitude = Column(Float)
+    theater_address = Column(String(255))
+    theater_api_id = Column(String(255))
     theater_name = Column(String(255))
 
-    show_details = relationship("ShowDetail", back_populates="theater")
+    # show_details = relationship("ShowDetail", back_populates="theater")
+    halls = relationship("Hall", back_populates="theater")
