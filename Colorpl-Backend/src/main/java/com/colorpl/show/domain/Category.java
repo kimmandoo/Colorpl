@@ -1,4 +1,4 @@
-package com.colorpl.show.domain.detail;
+package com.colorpl.show.domain;
 
 import java.util.HashMap;
 import java.util.Map;

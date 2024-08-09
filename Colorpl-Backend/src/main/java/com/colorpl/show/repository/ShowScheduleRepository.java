@@ -1,7 +1,7 @@
 package com.colorpl.show.repository;
 
-import com.colorpl.show.domain.detail.ShowDetail;
-import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.domain.ShowSchedule;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

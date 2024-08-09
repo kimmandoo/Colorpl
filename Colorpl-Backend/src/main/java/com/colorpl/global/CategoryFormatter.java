@@ -1,7 +1,7 @@
 package com.colorpl.global;
 
 import com.colorpl.global.common.exception.CategoryNotFoundException;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import java.text.ParseException;
 import java.util.Locale;
 import org.springframework.format.Formatter;

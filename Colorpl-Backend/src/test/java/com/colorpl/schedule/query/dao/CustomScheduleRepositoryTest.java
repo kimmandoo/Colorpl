@@ -8,7 +8,7 @@ import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.dto.SearchScheduleCondition;
 import com.colorpl.schedule.repository.CustomScheduleRepository;
 import com.colorpl.schedule.repository.ScheduleRepository;
-import com.colorpl.show.domain.detail.Category;
+import com.colorpl.show.domain.Category;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

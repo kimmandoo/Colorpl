@@ -1,7 +1,7 @@
 package com.colorpl.reservation.domain;
 
 import com.colorpl.global.common.BaseEntity;
-import com.colorpl.show.domain.schedule.ShowSchedule;
+import com.colorpl.show.domain.ShowSchedule;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,6 +1,6 @@
 package com.colorpl.show.dto;
 
-import com.colorpl.show.domain.detail.ShowDetail;
+import com.colorpl.show.domain.ShowDetail;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
