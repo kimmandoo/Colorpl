@@ -9,7 +9,6 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.colorpl.presentation.BuildConfig
 import com.colorpl.presentation.R
 import com.domain.model.Seat
 import com.presentation.util.Category
@@ -18,8 +17,6 @@ import com.presentation.util.Sign
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
 
@@ -34,7 +31,7 @@ fun loadImage(imageView: ImageView, image: Drawable?) {
 fun loadImage(imageView: ImageView, image: String?) {
     Glide.with(imageView.context)
         //이부분 서버에서 바꿔주신데
-        .load("https://i11d109.p.ssafy.io/image/"+image)
+        .load("https://i11d109.p.ssafy.io/image/" + image)
         .transform(CircleCrop())
         .into(imageView)
 }
@@ -147,8 +144,8 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
                 context.getString(R.string.sign_up_category_musical)
             }
 
-            Category.CIRCUS_MAGIC -> {
-                context.getString(R.string.sign_up_category_circus)
+            Category.CONCERT -> {
+                context.getString(R.string.sign_up_category_concert)
             }
 
             Category.EXHIBITION -> {
@@ -176,7 +173,7 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_musical)
             }
 
-            Category.CIRCUS_MAGIC -> {
+            Category.CONCERT -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_circus)
             }
 
@@ -239,7 +236,8 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
     val tomorrow = today.plusDays(1)
     val selectedDateTitle = "${view.context.getString(R.string.reservation_selected_title)} : "
     val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
-    val formattedDate = dateFormat.format(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+    val formattedDate =
+        dateFormat.format(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()))
     view.text = if (setTitle) {
         val subText = when (date) {
             today -> " ${view.context.getString(R.string.reservation_date_today)}"
@@ -257,7 +255,8 @@ fun setSelectedDate(view: TextView, date: LocalDate, setTitle: Boolean) {
 fun setSearchDate(view: TextView, date: LocalDate?) {
     date?.let {
         val dateFormat = SimpleDateFormat("yyyy.MM.dd (E)", Locale.KOREAN)
-        val formattedDate = dateFormat.format(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+        val formattedDate =
+            dateFormat.format(Date.from(it.atStartOfDay(ZoneId.systemDefault()).toInstant()))
         view.text = formattedDate
     } ?: run {
         view.text = "날짜"
