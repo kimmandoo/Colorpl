@@ -45,7 +45,7 @@ class ProfileUpdateFragment :
         binding.apply {
             profileUpdateViewModel.setUpdateNickName(data.nickName.toString())
             tiEtNickName.setText(data.nickName.toString())
-            ivProfileImg.setImageCircleCrop(data.profileImage.toString())
+            ivProfileImg.setImageCircleCrop(data.profileImage.toString(),true)
         }
     }
 
@@ -99,7 +99,7 @@ class ProfileUpdateFragment :
     }
 
     private fun initClickEvent() {
-        binding.ivBack.setOnClickListener {
+        binding.includeTop.clBack.setOnClickListener {
             navigatePopBackStack()
         }
 

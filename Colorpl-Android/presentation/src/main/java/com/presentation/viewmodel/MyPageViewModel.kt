@@ -2,8 +2,12 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.domain.model.Feed
 import com.domain.model.Member
 import com.domain.model.TicketResponse
+import com.domain.usecase.FeedUseCase
 import com.domain.usecase.TicketUseCase
 import com.domain.usecaseimpl.member.GetMemberInfoUseCase
 import com.domain.util.DomainResult
@@ -27,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val getMemberInfoUseCase: GetMemberInfoUseCase,
-    private val ticketUseCase: TicketUseCase
+    private val ticketUseCase: TicketUseCase,
+    private val getPagedFeedUseCase: FeedUseCase,
 ) : ViewModel() {
 
 
@@ -43,7 +48,7 @@ class MyPageViewModel @Inject constructor(
     }
 
 
-    fun getMemberInfo(type : Boolean = false, memberId : Int = 0) {
+    fun getMemberInfo(type: Boolean = false, memberId: Int = 0) {
         viewModelScope.launch {
             getMemberInfoUseCase.getMemberInfo(type, memberId).collectLatest { result ->
                 when (result) {
@@ -76,6 +81,7 @@ class MyPageViewModel @Inject constructor(
 
     private val _myPageEventState = MutableSharedFlow<MyPageEventState>()
     val myPageEventState: SharedFlow<MyPageEventState> get() = _myPageEventState
+
 
 
     init {
@@ -121,6 +127,7 @@ class MyPageViewModel @Inject constructor(
             ZonedDateTime.parse(it.dateTime + "Z", formatter).toInstant().isAfter(nowDate)
         })
     }
+
 
 
 }

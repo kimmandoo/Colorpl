@@ -8,7 +8,10 @@ import com.data.model.paging.Feed
 import com.data.util.ApiResult
 import timber.log.Timber
 
-class FeedPagingSource(private val feedDataSource: FeedDataSource) :
+class FeedPagingSource(
+    private val feedDataSource: FeedDataSource,
+    private val type: Boolean? = ALL
+) :
     PagingSource<Int, Feed>() {
     override fun getRefreshKey(state: PagingState<Int, Feed>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -19,9 +22,13 @@ class FeedPagingSource(private val feedDataSource: FeedDataSource) :
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Feed> {
         val nextPage = params.key ?: 0
-
+        val response = if (type == ALL) {
+            feedDataSource.getFeed(nextPage, params.loadSize)
+        } else {
+            feedDataSource.getMyFeedData(nextPage, params.loadSize)
+        }
         return when (val result =
-            safeApiCall { feedDataSource.getFeed(nextPage, params.loadSize) }) {
+            safeApiCall { response }) {
             is ApiResult.Success -> {
                 Timber.tag("pager").d("${result.data}")
                 val response = result.data.items.sortedByDescending { it.createdate }
@@ -39,5 +46,10 @@ class FeedPagingSource(private val feedDataSource: FeedDataSource) :
                 LoadResult.Error(result.exception)
             }
         }
+    }
+
+    companion object {
+        const val ALL = true
+        const val MY = false
     }
 }

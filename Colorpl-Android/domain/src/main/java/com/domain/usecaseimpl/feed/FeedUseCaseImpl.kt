@@ -13,8 +13,19 @@ import javax.inject.Inject
 
 class FeedUseCaseImpl @Inject constructor(private val feedRepository: FeedRepository) :
     FeedUseCase {
-    override fun invoke(): Flow<PagingData<Feed>> {
+
+    override fun getPagedFeed(): Flow<PagingData<Feed>> {
         return feedRepository.getPagedFeed()
+            .map { pagingData ->
+                Timber.tag("pagerUseCase").d("$pagingData")
+                pagingData.map { feed ->
+                    feed.toEntity()
+                }
+            }
+    }
+
+    override fun getPagedMyFeed(): Flow<PagingData<Feed>> {
+        return feedRepository.getPagedMyFeed()
             .map { pagingData ->
                 Timber.tag("pagerUseCase").d("$pagingData")
                 pagingData.map { feed ->
