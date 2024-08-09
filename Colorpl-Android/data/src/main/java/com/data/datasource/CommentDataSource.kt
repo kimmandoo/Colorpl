@@ -12,6 +12,7 @@ interface CommentDataSource {
 
     suspend fun getComment(reviewId: Int, page: Int, size: Int): ResponsePagedComment
     suspend fun editComment(
+        reviewId: Int,
         commentId: Int,
         requestEditComment: RequestCreateComment
     ): ResponseCommentEdit

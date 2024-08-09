@@ -31,7 +31,7 @@ class FeedPagingSource(
             safeApiCall { response }) {
             is ApiResult.Success -> {
                 Timber.tag("pager").d("${result.data}")
-                val response = result.data.items
+                val response = result.data.items.sortedByDescending { it.createdate }
                 Timber.tag("pager").d("${response}")
 
                 LoadResult.Page(

@@ -15,6 +15,7 @@ interface CommentRepository {
     ): Flow<ApiResult<ResponseCommentEdit>>
 
     suspend fun editComment(
+        reviewId: Int,
         commentId: Int,
         requestEditComment: RequestCreateComment
     ): Flow<ApiResult<ResponseCommentEdit>>

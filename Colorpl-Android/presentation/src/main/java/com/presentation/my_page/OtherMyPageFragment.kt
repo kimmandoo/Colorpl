@@ -29,8 +29,7 @@ class OtherMyPageFragment :
             onFeedContentClickListener = { id ->
 
             },
-            onCommentClickListener = { },
-            onEmotionClickListener = { },
+            onEmotionClickListener = { id, isEmpathy -> },
             onReportClickListener = { },
             onUserClickListener = { }
         )

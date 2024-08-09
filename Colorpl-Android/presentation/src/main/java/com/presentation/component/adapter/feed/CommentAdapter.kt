@@ -9,11 +9,8 @@ import com.domain.model.Comment
 import com.presentation.base.BaseDiffUtil
 
 class CommentAdapter(
-    private val onEditClickListener: () -> Unit,
-    private val onDeleteClickListener: () -> Unit,
-    private val onEmotionClickListener: () -> Unit,
-    private val onReportClickListener: () -> Unit,
-    private val onUserClickListener: () -> Unit,
+    private val onEditClickListener: (Comment) -> Unit,
+    private val onDeleteClickListener: (Int) -> Unit
 ) : PagingDataAdapter<Comment, ViewHolder>(BaseDiffUtil<Comment>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -99,8 +99,9 @@ interface FeedApi {
     ): ResponsePagedComment
 
     // 특정 댓글 수정
-    @PUT("comments/{commentId}")
+    @PUT("comments/reviews/{reviewId}/{commentId}")
     suspend fun editCommentData(
+        @Path("reviewId") reviewId: Int,
         @Path("commentId") commentId: Int,
         @Body requestEditComment: RequestCreateComment
     ): ResponseCommentEdit
