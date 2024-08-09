@@ -21,7 +21,6 @@ import com.presentation.viewmodel.ProfileUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -43,9 +42,10 @@ class ProfileUpdateFragment :
         val safeArgs: ProfileUpdateFragmentArgs by navArgs()
         val data = safeArgs.member
         binding.apply {
-            profileUpdateViewModel.setUpdateNickName(data.nickName.toString())
-            tiEtNickName.setText(data.nickName.toString())
-            ivProfileImg.setImageCircleCrop(data.profileImage.toString())
+            val nickName = data.nickName ?: getString(R.string.my_page_default_name)
+            profileUpdateViewModel.setUpdateNickName(nickName)
+            tiEtNickName.setText(nickName)
+            ivProfileImg.setImageCircleCrop(data.profileImage.toString(), true)
         }
     }
 
@@ -72,13 +72,12 @@ class ProfileUpdateFragment :
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
-                        Timber.d("uri 확인 $uri")
                         binding.ivProfileImg.setImageCircleCrop(uri)
                         binding.tvComplete.isSelected = true
                         profileUpdateViewModel.setUpdateProfileImageFile(
                             ImageProcessingUtil(
                                 requireActivity()
-                            ).uriToFile(uri)
+                            ).uriToCompressedFile(uri)
                         )
 
                     }

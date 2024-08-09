@@ -2,17 +2,13 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.domain.model.Member
 import com.domain.usecaseimpl.member.UpdateMemberInfoUseCase
 import com.domain.util.DomainResult
-import com.presentation.my_page.model.MemberUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -36,7 +32,7 @@ class ProfileUpdateViewModel @Inject constructor(
     }
 
     private val _updateSuccess = MutableSharedFlow<Boolean>()
-    val updateSuccess : SharedFlow<Boolean> get() = _updateSuccess
+    val updateSuccess: SharedFlow<Boolean> get() = _updateSuccess
 
     fun updateMemberInfo() {
         viewModelScope.launch {
@@ -44,10 +40,11 @@ class ProfileUpdateViewModel @Inject constructor(
                 _updateNickName.value,
                 _profileImageFile.value
             ).collectLatest { result ->
-                when(result){
+                when (result) {
                     is DomainResult.Success -> {
                         _updateSuccess.emit(true)
                     }
+
                     is DomainResult.Error -> {
                         _updateSuccess.emit(false)
                     }
