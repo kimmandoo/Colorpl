@@ -107,7 +107,7 @@ class OtherMyPageFragment :
 
     private fun initClickEvent() {
         binding.apply {
-            ivBack.setOnClickListener {
+            clBack.setOnClickListener {
                 navigatePopBackStack()
             }
             ivTicketStar.postDelayed(300L) {

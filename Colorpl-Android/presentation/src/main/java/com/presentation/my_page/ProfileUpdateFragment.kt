@@ -99,7 +99,7 @@ class ProfileUpdateFragment :
     }
 
     private fun initClickEvent() {
-        binding.ivBack.setOnClickListener {
+        binding.includeTop.clBack.setOnClickListener {
             navigatePopBackStack()
         }
 
