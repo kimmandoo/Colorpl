@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.Seat
 import com.domain.model.TimeTable
+import com.domain.usecase.ReservationScheduleUseCase
 import com.domain.usecase.ReservationUseCase
+import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReservationViewModel @Inject constructor(
     private val getReservationUseCase: ReservationUseCase,
+    private val getReservationScheduleUseCase: ReservationScheduleUseCase
 
 ) : ViewModel() {
     private val _reservationImg = MutableStateFlow("")
@@ -60,5 +63,24 @@ class ReservationViewModel @Inject constructor(
 
     fun setReservationSeat(seatList: List<Seat>) {
         _reservationSeat.value = seatList
+    }
+
+    fun getReservationSchedule(
+        showDetailId: Int,
+        date: String
+    ) {
+        viewModelScope.launch {
+            getReservationScheduleUseCase(showDetailId, date).collect { response ->
+                when (response) {
+                    is DomainResult.Success -> {
+                        Timber.tag(this.javaClass.simpleName).d("${response.data}")
+                        Timber.d("예약 정보 조회 성공")
+                    }
+                    is DomainResult.Error -> {
+                        Timber.d("예약 정보 조회 실패")
+                    }
+                }
+            }
+        }
     }
 }
