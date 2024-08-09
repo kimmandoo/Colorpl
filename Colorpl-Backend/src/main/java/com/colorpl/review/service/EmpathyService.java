@@ -1,5 +1,7 @@
 package com.colorpl.review.service;
 
+import com.colorpl.global.common.exception.MemberNotFoundException;
+import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
@@ -26,10 +28,10 @@ public class EmpathyService {
     @Transactional
     public void addEmpathy(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
+                .orElseThrow(MemberNotFoundException::new);
 
         EmpathyId empathyId = new EmpathyId(reviewId, memberId);
 
@@ -46,10 +48,10 @@ public class EmpathyService {
     @Transactional
     public void removeEmpathy(Long reviewId, Integer memberId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
+                .orElseThrow(MemberNotFoundException::new);
 
         EmpathyId empathyId = new EmpathyId(reviewId, memberId);
 
