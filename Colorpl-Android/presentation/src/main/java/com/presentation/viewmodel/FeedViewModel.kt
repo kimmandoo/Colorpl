@@ -12,6 +12,7 @@ import com.domain.usecase.CommentUseCase
 import com.domain.usecase.FeedUseCase
 import com.domain.usecase.ReviewDeleteUseCase
 import com.domain.usecase.ReviewEditUseCase
+import com.domain.usecase.ReviewEmpathyUseCase
 import com.domain.usecaseimpl.review.GetReviewDetailUseCase
 import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,8 @@ class FeedViewModel @Inject constructor(
     private val commentUseCase: CommentUseCase,
     private val getReviewDetailUseCase: GetReviewDetailUseCase,
     private val reviewEditUseCase: ReviewEditUseCase,
-    private val reviewDeleteUseCase: ReviewDeleteUseCase
+    private val reviewDeleteUseCase: ReviewDeleteUseCase,
+    private val reviewEmpathyUseCase: ReviewEmpathyUseCase
 ) : ViewModel() {
     private val _pagedFeed = MutableStateFlow<PagingData<Feed>?>(null)
     val pagedFeed = _pagedFeed
@@ -40,6 +42,8 @@ class FeedViewModel @Inject constructor(
     val reviewEditResponse = _reviewEditResponse.asSharedFlow()
     private val _reviewDeleteResponse = MutableSharedFlow<Int>()
     val reviewDeleteResponse = _reviewDeleteResponse.asSharedFlow()
+    private val _refreshTrigger = MutableSharedFlow<Unit>()
+    val refreshTrigger = _refreshTrigger.asSharedFlow()
 
     //리뷰 상세
     private val _reviewDetail = MutableStateFlow(ReviewDetail())
@@ -47,6 +51,28 @@ class FeedViewModel @Inject constructor(
 
     init {
         getFeed()
+    }
+
+    fun toggleEmpathy(reviewId: Int, isEmpathy: Boolean) {
+        viewModelScope.launch {
+            val result = if (isEmpathy) {
+                reviewEmpathyUseCase.removeEmpathy(reviewId)
+            } else {
+                reviewEmpathyUseCase.addEmpathy(reviewId)
+            }
+
+            result.collect {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.tag("empathy").d("${it.exception}")
+                    }
+                    is DomainResult.Success -> {
+                        getFeed()
+                        _refreshTrigger.emit(Unit)
+                    }
+                }
+            }
+        }
     }
 
     fun deleteReview(reviewId: Int) {
@@ -65,6 +91,7 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
+
     fun editReview(reviewId: Int, review: Review) {
         viewModelScope.launch {
             reviewEditUseCase(reviewId, requestReviewEdit = review).collect {

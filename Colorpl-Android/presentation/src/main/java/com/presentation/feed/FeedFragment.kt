@@ -15,8 +15,10 @@ import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.getFilterItems
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -33,17 +35,22 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             onFeedContentClickListener = { id ->
                 onFeedContentClickListener(id)
             },
-            onCommentClickListener = { onCommentClickListener() },
-            onEmotionClickListener = { onEmotionClickListener() },
+            onEmotionClickListener = { id, isEmpathy -> onEmotionClickListener(id, isEmpathy) },
             onReportClickListener = { onReportClickListener() },
-            onUserClickListener = { onUserClickListener() }
+            onUserClickListener = { onUserClickListener() },
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        feedAdapter.refresh()
     }
 
     override fun initView() {
         initFilter()
         initFeed()
         onFeedRegisterClickListener()
+        observeRefreshTrigger()
     }
 
     private fun initFilter() {
@@ -58,6 +65,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         binding.rvFeed.apply {
             adapter = feedAdapter
             itemAnimator = null
+            setHasFixedSize(true)
         }
         val loading = LoadingDialog(requireContext())
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
@@ -71,6 +79,14 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                 val isLoading = loadStates.source.refresh is LoadState.Loading
                 if (!isLoading) loading.dismiss() else loading.show()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeRefreshTrigger() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.refreshTrigger.collectLatest {
+                feedAdapter.refresh()
+            }
+        }
     }
 
     private fun onFilterClickListener(clickedItem: FilterItem) {
@@ -88,16 +104,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     private fun onFeedContentClickListener(reviewId: Int) {
         navigateDestinationBundle(
             R.id.action_fragment_feed_to_fragment_feed_detail,
-            bundleOf()
+            bundleOf("REVIEW_ID" to reviewId)
         )
     }
 
-    private fun onCommentClickListener() {
-
-    }
-
-    private fun onEmotionClickListener() {
-
+    private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {
+        viewModel.toggleEmpathy(id, isEmpathy)
     }
 
     private fun onReportClickListener() {
