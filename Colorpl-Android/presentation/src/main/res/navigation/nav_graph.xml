@@ -23,7 +23,6 @@
                 android:defaultValue="0"
                 app:argType="integer" />
 
-
         </action>
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
@@ -66,7 +65,12 @@
         android:id="@+id/fragment_feed_detail"
         android:name="com.presentation.feed.FeedDetailFragment"
         android:label="FeedDetailFragment"
-        tools:layout="@layout/fragment_feed_detail" />
+        tools:layout="@layout/fragment_feed_detail">
+        <argument
+            android:name="reviewId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </dialog>
 
     <dialog
         android:id="@+id/fragment_feed_ticket_select"

@@ -66,8 +66,8 @@ class FeedViewModel @Inject constructor(
                     is DomainResult.Error -> {
                         Timber.tag("empathy").d("${it.exception}")
                     }
+
                     is DomainResult.Success -> {
-                        getFeed()
                         _refreshTrigger.emit(Unit)
                     }
                 }
@@ -98,11 +98,12 @@ class FeedViewModel @Inject constructor(
                 when (it) {
                     is DomainResult.Success -> {
                         _reviewEditResponse.emit(it.data)
+                        getReviewDetail(reviewId)
                     }
 
                     is DomainResult.Error -> {
                         _reviewEditResponse.emit(-1)
-                        Timber.d("review edit에러 ${it.exception}")
+                        Timber.d("review edit 에러 ${it.exception}")
                     }
                 }
             }

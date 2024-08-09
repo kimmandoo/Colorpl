@@ -16,7 +16,7 @@ class FeedAdapter(
     private val onReportClickListener: () -> Unit,
     private val onUserClickListener: () -> Unit,
 
-    ) : PagingDataAdapter<Feed, ViewHolder>(BaseDiffUtil<Feed>()) {
+    ) : PagingDataAdapter<Feed, ViewHolder>(feedCustomDiffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemFeedBinding.inflate(layoutInflater)
@@ -60,7 +60,7 @@ class FeedAdapter(
     companion object {
         private val feedCustomDiffUtil = object : DiffUtil.ItemCallback<Feed>() {
             override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.hashCode() == newItem.hashCode()
             }
 
             override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {

@@ -30,12 +30,17 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             onFilterClickListener(filterItem)
         })
     }
+    private val loading by lazy {
+        LoadingDialog(requireContext())
+    }
     private val feedAdapter by lazy {
         FeedAdapter(
             onFeedContentClickListener = { id ->
                 onFeedContentClickListener(id)
             },
-            onEmotionClickListener = { id, isEmpathy -> onEmotionClickListener(id, isEmpathy) },
+            onEmotionClickListener = { id, isEmpathy ->
+                onEmotionClickListener(id, isEmpathy)
+            },
             onReportClickListener = { onReportClickListener() },
             onUserClickListener = { onUserClickListener() },
         )
@@ -65,9 +70,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         binding.rvFeed.apply {
             adapter = feedAdapter
             itemAnimator = null
-            setHasFixedSize(true)
         }
-        val loading = LoadingDialog(requireContext())
+
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
                 feedAdapter.submitData(feed)
@@ -102,10 +106,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     }
 
     private fun onFeedContentClickListener(reviewId: Int) {
-        navigateDestinationBundle(
-            R.id.action_fragment_feed_to_fragment_feed_detail,
-            bundleOf("REVIEW_ID" to reviewId)
-        )
+        val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedDetail(reviewId)
+        navigateDestination(action)
     }
 
     private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {

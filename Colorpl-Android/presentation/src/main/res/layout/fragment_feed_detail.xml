@@ -82,8 +82,8 @@
                     android:id="@+id/iv_emotion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="8dp"
+                    android:paddingStart="12dp"
+                    android:paddingVertical="8dp"
                     android:src="@drawable/ic_selected_excited"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_content" />

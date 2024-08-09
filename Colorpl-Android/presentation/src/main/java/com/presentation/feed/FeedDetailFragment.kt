@@ -1,9 +1,11 @@
 package com.presentation.feed
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
@@ -12,6 +14,7 @@ import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.component.dialog.ReviewEditDialog
+import com.presentation.util.setImageCenterCrop
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -25,7 +28,20 @@ class FeedDetailFragment :
     BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
 
     private val feedViewModel: FeedViewModel by viewModels()
-
+    private val args: FeedDetailFragmentArgs by navArgs()
+    private val editDialog: ReviewEditDialog by lazy {
+        ReviewEditDialog(requireContext(), binding.tvContent.text.toString()) {
+            feedViewModel.editReview(
+                feedViewModel.reviewDetail.value.id,
+                Review(
+                    feedViewModel.reviewDetail.value.id,
+                    it,
+                    feedViewModel.reviewDetail.value.spoiler,
+                    feedViewModel.reviewDetail.value.emotion
+                )
+            )
+        }
+    }
     private val commentAdapter by lazy {
         CommentAdapter(
             onEditClickListener = { onEditClickListener() },
@@ -42,6 +58,7 @@ class FeedDetailFragment :
         initAdapter()
         observeReviewDetail()
         observeViewModel()
+        observeRefreshTrigger()
     }
 
     private fun observeViewModel() {
@@ -49,7 +66,14 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.reviewDeleteResponse.collectLatest { reviewId ->
                     if (reviewId > 0) {
-                        Timber.d("리뷰 삭제 성공 $reviewId")
+                        dismiss()
+                    }
+                }
+            }
+            launch {
+                feedViewModel.reviewEditResponse.collectLatest { reviewId ->
+                    if (reviewId > 0) {
+                        editDialog.dismiss()
                     }
                 }
             }
@@ -58,24 +82,13 @@ class FeedDetailFragment :
 
     private fun initData() {
         feedViewModel.getComment(feedId = 1)
-        feedViewModel.getReviewDetail(1)
+        feedViewModel.getReviewDetail(args.reviewId)
     }
 
     private fun initEdit() {
         binding.apply {
             tvEdit.setOnClickListener {
-                val dialog = ReviewEditDialog(requireContext(), binding.tvEdit.text.toString()) {
-                    feedViewModel.editReview(
-                        feedViewModel.reviewDetail.value.id,
-                        Review(
-                            feedViewModel.reviewDetail.value.id,
-                            it,
-                            feedViewModel.reviewDetail.value.spoiler,
-                            feedViewModel.reviewDetail.value.emotion
-                        )
-                    )
-                }
-                dialog.show()
+                editDialog.show()
             }
             tvDelete.setOnClickListener {
                 feedViewModel.deleteReview(feedViewModel.reviewDetail.value.id)
@@ -104,9 +117,52 @@ class FeedDetailFragment :
 
     private fun observeReviewDetail() {
         feedViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach {
-                Timber.d("리뷰 상세 데이터 확인 $it")
+            .onEach { data ->
+                Timber.d("리뷰 상세 데이터 $data")
+                binding.apply {
+                    val ownerOptions = listOf(tvEdit, tvDelete)
+                    tvTitle.text = data.title
+                    tvContent.text = data.content
+                    ivContent.setImageCenterCrop(data.imgUrl)
+                    tvEmotion.text = data.empathy.toString()
+                    tvCommentCnt.text = data.commentCount.toString()
+                    ivEmotion.setImageResource(
+                        when (data.emotion) {
+                            1 -> R.drawable.selector_ic_excited
+                            2 -> R.drawable.selector_ic_love
+                            3 -> R.drawable.selector_ic_tired
+                            4 -> R.drawable.selector_ic_crying
+                            5 -> R.drawable.selector_ic_angry
+                            else -> R.drawable.selector_ic_excited
+                        }
+                    )
+                    ivEmotion.setOnClickListener {
+                        onEmotionClickListener(data.id, data.myEmpathy)
+                    }
+                    ownerOptions.forEach { option ->
+                        option.visibility = if (!data.myReview) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
+                    }
+                    ivEmotion.isSelected = data.myEmpathy
+                    tvProfile.text = data.writer
+                    tvUploadDate.text = data.createDate
+                }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeRefreshTrigger() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            feedViewModel.refreshTrigger.collectLatest {
+                feedViewModel.getReviewDetail(args.reviewId)
+            }
+        }
+    }
+
+    private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {
+        feedViewModel.toggleEmpathy(id, isEmpathy)
     }
 
     private fun onEditClickListener() {
