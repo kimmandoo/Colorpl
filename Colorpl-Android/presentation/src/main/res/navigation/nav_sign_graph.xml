@@ -20,7 +20,8 @@
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_fragment_sign_up_to_fragment_sign_up_preference"
-            app:destination="@id/fragment_sign_up_preference" />
+            app:destination="@id/fragment_sign_up_preference"
+            app:popUpTo="@+id/fragment_login" />
     </fragment>
 
     <dialog

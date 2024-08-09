@@ -52,10 +52,9 @@ class SignInUseCase @Inject constructor(
 
     suspend fun googleSignIn(idToken: String) = flow {
         signRepository.googleSignIn(RequestGoogleSignIn(idToken)).collect { result ->
-            Timber.d("구글 로그인 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    tokenRepository.setSignToken(result.data.toSignTokenParam(idToken))
+                    tokenRepository.setSignToken(result.data.toSignTokenParam(idToken = idToken))
                     emit(DomainResult.success(result.data))
                 }
 

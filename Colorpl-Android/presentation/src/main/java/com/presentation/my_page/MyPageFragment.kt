@@ -74,6 +74,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             .onEach {
                 binding.member = it.memberInfo
                 binding.ivProfileImg.setImageCircleCrop(it.memberInfo?.profileImage, true)
+
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
