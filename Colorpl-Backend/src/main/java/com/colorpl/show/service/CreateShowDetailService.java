@@ -6,8 +6,10 @@ import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowState;
 import com.colorpl.show.dto.ShowDetailApiResponse.Item;
 import com.colorpl.show.repository.ShowDetailRepository;
+import com.colorpl.theater.domain.Hall;
 import com.colorpl.theater.repository.TheaterRepository;
 import com.colorpl.theater.service.CreateTheaterService;
+import com.colorpl.theater.service.GetHallByTheaterApiIdAndTheaterNameService;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +27,12 @@ public class CreateShowDetailService {
     private final CreateTheaterService createTheaterService;
     private final ShowDetailRepository showDetailRepository;
     private final TheaterRepository theaterRepository;
+    private final GetHallByTheaterApiIdAndTheaterNameService getHallByTheaterApiIdAndTheaterNameService;
 
     public ShowDetail create(Item item) {
-        int pos = item.getHall().lastIndexOf('(');
-        String hall = item.getHall().substring(pos + 1, item.getHall().length() - 1);
-        createTheaterService.createTheater(item.getTheaterApiId());
+
+        Hall hall = getHallByTheaterApiIdAndTheaterNameService.getHallByTheaterApiIdAndTheaterName(
+            item.getTheaterApiId(), item.getTheaterName());
 
         ShowDetail showDetail = ShowDetail.builder()
             .apiId(item.getShowApiId())
@@ -42,8 +45,7 @@ public class CreateShowDetailService {
             .category(Category.fromString(item.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(item.getCategory())))
             .state(ShowState.from(item.getState()))
-//            .theater(theater)
-//            .hall(hall)
+            .hall(hall)
             .build();
         createSeatService.create(showDetail);
         showDetailRepository.save(showDetail);

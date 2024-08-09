@@ -1,5 +1,6 @@
 package com.colorpl.theater.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +42,7 @@ public class Theater {
     @Column(name = "THEATER_LONGITUDE")
     private Double longitude;
 
-    @OneToMany(mappedBy = "theater")
+    @Builder.Default
+    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
     private List<Hall> halls = new ArrayList<>();
 }

@@ -21,4 +21,5 @@ public class Messages {
     public static final String COMMENT_NOT_FOUND = "존재하지 않는 댓글 입니다.";
     public static final String SHOW_DETAIL_NOT_FOUND = "존재하지 않는 공연상세입니다.";
     public static final String THEATER_ALREADY_EXISTS = "이미 등록된 공연시설입니다.";
+    public static final String HALL_NOT_FOUND = "존재하지 않는 공연장입니다.";
 }
