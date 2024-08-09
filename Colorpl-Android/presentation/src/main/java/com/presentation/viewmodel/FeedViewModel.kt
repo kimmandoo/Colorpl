@@ -133,9 +133,9 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun createComment(comment: Comment) {
+    fun createComment(reviewId: Int, commentContent: String) {
         viewModelScope.launch {
-            commentUseCase.createComment(comment).collect {
+            commentUseCase.createComment(reviewId, commentContent).collect {
                 when (it) {
                     is DomainResult.Success -> {
                         _commentCreateResponse.emit(it.data)
@@ -150,9 +150,13 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun editComment(comment: Comment) {
+    fun editComment(reviewId: Int, commentId: Int, commentContent: String) {
         viewModelScope.launch {
-            commentUseCase.editComment(comment).collect {
+            commentUseCase.editComment(
+                reviewId = reviewId,
+                commentId = commentId,
+                commentContent = commentContent
+            ).collect {
                 when (it) {
                     is DomainResult.Success -> {
                         _commentEditResponse.emit(it.data)

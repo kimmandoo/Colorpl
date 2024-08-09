@@ -16,6 +16,7 @@ import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.component.dialog.ReviewEditDialog
+import com.presentation.util.hideKeyboard
 import com.presentation.util.setImageCenterCrop
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +45,10 @@ class FeedDetailFragment :
             )
         }
     }
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext())
+    }
+    private lateinit var commentDialog: ReviewEditDialog
 
     private val commentAdapter by lazy {
         CommentAdapter(
@@ -76,6 +81,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.reviewEditResponse.collectLatest { reviewId ->
                     if (reviewId > 0) {
+                        loadingDialog.dismiss()
                         editDialog.dismiss()
                     }
                 }
@@ -92,7 +98,12 @@ class FeedDetailFragment :
         binding.apply {
             ivSendComment.setOnClickListener {
                 if (etComment.text.toString().isNotEmpty()) {
-
+                    binding.root.context.hideKeyboard(requireView())
+                    feedViewModel.createComment(
+                        feedViewModel.reviewDetail.value.id,
+                        etComment.text.toString()
+                    )
+                    etComment.text.clear()
                 }
             }
             tvEdit.setOnClickListener {
@@ -108,6 +119,8 @@ class FeedDetailFragment :
         val loading = LoadingDialog(requireContext())
         binding.apply {
             rvComment.adapter = commentAdapter
+            rvComment.itemAnimator = null
+
             feedViewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .onEach { pagingData ->
                     pagingData?.let { comment ->
@@ -144,18 +157,23 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentDeleteResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    loadingDialog.dismiss()
                     commentAdapter.refresh()
                 }
             }
             launch {
                 feedViewModel.commentEditResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    binding.root.context.hideKeyboard(requireView())
+                    commentDialog.dismiss()
+                    loadingDialog.dismiss()
                     commentAdapter.refresh()
                 }
             }
             launch {
                 feedViewModel.commentCreateResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    loadingDialog.dismiss()
                     commentAdapter.refresh()
                 }
             }
@@ -201,23 +219,20 @@ class FeedDetailFragment :
     }
 
     private fun onCommentEditClickListener(comment: Comment) {
-        val commentDialog =
+        commentDialog =
             ReviewEditDialog(requireContext(), comment.commentContent) { editedContent ->
                 feedViewModel.editComment(
-                    Comment(
-                        comment.id,
-                        comment.reviewId,
-                        comment.memberId,
-                        comment.writer,
-                        editedContent,
-                        comment.createdate
-                    )
+                    reviewId = comment.reviewId,
+                    commentId = comment.id,
+                    commentContent = editedContent
                 )
+                loadingDialog.show()
             }
         commentDialog.show()
     }
 
     private fun onCommentDeleteClickListener(id: Int) {
+        loadingDialog.show()
         feedViewModel.deleteComment(id)
     }
 }

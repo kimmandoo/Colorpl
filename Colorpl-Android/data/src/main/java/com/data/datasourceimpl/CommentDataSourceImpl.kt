@@ -22,10 +22,11 @@ class CommentDataSourceImpl @Inject constructor(
     }
 
     override suspend fun editComment(
+        reviewId: Int,
         commentId: Int,
         requestEditComment: RequestCreateComment
     ): ResponseCommentEdit {
-        return feedApi.editCommentData(requestEditComment.reviewId, commentId, requestEditComment)
+        return feedApi.editCommentData(reviewId, commentId, requestEditComment)
     }
 
     override suspend fun deleteComment(commentId: Int): ResponseCommentEdit {

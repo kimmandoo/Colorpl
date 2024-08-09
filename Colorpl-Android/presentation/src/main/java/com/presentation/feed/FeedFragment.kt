@@ -1,10 +1,10 @@
 package com.presentation.feed
 
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
 import com.domain.model.FilterItem
@@ -75,7 +75,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
-                feedAdapter.submitData(feed)
+                feedAdapter.submitData(viewLifecycleOwner.lifecycle, feed)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 

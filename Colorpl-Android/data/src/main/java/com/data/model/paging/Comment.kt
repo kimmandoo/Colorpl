@@ -9,4 +9,5 @@ data class Comment(
     val writer: String,
     val commentContent: String,
     val createdate: String,
+    val mycomment: Boolean
 )

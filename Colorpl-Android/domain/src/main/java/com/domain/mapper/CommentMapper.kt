@@ -10,17 +10,13 @@ fun Comment.toEntity(): com.domain.model.Comment {
         memberId = memberId,
         writer = writer,
         commentContent = commentContent,
-        createdate = createdate
+        createdate = createdate,
+        mycomment = mycomment
     )
 }
 
-fun com.domain.model.Comment.toRequestEntity(): RequestCreateComment {
+fun String.toEntity(): RequestCreateComment {
     return RequestCreateComment(
-        id = id,
-        reviewId = reviewId,
-        memberId = memberId,
-        writer = writer,
-        commentContent = commentContent,
-        createdate = createdate
+        this
     )
 }

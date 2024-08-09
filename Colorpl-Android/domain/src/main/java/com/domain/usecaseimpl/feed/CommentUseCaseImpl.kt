@@ -5,7 +5,6 @@ import androidx.paging.map
 import com.data.repository.CommentRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
-import com.domain.mapper.toRequestEntity
 import com.domain.model.Comment
 import com.domain.usecase.CommentUseCase
 import com.domain.util.DomainResult
@@ -26,9 +25,13 @@ class CommentUseCaseImpl @Inject constructor(private val commentRepository: Comm
             }
     }
 
-    override suspend fun editComment(comment: Comment): Flow<DomainResult<Int>> =
+    override suspend fun editComment(
+        reviewId: Int,
+        commentId: Int,
+        commentContent: String
+    ): Flow<DomainResult<Int>> =
         flow {
-            commentRepository.editComment(comment.id, comment.toRequestEntity())
+            commentRepository.editComment(reviewId, commentId, commentContent.toEntity())
                 .collect { result ->
                     when (result) {
                         is ApiResult.Error -> {
@@ -64,9 +67,12 @@ class CommentUseCaseImpl @Inject constructor(private val commentRepository: Comm
                 }
         }
 
-    override suspend fun createComment(comment: Comment): Flow<DomainResult<Int>> =
+    override suspend fun createComment(
+        reviewId: Int,
+        commentContent: String
+    ): Flow<DomainResult<Int>> =
         flow {
-            commentRepository.editComment(comment.id, comment.toRequestEntity())
+            commentRepository.createComment(reviewId, commentContent.toEntity())
                 .collect { result ->
                     when (result) {
                         is ApiResult.Error -> {
