@@ -11,4 +11,11 @@ class FeedDataSourceImpl @Inject constructor(
     override suspend fun getFeed(page: Int, size: Int): ResponsePagedFeed {
         return feedApi.getAllFeedData(page, size)
     }
+
+    override suspend fun getMyFeedData(
+        page: Int,
+        size: Int
+    ): ResponsePagedFeed {
+        return feedApi.getMyFeedData(page, size)
+    }
 }
