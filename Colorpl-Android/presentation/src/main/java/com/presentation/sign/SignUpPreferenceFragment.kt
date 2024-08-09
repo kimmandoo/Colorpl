@@ -1,5 +1,6 @@
 package com.presentation.sign
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -7,6 +8,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpPreferenceBinding
+import com.presentation.MainActivity
 import com.presentation.base.BaseDialogFragment
 import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
@@ -33,7 +35,7 @@ class SignUpPreferenceFragment :
         binding.apply {
             val item = hashMapOf(
                 includeMovie to Category.MOVIE,
-                includeCircus to Category.CONCERT,
+                includeCircus to Category.CIRCUS_MAGIC,
                 includeMusical to Category.MUSICAL,
                 includeTheatre to Category.PLAY,
                 includeExhibition to Category.EXHIBITION
@@ -91,8 +93,9 @@ class SignUpPreferenceFragment :
             .onEach {
                 when (it) {
                     is SignUpEventState.SignUpSuccess -> {
-                        signUpViewModel.clearData()
-                        navigatePopBackStack()
+                        Timber.d("회원가입 성공")
+                        startActivity(Intent(requireActivity(), MainActivity::class.java))
+                        requireActivity().finish()
                     }
 
                     is SignUpEventState.Error -> {

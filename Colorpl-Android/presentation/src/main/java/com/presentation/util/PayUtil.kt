@@ -66,7 +66,7 @@ fun requestPayment(
     orderId: String,
     context: Context,
     manager: FragmentManager,
-    checkClientValidation: (String) -> Unit
+    checkClientValidation: (String) -> Boolean
 ) {
     val payload = Payload()
     var totalPrice: Double = 0.0
@@ -106,8 +106,7 @@ fun requestPayment(
             override fun onConfirm(data: String): Boolean {
                 Timber.tag("bootpay").d("receipt $data")
                 checkClientValidation(data)
-                Bootpay.dismissWindow()
-                return false
+                return true
             }
 
             override fun onDone(data: String) {

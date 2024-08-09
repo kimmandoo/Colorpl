@@ -41,7 +41,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-
+    val loading by lazy {
+        LoadingDialog(requireActivity())
+    }
 
 
     override fun initView() {
@@ -92,9 +94,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun observeLoginSuccess() {
+        loading.show()
         loginViewModel.signInEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
-                hideDialog()
+                loading.dismiss()
                 when (it) {
                     is SignInEventState.SignInSuccess -> {
                         Timber.d("로그인 성공")

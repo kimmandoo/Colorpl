@@ -147,8 +147,8 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
                 context.getString(R.string.sign_up_category_musical)
             }
 
-            Category.CONCERT -> {
-                context.getString(R.string.sign_up_concert)
+            Category.CIRCUS_MAGIC -> {
+                context.getString(R.string.sign_up_category_circus)
             }
 
             Category.EXHIBITION -> {
@@ -176,7 +176,7 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_musical)
             }
 
-            Category.CONCERT -> {
+            Category.CIRCUS_MAGIC -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_circus)
             }
 

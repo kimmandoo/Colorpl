@@ -58,7 +58,7 @@ enum class Page(val hideBottomNav: Boolean) {
     FEED(false),
     LOGIN(false),
     RESERVATION(false),
-    SETTING(true),
+    SETTING(false),
     TICKET(false),
     SCHEDULE(false),
     ADDRESS(true),
@@ -128,8 +128,8 @@ enum class Category(val resourceId: Int) {
     MUSICAL(R.string.sign_up_category_musical) {
         override fun getTitle(): String = "MUSICAL"
     },
-    CONCERT(R.string.sign_up_concert) {
-        override fun getTitle(): String = "CONCERT"
+    CIRCUS_MAGIC(R.string.sign_up_category_circus) {
+        override fun getTitle(): String = "CIRCUS_MAGIC"
     },
     EXHIBITION(R.string.sign_up_category_exhibition) {
         override fun getTitle(): String = "EXHIBITION"
