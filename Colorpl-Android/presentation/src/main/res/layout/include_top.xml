@@ -42,7 +42,6 @@
             android:text="@{title}"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/cl_back"
-            app:layout_constraintStart_toEndOf="@+id/cl_back"
-            app:layout_constraintTop_toTopOf="@+id/cl_back" />
+            app:layout_constraintStart_toEndOf="@+id/cl_back" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
