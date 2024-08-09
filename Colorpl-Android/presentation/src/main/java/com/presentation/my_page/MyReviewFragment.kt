@@ -62,7 +62,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
 
     private fun initClickEvent() {
         binding.apply {
-            includeTop.ivBack.setOnClickListener {
+            includeTop.clBack.setOnClickListener {
                 navigatePopBackStack()
             }
 

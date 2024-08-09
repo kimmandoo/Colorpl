@@ -37,6 +37,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 
     private fun initClickEvent() {
         binding.apply {
+            includeTop.clBack.setOnClickListener{
+                navigatePopBackStack()
+            }
             tvLogout.setOnClickListener {
                 settingViewModel.signOut()
             }

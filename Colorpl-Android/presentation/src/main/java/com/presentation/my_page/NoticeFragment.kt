@@ -33,7 +33,7 @@ class NoticeFragment : BaseFragment<FragmentNoticeBinding>(R.layout.fragment_not
     }
 
     private fun initClickEvent(){
-        binding.includeTop.ivBack.setOnClickListener {
+        binding.includeTop.clBack.setOnClickListener {
             navigatePopBackStack()
         }
     }
