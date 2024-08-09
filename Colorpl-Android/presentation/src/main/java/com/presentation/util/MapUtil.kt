@@ -154,14 +154,3 @@ fun clickMarker(
         }
     })
 }
-
-private fun createOverlayImageFromView(context: Context, imageUrl: String): OverlayImage {
-    val view = LayoutInflater.from(context).inflate(R.layout.item_marker, null)
-    val imageView = view.findViewById<ImageView>(R.id.iv_marker)
-    Glide.with(context)
-        .load(imageUrl)
-        .into(imageView)
-
-//    imageView.setImageBitmap(innerBitmap)
-    return OverlayImage.fromView(view)
-}

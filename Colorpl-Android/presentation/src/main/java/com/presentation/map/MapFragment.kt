@@ -1,5 +1,6 @@
 package com.presentation.map
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -54,7 +55,11 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         super.onCreate(savedInstanceState)
         // 카메라 위치 복원
         savedInstanceState?.let {
-            savedCameraPosition = it.getParcelable("cameraPosition")
+            savedCameraPosition =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.getParcelable("cameraPosition", CameraPosition::class.java)
+            }else{
+                it.getParcelable("cameraPosition")
+            }
         }
     }
 
