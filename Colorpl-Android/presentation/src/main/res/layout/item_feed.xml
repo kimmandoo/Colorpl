@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="img"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/eerie_black"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/eerie_black">
 
         <TextView
             android:id="@+id/tv_title"
@@ -48,16 +49,15 @@
 
         <ImageView
             android:id="@+id/iv_content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/test_feed"
             app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintBottom_toTopOf="@id/iv_emotion"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <ImageView
             android:id="@+id/iv_emotion"

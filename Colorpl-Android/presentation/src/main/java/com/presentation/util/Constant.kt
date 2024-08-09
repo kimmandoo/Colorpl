@@ -62,7 +62,7 @@ enum class Page(val hideBottomNav: Boolean) {
     TICKET(false),
     SCHEDULE(false),
     ADDRESS(true),
-
+    OTHER_MY_PAGE(true)
     ;
 
     companion object {
@@ -90,6 +90,7 @@ enum class Page(val hideBottomNav: Boolean) {
             SCHEDULE -> R.id.fragment_schedule
             TICKET_FINISH -> R.id.fragment_ticket_finish
             ADDRESS -> R.id.dialog_ticket_address
+            OTHER_MY_PAGE -> R.id.fragment_other_my_page
         }
 }
 

@@ -59,7 +59,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
                 indicator.setTransactionX(distance)
             }
 
-            includeTop.ivBack.setOnClickListener {
+            includeTop.clBack.setOnClickListener {
                 navigatePopBackStack()
             }
 

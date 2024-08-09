@@ -13,5 +13,7 @@ interface TokenRepository {
 
     suspend fun getAccessToken(): Flow<ApiResult<String>>
 
+    suspend fun clearToken()
+
     suspend fun setAccessToken(accessToken: String)
 }

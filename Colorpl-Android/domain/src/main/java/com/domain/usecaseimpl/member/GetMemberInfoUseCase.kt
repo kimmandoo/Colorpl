@@ -5,71 +5,122 @@ import com.data.util.ApiResult
 import com.domain.mapper.toEntity
 import com.domain.model.Member
 import com.domain.util.DomainResult
-import com.domain.util.onSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.zip
-import timber.log.Timber
 import javax.inject.Inject
 
 class GetMemberInfoUseCase @Inject constructor(
     private val memberRepository: MemberRepository
 ) {
-    suspend fun getMember(): Flow<DomainResult<Member>> {
+    suspend fun getMember(type: Boolean = false, memberId: Int = 0): Flow<DomainResult<Member>> {
         return flow {
-            memberRepository.getMemberInfo().collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        emit(DomainResult.success(result.data.toEntity()))
-                    }
+            if (type) {
+                memberRepository.getOtherMember(memberId).collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.toEntity()))
+                        }
 
-                    is ApiResult.Error -> {
-                        emit(DomainResult.error(result.exception))
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
+                    }
+                }
+            } else {
+                memberRepository.getMemberInfo().collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.toEntity()))
+                        }
+
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    suspend fun getFollowerCount(
+        type: Boolean = false,
+        memberId: Int = 0
+    ): Flow<DomainResult<Int>> {
+        return flow {
+            if (type) {
+                memberRepository.getOtherFollowersCount(memberId).collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.count))
+                        }
+
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
+                    }
+                }
+            } else {
+                memberRepository.getFollowerCount().collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.count))
+                        }
+
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    suspend fun getFollowingCount(
+        type: Boolean = false,
+        memberId: Int = 0
+    ): Flow<DomainResult<Int>> {
+        return flow {
+            if (type) {
+                memberRepository.getOtherFollowingCount(memberId).collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.count))
+                        }
+
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
+                    }
+                }
+            } else {
+                memberRepository.getFollowingCount().collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            emit(DomainResult.success(result.data.count))
+                        }
+
+                        is ApiResult.Error -> {
+                            emit(DomainResult.error(result.exception))
+                        }
                     }
                 }
             }
         }
     }
 
-    suspend fun getFollowerCount(): Flow<DomainResult<Int>> {
-        return flow {
-            memberRepository.getFollowerCount().collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        emit(DomainResult.success(result.data.count))
-                    }
+    suspend fun getMemberInfo(
+        type: Boolean = false,
+        memberId: Int = 0,
+    ): Flow<DomainResult<Member>> {
 
-                    is ApiResult.Error -> {
-                        emit(DomainResult.error(result.exception))
-                    }
-                }
-            }
-        }
-    }
-
-    suspend fun getFollowingCount(): Flow<DomainResult<Int>> {
-        return flow {
-            memberRepository.getFollowingCount().collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        emit(DomainResult.success(result.data.count))
-                    }
-
-                    is ApiResult.Error -> {
-                        emit(DomainResult.error(result.exception))
-                    }
-                }
-            }
-        }
-    }
-
-    suspend fun getMemberInfo(): Flow<DomainResult<Member>> {
         return flow {
             combine(
-                getMember(),
-                getFollowerCount(),
-                getFollowingCount()
+                getMember(type, memberId),
+                getFollowerCount(type, memberId),
+                getFollowingCount(type, memberId)
             ) { memberResult, followerCountResult, followingCountResult ->
 
                 val member = when (memberResult) {
@@ -93,7 +144,7 @@ class GetMemberInfoUseCase @Inject constructor(
                 )
 
                 DomainResult.success(completeMember)
-            }.collect{result ->
+            }.collect { result ->
                 emit(result)
             }
         }

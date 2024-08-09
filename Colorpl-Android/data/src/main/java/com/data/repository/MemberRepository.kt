@@ -24,4 +24,14 @@ interface MemberRepository {
     ): Flow<ApiResult<ResponseMemberInfo>>
 
     suspend fun getMemberSearch(nickname: String): Flow<ApiResult<List<ResponseMemberSearch>>>
+
+    suspend fun getOtherMember(memberId: Int): Flow<ApiResult<ResponseMemberInfo>>
+
+    suspend fun getOtherFollowingCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>>
+
+    suspend fun getOtherFollowersCount(memberId: Int): Flow<ApiResult<ResponseFollowCount>>
+
+    suspend fun postFollow(followId : Int) : Flow<ApiResult<String>>
+
+    suspend fun postUnFollow(followId : Int) : Flow<ApiResult<String>>
 }

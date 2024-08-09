@@ -79,6 +79,9 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             } else {
                 View.GONE
             }
+            includeTop.ivBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
             tvMyReview.setOnClickListener {
                 ticketViewModel.deleteReview(ticket.reviewId)
             }

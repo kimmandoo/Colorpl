@@ -43,9 +43,9 @@ class MyPageViewModel @Inject constructor(
     }
 
 
-    fun getMemberInfo() {
+    fun getMemberInfo(type : Boolean = false, memberId : Int = 0) {
         viewModelScope.launch {
-            getMemberInfoUseCase.getMemberInfo().collectLatest { result ->
+            getMemberInfoUseCase.getMemberInfo(type, memberId).collectLatest { result ->
                 when (result) {
                     is DomainResult.Success -> {
                         Timber.d("멤버 가져오기 성공 ${result.data}")

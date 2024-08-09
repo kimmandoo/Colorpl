@@ -16,6 +16,7 @@ interface SignRepository {
         requestSignIn: RequestSignIn
     ): Flow<ApiResult<ResponseSignIn>>
 
+    suspend fun signOut(refreshToken: String): Flow<ApiResult<Any?>>
 
     suspend fun signUp(
         requestSignUp: RequestSignUp,

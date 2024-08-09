@@ -100,6 +100,30 @@
                     app:layout_constraintStart_toEndOf="@id/iv_emotion"
                     app:layout_constraintTop_toTopOf="@id/iv_emotion" />
 
+                <TextView
+                    android:id="@+id/tv_edit"
+                    style="@style/suite_bold_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/feed_edit"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_delete"
+                    app:layout_constraintEnd_toStartOf="@id/tv_delete"
+                    app:layout_constraintTop_toTopOf="@id/tv_delete" />
+
+                <TextView
+                    android:id="@+id/tv_delete"
+                    style="@style/suite_bold_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/feed_delete"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_report"
+                    app:layout_constraintEnd_toStartOf="@id/iv_report"
+                    app:layout_constraintTop_toTopOf="@id/iv_report" />
+
                 <ImageView
                     android:id="@+id/iv_report"
                     android:layout_width="wrap_content"
@@ -170,8 +194,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toTopOf="@id/cl_comment"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_comment" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_comment"

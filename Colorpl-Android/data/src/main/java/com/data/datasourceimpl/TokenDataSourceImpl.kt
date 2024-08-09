@@ -37,6 +37,7 @@ class TokenDataSourceImpl @Inject constructor(
 
     }.first()
 
+
     override suspend fun getAccessToken(): String = dataStore.data.map { prefs ->
         prefs[ACCESS_TOKEN_KEY] ?: ""
     }.first()
@@ -44,6 +45,17 @@ class TokenDataSourceImpl @Inject constructor(
     override suspend fun setAccessToken(accessToken: String) {
         dataStore.edit { prefs ->
             prefs[ACCESS_TOKEN_KEY] = accessToken
+        }
+    }
+
+
+    override suspend fun clearToken() {
+        dataStore.edit { prefs ->
+            prefs.remove(EMAIL)
+            prefs.remove(PASSWORD)
+            prefs.remove(ACCESS_TOKEN_KEY)
+            prefs.remove(REFRESH_TOKEN_KEY)
+            prefs.remove(ID_TOKEN)
         }
     }
 

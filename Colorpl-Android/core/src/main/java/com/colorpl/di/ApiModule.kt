@@ -5,9 +5,10 @@ import com.data.api.MemberApi
 import com.data.api.NaverApi
 import com.data.api.NotificationApi
 import com.data.api.OpenAiApi
+import com.data.api.PayApi
 import com.data.api.ReservationApi
-import com.data.api.TicketApi
 import com.data.api.SignApi
+import com.data.api.TicketApi
 import com.data.api.TmapRouteApi
 import dagger.Module
 import dagger.Provides
@@ -77,6 +78,7 @@ object ApiModule {
         @NormalRetrofit
         retrofit: Retrofit
     ): ReservationApi = retrofit.create()
+
     @Singleton
     @Provides
     fun provideMemberApi(
@@ -84,4 +86,10 @@ object ApiModule {
         retrofit: Retrofit
     ): MemberApi = retrofit.create()
 
+    @Singleton
+    @Provides
+    fun providePayApi(
+        @NoHeaderRetrofit
+        retrofit: Retrofit
+    ): PayApi = retrofit.create()
 }

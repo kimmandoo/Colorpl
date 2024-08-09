@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="totalDistance"
             type="String" />
@@ -48,6 +49,7 @@
                 android:id="@+id/ll_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/cl_my_review"
@@ -128,11 +130,11 @@
                     android:id="@+id/cl_find_road_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:visibility="gone"
                     android:layout_marginHorizontal="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_find_road"
-                    android:background="@drawable/rectangle_white_10">
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rectangle_white_10"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_find_road">
 
                     <TextView
                         android:id="@+id/tv_title"
@@ -161,9 +163,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"
                         android:text="@{@string/ticket_total_time(totalTime)}"
                         android:textColor="@color/eerie_black"
-                        android:layout_marginBottom="15dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_total_distance"
                         app:layout_constraintTop_toBottomOf="@id/tv_total_distance" />

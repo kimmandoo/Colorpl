@@ -113,10 +113,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     }
 
     private fun initClickEvent() {
-        binding.ivTicketStar.postDelayed(300L) {
-            binding.ivTicketStar.performClick()
-        }
+
         binding.apply {
+            ivTicketStar.postDelayed(300L) {
+                binding.ivTicketStar.performClick()
+            }
             ivTicketStar.setOnClickListener {
                 myPageViewModel.ticketEvent(UN_USE)
 

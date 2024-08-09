@@ -29,7 +29,8 @@ fun List<ResponseMemberSearch>.toEntity(): List<MemberSearch> {
             memberId = it.memberId,
             nickname = it.nickname,
             profileImage = it.profileImage,
-            reviewCount = it.reviewCount
+            reviewCount = it.reviewCount,
+            isFollowing = it.isFollowing
         )
     }
 }
