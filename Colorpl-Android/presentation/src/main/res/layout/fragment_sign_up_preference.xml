@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     app:layout_constraintTop_toBottomOf="@+id/include_musical"
-                    app:type="@{Category.CIRCUS_MAGIC}" />
+                    app:type="@{Category.CONCERT}" />
 
                 <include
                     android:id="@+id/include_exhibition"
@@ -97,19 +97,19 @@
 
         <TextView
             android:id="@+id/tv_next"
+            style="@style/suite_extra_bold_15"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/suite_extra_bold_15"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:paddingVertical="12dp"
             android:layout_marginHorizontal="70dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
-            android:text="@string/sign_up_complete"/>
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:text="@string/sign_up_complete"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

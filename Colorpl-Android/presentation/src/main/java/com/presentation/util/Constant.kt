@@ -128,8 +128,8 @@ enum class Category(val resourceId: Int) {
     MUSICAL(R.string.sign_up_category_musical) {
         override fun getTitle(): String = "MUSICAL"
     },
-    CIRCUS_MAGIC(R.string.sign_up_category_circus) {
-        override fun getTitle(): String = "CIRCUS_MAGIC"
+    CONCERT(R.string.sign_up_category_concert) {
+        override fun getTitle(): String = "CONCERT"
     },
     EXHIBITION(R.string.sign_up_category_exhibition) {
         override fun getTitle(): String = "EXHIBITION"
