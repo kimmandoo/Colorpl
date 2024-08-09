@@ -25,7 +25,7 @@ class CommentDataSourceImpl @Inject constructor(
         commentId: Int,
         requestEditComment: RequestCreateComment
     ): ResponseCommentEdit {
-        return feedApi.editCommentData(commentId, requestEditComment)
+        return feedApi.editCommentData(requestEditComment.reviewId, commentId, requestEditComment)
     }
 
     override suspend fun deleteComment(commentId: Int): ResponseCommentEdit {

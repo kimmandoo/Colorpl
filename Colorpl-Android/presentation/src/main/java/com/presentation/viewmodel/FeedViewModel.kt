@@ -42,6 +42,12 @@ class FeedViewModel @Inject constructor(
     val reviewEditResponse = _reviewEditResponse.asSharedFlow()
     private val _reviewDeleteResponse = MutableSharedFlow<Int>()
     val reviewDeleteResponse = _reviewDeleteResponse.asSharedFlow()
+    private val _commentEditResponse = MutableSharedFlow<Int>()
+    val commentEditResponse = _commentEditResponse.asSharedFlow()
+    private val _commentDeleteResponse = MutableSharedFlow<Int>()
+    val commentDeleteResponse = _commentDeleteResponse.asSharedFlow()
+    private val _commentCreateResponse = MutableSharedFlow<Int>()
+    val commentCreateResponse = _commentCreateResponse.asSharedFlow()
     private val _refreshTrigger = MutableSharedFlow<Unit>()
     val refreshTrigger = _refreshTrigger.asSharedFlow()
 
@@ -110,6 +116,57 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    fun deleteComment(commentId: Int) {
+        viewModelScope.launch {
+            commentUseCase.deleteComment(commentId).collect {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _commentDeleteResponse.emit(it.data)
+                    }
+
+                    is DomainResult.Error -> {
+                        _commentDeleteResponse.emit(-1)
+                        Timber.d("comment delete에러 ${it.exception}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun createComment(comment: Comment) {
+        viewModelScope.launch {
+            commentUseCase.createComment(comment).collect {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _commentCreateResponse.emit(it.data)
+                    }
+
+                    is DomainResult.Error -> {
+                        _commentCreateResponse.emit(-1)
+                        Timber.d("comment cretate 에러 ${it.exception}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun editComment(comment: Comment) {
+        viewModelScope.launch {
+            commentUseCase.editComment(comment).collect {
+                when (it) {
+                    is DomainResult.Success -> {
+                        _commentEditResponse.emit(it.data)
+                    }
+
+                    is DomainResult.Error -> {
+                        _commentEditResponse.emit(-1)
+                        Timber.d("comment edit에러 ${it.exception}")
+                    }
+                }
+            }
+        }
+    }
+
     fun getFeed() {
         viewModelScope.launch {
             getPagedFeedUseCase().cachedIn(viewModelScope).collectLatest { pagedData ->
@@ -118,9 +175,9 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun getComment(feedId: Int) {
+    fun getComment(reviewId: Int) {
         viewModelScope.launch {
-            commentUseCase.getComment(feedId).cachedIn(viewModelScope)
+            commentUseCase.getComment(reviewId).cachedIn(viewModelScope)
                 .collectLatest { pagedData ->
                     _pagedComment.value = pagedData
                 }
@@ -142,4 +199,6 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
+
+
 }

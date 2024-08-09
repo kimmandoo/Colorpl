@@ -9,7 +9,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
+import com.domain.model.Comment
 import com.domain.model.Review
+import com.domain.model.ReviewDetail
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
@@ -42,13 +44,13 @@ class FeedDetailFragment :
             )
         }
     }
+
     private val commentAdapter by lazy {
         CommentAdapter(
-            onEditClickListener = { onEditClickListener() },
-            onDeleteClickListener = { onDeleteClickListener() },
-            onEmotionClickListener = {},
-            onReportClickListener = {},
-            onUserClickListener = {},
+            onEditClickListener = { comment ->
+                onCommentEditClickListener(comment)
+            },
+            onDeleteClickListener = { id -> onCommentDeleteClickListener(id) },
         )
     }
 
@@ -58,6 +60,7 @@ class FeedDetailFragment :
         initAdapter()
         observeReviewDetail()
         observeViewModel()
+        observeComment()
         observeRefreshTrigger()
     }
 
@@ -81,7 +84,7 @@ class FeedDetailFragment :
     }
 
     private fun initData() {
-        feedViewModel.getComment(feedId = 1)
+        feedViewModel.getComment(args.reviewId)
         feedViewModel.getReviewDetail(args.reviewId)
     }
 
@@ -119,37 +122,7 @@ class FeedDetailFragment :
         feedViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { data ->
                 Timber.d("리뷰 상세 데이터 $data")
-                binding.apply {
-                    val ownerOptions = listOf(tvEdit, tvDelete)
-                    tvTitle.text = data.title
-                    tvContent.text = data.content
-                    ivContent.setImageCenterCrop(data.imgUrl)
-                    tvEmotion.text = data.empathy.toString()
-                    tvCommentCnt.text = data.commentCount.toString()
-                    ivEmotion.setImageResource(
-                        when (data.emotion) {
-                            1 -> R.drawable.selector_ic_excited
-                            2 -> R.drawable.selector_ic_love
-                            3 -> R.drawable.selector_ic_tired
-                            4 -> R.drawable.selector_ic_crying
-                            5 -> R.drawable.selector_ic_angry
-                            else -> R.drawable.selector_ic_excited
-                        }
-                    )
-                    ivEmotion.setOnClickListener {
-                        onEmotionClickListener(data.id, data.myEmpathy)
-                    }
-                    ownerOptions.forEach { option ->
-                        option.visibility = if (!data.myReview) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
-                        }
-                    }
-                    ivEmotion.isSelected = data.myEmpathy
-                    tvProfile.text = data.writer
-                    tvUploadDate.text = data.createDate
-                }
+                updateReview(data)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -161,15 +134,82 @@ class FeedDetailFragment :
         }
     }
 
+    private fun observeComment() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                feedViewModel.commentDeleteResponse.collectLatest {
+                    feedViewModel.getComment(args.reviewId)
+                }
+            }
+            launch {
+                feedViewModel.commentEditResponse.collectLatest {
+                    feedViewModel.getComment(args.reviewId)
+                }
+            }
+            launch {
+                feedViewModel.commentCreateResponse.collectLatest {
+                    feedViewModel.getComment(args.reviewId)
+                }
+            }
+        }
+    }
+
+    private fun updateReview(data: ReviewDetail) {
+        binding.apply {
+            val ownerOptions = listOf(tvEdit, tvDelete)
+            tvTitle.text = data.title
+            tvContent.text = data.content
+            ivContent.setImageCenterCrop(data.imgUrl)
+            tvEmotion.text = data.empathy.toString()
+            tvCommentCnt.text = data.commentCount.toString()
+            ivEmotion.setImageResource(
+                when (data.emotion) {
+                    1 -> R.drawable.selector_ic_excited
+                    2 -> R.drawable.selector_ic_love
+                    3 -> R.drawable.selector_ic_tired
+                    4 -> R.drawable.selector_ic_crying
+                    5 -> R.drawable.selector_ic_angry
+                    else -> R.drawable.selector_ic_excited
+                }
+            )
+            ivEmotion.setOnClickListener {
+                onEmotionClickListener(data.id, data.myEmpathy)
+            }
+            ownerOptions.forEach { option ->
+                option.visibility = if (!data.myReview) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
+            }
+            ivEmotion.isSelected = data.myEmpathy
+            tvProfile.text = data.writer
+            tvUploadDate.text = data.createDate
+        }
+    }
+
     private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {
         feedViewModel.toggleEmpathy(id, isEmpathy)
     }
 
-    private fun onEditClickListener() {
-
+    private fun onCommentEditClickListener(comment: Comment) {
+        val commentDialog =
+            ReviewEditDialog(requireContext(), comment.commentContent) { editedContent ->
+                feedViewModel.editComment(
+                    Comment(
+                        comment.id,
+                        comment.reviewId,
+                        comment.memberId,
+                        comment.writer,
+                        editedContent,
+                        comment.createdate
+                    )
+                )
+            }
+        commentDialog.show()
     }
 
-    private fun onDeleteClickListener() {
-
+    private fun onCommentDeleteClickListener(id: Int) {
+        feedViewModel.deleteReview(id)
     }
 }

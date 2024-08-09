@@ -2,10 +2,10 @@ package com.domain.usecaseimpl.feed
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.data.model.request.RequestCreateComment
 import com.data.repository.CommentRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
+import com.domain.mapper.toRequestEntity
 import com.domain.model.Comment
 import com.domain.usecase.CommentUseCase
 import com.domain.util.DomainResult
@@ -26,9 +26,9 @@ class CommentUseCaseImpl @Inject constructor(private val commentRepository: Comm
             }
     }
 
-    override suspend fun editComment(requestEditComment: RequestCreateComment): Flow<DomainResult<Int>> =
+    override suspend fun editComment(comment: Comment): Flow<DomainResult<Int>> =
         flow {
-            commentRepository.editComment(requestEditComment.id, requestEditComment)
+            commentRepository.editComment(comment.id, comment.toRequestEntity())
                 .collect { result ->
                     when (result) {
                         is ApiResult.Error -> {
@@ -64,9 +64,9 @@ class CommentUseCaseImpl @Inject constructor(private val commentRepository: Comm
                 }
         }
 
-    override suspend fun createComment(reviewCreateComment: RequestCreateComment): Flow<DomainResult<Int>> =
+    override suspend fun createComment(comment: Comment): Flow<DomainResult<Int>> =
         flow {
-            commentRepository.editComment(reviewCreateComment.id, reviewCreateComment)
+            commentRepository.editComment(comment.id, comment.toRequestEntity())
                 .collect { result ->
                     when (result) {
                         is ApiResult.Error -> {
