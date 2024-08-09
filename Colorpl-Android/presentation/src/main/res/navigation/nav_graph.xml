@@ -76,7 +76,11 @@
             android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
             app:destination="@id/fragment_review"
             app:popUpTo="@id/fragment_feed_ticket_select"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true">
+            <argument
+                android:name="ticketId"
+                app:argType="integer" />
+        </action>
     </dialog>
 
     <!-- Reservation -->
@@ -224,7 +228,11 @@
     <dialog
         android:id="@+id/fragment_review"
         android:name="com.presentation.feed.ReviewFragment"
-        tools:layout="@layout/fragment_review" />
+        tools:layout="@layout/fragment_review">
+        <argument
+            android:name="ticketId"
+            app:argType="integer" />
+    </dialog>
 
     <fragment
         android:id="@+id/fragment_other_my_page"
@@ -233,7 +241,7 @@
 
         <argument
             android:name="memberInfo"
-            app:argType="com.domain.model.MemberSearch"/>
+            app:argType="com.domain.model.MemberSearch" />
 
     </fragment>
 
