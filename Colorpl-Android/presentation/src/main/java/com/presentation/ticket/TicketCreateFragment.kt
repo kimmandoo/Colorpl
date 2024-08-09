@@ -19,7 +19,6 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
 import com.domain.model.Description
 import com.presentation.base.BaseFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.checkCameraPermission
@@ -44,9 +43,7 @@ class TicketCreateFragment :
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
-    private val loading by lazy {
-        LoadingDialog(requireContext())
-    }
+
 
     override fun initView() {
         observeDescription()
@@ -115,11 +112,11 @@ class TicketCreateFragment :
 
     private fun observeDescription() {
         viewLifecycleOwner.lifecycleScope.launch {
-            loading.show()
+            showLoading()
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.description.collectLatest { data ->
                     data?.let {
-                        loading.dismiss()
+                        dismissLoading()
                         Timber.tag("description").d(data.toString())
                         binding.apply {
                             etTitle.setText(data.title)

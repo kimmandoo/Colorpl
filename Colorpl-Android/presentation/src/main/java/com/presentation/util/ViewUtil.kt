@@ -1,5 +1,8 @@
 package com.presentation.util
 
+
+
+import com.colorpl.presentation.R
 import android.animation.ObjectAnimator
 import android.graphics.Rect
 import android.text.method.PasswordTransformationMethod
@@ -9,6 +12,7 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_NEXT
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -64,6 +68,7 @@ fun ImageView.setImageCircleCrop(image: Any?, type : Boolean = false) {
     Glide.with(this)
         .load(data)
         .circleCrop()
+        .placeholder(R.drawable.ic_profile_circle)
         .into(this)
 }
 
