@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
+import com.presentation.component.dialog.LoadingDialog
 
 abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: Int) :
     DialogFragment() {
@@ -20,6 +21,10 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
     private var _binding: B? = null
     protected val binding get() = _binding!!
     protected var isBackPressedEnabled = true
+
+    val loading by lazy {
+        LoadingDialog(requireActivity())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +70,14 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
 
     fun navigatePopBackStack() { //뒤로 가기
         findNavController().popBackStack()
+    }
+
+    fun dismissLoading() {
+        loading.dismiss()
+    }
+
+    fun showLoading() {
+        loading.show()
     }
 
     override fun onDestroyView() {

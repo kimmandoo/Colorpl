@@ -12,10 +12,8 @@ import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
 import com.domain.model.Comment
 import com.domain.model.Review
 import com.domain.model.ReviewDetail
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.component.dialog.ReviewEditDialog
 import com.presentation.util.hideKeyboard
 import com.presentation.util.setEmotion
@@ -47,9 +45,7 @@ class FeedDetailFragment :
             )
         }
     }
-    private val loadingDialog by lazy {
-        LoadingDialog(requireContext())
-    }
+
     private lateinit var commentDialog: ReviewEditDialog
 
     private val commentAdapter by lazy {
@@ -83,7 +79,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.reviewEditResponse.collectLatest { reviewId ->
                     if (reviewId > 0) {
-                        loadingDialog.dismiss()
+                        dismissLoading()
                         editDialog.dismiss()
                     }
                 }
@@ -118,24 +114,23 @@ class FeedDetailFragment :
     }
 
     private fun initAdapter() {
-        val loading = LoadingDialog(requireContext())
         binding.apply {
             rvComment.adapter = commentAdapter
             rvComment.itemAnimator = null
-
-            feedViewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .onEach { pagingData ->
-                    pagingData?.let { comment ->
-                        commentAdapter.submitData(comment)
-                    }
-                }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-            commentAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .onEach { loadStates ->
-                    val isLoading = loadStates.source.refresh is LoadState.Loading
-                    if (!isLoading) loading.dismiss() else loading.show()
-                }.launchIn(viewLifecycleOwner.lifecycleScope)
         }
+
+        feedViewModel.pagedComment.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { pagingData ->
+                pagingData?.let { comment ->
+                    commentAdapter.submitData(comment)
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        commentAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { loadStates ->
+                val isLoading = loadStates.source.refresh is LoadState.Loading
+                if (!isLoading) dismissLoading() else showLoading()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun observeReviewDetail() {
@@ -159,7 +154,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentDeleteResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
-                    loadingDialog.dismiss()
+                    dismissLoading()
                     commentAdapter.refresh()
                 }
             }
@@ -168,7 +163,7 @@ class FeedDetailFragment :
                     feedViewModel.getComment(args.reviewId)
                     binding.root.context.hideKeyboard(requireView())
                     commentDialog.dismiss()
-                    loadingDialog.dismiss()
+                    dismissLoading()
                     commentAdapter.refresh()
                 }
             }
@@ -176,7 +171,7 @@ class FeedDetailFragment :
                 feedViewModel.commentCreateResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
                     binding.etComment.clearFocus()
-                    loadingDialog.dismiss()
+                    dismissLoading()
                     commentAdapter.refresh()
                 }
             }
@@ -220,13 +215,13 @@ class FeedDetailFragment :
                     commentId = comment.id,
                     commentContent = editedContent
                 )
-                loadingDialog.show()
+                showLoading()
             }
         commentDialog.show()
     }
 
     private fun onCommentDeleteClickListener(id: Int) {
-        loadingDialog.show()
+        showLoading()
         feedViewModel.deleteComment(id)
     }
 }
