@@ -2,23 +2,44 @@ package com.presentation.reservation
 
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationPaymentBinding
+import com.domain.model.PayRequest
+import com.google.gson.Gson
 import com.presentation.base.BaseFragment
+import com.presentation.reservation.model.PaymentEventState
 import com.presentation.util.Payment
+import com.presentation.util.ViewPagerManager
+import com.presentation.util.getBootUser
+import com.presentation.util.requestPayment
+import com.presentation.util.selectItemToPay
+import com.presentation.viewmodel.PayViewModel
 import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
-class ReservationPaymentFragment : BaseFragment<FragmentReservationPaymentBinding>(R.layout.fragment_reservation_payment) {
+class ReservationPaymentFragment :
+    BaseFragment<FragmentReservationPaymentBinding>(R.layout.fragment_reservation_payment) {
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
+    private val payViewModel: PayViewModel by viewModels()
+
+    @Inject
+    @Named("bootpay")
+    lateinit var applicationId: String
 
     private var paymentDiscount: Payment.Discount = Payment.Discount.NONE
     private var paymentMethod: Payment.Method = Payment.Method.NONE
 
     override fun initView() {
         initUi()
+        observePaymentResult()
     }
 
     private fun initUi() {
@@ -43,7 +64,23 @@ class ReservationPaymentFragment : BaseFragment<FragmentReservationPaymentBindin
                 handlePaymentMethodSelection(tvSsafyPay.id)
             }
             tvPayNext.setOnClickListener {
-                Toast.makeText(requireContext(), "결제를 해봅시다~", Toast.LENGTH_SHORT).show()
+                val bootUser = getBootUser("", "", "", "")
+                val bootItem = mutableListOf(selectItemToPay("", "", 1, 100.0))
+                requestPayment(
+                    v = null,
+                    applicationId = applicationId,
+                    user = bootUser,
+                    itemList = bootItem,
+                    orderName = "주문하세요",
+                    orderId = "123",
+                    context = requireActivity(),
+                    manager = requireActivity().supportFragmentManager,
+                ) { data ->
+                    Timber.d("영수증 id 받아오기 $data")
+                    val responseData = Gson().fromJson(data, PayRequest::class.java)
+                    payViewModel.startPayment(responseData.receipt_id)
+                    false
+                }
             }
         }
     }
@@ -62,6 +99,7 @@ class ReservationPaymentFragment : BaseFragment<FragmentReservationPaymentBindin
                     this@ReservationPaymentFragment.paymentMethod = Payment.Method.BOOT
                     tvBootPay.isSelected = true
                 }
+
                 tvSsafyPay.id -> {
                     this@ReservationPaymentFragment.paymentMethod = Payment.Method.SSAFY
                     tvSsafyPay.isSelected = true
@@ -71,6 +109,22 @@ class ReservationPaymentFragment : BaseFragment<FragmentReservationPaymentBindin
         }
         Timber.d("$paymentMethod")
         updateConfirmState()
+
+    }
+
+    private fun observePaymentResult() {
+        payViewModel.paymentEventState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when (it) {
+                    is PaymentEventState.PaySuccess -> {
+                        ViewPagerManager.moveNext()
+                    }
+
+                    is PaymentEventState.PayFail -> {
+                        Toast.makeText(requireActivity(), "결제 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun updateConfirmState() {
