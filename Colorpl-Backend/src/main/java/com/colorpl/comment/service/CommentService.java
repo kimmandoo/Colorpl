@@ -2,27 +2,19 @@ package com.colorpl.comment.service;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
+import com.colorpl.comment.dto.RequestDTO;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.CommentNotFoundException;
-import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Review;
 import com.colorpl.review.repository.ReviewRepository;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -49,7 +41,7 @@ public class CommentService {
 
     // 리뷰에 댓글 생성
     @Transactional
-    public CommentDTO createComment(Long reviewId, Integer memberId, CommentDTO commentDTO) {
+    public CommentDTO createComment(Long reviewId, Integer memberId, RequestDTO requestDTO) {
         // 리뷰 및 멤버 가져오기
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
@@ -60,7 +52,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .member(member)
                 .review(review)
-                .comment_content(commentDTO.getCommentContent())
+                .comment_content(requestDTO.getCommentContent())
                 .build();
 
         Comment createdComment = commentRepository.save(comment);
@@ -70,23 +62,23 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public CommentDTO updateComment(Long commentId, Integer memberId, CommentDTO commentDTO) {
+    public CommentDTO updateComment(Long commentId, Long reviewId, Integer memberId, RequestDTO requestDTO) {
         // 해당 댓글 찾기
         Comment comment = commentRepository.findById(commentId)
                 // 댓글 작성자와 동일한지 확인
                 .filter(c -> c.getMember().getId().equals(memberId))
                 .orElseThrow(CommentNotFoundException::new);
 
-        Review review = reviewRepository.findById(commentDTO.getReviewId())
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
-        Member member = memberRepository.findById(commentDTO.getMemberId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
         // 댓글 필드 수정
         comment.updateComment(
                 review,
                 member,
-                commentDTO.getCommentContent()
+                requestDTO.getCommentContent()
         );
 
         // 수정된 댓글 저장 및 DTO로 반환
