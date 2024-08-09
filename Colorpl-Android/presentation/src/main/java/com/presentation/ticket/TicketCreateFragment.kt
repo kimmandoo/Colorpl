@@ -44,9 +44,7 @@ class TicketCreateFragment :
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
-    private val loading by lazy {
-        LoadingDialog(requireContext())
-    }
+
 
     override fun initView() {
         observeDescription()

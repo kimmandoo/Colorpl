@@ -20,6 +20,7 @@ import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kr.co.bootpay.android.Bootpay
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named

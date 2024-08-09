@@ -120,6 +120,7 @@ class SignUpViewModel @Inject constructor(
             categories = userPreference.items.value
         )
         viewModelScope.launch {
+            Timber.d("회원가입 에러 $member")
             signUpUseCase.signUp(member, userImageFile.value).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {

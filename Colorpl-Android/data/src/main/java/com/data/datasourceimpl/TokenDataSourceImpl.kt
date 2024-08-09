@@ -9,6 +9,7 @@ import com.data.model.request.RequestSignToken
 import com.data.model.response.ResponseSignToken
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 

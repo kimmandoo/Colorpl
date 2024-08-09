@@ -27,9 +27,7 @@ class TicketFinishFragment :
 
     private val viewModel: TicketCreateViewModel by hiltNavGraphViewModels(R.id.nav_ticket_graph)
     private val args: TicketFinishFragmentArgs by navArgs()
-    private val loading by lazy {
-        LoadingDialog(requireContext())
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

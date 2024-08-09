@@ -31,6 +31,6 @@
     <string name="sign_up_category_movie">영화</string>
     <string name="sign_up_category_theater">연극</string>
     <string name="sign_up_category_musical">뮤지컬</string>
-    <string name="sign_up_category_circus">서커스</string>
+    <string name="sign_up_concert">콘서트</string>
     <string name="sign_up_category_exhibition">전시회</string>
 </resources>

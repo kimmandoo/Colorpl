@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
     private val signRepository: SignRepository,
-    private val tokenRepository: TokenRepository
 ) {
 
     suspend fun signUp(member: Member, file: File?) = flow {
@@ -23,7 +22,6 @@ class SignUpUseCase @Inject constructor(
             Timber.d("회원 가입 확인 $result")
             when (result) {
                 is ApiResult.Success -> {
-                    signRepository.signIn(member.toSignInParam())
                     emit(DomainResult.success(result.data))
                 }
 
