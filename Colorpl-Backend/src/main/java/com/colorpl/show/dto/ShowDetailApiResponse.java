@@ -30,6 +30,9 @@ public class ShowDetailApiResponse {
         @JacksonXmlProperty(localName = "prfpdto")
         private String endDate;
 
+        @JacksonXmlProperty(localName = "fcltynm")
+        private String theaterName;
+
         @JacksonXmlProperty(localName = "prfcast")
         private String cast;
 
@@ -56,8 +59,5 @@ public class ShowDetailApiResponse {
 
         @JacksonXmlProperty(localName = "dtguidance")
         private String schedule;
-
-        @JacksonXmlProperty(localName = "fcltynm")
-        private String hall;
     }
 }

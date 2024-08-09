@@ -29,6 +29,7 @@ public class RetrieveTheaterDetailApiService {
             .path("/prfplc")
             .path("/{apiId}")
             .queryParam("service", showApiKey)
+            .queryParam("newsql", "Y")
             .buildAndExpand(apiId)
             .toUri();
 
