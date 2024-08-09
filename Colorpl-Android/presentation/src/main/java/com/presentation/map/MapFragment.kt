@@ -1,5 +1,6 @@
 package com.presentation.map
 
+import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,7 @@ import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapFragment
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.map.model.MapMarker
 import com.presentation.util.LocationHelper
 import com.presentation.util.checkLocationPermission
@@ -33,19 +35,48 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
     private lateinit var markerBuilder: Clusterer.Builder<MapMarker>
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext())
+    }
 
-    //    private var markerBuilder: Clusterer.Builder<MapMarker>? = null
+    private var savedCameraPosition: CameraPosition? = null
     private val mapViewModel: MapViewModel by viewModels()
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // NaverMap이 초기화된 경우에만 상태를 저장
+        naverMap?.let { map ->
+            outState.putParcelable("cameraPosition", map.cameraPosition)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 카메라 위치 복원
+        savedInstanceState?.let {
+            savedCameraPosition = it.getParcelable("cameraPosition")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setMarker()
+        // NaverMap 상태 복원 가능
+        mapView?.getMapAsync { naverMap ->
+            savedCameraPosition?.let {
+                naverMap.cameraPosition = it
+            }
+        }
+    }
 
     override fun initOnCreateView() {
         initNaverMap()
-
+        loadingDialog.show()
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
         connectNaverMap(naverMap)
         observeTicketList()
-
     }
 
     override fun iniViewCreated() {
@@ -75,44 +106,32 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
             this@MapFragment.naverMap.cameraPosition =
                 CameraPosition(LatLng(location.latitude, location.longitude), DEFAULT_ZOOM)
         }
-
-//        setMarker()
     }
 
     private fun setMarker() {
         val markers = makeMarker(
             mapViewModel.ticketList.value,
-//            MapMarker.DEFAULT,
             markerBuilder
         )
         markers.map = naverMap
-//        markerBuilder?.let { builder ->
-//            val markers = makeMarker(mapViewModel.ticketList.value, builder)
-//            markers.map = naverMap
-//        }
     }
 
     private fun observeTicketList() {
+        Timber.tag(this::class.java.simpleName).d("티켓 리스트 관찰")
         mapViewModel.ticketList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
             Timber.d("이미지 확인 $it")
-            setMarker()
             clickMarker(
                 markerBuilder,
                 requireActivity(),
-                viewLifecycleOwner.lifecycleScope
+                viewLifecycleOwner.lifecycleScope,
             ) { markerData ->
                 Timber.d("markerData : $markerData")
             }
+            loadingDialog.dismiss()
+
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
     }
-
-//    private fun createOverlayImageFromView(context: Context, markerResId: Int, innerBitmap: Bitmap): OverlayImage {
-//        val view = LayoutInflater.from(context).inflate(R.layout.item_marker, null)
-//        val imageView = view.findViewById<ImageView>(R.id.iv_marker)
-//        imageView.setImageBitmap(innerBitmap)
-//        return OverlayImage.fromView(view)
-//    }
-
 
     companion object {
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Build
 import android.os.ext.SdkExtensions
@@ -59,12 +60,9 @@ fun Fragment.setCameraLauncher(action: () -> Unit): ActivityResultLauncher<Uri> 
 
 fun combineImages(context: Context, markerResId: Int, innerImageBitmap: Bitmap): OverlayImage {
     // 첫 번째 이미지 비트맵 로드
+    val markerBitmap = BitmapFactory.decodeResource(context.resources, markerResId)
 
-    val markerBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, markerResId)
-
-
-
-    val combinedBitmap = Bitmap.createScaledBitmap(markerBitmap, 75.dpToPx, 75.dpToPx, true)
+    val combinedBitmap = Bitmap.createScaledBitmap(markerBitmap, 70.dpToPx, 80.dpToPx, true)
     val canvas = Canvas(combinedBitmap)
     //내부 그림 크기 조정
     val scaledInnerBitmap = Bitmap.createScaledBitmap(innerImageBitmap, 45.dpToPx, 45.dpToPx, true)
@@ -72,7 +70,6 @@ fun combineImages(context: Context, markerResId: Int, innerImageBitmap: Bitmap):
     // 내부 그림 그리기 (말풍선 중앙에 위치)
     val left = (combinedBitmap.width-scaledInnerBitmap.width) / 2
     val top = (combinedBitmap.height-scaledInnerBitmap.height-10.dpToPx) /2
-
 
     canvas.drawBitmap(scaledInnerBitmap, left.toFloat(), top.toFloat(), null)
 

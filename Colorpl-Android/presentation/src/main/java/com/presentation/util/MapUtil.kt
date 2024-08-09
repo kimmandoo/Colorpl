@@ -23,6 +23,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.map.model.MapMarker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -98,7 +99,7 @@ fun makeMarker(
     builder: Clusterer.Builder<MapMarker>,
 ): Clusterer<MapMarker> { // cluster 연결
     val cluster: Clusterer<MapMarker> = builder.build()
-
+    Timber.tag("마커 데이터").d("marker : $marker")
 
     marker.forEach { item ->
         cluster.add(item, null)
@@ -135,6 +136,7 @@ fun clickMarker(
             marker.apply {
                 width = 200
                 height = 200
+                icon = OverlayImage.fromResource(R.drawable.ic_default_back)
                 val markerData = info.key as MapMarker
                 Timber.d("데이터 확인 $markerData")
                 lifecycleScope.launch {
@@ -143,9 +145,6 @@ fun clickMarker(
                     }
                     icon = combineImages(context, R.drawable.ic_default_pin, async.await() ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888))
                 }
-
-                Timber.tag(this::class.java.simpleName).d("markerData : $markerData")
-//                icon = createOverlayImageFromView(context, markerData.image)
                 onClickListener = Overlay.OnClickListener {
 
                     markerInfo(markerData)
