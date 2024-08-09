@@ -23,7 +23,6 @@
                 android:defaultValue="0"
                 app:argType="integer" />
 
-
         </action>
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
@@ -66,7 +65,12 @@
         android:id="@+id/fragment_feed_detail"
         android:name="com.presentation.feed.FeedDetailFragment"
         android:label="FeedDetailFragment"
-        tools:layout="@layout/fragment_feed_detail" />
+        tools:layout="@layout/fragment_feed_detail">
+        <argument
+            android:name="reviewId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </dialog>
 
     <dialog
         android:id="@+id/fragment_feed_ticket_select"
@@ -76,7 +80,11 @@
             android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
             app:destination="@id/fragment_review"
             app:popUpTo="@id/fragment_feed_ticket_select"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true">
+            <argument
+                android:name="ticketId"
+                app:argType="integer" />
+        </action>
     </dialog>
 
     <!-- Reservation -->
@@ -122,7 +130,12 @@
         tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" />
+            app:destination="@id/fragment_feed_detail" >
+            <argument
+                android:name="reviewId"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
         <argument
             android:name="ticket"
             app:argType="com.domain.model.TicketResponse" />
@@ -224,7 +237,11 @@
     <dialog
         android:id="@+id/fragment_review"
         android:name="com.presentation.feed.ReviewFragment"
-        tools:layout="@layout/fragment_review" />
+        tools:layout="@layout/fragment_review">
+        <argument
+            android:name="ticketId"
+            app:argType="integer" />
+    </dialog>
 
     <fragment
         android:id="@+id/fragment_other_my_page"
@@ -233,7 +250,7 @@
 
         <argument
             android:name="memberInfo"
-            app:argType="com.domain.model.MemberSearch"/>
+            app:argType="com.domain.model.MemberSearch" />
 
     </fragment>
 

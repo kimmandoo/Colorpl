@@ -9,7 +9,7 @@ import com.data.util.ApiResult
 import timber.log.Timber
 
 class CommentPagingSource(
-    private val feedId: Int,
+    private val reviewId: Int,
     private val commentDataSource: CommentDataSource
 ) :
     PagingSource<Int, Comment>() {
@@ -24,7 +24,7 @@ class CommentPagingSource(
         val nextPage = params.key ?: 0
 
         return when (val result =
-            safeApiCall { commentDataSource.getComment(feedId, nextPage, params.loadSize) }) {
+            safeApiCall { commentDataSource.getComment(reviewId, nextPage, params.loadSize) }) {
             is ApiResult.Success -> {
                 val response = result.data
                 Timber.tag("pager").d("${response.items.firstOrNull()?.id}")

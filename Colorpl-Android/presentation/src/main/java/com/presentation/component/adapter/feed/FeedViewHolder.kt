@@ -1,17 +1,16 @@
 package com.presentation.component.adapter.feed
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
+import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemFeedBinding
 import com.domain.model.Feed
+import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
-import timber.log.Timber
 
 class FeedViewHolder(
     private val binding: ItemFeedBinding,
     private val onFeedContentClickListener: (Int) -> Unit,
-    private val onCommentClickListener: () -> Unit,
-    private val onEmotionClickListener: () -> Unit,
+    private val onEmotionClickListener: (Int, Boolean) -> Unit,
     private val onReportClickListener: () -> Unit,
     private val onUserClickListener: () -> Unit,
 ) : ViewHolder(binding.root) {
@@ -21,20 +20,26 @@ class FeedViewHolder(
             val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
             tvTitle.text = data.title
             tvContent.text = data.content
-            tvEmotion.text = data.emotion.toString()
+            tvEmotion.text = data.empathy.toString()
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
             tvUploadDate.text = data.createdate
+            ivEmotion.setEmotion(data.emotion)
+            updateEmpathy(data.myempathy, data.empathy)
             ivContent.setImageCenterCrop(data.imgurl)
             clickScope.forEach {
-                it.setOnClickListener {
-                    when (it) {
-                        tvContent -> {
-                            onFeedContentClickListener(data.id)
-                        }
-                    }
-                }
+                it.setOnClickListener { onFeedContentClickListener(data.id) }
             }
+            ivEmotion.setOnClickListener {
+                onEmotionClickListener(data.id, data.myempathy)
+            }
+        }
+    }
+
+    fun updateEmpathy(myEmpathy: Boolean, empathyCount: Int) {
+        binding.apply {
+            ivEmotion.isSelected = myEmpathy
+            tvEmotion.text = empathyCount.toString()
         }
     }
 }

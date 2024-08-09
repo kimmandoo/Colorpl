@@ -6,16 +6,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReviewBinding
 import com.domain.model.Review
 import com.presentation.base.BaseDialogFragment
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.ReviewViewModel
@@ -31,6 +34,11 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var photoUri: Uri
     private val viewModel: ReviewViewModel by viewModels()
+    private val args: ReviewFragmentArgs by navArgs()
+
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext())
+    }
 
     override fun initView(savedInstanceState: Bundle?) {
         observeViewModel()
@@ -75,13 +83,14 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         }
         viewModel.createReview(
             review = Review(
-                203,
+                args.ticketId,
                 binding.etContent.text.toString(),
                 false,
                 viewModel.selectedEmotion.value + 1
             ),
             image
         )
+        loadingDialog.show()
     }
 
     private fun observeViewModel() {
@@ -94,7 +103,11 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
             launch {
                 viewModel.reviewResponse.collectLatest { reviewId ->
-                    if (reviewId > 0) navigatePopBackStack()
+                    loadingDialog.dismiss()
+                    if (reviewId > 0) navigatePopBackStack() else {
+                        Toast.makeText(requireContext(), "리뷰 등록에 실패했습니다", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@
 <resources>
     <string name="my_page_profile_update">프로필 수정</string>
     <string name="my_page_follower">팔로워</string>
+    <string name="my_page_default_name">임시닉네임</string>
     <string name="my_page_following">팔로잉</string>
     <string name="my_page_notice">공지사항</string>
     <string name="my_page_payment">결제내역</string>

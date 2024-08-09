@@ -21,19 +21,14 @@ import timber.log.Timber
 class FeedTicketSelectFragment :
     BaseDialogFragment<FragmentFeedTicketSelectBinding>(R.layout.fragment_feed_ticket_select) {
 
+    private val viewModel: TicketSelectViewModel by viewModels()
     private val feedTicketSelectAdapter by lazy {
-        FeedTicketSelectAdapter() {
-
-        }
+        FeedTicketSelectAdapter { }
     }
 
     private val loadingDialog by lazy {
         LoadingDialog(requireContext())
     }
-    private val viewModel: TicketSelectViewModel by viewModels()
-
-    //얘도 ViewModel에서 따로 빼서 쓰면 될듯
-    var ticketPosition = 0
 
     override fun initView(savedInstanceState: Bundle?) {
         observeViewModel()
@@ -53,7 +48,6 @@ class FeedTicketSelectFragment :
         }
     }
 
-
     private fun initAdapter() {
         binding.vpFeedTicketSelect.apply {
             adapter = feedTicketSelectAdapter
@@ -61,20 +55,29 @@ class FeedTicketSelectFragment :
             this.addCustomItemDecoration()
             this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    Timber.d("현재 페이지 위치 $position")
+                    Timber.d("현재 페이지 위치 ${viewModel.tickets.value[position]}")
                 }
             })
         }
+
     }
 
     private fun initClickEvent() {
         binding.apply {
             tvSelect.setOnClickListener {
-                navigateDestination(R.id.action_fragment_feed_ticket_select_to_fragment_review)
+                navigateToReview()
             }
             ivBack.setOnClickListener {
                 navigatePopBackStack()
             }
         }
+    }
+
+    private fun navigateToReview() {
+        val action =
+            FeedTicketSelectFragmentDirections.actionFragmentFeedTicketSelectToFragmentReview(
+                viewModel.tickets.value[binding.vpFeedTicketSelect.currentItem].id
+            )
+        navigateDestination(action)
     }
 }

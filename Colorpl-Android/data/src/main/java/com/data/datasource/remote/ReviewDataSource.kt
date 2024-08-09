@@ -1,5 +1,6 @@
 package com.data.datasource.remote
 
+import com.data.model.paging.ResponsePagedFeed
 import com.data.model.request.RequestReviewEdit
 import com.data.model.response.ResponseReviewCreate
 
@@ -27,5 +28,6 @@ interface ReviewDataSource {
     suspend fun deleteEmpathize(
         reviewId: Int
     ): ResponseReviewEdit
+
 
 }

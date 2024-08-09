@@ -8,4 +8,7 @@ interface FeedRepository {
     fun getPagedFeed(): Flow<PagingData<Feed>>
 
     fun getPagedUserFeed(memberId: Int): Flow<PagingData<Feed>>
+
+    fun getPagedMyFeed() : Flow<PagingData<Feed>>
+
 }

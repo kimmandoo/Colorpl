@@ -106,7 +106,8 @@ fun requestPayment(
             override fun onConfirm(data: String): Boolean {
                 Timber.tag("bootpay").d("receipt $data")
                 checkClientValidation(data)
-                return true
+                Bootpay.dismissWindow()
+                return false
             }
 
             override fun onDone(data: String) {

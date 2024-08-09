@@ -35,7 +35,7 @@ class SignUpPreferenceFragment :
         binding.apply {
             val item = hashMapOf(
                 includeMovie to Category.MOVIE,
-                includeCircus to Category.CIRCUS_MAGIC,
+                includeCircus to Category.CONCERT,
                 includeMusical to Category.MUSICAL,
                 includeTheatre to Category.PLAY,
                 includeExhibition to Category.EXHIBITION
@@ -93,9 +93,7 @@ class SignUpPreferenceFragment :
             .onEach {
                 when (it) {
                     is SignUpEventState.SignUpSuccess -> {
-                        Timber.d("회원가입 성공")
-                        startActivity(Intent(requireActivity(), MainActivity::class.java))
-                        requireActivity().finish()
+                        navigatePopBackStack()
                     }
 
                     is SignUpEventState.Error -> {

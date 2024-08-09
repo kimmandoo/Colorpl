@@ -40,11 +40,12 @@ class CommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editComment(
+        reviewId: Int,
         commentId: Int,
         requestEditComment: RequestCreateComment
     ): Flow<ApiResult<ResponseCommentEdit>> = flow {
         emit(safeApiCall {
-            commentDataSource.editComment(commentId, requestEditComment)
+            commentDataSource.editComment(reviewId, commentId, requestEditComment)
         })
     }
 
