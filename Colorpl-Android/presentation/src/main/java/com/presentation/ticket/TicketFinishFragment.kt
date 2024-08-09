@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketFinishBinding
 import com.presentation.base.BaseFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.TicketCreateViewModel
@@ -27,9 +26,7 @@ class TicketFinishFragment :
 
     private val viewModel: TicketCreateViewModel by hiltNavGraphViewModels(R.id.nav_ticket_graph)
     private val args: TicketFinishFragmentArgs by navArgs()
-    private val loading by lazy {
-        LoadingDialog(requireContext())
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +51,7 @@ class TicketFinishFragment :
                     }
 
                     ticketId < 0 -> {
-                        loading.dismiss()
+                        dismissLoading()
                         Toast.makeText(requireContext(), "티켓 생성에 실패했습니다", Toast.LENGTH_SHORT).show()
                         binding.tvConfirm.isEnabled = true
                     }
@@ -82,7 +79,7 @@ class TicketFinishFragment :
                         ImageProcessingUtil(binding.root.context).uriToCompressedFile(args.imageUrl!!)!!,
                     )
                     tvConfirm.isEnabled = false
-                    loading.show()
+                    showLoading()
                 }
             }
         }

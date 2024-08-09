@@ -41,9 +41,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    val loading by lazy {
-        LoadingDialog(requireActivity())
-    }
+
 
 
     override fun initView() {
@@ -73,6 +71,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun initClickEvent() {
         binding.apply {
             tvLogin.setOnClickListener { //로그인 버튼 클릭
+                loading.show()
                 loginViewModel.signIn(
                     includeId.etContent.text.toString(),
                     includePassword.etContent.text.toString()
@@ -94,7 +93,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     }
 
     private fun observeLoginSuccess() {
-        loading.show()
         loginViewModel.signInEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 loading.dismiss()
