@@ -1,19 +1,19 @@
 package com.colorpl.payment.dto;
 
-import lombok.AllArgsConstructor;
+import kr.co.bootpay.model.request.Cancel;
 import lombok.Data;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@Setter
-public class CancelRequest {
-    private String receiptId;
-    private String cancelUsername;
-    private String cancelMessage;
-    private double amount;  // 추가된 필드
+@NoArgsConstructor
+public class CancelRequest extends Cancel {
+    public String receiptId;
+    public Double cancelPrice;
+    public Double cancelTaxFree;
+    public String cancelId;
+    public String cancelUsername;
+    public String cancelMessage;
+    public RefundData refund;
 
-    // Getters and setters
+
 }
-
-

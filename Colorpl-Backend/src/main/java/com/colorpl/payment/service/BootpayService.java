@@ -1,7 +1,7 @@
 package com.colorpl.payment.service;
 
+
 import com.colorpl.payment.dto.CancelRequest;
-import com.colorpl.payment.dto.UserTokenRequest;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import kr.co.bootpay.Bootpay;
@@ -53,5 +53,7 @@ public class BootpayService {
     public HashMap<String, Object> getUserToken(UserToken userToken, String token) throws Exception {
         return bootpay.getUserToken(userToken);
     }
+
+
 
 }

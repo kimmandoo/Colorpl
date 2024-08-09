@@ -3,7 +3,10 @@ package com.colorpl.reservation.controller;
 
 import com.colorpl.member.service.MemberService;
 import com.colorpl.reservation.dto.ReservationDTO;
+import com.colorpl.reservation.repository.ReservationDetailRepository;
+import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.reservation.service.ReservationService;
+import com.colorpl.show.repository.ShowScheduleRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,10 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final MemberService memberService;
+
+    private final ShowScheduleRepository showScheduleRepository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationDetailRepository reservationDetailRepository;
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER')")
@@ -67,9 +74,18 @@ public class ReservationController {
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
 
+    // show_schedule_id를 입력받아 예약된 좌석 수를 카운트하는 API
+//    @GetMapping("/count")
+//    public ResponseEntity<Long> getReservedSeatsCount(@RequestParam Long showScheduleId) {
+//        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
+//        return ResponseEntity.ok(reservedSeatsCount);
+//    }
 
-
-
+    @GetMapping("/count/{showScheduleId}")
+    public ResponseEntity<Long> getReservedSeatsCount(@PathVariable Long showScheduleId) {
+        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
+        return ResponseEntity.ok(reservedSeatsCount);
+    }
     //-------------관리자용 or 다른 유저 정보 조회시 사용---------------
     // 특정 멤버의 모든 예매 조회
     @GetMapping("member/{memberId}")
@@ -125,6 +141,8 @@ public class ReservationController {
         ReservationDTO createdReservation = reservationService.createReservation(memberId, reservationDTO);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
+
+
 
 
 }

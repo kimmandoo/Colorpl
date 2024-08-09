@@ -44,7 +44,6 @@ public class ReservationDetail extends BaseEntity {
     @JoinColumn(name = "SHOW_SCHEDULE_ID")
     private ShowSchedule showSchedule;
 
-
     public void updateDetail(Byte row, Byte col, ShowSchedule showSchedule) {
         this.row = row;
         this.col = col;
