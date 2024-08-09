@@ -162,84 +162,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/cl_profile">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/ml_ticket_tab"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toTopOf="parent">
-
-
-                            <ImageView
-                                android:id="@+id/iv_ticket_star"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="72dp"
-                                android:layout_marginEnd="67dp"
-                                android:background="@drawable/selector_ic_ticket_star"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_ticket_expire"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <ImageView
-                                android:id="@+id/iv_ticket_expire"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="67dp"
-                                android:layout_marginEnd="72dp"
-                                android:background="@drawable/selector_ic_ticket_expired"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/iv_ticket_star"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <View
-                                android:id="@+id/line"
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="0.5dp"
-                                android:background="@color/white_fifty"
-                                app:layout_constraintTop_toBottomOf="@+id/indicator" />
-
-                            <View
-                                android:id="@+id/indicator"
-                                android:layout_width="60dp"
-                                android:layout_height="2dp"
-                                android:layout_marginTop="5dp"
-                                android:background="@color/imperial_red"
-                                app:layout_constraintEnd_toEndOf="@+id/iv_ticket_star"
-                                app:layout_constraintStart_toStartOf="@+id/iv_ticket_star"
-                                app:layout_constraintTop_toBottomOf="@+id/iv_ticket_star" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/cl_ticket_count"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toBottomOf="@+id/ml_ticket_tab">
-
-                            <TextView
-                                android:id="@+id/tv_ticket_title"
-                                style="@style/suite_bold_20"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginTop="20dp"
-                                android:text="@{ticketTitle ? @string/my_page_ticket_use : @string/my_page_ticket_un_use}"
-                                android:textColor="@color/timber_wolf"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_ticket_value"
-                                style="@style/suite_bold_20"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{ticketCount}"
-                                android:textColor="@color/imperial_red"
-                                app:layout_constraintBottom_toBottomOf="@+id/tv_ticket_title"
-                                app:layout_constraintStart_toEndOf="@+id/tv_ticket_title"
-                                app:layout_constraintTop_toTopOf="@+id/tv_ticket_title" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -247,7 +169,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rc_ticket"
+            android:id="@+id/rc_feed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="14dp"
