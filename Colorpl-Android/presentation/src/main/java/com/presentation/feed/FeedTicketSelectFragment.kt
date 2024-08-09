@@ -61,7 +61,7 @@ class FeedTicketSelectFragment :
             this.addCustomItemDecoration()
             this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    Timber.d("현재 페이지 위치 $position")
+                    Timber.d("현재 페이지 위치 ${viewModel.tickets.value[position]}")
                 }
             })
         }
