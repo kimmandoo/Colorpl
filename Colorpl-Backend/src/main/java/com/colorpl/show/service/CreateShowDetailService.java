@@ -23,11 +23,11 @@ import org.springframework.util.StringUtils;
 @Transactional
 public class CreateShowDetailService {
 
-    private final CreateSeatService createSeatService;
     private final CreateTheaterService createTheaterService;
     private final ShowDetailRepository showDetailRepository;
     private final TheaterRepository theaterRepository;
     private final GetHallByTheaterApiIdAndTheaterNameService getHallByTheaterApiIdAndTheaterNameService;
+    private final CreateSeatService createSeatService;
 
     public ShowDetail create(Item item) {
 

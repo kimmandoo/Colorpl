@@ -76,12 +76,4 @@ public class ShowController {
 
         return ResponseEntity.created(uri).body(id);
     }
-//
-//    @GetMapping("/schedules")
-//    public ResponseEntity<?> showSchedules(
-//        @RequestParam Long showDetailId,
-//        @RequestParam LocalDate date
-//    ) {
-//        return ResponseEntity.ok(searchShowScheduleService.search(showDetailId, date));
-//    }
 }
