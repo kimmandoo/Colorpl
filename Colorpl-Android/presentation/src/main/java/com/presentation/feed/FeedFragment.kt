@@ -49,6 +49,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     override fun onResume() {
         super.onResume()
         feedAdapter.refresh()
+        binding.rvFeed.scrollToPosition(0)
     }
 
     override fun initView() {
