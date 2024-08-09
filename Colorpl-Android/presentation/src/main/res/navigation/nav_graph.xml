@@ -130,7 +130,12 @@
         tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" />
+            app:destination="@id/fragment_feed_detail" >
+            <argument
+                android:name="reviewId"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
         <argument
             android:name="ticket"
             app:argType="com.domain.model.TicketResponse" />

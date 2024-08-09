@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
@@ -41,6 +42,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     private val args: TicketFragmentArgs by navArgs()
     private val ticket by lazy { args.ticket }
     var currentLocation: LatLng? = null
+    lateinit var action: NavDirections
 
     override fun initView(savedInstanceState: Bundle?) {
         initNaverMap()
@@ -58,6 +60,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     private fun observeReview() {
         ticketViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { reviewDetail ->
+                action  = TicketFragmentDirections.actionFragmentTicketToFragmentFeedDetail(reviewId = reviewDetail.id)
                 binding.apply {
                     includeMyReview.apply {
                         tvTitle.text = reviewDetail.title
@@ -108,7 +111,9 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 findNavController().popBackStack()
             }
             includeMyReview.clFeedDetail.setOnClickListener {
-                findNavController().navigate(R.id.fragment_feed_detail)
+                if(::action.isInitialized){
+                    navigateDestination(action)
+                }
             }
             tvFindRoad.setOnClickListener {
                 ticketViewModel.getRoute(
