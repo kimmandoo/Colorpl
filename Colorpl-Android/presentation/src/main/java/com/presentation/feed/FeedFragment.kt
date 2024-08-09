@@ -30,9 +30,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             onFilterClickListener(filterItem)
         })
     }
-    private val loading by lazy {
-        LoadingDialog(requireContext())
-    }
     private val feedAdapter by lazy {
         FeedAdapter(
             onFeedContentClickListener = { id ->
@@ -82,7 +79,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         feedAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { loadStates ->
                 val isLoading = loadStates.source.refresh is LoadState.Loading
-                if (!isLoading) loading.dismiss() else loading.show()
+                if (!isLoading) dismissLoading() else showLoading()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
