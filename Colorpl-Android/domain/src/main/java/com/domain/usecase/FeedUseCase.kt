@@ -5,5 +5,7 @@ import com.domain.model.Feed
 import kotlinx.coroutines.flow.Flow
 
 interface FeedUseCase {
-    operator fun invoke(): Flow<PagingData<Feed>>
+    fun getPagedFeed(): Flow<PagingData<Feed>>
+
+    fun getPagedMyFeed(): Flow<PagingData<Feed>>
 }
