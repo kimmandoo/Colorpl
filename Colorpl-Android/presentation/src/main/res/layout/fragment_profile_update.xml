@@ -13,27 +13,14 @@
         android:background="@color/night"
         tools:context="com.presentation.my_page.ProfileUpdateFragment">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/ic_back_white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/suite_extra_bold_20"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/include_top"
+            layout="@layout/include_top"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/my_page_profile_update"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_back"
-            app:layout_constraintStart_toEndOf="@+id/iv_back"
-            app:layout_constraintTop_toTopOf="@+id/iv_back" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{@string/my_page_profile_update}" />
 
 
         <ImageView
@@ -44,7 +31,7 @@
             android:src="@drawable/ic_profile_image_mark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_back" />
+            app:layout_constraintTop_toBottomOf="@+id/include_top" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_nick_name"

@@ -36,7 +36,7 @@ class PaymentHistoryFragment :
     }
 
     private fun initClickEvent() {
-        binding.includeTop.ivBack.setOnClickListener {
+        binding.includeTop.clBack.setOnClickListener {
             navigatePopBackStack()
         }
 

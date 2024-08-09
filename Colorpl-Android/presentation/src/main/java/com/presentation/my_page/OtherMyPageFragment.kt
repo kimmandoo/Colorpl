@@ -109,7 +109,7 @@ class OtherMyPageFragment :
 
     private fun initClickEvent() {
         binding.apply {
-            ivBack.setOnClickListener {
+            clBack.setOnClickListener {
                 navigatePopBackStack()
             }
             tvFollowRequest.setOnClickListener {
