@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
@@ -36,6 +38,11 @@ abstract class BaseMapDialogFragment<B : ViewDataBinding>(private val layoutResI
 
     override fun onMapReady(map: NaverMap) {
 
+    }
+
+    //Navigation safe args 이동
+    fun navigateDestination(action: NavDirections) {
+        findNavController().navigate(action)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
