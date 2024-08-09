@@ -65,6 +65,7 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
+
     fun editReview(reviewId: Int, review: Review) {
         viewModelScope.launch {
             reviewEditUseCase(reviewId, requestReviewEdit = review).collect {
@@ -84,7 +85,7 @@ class FeedViewModel @Inject constructor(
 
     fun getFeed() {
         viewModelScope.launch {
-            getPagedFeedUseCase().cachedIn(viewModelScope).collectLatest { pagedData ->
+            getPagedFeedUseCase.getPagedFeed().cachedIn(viewModelScope).collectLatest { pagedData ->
                 _pagedFeed.value = pagedData
             }
         }
