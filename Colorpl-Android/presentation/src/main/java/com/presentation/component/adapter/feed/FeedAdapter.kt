@@ -60,7 +60,7 @@ class FeedAdapter(
     companion object {
         private val feedCustomDiffUtil = object : DiffUtil.ItemCallback<Feed>() {
             override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
-                return oldItem.hashCode() == newItem.hashCode()
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {

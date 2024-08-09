@@ -12,6 +12,7 @@ import com.colorpl.presentation.databinding.FragmentFeedDetailBinding
 import com.domain.model.Comment
 import com.domain.model.Review
 import com.domain.model.ReviewDetail
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
@@ -174,6 +175,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentCreateResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    binding.etComment.clearFocus()
                     loadingDialog.dismiss()
                     commentAdapter.refresh()
                 }
