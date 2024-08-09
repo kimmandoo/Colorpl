@@ -4,19 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "dbs")
 public class RetrieveTheaterDetailApiResponse {
 
     @JacksonXmlProperty(localName = "db")
-    private Db theaterDetail;
+    private Theater theater;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Db {
+    public static class Theater {
 
         @JacksonXmlProperty(localName = "fcltynm")
         private String name;
@@ -24,25 +26,22 @@ public class RetrieveTheaterDetailApiResponse {
         @JacksonXmlProperty(localName = "mt10id")
         private String apiId;
 
-        @JacksonXmlProperty(localName = "seatscale")
-        private int seatscale;
-
         @JacksonXmlProperty(localName = "adres")
         private String address;
 
         @JacksonXmlProperty(localName = "la")
-        private double latitude;
+        private Double latitude;
 
         @JacksonXmlProperty(localName = "lo")
-        private double longitude;
+        private Double longitude;
 
         @JacksonXmlElementWrapper(localName = "mt13s")
         @JacksonXmlProperty(localName = "mt13")
-        private List<Mt13> mt13s;
+        private final List<Hall> halls = new ArrayList<>();
 
         @Getter
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Mt13 {
+        public static class Hall {
 
             @JacksonXmlProperty(localName = "prfplcnm")
             private String name;
