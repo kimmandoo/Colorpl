@@ -58,11 +58,11 @@ enum class Page(val hideBottomNav: Boolean) {
     FEED(false),
     LOGIN(false),
     RESERVATION(false),
-    SETTING(false),
+    SETTING(true),
     TICKET(false),
     SCHEDULE(false),
     ADDRESS(true),
-    OTHER_MY_PAGE(true)
+    OTHER_MY_PAGE(true),
     ;
 
     companion object {
