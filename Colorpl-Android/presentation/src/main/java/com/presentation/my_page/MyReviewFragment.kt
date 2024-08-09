@@ -1,64 +1,67 @@
 package com.presentation.my_page
 
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMyReviewBinding
 import com.presentation.base.BaseFragment
-import com.presentation.component.adapter.schedule.TicketAdapter
-import com.presentation.util.setDistanceX
-import com.presentation.util.setTransactionX
+import com.presentation.component.adapter.feed.FeedAdapter
+import com.presentation.component.dialog.LoadingDialog
+import com.presentation.viewmodel.MyReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment_my_review) {
 
-    private val ticketAdapter: TicketAdapter by lazy {
-        TicketAdapter(
-            onTicketClickListener = {
-            }
+    private val myReviewViewModel: MyReviewViewModel by viewModels()
+
+    private val feedAdapter by lazy {
+        FeedAdapter(
+            onFeedContentClickListener = { id ->
+
+            },
+            onCommentClickListener = { },
+            onEmotionClickListener = { },
+            onReportClickListener = { },
+            onUserClickListener = { }
         )
     }
 
+
     override fun initView() {
-        initTicket()
+        initFeed()
         initClickEvent()
     }
 
-    private fun initTicket() {
-        binding.rcReview.apply {
-            adapter = ticketAdapter
+    private fun initFeed() {
+        binding.rcFeed.apply {
+            adapter = feedAdapter
             itemAnimator = null
         }
+        val loading = LoadingDialog(requireContext())
+        myReviewViewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { pagingData ->
+                pagingData?.let { feed ->
+                    feedAdapter.submitData(feed)
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-
-        ticketAdapter.submitList(
-            listOf( // testcode
-
-            )
-        )
-
+        feedAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { loadStates ->
+                val isLoading = loadStates.source.refresh is LoadState.Loading
+                if (!isLoading) {
+                    binding.count = feedAdapter.itemCount
+                    loading.dismiss()
+                } else loading.show()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initClickEvent() {
-        val unUse = binding.ivUnUseTicket
-        val use = binding.ivUseTicket
-        unUse.isSelected = true
-
         binding.apply {
-            ivUnUseTicket.setOnClickListener {
-                it.isSelected = !it.isSelected
-                use.isSelected = false
-                type = false
-                indicator.setTransactionX(0f)
-            }
-
-            ivUseTicket.setOnClickListener {
-                it.isSelected = !it.isSelected
-                unUse.isSelected = false
-                type = true
-                val distance = setDistanceX(unUse, use)
-                indicator.setTransactionX(distance)
-            }
-
             includeTop.ivBack.setOnClickListener {
                 navigatePopBackStack()
             }
