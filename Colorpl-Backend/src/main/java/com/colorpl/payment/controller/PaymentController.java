@@ -4,6 +4,7 @@ import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.member.service.MemberService;
+import com.colorpl.payment.dto.ReceiptDTO;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import kr.co.bootpay.model.request.Cancel;
@@ -55,7 +56,7 @@ public class PaymentController {
     @GetMapping("/receipt/{id}")
     @Operation(summary = "영수증 조회", description = "영수증 id로 영수증 정보를 받아오는 api")
     public ResponseEntity<?> getReceipt(
-        @RequestHeader("Authorization") String authorizationHeader,
+        @RequestHeader("Pay-Authorization") String authorizationHeader,
         @PathVariable String id) {
         try {
             String token = authorizationHeader.replace("Bearer ", "");
@@ -203,25 +204,71 @@ public class PaymentController {
             );
         }
     }
-
-    @GetMapping("/{memberId}/receipts")
+    @GetMapping("/receipts")
     @Transactional
-    public ResponseEntity<?> getAllReceiptsForMember(@PathVariable Integer memberId) {
+    @Operation(summary = "구매자의 모든 결제내역 조회", description = "구매자의 모든 영수증 내역을 받아오는 api")
+    public ResponseEntity<?> getAllReceiptsForMember(
+        @RequestHeader("Pay-Authorization") String authorizationHeader
+        ) {
         try {
+
+            String token = authorizationHeader.replace("Bearer ", "");
             // 특정 멤버를 조회
+
+            Integer memberId = memberService.getCurrentMemberId();
             Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+                .orElseThrow(MemberNotFoundException::new);
 
             // 멤버의 모든 영수증 ID 목록을 가져옴
             List<String> receiptIds = member.getReceiptIds();
 
+            // 각 영수증을 조회하여 필요한 필드만 추출
+            List<ReceiptDTO> receipts = receiptIds.stream()
+                .map(receiptId -> {
+                    try {
+                        // 영수증 상세 정보 조회
+                        HashMap<String, Object> receiptDetails = bootpayService.getReceipt(receiptId,token);
+
+                        // 필요한 필드만 추출하여 ReceiptDTO로 변환
+                        return ReceiptDTO.builder()
+                            .orderName((String) receiptDetails.get("order_name"))
+                            .purchasedAt((String) receiptDetails.get("purchased_at"))
+                            .price((int) receiptDetails.get("price"))
+                            .statusLocale((String) receiptDetails.get("status_locale"))
+                            .build();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to retrieve receipt details for ID: " + receiptId);
+                    }
+                })
+                .toList();
+
             // 결과 반환
-            return ResponseEntity.ok(receiptIds);
+            return ResponseEntity.ok(receipts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error: " + e.getMessage());
         }
     }
+
+
+//    @GetMapping("/{memberId}/receipts")
+//    @Transactional
+//    public ResponseEntity<?> getAllReceiptsForMember(@PathVariable Integer memberId) {
+//        try {
+//            // 특정 멤버를 조회
+//            Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+//
+//            // 멤버의 모든 영수증 ID 목록을 가져옴
+//            List<String> receiptIds = member.getReceiptIds();
+//
+//            // 결과 반환
+//            return ResponseEntity.ok(receiptIds);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body("Error: " + e.getMessage());
+//        }
+//    }
 
 
 }
