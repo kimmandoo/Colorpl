@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -17,13 +18,15 @@ public class CommentDTO {
     private String writer;
     private String commentContent;
     private String createdate;
+    private Boolean mycomment;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
 
     // Static method to create a CommentDTO from a Comment entity
-    public static CommentDTO fromComment(Comment comment) {
+    public static CommentDTO fromComment(Integer memberId, Comment comment) {
 
         String formattedDate = comment.getCreateDate() != null ? comment.getCreateDate().format(formatter) : null;
+
 
         return CommentDTO.builder()
                 .id(comment.getId())
@@ -32,6 +35,7 @@ public class CommentDTO {
                 .writer(comment.getMember().getNickname())
                 .commentContent(comment.getComment_content())
                 .createdate(formattedDate)
+                .mycomment(Objects.equals(comment.getMember().getId(), memberId))
                 .build();
     }
 

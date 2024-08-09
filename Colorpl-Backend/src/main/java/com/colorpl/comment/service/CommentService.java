@@ -2,7 +2,7 @@ package com.colorpl.comment.service;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
-import com.colorpl.comment.dto.RequestDTO;
+import com.colorpl.comment.dto.CommentRequestDTO;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.CommentNotFoundException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
@@ -31,17 +31,18 @@ public class CommentService {
 
     // 각 리뷰의 댓글 조회
     @Transactional(readOnly = true)
-    public Page<CommentDTO> getCommentsByReviewId(Long reviewId, Pageable pageable) {
+    public Page<CommentDTO> getCommentsByReviewId(Integer memberId, Long reviewId, Pageable pageable) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
         Page<Comment> commentPage = commentRepository.findByReviewId(reviewId, pageable);
-        return commentPage.map(CommentDTO::fromComment);
+//        return commentPage.map(CommentDTO::fromComment);
+        return commentPage.map(comment -> CommentDTO.fromComment(memberId, comment));
     }
 
     // 리뷰에 댓글 생성
     @Transactional
-    public CommentDTO createComment(Long reviewId, Integer memberId, RequestDTO requestDTO) {
+    public CommentDTO createComment(Long reviewId, Integer memberId, CommentRequestDTO commentRequestDTO) {
         // 리뷰 및 멤버 가져오기
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
@@ -52,17 +53,17 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .member(member)
                 .review(review)
-                .comment_content(requestDTO.getCommentContent())
+                .comment_content(commentRequestDTO.getCommentContent())
                 .build();
 
         Comment createdComment = commentRepository.save(comment);
         // DTO로 반환
-        return CommentDTO.fromComment(createdComment);
+        return CommentDTO.fromComment(memberId,createdComment);
     }
 
     // 댓글 수정
     @Transactional
-    public CommentDTO updateComment(Long commentId, Long reviewId, Integer memberId, RequestDTO requestDTO) {
+    public CommentDTO updateComment(Long commentId, Long reviewId, Integer memberId, CommentRequestDTO commentRequestDTO) {
         // 해당 댓글 찾기
         Comment comment = commentRepository.findById(commentId)
                 // 댓글 작성자와 동일한지 확인
@@ -78,12 +79,12 @@ public class CommentService {
         comment.updateComment(
                 review,
                 member,
-                requestDTO.getCommentContent()
+                commentRequestDTO.getCommentContent()
         );
 
         // 수정된 댓글 저장 및 DTO로 반환
         Comment updatedComment = commentRepository.save(comment);
-        return CommentDTO.fromComment(updatedComment);
+        return CommentDTO.fromComment(memberId,updatedComment);
     }
 
     // 댓글 삭제
