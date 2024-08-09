@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemFeedBinding
 import com.domain.model.Feed
+import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
 
 class FeedViewHolder(
@@ -23,16 +24,7 @@ class FeedViewHolder(
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
             tvUploadDate.text = data.createdate
-            ivEmotion.setImageResource(
-                when (data.emotion) {
-                    1 -> R.drawable.selector_ic_excited
-                    2 -> R.drawable.selector_ic_love
-                    3 -> R.drawable.selector_ic_tired
-                    4 -> R.drawable.selector_ic_crying
-                    5 -> R.drawable.selector_ic_angry
-                    else -> R.drawable.selector_ic_excited
-                }
-            )
+            ivEmotion.setEmotion(data.emotion)
             updateEmpathy(data.myempathy, data.empathy)
             ivContent.setImageCenterCrop(data.imgurl)
             clickScope.forEach {

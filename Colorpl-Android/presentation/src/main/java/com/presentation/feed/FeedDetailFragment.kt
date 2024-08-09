@@ -17,6 +17,7 @@ import com.presentation.component.adapter.feed.CommentAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.component.dialog.ReviewEditDialog
 import com.presentation.util.hideKeyboard
+import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -188,16 +189,7 @@ class FeedDetailFragment :
             ivContent.setImageCenterCrop(data.imgUrl)
             tvEmotion.text = data.empathy.toString()
             tvCommentCnt.text = data.commentCount.toString()
-            ivEmotion.setImageResource(
-                when (data.emotion) {
-                    1 -> R.drawable.selector_ic_excited
-                    2 -> R.drawable.selector_ic_love
-                    3 -> R.drawable.selector_ic_tired
-                    4 -> R.drawable.selector_ic_crying
-                    5 -> R.drawable.selector_ic_angry
-                    else -> R.drawable.selector_ic_excited
-                }
-            )
+            ivEmotion.setEmotion(data.emotion)
             ivEmotion.setOnClickListener {
                 onEmotionClickListener(data.id, data.myEmpathy)
             }

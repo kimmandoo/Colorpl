@@ -23,6 +23,7 @@ import com.presentation.util.checkLocationPermission
 import com.presentation.util.distanceChange
 import com.presentation.util.ignoreParentScroll
 import com.presentation.util.roadTimeChange
+import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
 import com.presentation.util.setup
 import com.presentation.viewmodel.TicketViewModel
@@ -45,6 +46,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         initNaverMap()
         initUi()
         initClickEvent()
+        observeReview()
     }
 
     private fun initNaverMap() {
@@ -53,7 +55,27 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         mapView?.getMapAsync(this@TicketFragment)
     }
 
+    private fun observeReview() {
+        ticketViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { reviewDetail ->
+                binding.apply {
+                    includeMyReview.apply {
+                        tvTitle.text = reviewDetail.title
+                        tvProfile.text = reviewDetail.writer
+                        tvCommentCnt.text = reviewDetail.commentCount.toString()
+                        tvEmotion.text = reviewDetail.empathy.toString()
+                        tvContent.text = reviewDetail.content
+                        ivContent.setImageCenterCrop(reviewDetail.imgUrl)
+                        ivEmotion.setEmotion(reviewDetail.emotion)
+                    }
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
     private fun initUi() {
+        if (args.ticket.reviewId > 0) {
+            ticketViewModel.getDetailReviewDetail(args.ticket.reviewId)
+        }
         binding.apply {
             binding.titleText = ticket.name
             ivPoster.setImageCenterCrop(ticket.imgUrl)
@@ -74,16 +96,16 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
 
     private fun initClickEvent() {
         binding.apply {
-            includeMyReview.clFeedDetail.visibility = if (ticket.reviewExists) {
-                View.VISIBLE
-            } else {
-                View.GONE
+            val myReview = listOf(tvMyReview, includeMyReview.clFeedDetail)
+            myReview.forEach {
+                it.visibility = if (ticket.reviewExists) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
             }
             includeTop.ivBack.setOnClickListener {
                 findNavController().popBackStack()
-            }
-            tvMyReview.setOnClickListener {
-                ticketViewModel.deleteReview(ticket.reviewId)
             }
             includeMyReview.clFeedDetail.setOnClickListener {
                 findNavController().navigate(R.id.fragment_feed_detail)
