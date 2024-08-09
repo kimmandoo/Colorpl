@@ -1,11 +1,14 @@
 package com.colorpl.show.controller;
 
+import com.colorpl.show.dto.CreateByApiIdRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.SearchShowsRequest;
 import com.colorpl.show.dto.SearchShowsResponse;
-import com.colorpl.show.service.GetShowDetailService;
+import com.colorpl.show.service.CreateShowService;
 import com.colorpl.show.service.GetSchedulesService;
+import com.colorpl.show.service.GetShowDetailService;
 import com.colorpl.show.service.SearchShowsService;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/shows")
@@ -25,6 +31,7 @@ public class ShowController {
     private final SearchShowsService searchShowsService;
     private final GetShowDetailService getShowDetailService;
     private final GetSchedulesService getSchedulesService;
+    private final CreateShowService createShowService;
 
     @GetMapping
     public ResponseEntity<List<SearchShowsResponse>> searchShows(
@@ -48,7 +55,15 @@ public class ShowController {
         return ResponseEntity.ok(getSchedulesService.getSchedules(showDetailId, date));
     }
 
-//    @PostMapping("/create")
+    @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
+    public ResponseEntity<?> getShowSchedule(
+        @PathVariable Integer showDetailId,
+        @PathVariable Long showScheduleId
+    ) {
+        return ResponseEntity.ok().build();
+    }
+
+    //    @PostMapping("/create")
 //    public ResponseEntity<Void> createByDate(
 //        @RequestBody CreateByDateRequest request) {
 //
@@ -57,24 +72,16 @@ public class ShowController {
 //        return ResponseEntity.ok().build();
 //    }
 //
-//    @PostMapping
-//    public ResponseEntity<Long> createByApiId(@RequestBody CreateByApiIdRequest request) {
-//
-//        Long id = createShowService.createByApiId(request.getApiId());
-//
-//        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//            .path("/shows/{id}")
-//            .buildAndExpand(id)
-//            .toUri();
-//
-//        return ResponseEntity.created(uri).body(id);
-//    }
-//
-//    @GetMapping("/schedules")
-//    public ResponseEntity<?> showSchedules(
-//        @RequestParam Long showDetailId,
-//        @RequestParam LocalDate date
-//    ) {
-//        return ResponseEntity.ok(searchShowScheduleService.search(showDetailId, date));
-//    }
+    @PostMapping
+    public ResponseEntity<Integer> createByApiId(@RequestBody CreateByApiIdRequest request) {
+
+        Integer id = createShowService.createByApiId(request.getApiId());
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/shows/{id}")
+            .buildAndExpand(id)
+            .toUri();
+
+        return ResponseEntity.created(uri).body(id);
+    }
 }

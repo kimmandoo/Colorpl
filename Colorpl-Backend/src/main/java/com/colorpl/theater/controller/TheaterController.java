@@ -17,6 +17,6 @@ public class TheaterController {
 
     @PostMapping
     public ResponseEntity<Integer> createTheater(@RequestBody String apiId) {
-        return ResponseEntity.ok(createTheaterService.createTheater(apiId));
+        return ResponseEntity.ok(createTheaterService.createTheaterByApiId(apiId).getId());
     }
 }

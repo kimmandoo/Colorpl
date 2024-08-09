@@ -25,18 +25,21 @@ public class RetrieveShowDetailApiServiceImpl implements RetrieveShowDetailApiSe
 
     @Override
     public ShowDetailApiResponse retrieve(String apiId) {
+
         URI uri = UriComponentsBuilder.fromHttpUrl(showApiUrl)
-            .path("pblprfr/")
-            .path(apiId)
+            .path("/pblprfr")
+            .path("/{apiId}")
             .queryParam("service", showApiKey)
             .queryParam("newsql", "Y")
-            .build()
+            .buildAndExpand(apiId)
             .toUri();
+
         String xml = webClient.get()
             .uri(uri)
             .retrieve()
             .bodyToMono(String.class)
             .block();
+
         return deserialize(xml);
     }
 
