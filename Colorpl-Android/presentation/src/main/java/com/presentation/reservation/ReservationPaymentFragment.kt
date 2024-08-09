@@ -78,8 +78,8 @@ class ReservationPaymentFragment :
                     manager = requireActivity().supportFragmentManager,
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
-                    val responseData = Gson().fromJson(data, PayRequest::class.java)
-                    payViewModel.startPayment(responseData.receipt_id)
+//                    val responseData = Gson().fromJson(data, PayRequest::class.java)
+//                    payViewModel.startPayment(responseData.receipt_id)
                     false
                 }
             }
