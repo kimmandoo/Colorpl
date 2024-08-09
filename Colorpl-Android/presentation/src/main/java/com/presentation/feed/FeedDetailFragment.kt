@@ -90,6 +90,11 @@ class FeedDetailFragment :
 
     private fun initEdit() {
         binding.apply {
+            ivSendComment.setOnClickListener {
+                if (etComment.text.toString().isNotEmpty()) {
+
+                }
+            }
             tvEdit.setOnClickListener {
                 editDialog.show()
             }
@@ -139,16 +144,19 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentDeleteResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    commentAdapter.refresh()
                 }
             }
             launch {
                 feedViewModel.commentEditResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    commentAdapter.refresh()
                 }
             }
             launch {
                 feedViewModel.commentCreateResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    commentAdapter.refresh()
                 }
             }
         }
@@ -210,6 +218,6 @@ class FeedDetailFragment :
     }
 
     private fun onCommentDeleteClickListener(id: Int) {
-        feedViewModel.deleteReview(id)
+        feedViewModel.deleteComment(id)
     }
 }
