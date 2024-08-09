@@ -2,6 +2,7 @@ package com.colorpl.show.dto;
 
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
+import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,16 @@ public class GetShowDetailResponse {
     private Map<String, Integer> priceBySeatClass;
     private String posterImagePath;
     private Category category;
+    private List<SeatResponse> seats;
+
+    @Getter
+    @Builder
+    public static class SeatResponse {
+
+        private Integer row;
+        private Integer col;
+        private String seatClass;
+    }
 
     public static GetShowDetailResponse from(ShowDetail showDetail) {
         return GetShowDetailResponse.builder()
@@ -28,6 +39,11 @@ public class GetShowDetailResponse {
             .priceBySeatClass(showDetail.getPriceBySeatClass())
             .posterImagePath(showDetail.getPosterImagePath())
             .category(showDetail.getCategory())
+            .seats(showDetail.getSeats().stream().map(s -> SeatResponse.builder()
+                .row(s.getRow())
+                .col(s.getCol())
+                .seatClass(s.getSeatClass())
+                .build()).toList())
             .build();
     }
 }

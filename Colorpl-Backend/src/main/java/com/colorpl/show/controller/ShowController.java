@@ -55,6 +55,14 @@ public class ShowController {
         return ResponseEntity.ok(getSchedulesService.getSchedules(showDetailId, date));
     }
 
+    @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
+    public ResponseEntity<?> getShowSchedule(
+        @PathVariable Integer showDetailId,
+        @PathVariable Long showScheduleId
+    ) {
+        return ResponseEntity.ok().build();
+    }
+
     //    @PostMapping("/create")
 //    public ResponseEntity<Void> createByDate(
 //        @RequestBody CreateByDateRequest request) {
