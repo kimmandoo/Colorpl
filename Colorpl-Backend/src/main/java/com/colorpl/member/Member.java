@@ -7,6 +7,7 @@ import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.Category;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -71,6 +72,10 @@ public class Member extends BaseEntity {
 
     private static final int MAX_CATEGORIES = 2;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "member_receipts", joinColumns = @JoinColumn(name = "member_id"))
+    private List<String> receiptIds = new ArrayList<>();
+
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
 //    private List<Review> reviews;
 
@@ -80,6 +85,8 @@ public class Member extends BaseEntity {
 
     @ManyToMany(mappedBy = "followingList")
     private Set<Member> followerList;
+
+
 
 
     // 연관관계 편의 메서드
@@ -125,6 +132,20 @@ public class Member extends BaseEntity {
         member.getFollowerList().remove(this);
     }
 
+
+    public void addReceiptId(String receiptId) {
+        if (receiptIds.contains(receiptId)) {
+            throw new IllegalArgumentException("이미 추가된 영수증 ID입니다.");
+        }
+        receiptIds.add(receiptId);
+    }
+
+    public void removeReceiptId(String receiptId) {
+        if (!receiptIds.contains(receiptId)) {
+            throw new IllegalArgumentException("삭제할 영수증 ID가 없습니다.");
+        }
+        receiptIds.remove(receiptId);
+    }
     public void updatePassword(String password) {
         this.password = password;
     }
