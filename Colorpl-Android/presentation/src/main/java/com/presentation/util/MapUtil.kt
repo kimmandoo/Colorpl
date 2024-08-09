@@ -2,8 +2,13 @@ package com.presentation.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleCoroutineScope
+import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
@@ -18,9 +23,13 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.presentation.component.dialog.LoadingDialog
 import com.presentation.map.model.MapMarker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 
 /** Naver map 셋팅 */
@@ -90,7 +99,7 @@ fun makeMarker(
     builder: Clusterer.Builder<MapMarker>,
 ): Clusterer<MapMarker> { // cluster 연결
     val cluster: Clusterer<MapMarker> = builder.build()
-
+    Timber.tag("마커 데이터").d("marker : $marker")
 
     marker.forEach { item ->
         cluster.add(item, null)
@@ -108,7 +117,9 @@ suspend fun deleteMarker(marker: Clusterer<MapMarker>) {
 fun clickMarker(
     builder: Clusterer.Builder<MapMarker>,
     context: Context,
+    lifecycleScope : LifecycleCoroutineScope,
     markerInfo: (MapMarker) -> Unit?,
+
 ) {
     builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
 
@@ -125,8 +136,15 @@ fun clickMarker(
             marker.apply {
                 width = 200
                 height = 200
+                icon = OverlayImage.fromResource(R.drawable.ic_default_back)
                 val markerData = info.key as MapMarker
-                icon = combineImages(context, R.drawable.ic_pin, R.drawable.dummy_ticket)
+                Timber.d("데이터 확인 $markerData")
+                lifecycleScope.launch {
+                    val async = lifecycleScope.async(Dispatchers.IO) {
+                        convertBitmapFromURL(markerData.image.replace("http", "https"))
+                    }
+                    icon = combineImages(context, R.drawable.ic_default_pin, async.await() ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888))
+                }
                 onClickListener = Overlay.OnClickListener {
 
                     markerInfo(markerData)
