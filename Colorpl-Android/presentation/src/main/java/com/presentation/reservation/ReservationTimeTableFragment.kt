@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class ReservationTimeTableFragment :
@@ -48,6 +49,7 @@ class ReservationTimeTableFragment :
         initDateAdapter()
         initViewModel()
         observedSelectedDate()
+        observedReservationSchedule()
         viewModel.getReservationSchedule(2, "2024-08-09")
     }
 
@@ -102,9 +104,9 @@ class ReservationTimeTableFragment :
         )
 
 
-        reservationPlaceAdapter.submitList(
-            data.toModel()
-        )
+//        reservationPlaceAdapter.submitList(
+//            data.toModel()
+//        )
     }
 
     private fun initDateAdapter() {
@@ -142,7 +144,17 @@ class ReservationTimeTableFragment :
                     )
                 }
                 reservationDateTableAdapter.submitList(dateList)
+                val formattedDate = viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                viewModel.getReservationSchedule(2, formattedDate)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observedReservationSchedule() {
+        viewModel.getReservationSchedule.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                reservationPlaceAdapter.submitList(it)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {

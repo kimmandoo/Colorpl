@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.ReservationPairInfo
 import com.domain.model.Seat
 import com.domain.model.TimeTable
 import com.domain.usecase.ReservationScheduleUseCase
@@ -36,6 +37,9 @@ class ReservationViewModel @Inject constructor(
     val reservationTimeTable: StateFlow<TimeTable> = _reservationTimeTable
     private val _reservationSeat = MutableStateFlow<List<Seat>>(listOf())
     val reservationSeat: StateFlow<List<Seat>> = _reservationSeat
+
+    private val _getReservationSchedule = MutableStateFlow<List<ReservationPairInfo>>(listOf())
+    val getReservationSchedule: StateFlow<List<ReservationPairInfo>> = _getReservationSchedule
 
     fun setReservationImg(img: String) {
         _reservationImg.value = img
@@ -73,6 +77,7 @@ class ReservationViewModel @Inject constructor(
             getReservationScheduleUseCase(showDetailId, date).collect { response ->
                 when (response) {
                     is DomainResult.Success -> {
+                        _getReservationSchedule.value = response.data
                         Timber.tag(this.javaClass.simpleName).d("${response.data}")
                         Timber.d("예약 정보 조회 성공")
                     }

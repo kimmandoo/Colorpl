@@ -7,13 +7,13 @@ data class ResponseShowSchedules (
 
 data class Hall(
     val name: String,
-    val countSeat: Int,
-    val timeTable: List<TimeTable>,
+    val countSeats: Int,
+    val timetable: List<TimeTable>,
 )
 
 data class TimeTable(
-    val scheduleId: Int,
+    val scheduleId: Int?,
     val startTime: String,
     val endTime: String,
-    val remainingSeatCount: Int,
+    val remainingSeats: Int?,
 )
