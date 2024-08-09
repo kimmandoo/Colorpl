@@ -24,8 +24,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
             onFeedContentClickListener = { id ->
 
             },
-            onCommentClickListener = { },
-            onEmotionClickListener = { },
+            onEmotionClickListener = { id, isEmpathy -> },
             onReportClickListener = { },
             onUserClickListener = { }
         )
