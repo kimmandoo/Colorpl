@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.colorpl.comment.domain.Comment;
 import com.colorpl.comment.dto.CommentDTO;
+import com.colorpl.comment.dto.RequestDTO;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
@@ -82,7 +83,7 @@ public class CommentServiceTest {
     void testCreateComment() {
         Long reviewId = 1L;
         Integer memberId = 1;
-        CommentDTO commentDTO = CommentDTO.builder()
+        RequestDTO requestDTO = RequestDTO.builder()
                 .commentContent("New comment")
                 .build();
         Review review = Review.builder().id(reviewId).build();
@@ -90,31 +91,30 @@ public class CommentServiceTest {
         Comment comment = Comment.builder()
                 .review(review)
                 .member(member)
-                .comment_content(commentDTO.getCommentContent())
+                .comment_content(requestDTO.getCommentContent())
                 .build();
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
-        CommentDTO result = commentService.createComment(reviewId, memberId, commentDTO);
+        CommentDTO result = commentService.createComment(reviewId, memberId, requestDTO);
 
         verify(reviewRepository, times(1)).findById(reviewId);
         verify(memberRepository, times(1)).findById(memberId);
         verify(commentRepository, times(1)).save(any(Comment.class));
-        assertThat(result.getCommentContent()).isEqualTo(commentDTO.getCommentContent());
+        assertThat(result.getCommentContent()).isEqualTo(requestDTO.getCommentContent());
     }
 
     @Test
     void testUpdateComment() {
         Long commentId = 1L;
         Integer memberId = 1;
-        CommentDTO commentDTO = CommentDTO.builder()
-                .reviewId(1L)
-                .memberId(memberId)
-                .commentContent("Updated comment")
+        Long reviewId = 1L;
+        RequestDTO requestDTO = RequestDTO.builder()
+                .commentContent("New comment")
                 .build();
-        Review review = Review.builder().id(commentDTO.getReviewId()).build();
+        Review review = Review.builder().id(reviewId).build();
         Member member = Member.builder().id(memberId).build();
 
         Comment comment = Comment.builder()
@@ -125,17 +125,17 @@ public class CommentServiceTest {
                 .build();
 
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        when(reviewRepository.findById(commentDTO.getReviewId())).thenReturn(Optional.of(review));
-        when(memberRepository.findById(commentDTO.getMemberId())).thenReturn(Optional.of(member));
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
-        CommentDTO result = commentService.updateComment(commentId, memberId, commentDTO);
+        CommentDTO result = commentService.updateComment(commentId, reviewId, memberId, requestDTO);
 
         verify(commentRepository, times(1)).findById(commentId);
-        verify(reviewRepository, times(1)).findById(commentDTO.getReviewId());
-        verify(memberRepository, times(1)).findById(commentDTO.getMemberId());
+        verify(reviewRepository, times(1)).findById(reviewId);
+        verify(memberRepository, times(1)).findById(memberId);
         verify(commentRepository, times(1)).save(any(Comment.class));
-        assertThat(result.getCommentContent()).isEqualTo(commentDTO.getCommentContent());
+        assertThat(result.getCommentContent()).isEqualTo(requestDTO.getCommentContent());
     }
 
     @Test
