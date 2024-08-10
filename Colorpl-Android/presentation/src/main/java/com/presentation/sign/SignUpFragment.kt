@@ -141,7 +141,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
-                        signUpViewModel.setUserImageFile(ImageProcessingUtil(requireActivity()).uriToFile(uri))
+                        signUpViewModel.setUserImageFile(ImageProcessingUtil(requireActivity()).uriToCompressedFile(uri))
                         binding.ivProfile.setImageCircleCrop(uri)
                     }
                 }

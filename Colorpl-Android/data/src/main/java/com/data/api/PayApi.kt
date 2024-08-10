@@ -14,7 +14,7 @@ interface PayApi {
 
     @POST("api/payment/confirm")
     suspend fun postPayment(
-        @Header("Authorization") Authorization: String,
+        @Header("Pay-Authorization") payAuthorization: String,
         @Query("receiptId") receiptId: String
     ): ResponsePayResult
 }
