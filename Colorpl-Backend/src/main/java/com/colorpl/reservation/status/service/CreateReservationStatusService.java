@@ -18,12 +18,16 @@ public class CreateReservationStatusService {
     @Value("${seat.cols}")
     private int cols;
 
+    @Value("${time.to.live}")
+    private Long expiration;
+
     private final ReservationStatusRepository reservationStatusRepository;
 
     public void createReservationStatus(Long showScheduleId) {
         reservationStatusRepository.findById(showScheduleId).orElseGet(() -> {
             ReservationStatus reservationStatus = ReservationStatus.builder()
                 .showScheduleId(showScheduleId)
+                .expiration(expiration)
                 .build();
             createReserved(reservationStatus);
             return reservationStatusRepository.save(reservationStatus);

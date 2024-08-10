@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
 @Builder
@@ -17,4 +18,11 @@ public class ReservationStatus {
 
     @Builder.Default
     private Map<String, Boolean> reserved = new HashMap<>();
+
+    @TimeToLive
+    private Long expiration;
+
+    public void updateExpiration(Long expiration) {
+        this.expiration = expiration;
+    }
 }

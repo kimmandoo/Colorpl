@@ -6,6 +6,7 @@ import com.colorpl.reservation.status.domain.ReservationStatus;
 import com.colorpl.reservation.status.repository.ReservationStatusRepository;
 import com.colorpl.show.domain.Seat;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class EnableReservationService {
 
     private final ReservationStatusRepository reservationStatusRepository;
+
+    @Value("${time.to.live}")
+    private Long expiration;
 
     public void enableReservation(Long showScheduleId, Integer row, Integer col) {
         ReservationStatus reservationStatus = reservationStatusRepository.findById(showScheduleId)
@@ -25,6 +29,7 @@ public class EnableReservationService {
             throw new ReservationStatusAlreadyEnabledException(showScheduleId, row, col);
         }
         reservationStatus.getReserved().put(seat.toString(), true);
+        reservationStatus.updateExpiration(expiration);
         reservationStatusRepository.save(reservationStatus);
     }
 }
