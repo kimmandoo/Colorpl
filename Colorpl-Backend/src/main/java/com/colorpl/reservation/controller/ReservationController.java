@@ -81,10 +81,18 @@ public class ReservationController {
 //        return ResponseEntity.ok(reservedSeatsCount);
 //    }
 
-    @GetMapping("/count/{showScheduleId}")
-    public ResponseEntity<Long> getReservedSeatsCount(@PathVariable Long showScheduleId) {
-        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
-        return ResponseEntity.ok(reservedSeatsCount);
+//    @GetMapping("/count/{showScheduleId}")
+//    public ResponseEntity<Long> getReservedSeatsCount(@PathVariable Long showScheduleId) {
+//        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
+//        return ResponseEntity.ok(reservedSeatsCount);
+//    }
+
+    @GetMapping("/count")
+    @Operation(summary = "특정 ShowSchedule ID를 가진 예약 상세 항목 수 조회", description = "주어진 ShowSchedule ID에 대한 예약 상세 항목의 수를 반환합니다.")
+    public ResponseEntity<Long> countReservationDetailsByShowScheduleId(
+            @RequestParam Long showScheduleId) {
+        long count = reservationService.countByShowScheduleId(showScheduleId);
+        return ResponseEntity.ok(count);
     }
     //-------------관리자용 or 다른 유저 정보 조회시 사용---------------
     // 특정 멤버의 모든 예매 조회

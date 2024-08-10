@@ -324,19 +324,23 @@ public class ReservationService {
         return ReservationDTO.toReservationDTO(createdReservation);
     }
 
-    // 입력받은 show_schedule_id로 Reservation을 조회하고 카운트 증가
-    @Transactional(readOnly = true)
-    public long countReservedSeatsByShowScheduleId(Long showScheduleId) {
-        // 주어진 show_schedule_id로 Reservation을 조회
-        List<Reservation> reservations = reservationRepository.findByReservationDetailsShowScheduleId(showScheduleId);
+//    // 입력받은 show_schedule_id로 Reservation을 조회하고 카운트 증가
+//    @Transactional(readOnly = true)
+//    public long countReservedSeatsByShowScheduleId(Long showScheduleId) {
+//        // 주어진 show_schedule_id로 Reservation을 조회
+//        List<Reservation> reservations = reservationRepository.findByReservationDetailsShowScheduleId(showScheduleId);
+//
+//        // 각 Reservation의 ReservationDetail 수를 카운트
+//        long reservedSeatsCount = reservations.stream()
+//            .flatMap(reservation -> reservation.getReservationDetails().stream())
+//            .filter(detail -> detail.getShowSchedule().getId().equals(showScheduleId))
+//            .count();
+//
+//        return reservedSeatsCount;
+//    }
 
-        // 각 Reservation의 ReservationDetail 수를 카운트
-        long reservedSeatsCount = reservations.stream()
-            .flatMap(reservation -> reservation.getReservationDetails().stream())
-            .filter(detail -> detail.getShowSchedule().getId().equals(showScheduleId))
-            .count();
-
-        return reservedSeatsCount;
+    public long countByShowScheduleId(Long showScheduleId) {
+        return reservationDetailRepository.countByShowScheduleId(showScheduleId);
     }
 
 
