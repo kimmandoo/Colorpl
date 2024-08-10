@@ -138,7 +138,7 @@ class ShowDetail(Base):
     show_detail_area = Column(String(255))
     show_detail_cast = Column(String(255))
     show_detail_category = Column(Enum('PLAY', 'MOVIE', 'PERFORMANCE', 'CONCERT', 'MUSICAL', 'EXHIBITION', 'ETC'))
-    show_hall = Column(String(255))
+    # show_hall = Column(String(255))
     show_detail_name = Column(String(255))
     show_detail_poster_image_path = Column(String(255))
     show_detail_runtime = Column(String(255))
