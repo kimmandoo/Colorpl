@@ -5,44 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2c81a84-c9ab-4c73-b3e1-d0b39c6dfd4d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/Colorpl-Backend.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/Colorpl-Backend.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/controller/ReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/controller/ReviewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/domain/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/domain/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/dto/NonReadReviewResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/dto/NonReadReviewResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/dto/RequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/dto/RequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/dto/RequestDTO_cpy.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/application/CreateCustomScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/application/CreateCustomScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/ScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/command/domain/ScheduleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/application/MonthlyScheduleListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/application/MonthlyScheduleListRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/application/ScheduleListService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/query/application/ScheduleListService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/ui/CreateCustomScheduleRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/ui/CreateCustomScheduleRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/ui/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/ui/ScheduleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/application/CreateTicketRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/application/CreateTicketResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/application/CreateTicketService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/domain/FindTicketDetailResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/domain/FindTicketDetailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/domain/Ticket.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/domain/TicketRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/query/MonthlyTicketListRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/query/MonthlyTicketListResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/query/MonthlyTicketListService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/query/TicketRepositoryCustom.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/query/TicketRepositoryImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/ui/CreateTicketController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/ui/FindTicketDetailController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/ticket/ui/TicketController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/dto/ReceiptDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/dto/ReceiptDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/BootpayService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/repository/ReservationDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/repository/ReservationDetailRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/test/java/com/colorpl/review/service/ReviewServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/test/java/com/colorpl/review/service/ReviewServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,17 +37,6 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Colorpl-Backend" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="other" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -143,7 +103,7 @@
     "Spring Boot.ColorplApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "be/refactor/review__S11P12D109-136",
+    "git-widget-placeholder": "be/feat/payment__S11P12D109-372",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/new136/S11P12D109/Colorpl-Backend/build.gradle",
     "node.js.detected.package.eslint": "true",
@@ -163,7 +123,7 @@
       <recent name="com.colorpl.schedule.query" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.ScheduleRepositoryCustomTest.monthlyReservationScheduleList">
+  <component name="RunManager" selected="Spring Boot.ColorplApplication">
     <configuration name="Colorpl-Backend [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -226,10 +186,19 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.ColorplApplication" />
         <item itemvalue="Gradle.ScheduleRepositoryCustomTest.monthlyReservationScheduleList" />
         <item itemvalue="Gradle.Colorpl-Backend [compileJava]" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -247,5 +216,8 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
