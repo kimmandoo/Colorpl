@@ -2,6 +2,7 @@ package com.data.datasourceimpl
 
 import com.data.api.PayApi
 import com.data.datasource.remote.PayDataSource
+import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import javax.inject.Inject
 
@@ -18,5 +19,9 @@ class PayDataSourceImpl @Inject constructor(
         receiptId: String
     ): ResponsePayResult {
         return payApi.postPayment(header, receiptId)
+    }
+
+    override suspend fun getPaymentReceipts(header: String): List<ResponsePayReceipt> {
+        return payApi.getPaymentReceipts(header)
     }
 }

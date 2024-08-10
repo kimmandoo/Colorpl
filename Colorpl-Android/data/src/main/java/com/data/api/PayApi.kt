@@ -1,5 +1,6 @@
 package com.data.api
 
+import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -17,4 +18,9 @@ interface PayApi {
         @Header("Pay-Authorization") payAuthorization: String,
         @Query("receiptId") receiptId: String
     ): ResponsePayResult
+
+    @GET("api/payment/receipts")
+    suspend fun getPaymentReceipts(
+        @Header("Pay-Authorization") payAuthorization: String
+    ): List<ResponsePayReceipt>
 }

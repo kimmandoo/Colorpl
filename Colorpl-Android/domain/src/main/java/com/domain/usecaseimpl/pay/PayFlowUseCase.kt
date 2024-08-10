@@ -2,7 +2,9 @@ package com.domain.usecaseimpl.pay
 
 import com.data.repository.PayRepository
 import com.data.util.ApiResult
+import com.domain.mapper.toEntity
 import com.domain.mapper.toPayStatus
+import com.domain.model.PayReceipt
 import com.domain.model.PayStatus
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +43,22 @@ class PayFlowUseCase @Inject constructor(
                         emit(DomainResult.Error(result.exception))
                     }
                 }
+            }
+        }
+    }
+
+    suspend fun getPayReceipts(header : String) : Flow<DomainResult<List<PayReceipt>>>{
+        return flow {
+            payRepository.getPayReceipts(header).collect{ result ->
+                when (result){
+                    is ApiResult.Success -> {
+                        emit(DomainResult.Success(result.data.toEntity()))
+                    }
+                    is ApiResult.Error -> {
+                        emit(DomainResult.Error(result.exception))
+                    }
+                }
+
             }
         }
     }

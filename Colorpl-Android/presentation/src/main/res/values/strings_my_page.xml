@@ -40,4 +40,8 @@
     <string name="my_page_version">앱 버전</string>
     <string name="my_page_version_value">1.0.0</string>
     <string name="my_page_inquire">문의하기</string>
+
+    <string name="my_page_payment_complete">결제완료</string>
+    <string name="my_page_payment_refund_complete">결제취소완료</string>
+
 </resources>

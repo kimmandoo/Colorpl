@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.PayReceipt
 import com.domain.usecaseimpl.pay.PayFlowUseCase
 import com.domain.util.DomainResult
 import com.presentation.reservation.model.PaymentEventState
@@ -65,6 +66,29 @@ class PayViewModel @Inject constructor(
                         Timber.d("결제 에러 ${result.exception}")
                     }
 
+                }
+            }
+        }
+    }
+
+    private val _paymentReceipts = MutableStateFlow<List<PayReceipt>>(listOf())
+    val paymentReceipts: StateFlow<List<PayReceipt>> get() = _paymentReceipts
+
+    fun setPaymentReceipts(value: List<PayReceipt>) {
+        _paymentReceipts.value = value
+    }
+
+    fun getPaymentReceipts() {
+        viewModelScope.launch {
+            payFlowUseCase.getPayReceipts(payToken.value).collectLatest { result ->
+                when (result) {
+                    is DomainResult.Success -> {
+                        setPaymentReceipts(result.data)
+                    }
+
+                    is DomainResult.Error -> {
+                        Timber.d("결제 내역 불러오기 실패 ${result.exception}")
+                    }
                 }
             }
         }

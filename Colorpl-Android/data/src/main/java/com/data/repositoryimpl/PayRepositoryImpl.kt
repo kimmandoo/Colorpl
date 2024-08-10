@@ -2,6 +2,7 @@ package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
 import com.data.datasource.remote.PayDataSource
+import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import com.data.repository.PayRepository
 import com.data.util.ApiResult
@@ -28,6 +29,14 @@ class PayRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 payDataSource.postPayment(header, receiptId)
+            })
+        }
+    }
+
+    override suspend fun getPayReceipts(header: String): Flow<ApiResult<List<ResponsePayReceipt>>> {
+        return flow {
+            emit(safeApiCall {
+                payDataSource.getPaymentReceipts(header)
             })
         }
     }

@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.colorpl.presentation.databinding.ItemPaymentHistoryBinding
-import com.domain.model.Payment
+import com.domain.model.PayReceipt
 import com.presentation.base.BaseDiffUtil
 import com.presentation.util.PaymentResult
 
-class PaymentHistoryAdapter : ListAdapter<Payment, PaymentHistoryViewHolder>(
-    BaseDiffUtil<Payment>()
+class PaymentHistoryAdapter : ListAdapter<PayReceipt, PaymentHistoryViewHolder>(
+    BaseDiffUtil<PayReceipt>()
 ) {
     private var onMenuClickListener: ((View, PaymentResult) -> Unit)? = null
 
@@ -25,12 +25,24 @@ class PaymentHistoryAdapter : ListAdapter<Payment, PaymentHistoryViewHolder>(
 
         holder.binding.ivMenu.setOnClickListener { view ->
             onMenuClickListener?.let {
-                it(view, PaymentResult.getType(getItem(position).type))
+                it(
+                    view,
+                    holder.setPaymentResultType(
+                        getItem(position).statusLocale,
+                        holder.binding.root.context
+                    )
+                )
             }
         }
     }
 
     fun setItemClickListener(listener: (View, PaymentResult) -> Unit) {
         this.onMenuClickListener = listener
+    }
+
+
+    companion object {
+        const val COMPLETE = 0
+        const val REFUND = 1
     }
 }
