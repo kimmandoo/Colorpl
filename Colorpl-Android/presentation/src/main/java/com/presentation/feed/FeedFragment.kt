@@ -4,6 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.filter
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
@@ -72,7 +73,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
-                feedAdapter.submitData(viewLifecycleOwner.lifecycle, feed)
+                val filteredList = if(viewModel.currentFilter.value == "전체"){
+                    feed
+                }else{
+                    feed.filter { it.category == viewModel.currentFilter.value }
+                }
+                feedAdapter.submitData(viewLifecycleOwner.lifecycle, filteredList)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -99,7 +105,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                 item.copy(isSelected = false)
             }
         }
-
+        viewModel.setFilter(clickedItem.name)
         filterAdapter.submitList(updatedList)
     }
 
