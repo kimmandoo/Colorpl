@@ -26,7 +26,7 @@ class DisableReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        createReservationStatusService.createReservationStatus(0L);
+        createReservationStatusService.createReservationStatus(2L);
         seat = Seat.builder()
             .row(0)
             .col(0)
@@ -40,16 +40,16 @@ class DisableReservationServiceTest {
 
     @Test
     void disableReservation() {
-        disableReservationService.disableReservation(0L, 0, 0);
-        ReservationStatus found = reservationStatusRepository.findById(0L).orElseThrow();
+        disableReservationService.disableReservation(2L, 0, 0);
+        ReservationStatus found = reservationStatusRepository.findById(2L).orElseThrow();
         assertThat(found.getReserved().get(seat.toString())).isEqualTo(false);
     }
 
     @Test
     void disableReservation_assertThatThrownBy() {
         assertThatThrownBy(() -> {
-            disableReservationService.disableReservation(0L, 0, 0);
-            disableReservationService.disableReservation(0L, 0, 0);
+            disableReservationService.disableReservation(2L, 0, 0);
+            disableReservationService.disableReservation(2L, 0, 0);
         }).isInstanceOf(ReservationStatusAlreadyDisabledException.class);
     }
 }

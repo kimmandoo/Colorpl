@@ -21,7 +21,7 @@ class DeleteReservationStatusServiceTest {
 
     @BeforeEach
     void setUp() {
-        createReservationStatusService.createReservationStatus(0L);
+        createReservationStatusService.createReservationStatus(2L);
     }
 
     @AfterEach
@@ -31,7 +31,7 @@ class DeleteReservationStatusServiceTest {
 
     @Test
     void deleteReservationStatus() {
-        deleteReservationStatusService.deleteReservationStatus(0L);
+        deleteReservationStatusService.deleteReservationStatus(2L);
         assertThat(reservationStatusRepository.count()).isEqualTo(0L);
     }
 }

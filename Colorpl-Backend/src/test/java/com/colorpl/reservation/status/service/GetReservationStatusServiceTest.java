@@ -24,7 +24,7 @@ class GetReservationStatusServiceTest {
 
     @BeforeEach
     void setUp() {
-        createReservationStatusService.createReservationStatus(0L);
+        createReservationStatusService.createReservationStatus(2L);
         seat = Seat.builder()
             .row(0)
             .col(0)
@@ -38,7 +38,7 @@ class GetReservationStatusServiceTest {
 
     @Test
     void getReservationStatus() {
-        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatus(0L);
+        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatus(2L);
         assertThat(reservationStatus.getReserved().get(seat.toString())).isEqualTo(true);
     }
 }

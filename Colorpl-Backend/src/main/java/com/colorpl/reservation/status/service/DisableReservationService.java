@@ -1,10 +1,7 @@
 package com.colorpl.reservation.status.service;
 
-import com.colorpl.global.common.exception.ReservationStatusAlreadyDisabledException;
-import com.colorpl.global.common.exception.ShowScheduleNotFoundException;
 import com.colorpl.reservation.status.domain.ReservationStatus;
 import com.colorpl.reservation.status.repository.ReservationStatusRepository;
-import com.colorpl.show.domain.Seat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,23 +10,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DisableReservationService {
 
+    private final GetReservationStatusService getReservationStatusService;
     private final ReservationStatusRepository reservationStatusRepository;
 
     @Value("${time.to.live}")
     private Long expiration;
 
     public void disableReservation(Long showScheduleId, Integer row, Integer col) {
-        ReservationStatus reservationStatus = reservationStatusRepository.findById(showScheduleId)
-            .orElseThrow(ShowScheduleNotFoundException::new);
-        Seat seat = Seat.builder()
-            .row(row)
-            .col(col)
-            .build();
-        if (!reservationStatus.getReserved().get(seat.toString())) {
-            throw new ReservationStatusAlreadyDisabledException(showScheduleId, row, col);
-        }
-        reservationStatus.getReserved().put(seat.toString(), false);
-        reservationStatus.updateExpiration(expiration);
+        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatus(
+            showScheduleId);
+        reservationStatus.disableReservation(row, col, expiration);
         reservationStatusRepository.save(reservationStatus);
     }
 }

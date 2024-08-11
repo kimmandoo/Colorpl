@@ -35,8 +35,8 @@ class CreateReservationStatusServiceTest {
 
     @Test
     void createReservationStatus() {
-        createReservationStatusService.createReservationStatus(0L);
-        ReservationStatus status = reservationStatusRepository.findById(0L).orElseThrow();
+        createReservationStatusService.createReservationStatus(2L);
+        ReservationStatus status = reservationStatusRepository.findById(2L).orElseThrow();
         assertThat(status.getReserved().get(seat.toString())).isEqualTo(true);
     }
 }
