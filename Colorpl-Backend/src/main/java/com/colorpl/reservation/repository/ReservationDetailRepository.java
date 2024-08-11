@@ -10,4 +10,5 @@ public interface ReservationDetailRepository extends JpaRepository<ReservationDe
     List<ReservationDetail> findByShowSchedule(ShowSchedule showSchedule);
 //    @Query("SELECT COUNT(rd) FROM ReservationDetail rd WHERE rd.showSchedule = :showSchedule")
 //    long countByShowSchedule(@Param("showSchedule") ShowSchedule showSchedule);
+    long countByShowScheduleId(Long showScheduleId);
 }
