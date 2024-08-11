@@ -5,6 +5,7 @@ import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.SearchShowsRequest;
 import com.colorpl.show.dto.SearchShowsResponse;
 import com.colorpl.show.service.CreateShowService;
+import com.colorpl.show.service.GetScheduleService;
 import com.colorpl.show.service.GetSchedulesService;
 import com.colorpl.show.service.GetShowDetailService;
 import com.colorpl.show.service.SearchShowsService;
@@ -32,6 +33,7 @@ public class ShowController {
     private final GetShowDetailService getShowDetailService;
     private final GetSchedulesService getSchedulesService;
     private final CreateShowService createShowService;
+    private final GetScheduleService getScheduleService;
 
     @GetMapping
     public ResponseEntity<List<SearchShowsResponse>> searchShows(
@@ -57,21 +59,11 @@ public class ShowController {
 
     @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
     public ResponseEntity<?> getShowSchedule(
-        @PathVariable Integer showDetailId,
         @PathVariable Long showScheduleId
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(getScheduleService.getSchedule(showScheduleId));
     }
 
-    //    @PostMapping("/create")
-//    public ResponseEntity<Void> createByDate(
-//        @RequestBody CreateByDateRequest request) {
-//
-//        createShowService.createByDate(request.getFrom(), request.getTo());
-//
-//        return ResponseEntity.ok().build();
-//    }
-//
     @PostMapping
     public ResponseEntity<Integer> createByApiId(@RequestBody CreateByApiIdRequest request) {
 

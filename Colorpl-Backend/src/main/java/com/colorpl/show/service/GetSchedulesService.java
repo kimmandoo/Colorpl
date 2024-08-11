@@ -1,6 +1,7 @@
 package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.InvalidRuntimeException;
+import com.colorpl.reservation.status.service.GetReservationStatusService;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.dto.GetSchedulesResponse;
@@ -25,6 +26,7 @@ public class GetSchedulesService {
 
     private final ShowDetailRepository showDetailRepository;
     private final ShowScheduleRepository showScheduleRepository;
+    private final GetReservationStatusService getReservationStatusService;
 
     @Value("${seat.rows}")
     private int rows;
@@ -59,15 +61,14 @@ public class GetSchedulesService {
         List<ShowSchedule> showSchedules = showScheduleRepository.search(condition);
 
         List<Timetable> timetable = showSchedules.stream()
-            .map(showSchedule -> {
-
-                // 남은 좌석 수
-
-                return Timetable.builder()
-                    .startTime(showSchedule.getDateTime())
-                    .endTime(showSchedule.getDateTime().plus(duration))
-                    .build();
-            })
+            .map(showSchedule -> Timetable.builder()
+                .showScheduleId(showSchedule.getId())
+                .startTime(showSchedule.getDateTime())
+                .endTime(showSchedule.getDateTime().plus(duration))
+                .remainingSeats(
+                    (int) getReservationStatusService.getReservationStatus(showSchedule.getId())
+                        .getReserved().values().stream().filter(b -> b.equals(true)).count())
+                .build())
             .toList();
 
         Hall hall = Hall.builder()
