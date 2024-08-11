@@ -1,6 +1,7 @@
 package com.presentation.component.adapter
 
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,23 +18,21 @@ import com.presentation.util.Sign
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
 @BindingAdapter("setImage")
 fun loadImage(imageView: ImageView, image: Drawable?) {
-    Glide.with(imageView.context)
-        .load(image)
-        .into(imageView)
+    Glide.with(imageView.context).load(image).into(imageView)
 }
 
 @BindingAdapter("setImageCircleString")
 fun loadImage(imageView: ImageView, image: String?) {
     Glide.with(imageView.context)
         //이부분 서버에서 바꿔주신데
-        .load("https://i11d109.p.ssafy.io/image/" + image)
-        .transform(CircleCrop())
-        .into(imageView)
+        .load("https://i11d109.p.ssafy.io/image/" + image).transform(CircleCrop()).into(imageView)
 }
 
 @BindingAdapter("setSignHint")
@@ -208,6 +207,16 @@ fun setPaymentBackground(imageView: ImageView, paymentResult: PaymentResult?) {
     }
 }
 
+@BindingAdapter("visiblePaymentResult")
+fun visiblePaymentResult(imageView: ImageView, type: PaymentResult) {
+    imageView.visibility = if (type == PaymentResult.COMPLETE) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}
+
+
 @BindingAdapter("setFormattedSeatsText")
 fun setFormattedSeatsText(textView: TextView, seats: List<Seat>?) {
     seats?.let {
@@ -266,13 +275,20 @@ fun setSearchDate(view: TextView, date: LocalDate?) {
 @BindingAdapter("loadImageToReservationDetail")
 fun loadImageToReservationDetail(view: ImageView, url: String?) {
     url?.let {
-        Glide.with(view.context)
-            .load(it)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
-                    .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
-            )
-            .into(view)
+        Glide.with(view.context).load(it).apply(
+            RequestOptions().placeholder(R.drawable.rectangle_eerie_black) // 로딩 중 보여줄 이미지
+                .error(R.drawable.rectangle_eerie_black) // 로딩 실패 시 보여줄 이미지
+        ).into(view)
     }
+}
+
+@BindingAdapter("changeDateText")
+fun changeDateText(textView: TextView, date: String) {
+
+    val zonedDateTime = ZonedDateTime.parse(date)
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm")
+    val formattedDate = zonedDateTime.format(formatter)
+
+    textView.text = formattedDate
 }

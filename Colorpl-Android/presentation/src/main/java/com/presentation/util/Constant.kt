@@ -152,12 +152,9 @@ enum class PaymentResult(val value: Int) {
 
     companion object {
 
-        fun getType(value: Int): PaymentResult =
-            entries.find { it.value == value } ?: COMPLETE
-
         fun getMenu(mode: PaymentResult): List<Int> {
             return when (mode) {
-                COMPLETE -> listOf(0, 1)
+                COMPLETE -> listOf(0,1)
                 REFUND -> listOf(1)
                 USE -> listOf(2)
             }
