@@ -27,6 +27,7 @@ import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.getPhotoGallery
+import com.presentation.util.requestCameraPermission
 import com.presentation.util.setCameraLauncher
 import com.presentation.util.setImageLauncher
 import com.presentation.viewmodel.TicketCreateViewModel
@@ -53,7 +54,6 @@ class TicketCreateFragment :
             if (isGranted) {
                 openCamera()
             } else {
-                showCameraPermissionDeniedMessage()
                 dismissLoading()
                 navigatePopBackStack()
             }
@@ -69,7 +69,14 @@ class TicketCreateFragment :
     private fun initUi() {
         when (args.photoType) {
             TicketType.CAMERA -> {
-                requestCameraPermission()
+                requireContext().requestCameraPermission(
+                    onGrant = {
+                        openCamera()
+                    },
+                    onDenied = {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                )
             }
 
             TicketType.GALLERY -> {
@@ -120,25 +127,6 @@ class TicketCreateFragment :
                 }
             }
         }
-    }
-
-    private fun requestCameraPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                openCamera()
-            }
-
-            else -> {
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }
-    }
-
-    private fun showCameraPermissionDeniedMessage() {
-        Toast.makeText(requireContext(), "카메라 사용을 위해 권한이 필요합니다.", Toast.LENGTH_LONG).show()
     }
 
     private fun observeDescription() {

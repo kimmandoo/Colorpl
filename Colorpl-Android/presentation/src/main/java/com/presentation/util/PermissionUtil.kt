@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.colorpl.presentation.R
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -71,6 +73,27 @@ fun checkLocationPermission(context: Context) {
     ) {
         return
     }
+}
+
+// 카메라 권한
+fun Context.requestCameraPermission(onGrant: ()->Unit, onDenied: ()->Unit) {
+    when {
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED -> {
+            onGrant()
+        }
+
+        else -> {
+            this.showCameraPermissionDeniedMessage()
+            onDenied()
+        }
+    }
+}
+
+fun Context.showCameraPermissionDeniedMessage() {
+    Toast.makeText(this, "카메라 사용을 위해 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
 }
 
 
