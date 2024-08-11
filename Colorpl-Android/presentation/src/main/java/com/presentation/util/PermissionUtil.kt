@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.colorpl.presentation.R
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -32,24 +34,6 @@ fun notificationPermission(){
             })
             .check()
     }
-}
-
-// 카메라 권한 허용
-fun checkCameraPermission(action: () -> Unit) {
-    TedPermission.create().setPermissionListener(object : PermissionListener {
-        override fun onPermissionGranted() {
-            action()
-        }
-
-        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-        }
-    }).setDeniedMessage("앱을 사용하려면 권한이 필요합니다. [설정] > [권한]에서 권한을 허용해 주세요.")
-        .setPermissions(
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        .check()
 }
 
 //위치 권한 허용
@@ -89,6 +73,27 @@ fun checkLocationPermission(context: Context) {
     ) {
         return
     }
+}
+
+// 카메라 권한
+fun Context.requestCameraPermission(onGrant: ()->Unit, onDenied: ()->Unit) {
+    when {
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED -> {
+            onGrant()
+        }
+
+        else -> {
+            this.showCameraPermissionDeniedMessage()
+            onDenied()
+        }
+    }
+}
+
+fun Context.showCameraPermissionDeniedMessage() {
+    Toast.makeText(this, "카메라 사용을 위해 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
 }
 
 

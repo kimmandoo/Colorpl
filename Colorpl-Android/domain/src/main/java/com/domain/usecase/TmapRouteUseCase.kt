@@ -10,5 +10,5 @@ interface TmapRouteUseCase {
         startY: String,
         endX: String,
         endY: String
-    ): Flow<DomainResult<Route>>
+    ): Flow<DomainResult<Route?>>
 }

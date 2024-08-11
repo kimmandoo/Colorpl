@@ -26,8 +26,10 @@ enum class TicketState(val state: Int) {
 }
 
 enum class TicketType() {
-    CAMERA,
-    GALLERY
+    CAMERA_ISSUED,
+    GALLERY_ISSUED,
+    CAMERA_UNISSUED,
+    GALLERY_UNISSUED,
 }
 
 enum class Calendar {
@@ -101,7 +103,9 @@ enum class FilterType(private val resourceId: Int) {
     CONCERT(R.string.feed_filter_concert),
     PLAY(R.string.feed_filter_play),
     MUSICAL(R.string.feed_filter_musical),
-    EXHIBITION(R.string.feed_filter_exhibition);
+    EXHIBITION(R.string.feed_filter_exhibition),
+    ETC(R.string.ticket_etc),
+    ;
 
     fun getText(context: Context): String {
         return context.getString(resourceId)
@@ -152,12 +156,9 @@ enum class PaymentResult(val value: Int) {
 
     companion object {
 
-        fun getType(value: Int): PaymentResult =
-            entries.find { it.value == value } ?: COMPLETE
-
         fun getMenu(mode: PaymentResult): List<Int> {
             return when (mode) {
-                COMPLETE -> listOf(0, 1)
+                COMPLETE -> listOf(0,1)
                 REFUND -> listOf(1)
                 USE -> listOf(2)
             }

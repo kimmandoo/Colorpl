@@ -51,6 +51,6 @@ class FeedRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 5
+        private const val PAGE_SIZE = 20
     }
 }

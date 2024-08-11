@@ -6,10 +6,11 @@ import com.domain.model.Route
 import com.domain.model.Step
 
 
-fun ResponseTmapRoute.toEntity(): Route {
-    val itinerary = this.metaData.plan.itineraries.first()
-    return Route(
-        totalDistance = itinerary.totalDistance,
+fun ResponseTmapRoute.toEntity(): Route? {
+    val itinerary = this.metaData?.plan?.itineraries?.firstOrNull()
+    return itinerary?.let {
+        Route(
+        totalDistance = it.totalDistance,
         totalTime = itinerary.totalTime,
         totalWalkDistance = itinerary.totalWalkDistance,
         totalWalkTime = itinerary.totalWalkTime,
@@ -35,4 +36,5 @@ fun ResponseTmapRoute.toEntity(): Route {
             )
         }
     )
+    }
 }

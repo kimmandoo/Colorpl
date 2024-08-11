@@ -3,6 +3,7 @@ package com.presentation.ticket
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -149,6 +150,11 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     }
 
     private fun observePath(naverMap: NaverMap) { // path 그리기
+        ticketViewModel.isRouteNull.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state->
+            if(state){
+                Toast.makeText(requireContext(), "경로를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
         ticketViewModel.routeData.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { routeData ->
                 val routeOverlay = PathOverlay()

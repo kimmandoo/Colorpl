@@ -26,13 +26,15 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
-    private val getDetailReviewDetailUseCase: GetReviewDetailUseCase
+    private val getDetailReviewDetailUseCase: GetReviewDetailUseCase,
 ) : ViewModel() {
 
     private val _routeData = MutableSharedFlow<Pair<Route, List<LatLng>>>()
     val routeData: SharedFlow<Pair<Route, List<LatLng>>> = _routeData.asSharedFlow()
     private val _latLng = MutableStateFlow(LatLng(0.0, 0.0))
     val latLng: StateFlow<LatLng> get() = _latLng
+    private val _isRouteNull = MutableSharedFlow<Boolean>()
+    val isRouteNull: SharedFlow<Boolean> get() = _isRouteNull
     private val _reviewDetail = MutableStateFlow(ReviewDetail())
     val reviewDetail: StateFlow<ReviewDetail> get() = _reviewDetail
 
@@ -67,25 +69,30 @@ class TicketViewModel @Inject constructor(
                 endY = destination.latitude.toString(),
             ).collectLatest { response ->
                 response.onSuccess { data ->
-                    for (route in data.legs) {
-                        when (route.mode) {
-                            Mode.WALK.mode -> {
-                                route.steps?.let { steps ->
-                                    for (lineString in steps) {
-                                        routeData.addAll(parseLatLng(lineString.linestring))
+                    if(data == null){
+                        _isRouteNull.emit(true)
+                    }
+                    data?.let {
+                        for (route in data.legs) {
+                            when (route.mode) {
+                                Mode.WALK.mode -> {
+                                    route.steps?.let { steps ->
+                                        for (lineString in steps) {
+                                            routeData.addAll(parseLatLng(lineString.linestring))
+                                        }
+                                    }
+                                }
+
+                                else -> {
+                                    route.passShape?.let { lineString ->
+                                        routeData.addAll(parseLatLng(lineString))
                                     }
                                 }
                             }
-
-                            else -> {
-                                route.passShape?.let { lineString ->
-                                    routeData.addAll(parseLatLng(lineString))
-                                }
-                            }
                         }
+                        val pairData = Pair(data, routeData)
+                        _routeData.emit(pairData)
                     }
-                    val pairData = Pair(data, routeData)
-                    _routeData.emit(pairData)
                 }.onFailure { error ->
                     Timber.tag("error").e(error)
                 }
