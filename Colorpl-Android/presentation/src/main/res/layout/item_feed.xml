@@ -27,16 +27,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="잊혀진 영웅들" />
 
-        <ImageView
-            android:id="@+id/iv_profile"
-            src="@tools:sample/avatars"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_profile"
-            app:layout_constraintEnd_toStartOf="@+id/tv_profile"
-            app:layout_constraintTop_toTopOf="@+id/tv_profile" />
-
         <TextView
             android:id="@+id/tv_profile"
             style="@style/suite_bold_16"
@@ -46,7 +36,7 @@
             android:text="타이타닉호택"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <ImageView
             android:id="@+id/iv_content"
@@ -58,7 +48,7 @@
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_profile" />
 
         <ImageView
             android:id="@+id/iv_emotion"

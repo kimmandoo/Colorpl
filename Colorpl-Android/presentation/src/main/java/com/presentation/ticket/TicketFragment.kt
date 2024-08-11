@@ -90,7 +90,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             includeDate.tvTitleHint.text = getString(R.string.ticket_date)
             includeSeat.tvTitleHint.text = getString(R.string.ticket_seat)
             with(includeMyReview) {
-                listOf(ivReport, ivComment, ivProfile, tvProfile, tvCommentCnt).forEach {
+                listOf(ivReport, ivComment, tvProfile, tvCommentCnt).forEach {
                     it.visibility = View.GONE
                 }
             }
