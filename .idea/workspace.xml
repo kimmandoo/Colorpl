@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2c81a84-c9ab-4c73-b3e1-d0b39c6dfd4d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/Colorpl-Backend.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/Colorpl-Backend.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/dto/SeatInfoDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/controller/PaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/dto/ReceiptDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/dto/ReceiptDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/BootpayService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/repository/ReservationDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/repository/ReservationDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/domain/ShowDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/domain/ShowDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/repository/ShowScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/repository/ShowScheduleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

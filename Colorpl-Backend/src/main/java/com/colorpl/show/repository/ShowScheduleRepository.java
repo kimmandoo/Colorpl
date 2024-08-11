@@ -9,4 +9,5 @@ public interface ShowScheduleRepository extends JpaRepository<ShowSchedule, Long
     ShowScheduleRepositoryCustom {
 
     List<ShowSchedule> findByShowDetail(ShowDetail showDetail);
+    List<ShowSchedule> findByShowDetailId(Integer showDetailId);
 }
