@@ -3,10 +3,7 @@ package com.colorpl.review.controller;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.member.service.MemberService;
-import com.colorpl.review.dto.NonReadReviewResponse;
-import com.colorpl.review.dto.ReadReviewResponse;
-import com.colorpl.review.dto.RequestDTO;
-import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.dto.*;
 import com.colorpl.review.service.EmpathyService;
 import com.colorpl.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,13 +62,13 @@ public class ReviewController {
     // 특정 멤버의 리뷰 수 구하기
     @GetMapping("/members/{memberId}/numbers")
     @Operation(summary = "특정 멤버의 모든 리뷰 개수 조회", description = "특정 멤버의 모든 리뷰 개수 조회할 때 사용하는 API (예외처리 : 멤버 -1)")
-    public ResponseEntity<NonReadReviewResponse> findReviewNumbersOfRespectiveMember(@PathVariable Integer memberId, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<NumbersReviewResponse> findReviewNumbersOfRespectiveMember(@PathVariable Integer memberId) {
 //        Integer memberId = memberService.getCurrentMemberId();
         try {
-            NonReadReviewResponse reviews = reviewService.findReviewNumbersOfMember(memberId, page, size);
+            NumbersReviewResponse reviews = reviewService.findReviewNumbersOfMember(memberId);
             return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (MemberNotFoundException e) {
-            NonReadReviewResponse reviews = NonReadReviewResponse.builder().reviewId(-1L).numbers(-1).build();
+            NumbersReviewResponse reviews = NumbersReviewResponse.builder().numbers(-1).build();
             return new ResponseEntity<>(reviews, HttpStatus.NOT_FOUND);
         }
     }
