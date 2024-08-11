@@ -4,6 +4,7 @@ import com.data.api.ReservationApi
 import com.data.datasource.remote.ReservationDataSource
 import com.data.model.response.ReservationInfo
 import com.data.model.response.ResponseShowSchedules
+import com.data.model.response.ResponseShowSeat
 import javax.inject.Inject
 
 class ReservationDataSourceImpl @Inject constructor(
@@ -21,7 +22,7 @@ class ReservationDataSourceImpl @Inject constructor(
     override suspend fun getReservationSchedule(showDetailId: Int, date: String): List<ResponseShowSchedules> {
         return reservationApi.getReservationSchedule(showDetailId, date)
     }
-    override suspend fun getReservationSeat(showDetailId: Int, showScheduleId: Int): Map<String, Boolean> {
+    override suspend fun getReservationSeat(showDetailId: Int, showScheduleId: Int): Map<String, ResponseShowSeat> {
         return reservationApi.getReservationSeat(showDetailId, showScheduleId)
     }
 }

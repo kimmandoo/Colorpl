@@ -28,6 +28,6 @@ interface ReservationApi {
     suspend fun getReservationSeat(
         @Path("showDetailId") showDetailId: Int,
         @Path("showScheduleId") showScheduleId: Int,
-    ): Map<String, Boolean>
+    ): Map<String, ResponseShowSeat>
 
 }

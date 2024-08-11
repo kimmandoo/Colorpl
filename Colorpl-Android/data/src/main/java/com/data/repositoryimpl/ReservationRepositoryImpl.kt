@@ -4,6 +4,7 @@ import com.data.api.safeApiCall
 import com.data.datasource.remote.ReservationDataSource
 import com.data.model.response.ReservationInfo
 import com.data.model.response.ResponseShowSchedules
+import com.data.model.response.ResponseShowSeat
 import com.data.repository.ReservationRepository
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -44,7 +45,7 @@ class ReservationRepositoryImpl @Inject constructor(
     override suspend fun getReservationSeat(
         showDetailId: Int,
         showScheduleId: Int
-    ): Flow<ApiResult<Map<String, Boolean>>> {
+    ): Flow<ApiResult<Map<String, ResponseShowSeat>>> {
         return flow {
             emit(safeApiCall {
                 reservationDataSource.getReservationSeat(showDetailId, showScheduleId)

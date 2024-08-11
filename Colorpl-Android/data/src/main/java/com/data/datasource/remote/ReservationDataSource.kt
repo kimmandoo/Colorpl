@@ -2,6 +2,7 @@ package com.data.datasource.remote
 
 import com.data.model.response.ReservationInfo
 import com.data.model.response.ResponseShowSchedules
+import com.data.model.response.ResponseShowSeat
 
 interface ReservationDataSource {
     suspend fun getReservationListShows(filters: Map<String, String>): List<ReservationInfo>
@@ -18,6 +19,6 @@ interface ReservationDataSource {
     suspend fun getReservationSeat(
         showDetailId: Int,
         showScheduleId: Int,
-    ): Map<String, Boolean>
+    ): Map<String, ResponseShowSeat>
 
 }

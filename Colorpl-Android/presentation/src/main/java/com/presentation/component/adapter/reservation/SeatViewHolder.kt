@@ -11,7 +11,7 @@ class SeatViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(seat: Seat) {
         binding.apply {
-            tvSeat.text = seat.toString()
+            tvSeat.text = seat.name
             clItem.setBackgroundResource(
                 when (seat.grade) {
                     "R" -> R.drawable.selector_timber_wolf_to_imperial_red_for_seat

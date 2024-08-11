@@ -1,10 +1,10 @@
 package com.domain.model
 
 data class Seat(
-    val row: Int,
-    val col: Int,
-    val name: String,
-    val grade: String?,
+    val row: Int = -1,
+    val col: Int = -1,
+    val name: String = "",
+    val grade: String? = null,
     val isReserved: Boolean = false,
     val isSelected: Boolean = false,
 ) {
