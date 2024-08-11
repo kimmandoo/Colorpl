@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
@@ -16,7 +15,6 @@ import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.map.model.MapMarker
 import com.presentation.util.LocationHelper
 import com.presentation.util.checkLocationPermission
@@ -63,7 +61,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     override fun onResume() {
         super.onResume()
-        setMarker()
         // NaverMap 상태 복원 가능
         mapView?.getMapAsync { naverMap ->
             savedCameraPosition?.let {
@@ -78,8 +75,8 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
+        markerBuilder = Clusterer.Builder<MapMarker>()
         connectNaverMap(naverMap)
-        observeTicketList()
     }
 
     override fun iniViewCreated() {
@@ -95,8 +92,9 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     /** Naver map 연결. */
     private fun connectNaverMap(naverMap: NaverMap) {
-        markerBuilder = Clusterer.Builder<MapMarker>()
         this@MapFragment.naverMap = naverMap
+        observeTicketList()
+        setMarker()
         naverMap.setup(locationSource)
         this@MapFragment.locationOverlay = this@MapFragment.naverMap.locationOverlay
         this@MapFragment.locationOverlay.setupOverlay(
