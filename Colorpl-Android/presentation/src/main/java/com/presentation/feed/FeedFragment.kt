@@ -4,6 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.filter
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
@@ -52,6 +53,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     override fun initView() {
         initFilter()
         initFeed()
+        observeFilter()
         onFeedRegisterClickListener()
         observeRefreshTrigger()
     }
@@ -64,6 +66,21 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         filterAdapter.submitList(binding.root.context.getFilterItems())
     }
 
+    private fun observeFilter() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentFilter.collect { filter ->
+                updateFilterUI(filter)
+            }
+        }
+    }
+
+    private fun updateFilterUI(selectedFilter: String) {
+        val updatedList = filterAdapter.currentList.map { item ->
+            item.copy(isSelected = item.name == selectedFilter)
+        }
+        filterAdapter.submitList(updatedList)
+    }
+
     private fun initFeed() {
         binding.rvFeed.apply {
             adapter = feedAdapter
@@ -72,7 +89,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
-                feedAdapter.submitData(viewLifecycleOwner.lifecycle, feed)
+                val filteredList = if(viewModel.currentFilter.value == "전체"){
+                    feed
+                }else{
+                    feed.filter { it.category == viewModel.currentFilter.value }
+                }
+                feedAdapter.submitData(viewLifecycleOwner.lifecycle, filteredList)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -99,7 +121,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                 item.copy(isSelected = false)
             }
         }
-
+        viewModel.setFilter(clickedItem.name)
         filterAdapter.submitList(updatedList)
     }
 

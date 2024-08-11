@@ -1,23 +1,36 @@
 package com.presentation.map.model
 
-import android.graphics.drawable.Drawable
+import com.domain.model.TicketResponse
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.clustering.ClusteringKey
 
 data class MapMarker(
     val id: Int,
-    val image: String,
-    val latitude : Double,
-    val longitude : Double,
+    val seat: String,
+    val dateTime: String,
+    val name: String,
+    val category: String,
+    val location: String,
+    val latitude: Double,
+    val longitude: Double,
+    val imgUrl: String,
+    val reviewExists: Boolean,
+    val reviewId: Int
 ) : ClusteringKey{
     override fun getPosition(): LatLng = LatLng(latitude, longitude)
-
-    companion object{
-        val DEFAULT = listOf(MapMarker(0, "https://cccv-to.s3.ap-northeast-2.amazonaws.com/files/profile/rqygz9qJnFs8ChQbaava_J9HsA3dJuu",36.0990913, 128.4236401),
-            MapMarker(0, "https://cccv-to.s3.ap-northeast-2.amazonaws.com/files/profile/rqygz9qJnFs8ChQbaava_J9HsA3dJuu",36.10456406936184, 128.41981348179178),
-            MapMarker(0, "https://cccv-to.s3.ap-northeast-2.amazonaws.com/files/profile/rqygz9qJnFs8ChQbaava_J9HsA3dJuu",36.10324329683452,128.42339515686035 ),
-            MapMarker(0, "https://cccv-to.s3.ap-northeast-2.amazonaws.com/files/profile/rqygz9qJnFs8ChQbaava_J9HsA3dJuu",36.10324647862417, 128.41663774631814),
-            MapMarker(0, "https://cccv-to.s3.ap-northeast-2.amazonaws.com/files/profile/rqygz9qJnFs8ChQbaava_J9HsA3dJuu",36.106609758558214,128.4262436308565 )
+    fun toTicketResponse(): TicketResponse {
+        return TicketResponse(
+            id = id,
+            seat = seat,
+            dateTime = dateTime,
+            name = name,
+            category = category,
+            location = location,
+            latitude = latitude,
+            longitude = longitude,
+            imgUrl = imgUrl,
+            reviewExists = reviewExists,
+            reviewId = reviewId
         )
     }
 }

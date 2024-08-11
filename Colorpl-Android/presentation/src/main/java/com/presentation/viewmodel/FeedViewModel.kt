@@ -32,7 +32,7 @@ class FeedViewModel @Inject constructor(
     private val getReviewDetailUseCase: GetReviewDetailUseCase,
     private val reviewEditUseCase: ReviewEditUseCase,
     private val reviewDeleteUseCase: ReviewDeleteUseCase,
-    private val reviewEmpathyUseCase: ReviewEmpathyUseCase
+    private val reviewEmpathyUseCase: ReviewEmpathyUseCase,
 ) : ViewModel() {
     private val _pagedFeed = MutableStateFlow<PagingData<Feed>?>(null)
     val pagedFeed = _pagedFeed
@@ -50,6 +50,8 @@ class FeedViewModel @Inject constructor(
     val commentCreateResponse = _commentCreateResponse.asSharedFlow()
     private val _refreshTrigger = MutableSharedFlow<Unit>()
     val refreshTrigger = _refreshTrigger.asSharedFlow()
+    private val _currentFilter = MutableStateFlow<String>("전체")
+    val currentFilter: StateFlow<String> = _currentFilter
 
     //리뷰 상세
     private val _reviewDetail = MutableStateFlow(ReviewDetail())
@@ -169,6 +171,11 @@ class FeedViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setFilter(filter: String) {
+        _currentFilter.value = filter
+        getFeed()
     }
 
     fun getFeed() {

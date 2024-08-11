@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.presentation.component.dialog.LoadingDialog
 
 abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int) :
     Fragment(),
@@ -17,7 +21,9 @@ abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int
 
     private var _binding: T? = null
     val binding get() = _binding!!
-
+    val loading by lazy {
+        LoadingDialog(requireActivity())
+    }
     abstract var mapView: MapView?
 
     override fun onCreateView(
@@ -43,6 +49,22 @@ abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int
     }
 
     abstract fun iniViewCreated()
+
+    fun navigateDestination(@IdRes action: Int) { //Navigation 이동
+        findNavController().navigate(action)
+    }
+
+    fun navigateDestination(action: NavDirections) { //Navigation 이동
+        findNavController().navigate(action)
+    }
+
+    fun dismissLoading() {
+        loading.dismiss()
+    }
+
+    fun showLoading() {
+        loading.show()
+    }
 
     override fun onStart() {
         super.onStart()
