@@ -34,24 +34,6 @@ fun notificationPermission(){
     }
 }
 
-// 카메라 권한 허용
-fun checkCameraPermission(action: () -> Unit) {
-    TedPermission.create().setPermissionListener(object : PermissionListener {
-        override fun onPermissionGranted() {
-            action()
-        }
-
-        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-        }
-    }).setDeniedMessage("앱을 사용하려면 권한이 필요합니다. [설정] > [권한]에서 권한을 허용해 주세요.")
-        .setPermissions(
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        .check()
-}
-
 //위치 권한 허용
 fun locationPermission(){
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
