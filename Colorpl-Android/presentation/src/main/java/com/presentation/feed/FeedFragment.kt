@@ -53,6 +53,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     override fun initView() {
         initFilter()
         initFeed()
+        observeFilter()
         onFeedRegisterClickListener()
         observeRefreshTrigger()
     }
@@ -63,6 +64,21 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             itemAnimator = null
         }
         filterAdapter.submitList(binding.root.context.getFilterItems())
+    }
+
+    private fun observeFilter() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentFilter.collect { filter ->
+                updateFilterUI(filter)
+            }
+        }
+    }
+
+    private fun updateFilterUI(selectedFilter: String) {
+        val updatedList = filterAdapter.currentList.map { item ->
+            item.copy(isSelected = item.name == selectedFilter)
+        }
+        filterAdapter.submitList(updatedList)
     }
 
     private fun initFeed() {
