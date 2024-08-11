@@ -2,10 +2,10 @@ package com.data.model.response
 
 
 data class ResponseTmapRoute(
-    val metaData: MetaData
+    val metaData: MetaData?
 ) {
     data class MetaData(
-        val plan: Plan,
+        val plan: Plan?,
         val requestParameters: RequestParameters
     ) {
         data class Plan(

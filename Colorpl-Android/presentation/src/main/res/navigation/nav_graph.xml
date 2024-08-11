@@ -32,7 +32,15 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_ticket"
+            app:destination="@id/fragment_ticket">
+            <argument
+                android:name="ticket"
+                app:argType="com.domain.model.TicketResponse" />
+        </action>
+    </fragment>
 
 
     <fragment

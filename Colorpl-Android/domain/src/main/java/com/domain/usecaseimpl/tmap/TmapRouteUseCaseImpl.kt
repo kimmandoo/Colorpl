@@ -19,7 +19,7 @@ class TmapRouteUseCaseImpl @Inject constructor(
         startY: String,
         endX: String,
         endY: String
-    ): Flow<DomainResult<Route>> = flow {
+    ): Flow<DomainResult<Route?>> = flow {
         tmapRouteRepository.getRoute(startX, startY, endX, endY).collect { result ->
             when (result) {
                 is ApiResult.Success -> {

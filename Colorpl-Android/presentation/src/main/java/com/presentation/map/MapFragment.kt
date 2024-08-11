@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
@@ -36,9 +37,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private lateinit var naverMap: NaverMap
     private lateinit var locationOverlay: LocationOverlay
     private lateinit var markerBuilder: Clusterer.Builder<MapMarker>
-    private val loadingDialog by lazy {
-        LoadingDialog(requireContext())
-    }
 
     private var savedCameraPosition: CameraPosition? = null
     private val mapViewModel: MapViewModel by viewModels()
@@ -55,9 +53,9 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         super.onCreate(savedInstanceState)
         // 카메라 위치 복원
         savedInstanceState?.let {
-            savedCameraPosition =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedCameraPosition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 it.getParcelable("cameraPosition", CameraPosition::class.java)
-            }else{
+            } else {
                 it.getParcelable("cameraPosition")
             }
         }
@@ -76,7 +74,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     override fun initOnCreateView() {
         initNaverMap()
-        loadingDialog.show()
+        showLoading()
     }
 
     override fun initOnMapReady(naverMap: NaverMap) {
@@ -115,7 +113,21 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     private fun setMarker() {
         val markers = makeMarker(
-            mapViewModel.ticketList.value,
+            mapViewModel.ticketList.value.map {
+                MapMarker(
+                    id = it.id,
+                    latitude = it.latitude,
+                    longitude = it.longitude,
+                    seat = it.seat,
+                    dateTime = it.dateTime,
+                    name = it.name,
+                    category = it.category,
+                    location = it.location,
+                    imgUrl = it.imgUrl,
+                    reviewExists = it.reviewExists,
+                    reviewId = it.reviewId,
+                )
+            },
             markerBuilder
         )
         markers.map = naverMap
@@ -130,10 +142,12 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
                 requireActivity(),
                 viewLifecycleOwner.lifecycleScope,
             ) { markerData ->
+                val action =
+                    MapFragmentDirections.actionFragmentMapToFragmentTicket(markerData.toTicketResponse())
+                navigateDestination(action)
                 Timber.d("markerData : $markerData")
             }
-            loadingDialog.dismiss()
-
+            dismissLoading()
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
     }
