@@ -7,4 +7,6 @@ import java.util.List;
 public interface ShowDetailRepositoryCustom {
 
     List<ShowDetail> searchShows(SearchShowsRequest request);
+
+    ShowDetail findShowDetailAndSeatsById(Integer id);
 }

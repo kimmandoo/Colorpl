@@ -5,7 +5,9 @@ import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
 import com.colorpl.reservation.status.domain.ReservationStatus;
 import com.colorpl.reservation.status.repository.ReservationStatusRepository;
+import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowSchedule;
+import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class CreateReservationStatusService {
     private final ShowScheduleRepository showScheduleRepository;
     private final ReservationDetailRepository reservationDetailRepository;
     private final ReservationStatusRepository reservationStatusRepository;
+    private final ShowDetailRepository showDetailRepository;
 
     @Value("${time.to.live}")
     private Long expiration;
@@ -33,6 +36,8 @@ public class CreateReservationStatusService {
         ShowSchedule showSchedule = showScheduleRepository
             .findById(showScheduleId)
             .orElseThrow(ShowScheduleNotFoundException::new);
+        ShowDetail showDetail = showDetailRepository.findShowDetailAndSeatsById(
+            showSchedule.getShowDetail().getId());
         List<ReservationDetail> reservationDetails = reservationDetailRepository
             .findByShowSchedule(showSchedule);
         ReservationStatus reservationStatus = ReservationStatus.createReservationStatus(
@@ -40,6 +45,7 @@ public class CreateReservationStatusService {
             expiration,
             rows,
             cols,
+            showDetail,
             reservationDetails
         );
         return reservationStatusRepository.save(reservationStatus);
