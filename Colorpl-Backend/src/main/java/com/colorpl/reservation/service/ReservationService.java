@@ -13,6 +13,8 @@ import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
 import com.colorpl.reservation.repository.ReservationRepository;
+import com.colorpl.reservation.status.service.DisableReservationService;
+import com.colorpl.reservation.status.service.EnableReservationService;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class ReservationService {
     private final MemberRepository memberRepository;
     private final ShowScheduleRepository showScheduleRepository;
     private final ReservationDetailRepository reservationDetailRepository;
+    private final EnableReservationService enableReservationService;
+    private final DisableReservationService disableReservationService;
 
     @Transactional(readOnly = true)
     public List<ReservationDTO> getReservationsByMemberId(Integer memberId) {
@@ -77,6 +81,15 @@ public class ReservationService {
 
         List<Reservation> reservations = reservationRepository.findByMemberId(memberId);
 
+        // 예매상세에 변경사항 반영
+        reservations.forEach(
+            reservation -> reservation.getReservationDetails()
+                .forEach(reservationDetail -> enableReservationService.enableReservation(
+                    reservationDetail.getShowSchedule().getId(),
+                    Integer.valueOf(reservationDetail.getRow()),
+                    Integer.valueOf(reservationDetail.getCol())
+                )));
+
         // 각 예약을 member에서 제거
         reservations.forEach(member::removeReservation);
 
@@ -92,6 +105,14 @@ public class ReservationService {
 
         reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
         reservationRepository.save(reservation);  // 변경 사항을 저장
+
+        // 예매상세에 변경사항 반영
+        reservation.getReservationDetails()
+            .forEach(reservationDetail -> enableReservationService.enableReservation(
+                reservationDetail.getShowSchedule().getId(),
+                Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol())
+            ));
     }
 
     //특정 멤버의 특정 예약을 취소
@@ -103,9 +124,17 @@ public class ReservationService {
 
         reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
         reservationRepository.save(reservation);
+
+        // 예매상세에 변경사항 반영
+        reservation.getReservationDetails()
+            .forEach(reservationDetail -> enableReservationService.enableReservation(
+                reservationDetail.getShowSchedule().getId(),
+                Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol())
+            ));
     }
 
-//    @Transactional
+    //    @Transactional
 //    public ReservationDTO updateReservation(Integer memberId, Long reservationId,
 //        ReservationDTO reservationDTO) {
 //        // 예약을 가져오고 멤버 ID를 확인
@@ -174,7 +203,8 @@ public class ReservationService {
 //        return ReservationDTO.toReservationDTO(updatedReservation);
 //    }
     @Transactional
-    public ReservationDTO updateReservation(Integer memberId, Long reservationId, ReservationDTO reservationDTO) {
+    public ReservationDTO updateReservation(Integer memberId, Long reservationId,
+        ReservationDTO reservationDTO) {
         // 예약을 가져오고 멤버 ID를 확인
         Reservation reservation = reservationRepository.findById(reservationId)
             .filter(res -> res.getMember().getId().equals(memberId))
@@ -191,7 +221,8 @@ public class ReservationService {
             .collect(Collectors.toSet());
 
         // 기존 예약 상세 항목을 업데이트하거나 삭제
-        List<ReservationDetail> existingDetails = new ArrayList<>(reservation.getReservationDetails());
+        List<ReservationDetail> existingDetails = new ArrayList<>(
+            reservation.getReservationDetails());
         existingDetails.forEach(existingDetail -> {
             if (newReservationDetailIds.contains(existingDetail.getId())) {
                 // 새로 받은 DTO로 업데이트
@@ -200,7 +231,8 @@ public class ReservationService {
                     .findFirst()
                     .orElseThrow(ReservationDetailNotFoundException::new);
 
-                ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
+                ShowSchedule showSchedule = showScheduleRepository.findById(
+                        detailDTO.getShowScheduleId())
                     .orElseThrow(ShowScheduleNotFoundException::new);
 
                 existingDetail.updateDetail(detailDTO.getRow(), detailDTO.getCol(), showSchedule);
@@ -213,10 +245,12 @@ public class ReservationService {
         });
 
         // 새로운 예약 상세 항목 추가
-        List<ReservationDetail> newReservationDetails = reservationDTO.getReservationDetails().stream()
+        List<ReservationDetail> newReservationDetails = reservationDTO.getReservationDetails()
+            .stream()
             .filter(detailDTO -> detailDTO.getId() == null) // ID가 없는 항목은 새 항목
             .map(detailDTO -> {
-                ShowSchedule showSchedule = showScheduleRepository.findById(detailDTO.getShowScheduleId())
+                ShowSchedule showSchedule = showScheduleRepository.findById(
+                        detailDTO.getShowScheduleId())
                     .orElseThrow(ShowScheduleNotFoundException::new);
 
                 ReservationDetail newDetail = ReservationDetail.builder()
@@ -239,7 +273,6 @@ public class ReservationService {
         // 변경된 예약 반환
         return ReservationDTO.toReservationDTO(updatedReservation);
     }
-
 
 //    @Transactional
 //    public ReservationDTO createReservation(Integer memberId, ReservationDTO reservationDTO) {
@@ -320,6 +353,14 @@ public class ReservationService {
         Reservation createdReservation = reservationRepository.save(reservation);
         reservationDetailRepository.saveAll(reservationDetails); // ReservationDetail 별도 저장
 
+        // 예매상세에 변경사항 반영
+        reservation.getReservationDetails()
+            .forEach(reservationDetail -> disableReservationService.disableReservation(
+                reservationDetail.getShowSchedule().getId(),
+                Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol())
+            ));
+
         // DTO로 변환하여 반환
         return ReservationDTO.toReservationDTO(createdReservation);
     }
@@ -328,7 +369,8 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public long countReservedSeatsByShowScheduleId(Long showScheduleId) {
         // 주어진 show_schedule_id로 Reservation을 조회
-        List<Reservation> reservations = reservationRepository.findByReservationDetailsShowScheduleId(showScheduleId);
+        List<Reservation> reservations = reservationRepository.findByReservationDetailsShowScheduleId(
+            showScheduleId);
 
         // 각 Reservation의 ReservationDetail 수를 카운트
         long reservedSeatsCount = reservations.stream()

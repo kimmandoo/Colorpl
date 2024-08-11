@@ -81,8 +81,8 @@ public class ReservationStatus {
     }
 
     private void createAvailableSeats(Integer rows, Integer cols) {
-        IntStream.rangeClosed(0, rows)
-            .forEach(i -> IntStream.rangeClosed(0, cols)
+        IntStream.rangeClosed(1, rows)
+            .forEach(i -> IntStream.rangeClosed(1, cols)
                 .forEach(j -> reserved.putIfAbsent(
                     Seat.builder()
                         .row(i)
