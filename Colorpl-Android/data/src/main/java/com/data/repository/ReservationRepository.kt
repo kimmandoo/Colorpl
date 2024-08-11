@@ -12,4 +12,5 @@ interface ReservationRepository {
 
     suspend fun getReservationSchedule(showDetailId: Int, date: String): Flow<ApiResult<List<ResponseShowSchedules>>>
 
+    suspend fun getReservationSeat(showDetailId: Int, showScheduleId: Int): Flow<ApiResult<Map<String, Boolean>>>
 }

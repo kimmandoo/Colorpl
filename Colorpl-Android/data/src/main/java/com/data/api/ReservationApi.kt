@@ -2,6 +2,7 @@ package com.data.api
 
 import com.data.model.response.ReservationInfo
 import com.data.model.response.ResponseShowSchedules
+import com.data.model.response.ResponseShowSeat
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -22,5 +23,11 @@ interface ReservationApi {
         @Path("showDetailId") showDetailId: Int,
         @Query("date") date: String,
     ): List<ResponseShowSchedules>
+
+    @GET("shows/{showDetailId}/schedules/{showScheduleId}")
+    suspend fun getReservationSeat(
+        @Path("showDetailId") showDetailId: Int,
+        @Path("showScheduleId") showScheduleId: Int,
+    ): Map<String, Boolean>
 
 }

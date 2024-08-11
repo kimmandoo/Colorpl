@@ -40,4 +40,15 @@ class ReservationRepositoryImpl @Inject constructor(
             })
         }
     }
+
+    override suspend fun getReservationSeat(
+        showDetailId: Int,
+        showScheduleId: Int
+    ): Flow<ApiResult<Map<String, Boolean>>> {
+        return flow {
+            emit(safeApiCall {
+                reservationDataSource.getReservationSeat(showDetailId, showScheduleId)
+            })
+        }
+    }
 }

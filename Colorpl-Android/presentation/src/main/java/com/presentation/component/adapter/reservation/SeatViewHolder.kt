@@ -14,10 +14,10 @@ class SeatViewHolder(
             tvSeat.text = seat.toString()
             clItem.setBackgroundResource(
                 when (seat.grade) {
-                    1 -> R.drawable.selector_timber_wolf_to_purple_for_seat
-                    2 -> R.drawable.selector_timber_wolf_to_blue_for_seat
-                    3 -> R.drawable.selector_timber_wolf_to_green_for_seat
-                    4 -> R.drawable.selector_timber_wolf_to_imperial_red_for_seat
+                    "R" -> R.drawable.selector_timber_wolf_to_imperial_red_for_seat
+                    "S" -> R.drawable.selector_timber_wolf_to_green_for_seat
+                    "A" -> R.drawable.selector_timber_wolf_to_blue_for_seat
+                    "B" -> R.drawable.selector_timber_wolf_to_purple_for_seat
                     else -> R.color.eerie_black
                 }
             )
@@ -27,7 +27,7 @@ class SeatViewHolder(
             }
 
             tvSeat.setOnClickListener {
-                if (seat.grade != 5) onSeatSelected(seat)
+                if (seat.grade != null) onSeatSelected(seat)
             }
         }
     }

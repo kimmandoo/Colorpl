@@ -6,6 +6,7 @@ import com.domain.model.ReservationPairInfo
 import com.domain.model.Seat
 import com.domain.model.TimeTable
 import com.domain.usecase.ReservationScheduleUseCase
+import com.domain.usecase.ReservationSeatUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ReservationViewModel @Inject constructor(
     private val getReservationUseCase: ReservationUseCase,
-    private val getReservationScheduleUseCase: ReservationScheduleUseCase
+    private val getReservationScheduleUseCase: ReservationScheduleUseCase,
+    private val getReservationSeatUseCase: ReservationSeatUseCase
 
 ) : ViewModel() {
     private val _reservationImg = MutableStateFlow("")
@@ -40,6 +42,9 @@ class ReservationViewModel @Inject constructor(
 
     private val _getReservationSchedule = MutableStateFlow<List<ReservationPairInfo>>(listOf())
     val getReservationSchedule: StateFlow<List<ReservationPairInfo>> = _getReservationSchedule
+
+    private val _getReservationSeat = MutableStateFlow<Map<String, Boolean>>(mapOf())
+    val getReservationSeat : StateFlow<Map<String, Boolean>> = _getReservationSeat
 
     private val _showPlace = MutableStateFlow("")
     val showPlace : StateFlow<String> = _showPlace
@@ -89,6 +94,29 @@ class ReservationViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getReservationSeat(
+        showDetailId: Int,
+        showScheduleId: Int
+    ) {
+        viewModelScope.launch {
+            getReservationSeatUseCase(showDetailId, showScheduleId).collect { response ->
+                when (response) {
+                    is DomainResult.Success -> {
+//                        val seatList = response.data
+//                        _getReservationSeat.value = seatList
+                        _reservationSeat.value = response.data
+                        Timber.tag(this.javaClass.simpleName).d("${response.data}")
+                        Timber.d("예약 정보 조회 성공")
+                    }
+                    is DomainResult.Error -> {
+                        Timber.d("예약 정보 조회 실패")
+                    }
+                }
+
+                }
         }
     }
 }

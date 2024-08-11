@@ -21,4 +21,7 @@ class ReservationDataSourceImpl @Inject constructor(
     override suspend fun getReservationSchedule(showDetailId: Int, date: String): List<ResponseShowSchedules> {
         return reservationApi.getReservationSchedule(showDetailId, date)
     }
+    override suspend fun getReservationSeat(showDetailId: Int, showScheduleId: Int): Map<String, Boolean> {
+        return reservationApi.getReservationSeat(showDetailId, showScheduleId)
+    }
 }
