@@ -19,7 +19,7 @@ class ReservationCompleteFragment :
 
     private fun initClickEvent() {
         binding.apply {
-            ivComplete.setOnClickListener {
+            tvComplete.setOnClickListener {
                 navigatePopBackStack()
             }
         }
