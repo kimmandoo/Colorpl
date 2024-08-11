@@ -8,13 +8,19 @@ import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.reservation.service.ReservationService;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/reservations")
@@ -40,16 +46,19 @@ public class ReservationController {
     @GetMapping("/{reservationId}")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 특정 예매 상세 조회", description = "특정 멤버의 특정 예매를 상세 조회 할 때 사용하는 API")
-    public ResponseEntity<ReservationDTO> getReservationByMemberIdAndReservationId(@PathVariable Long reservationId) {
+    public ResponseEntity<ReservationDTO> getReservationByMemberIdAndReservationId(
+        @PathVariable Long reservationId) {
         Integer memberId = memberService.getCurrentMemberId();
-        ReservationDTO reservation = reservationService.getReservationByMemberIdAndReservationId(memberId, reservationId);
+        ReservationDTO reservation = reservationService.getReservationByMemberIdAndReservationId(
+            memberId, reservationId);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
     @PostMapping("/cancel/{reservationId}")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 특정 예매 취소", description = "로그인 된 사용자가 특정 예매를 취소할때 사용하는 API, is_refunded를 true로 변경")
-    public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(@PathVariable Long reservationId) {
+    public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(
+        @PathVariable Long reservationId) {
         Integer memberId = memberService.getCurrentMemberId();
         reservationService.cancelReservationByMemberIdAndReservationId(memberId, reservationId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -59,18 +68,22 @@ public class ReservationController {
     @PutMapping("/{reservationId}")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 예매 업데이트", description = "로그인 된 사용자가 예매를 수정하는 API, 새로운 예매 상세 추가시 id를 빼고 in해야 정상 작동")
-    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
+    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Long reservationId,
+        @RequestBody ReservationDTO reservationDTO) {
         Integer memberId = memberService.getCurrentMemberId();
-        ReservationDTO updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
+        ReservationDTO updatedReservation = reservationService.updateReservation(memberId,
+            reservationId, reservationDTO);
         return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "사용자의 예매 생성", description = "로그인 된 사용자의 예매를 생성하는 API")
-    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+    public ResponseEntity<ReservationDTO> createReservation(
+        @RequestBody ReservationDTO reservationDTO) {
         Integer memberId = memberService.getCurrentMemberId();
-        ReservationDTO createdReservation = reservationService.createReservation(memberId, reservationDTO);
+        ReservationDTO createdReservation = reservationService.createReservation(memberId,
+            reservationDTO);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
 
@@ -81,29 +94,41 @@ public class ReservationController {
 //        return ResponseEntity.ok(reservedSeatsCount);
 //    }
 
-    @GetMapping("/count/{showScheduleId}")
-    public ResponseEntity<Long> getReservedSeatsCount(@PathVariable Long showScheduleId) {
-        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
-        return ResponseEntity.ok(reservedSeatsCount);
-    }
+//    @GetMapping("/count/{showScheduleId}")
+//    public ResponseEntity<Long> getReservedSeatsCount(@PathVariable Long showScheduleId) {
+//        long reservedSeatsCount = reservationService.countReservedSeatsByShowScheduleId(showScheduleId);
+//        return ResponseEntity.ok(reservedSeatsCount);
+//    }
+
+    //    @GetMapping("/count")
+//    @Operation(summary = "특정 ShowSchedule ID를 가진 예약 상세 항목 수 조회", description = "주어진 ShowSchedule ID에 대한 예약 상세 항목의 수를 반환합니다.")
+//    public ResponseEntity<Long> countReservationDetailsByShowScheduleId(
+//            @RequestParam Long showScheduleId) {
+//        long count = reservationService.countByShowScheduleId(showScheduleId);
+//        return ResponseEntity.ok(count);
+//    }
     //-------------관리자용 or 다른 유저 정보 조회시 사용---------------
     // 특정 멤버의 모든 예매 조회
     @GetMapping("member/{memberId}")
     @Operation(summary = "특정 멤버의 모든 예매 조회", description = "특정 멤버의 모든 예매 조회 할 때 사용하는 API")
 //    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<ReservationDTO>> getReservationsByMemberId(@PathVariable Integer memberId) {
+    public ResponseEntity<List<ReservationDTO>> getReservationsByMemberId(
+        @PathVariable Integer memberId) {
         List<ReservationDTO> reservations = reservationService.getReservationsByMemberId(memberId);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
+
     // 특정 사용자의 특정 예매 조회
     @GetMapping("/member/{memberId}/reservation/{reservationId}")
     @Operation(summary = "특정 멤버의 특정 예매 상세 조회", description = "특정 멤버의 특정 예매를 상세 조회 할 때 사용하는 API")
     public ResponseEntity<ReservationDTO> getReservationByMemberIdAndReservationId(
         @PathVariable Integer memberId,
         @PathVariable Long reservationId) {
-        ReservationDTO reservation = reservationService.getReservationByMemberIdAndReservationId(memberId, reservationId);
+        ReservationDTO reservation = reservationService.getReservationByMemberIdAndReservationId(
+            memberId, reservationId);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
+
     // 모든 예매 조회
     @GetMapping("/all")
     @Operation(summary = "모든 예매 조회", description = "모든 예매를 조회할 때 사용하는 API")
@@ -123,26 +148,31 @@ public class ReservationController {
     // 특정 멤버의 특정 예매 취소(테스트 완료)
     @PostMapping("/cancel/member/{memberId}/reservation/{reservationId}")
     @Operation(summary = "특정 멤버의 특정 예매 취소", description = "특정 멤버의 특정 예매를 취소하는 API, is_refunded를 true로 변경")
-    public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(@PathVariable Integer memberId, @PathVariable Long reservationId) {
+    public ResponseEntity<Void> cancelReservationByMemberIdAndReservationId(
+        @PathVariable Integer memberId, @PathVariable Long reservationId) {
         reservationService.cancelReservationByMemberIdAndReservationId(memberId, reservationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     // 특정 예매 업데이트(테스트 완료)
     @PutMapping("/member/{memberId}/reservation/{reservationId}")
     @Operation(summary = "특정 예매 업데이트", description = "특정 멤버의 특정 예매를 수정하는 API, 새로운 예매 상세 추가시 id를 빼고 in해야 정상 작동")
-    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Integer memberId, @PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO updatedReservation = reservationService.updateReservation(memberId, reservationId, reservationDTO);
+    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Integer memberId,
+        @PathVariable Long reservationId, @RequestBody ReservationDTO reservationDTO) {
+        ReservationDTO updatedReservation = reservationService.updateReservation(memberId,
+            reservationId, reservationDTO);
         return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
     }
+
     // 예매 생성(테스트 완료)
     @PostMapping("/member/{memberId}")
     @Operation(summary = "예매 생성", description = "특정 멤버의 예매를 생성하는 API")
-    public ResponseEntity<ReservationDTO> createReservation(@PathVariable Integer memberId, @RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO createdReservation = reservationService.createReservation(memberId, reservationDTO);
+    public ResponseEntity<ReservationDTO> createReservation(@PathVariable Integer memberId,
+        @RequestBody ReservationDTO reservationDTO) {
+        ReservationDTO createdReservation = reservationService.createReservation(memberId,
+            reservationDTO);
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
-
-
 
 
 }

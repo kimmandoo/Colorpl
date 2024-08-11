@@ -13,19 +13,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Seat {
 
+    @ToString.Exclude
     @Column(name = "SEAT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
+    @ToString.Exclude
     @JoinColumn(name = "SHOW_DETAIL_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private ShowDetail showDetail;
@@ -36,6 +40,7 @@ public class Seat {
     @Column(name = "SEAT_COL")
     private Integer col;
 
+    @ToString.Exclude
     @Column(name = "SEAT_CLASS")
     private String seatClass;
 }
