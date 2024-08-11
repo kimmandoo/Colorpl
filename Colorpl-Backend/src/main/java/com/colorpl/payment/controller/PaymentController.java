@@ -87,6 +87,71 @@ public class PaymentController {
             );
         }
     }
+//
+//    @PostMapping("/delete/receipt")
+//    @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
+//    public ResponseEntity<HashMap<String, Object>> deleteReceipt(@RequestBody Cancel cancel,
+//                                                                 @RequestHeader("Pay-Authorization") String authorizationHeader) {
+//        try {
+//            HashMap<String, Object> response = paymentService.removeReceiptIdFromMember(cancel, authorizationHeader);
+//            return ResponseEntity.ok(response);
+//        }catch(Exception e){
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                        new HashMap<String, String>() {{
+//                            put("error", "Failed to cancel payment: " + e.getMessage());
+//                        }}
+//                );
+//            }
+//
+//        }
+//    }
+
+//@PostMapping("/delete/receipt")
+//@Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
+//public ResponseEntity<?> deleteReceipt(@RequestBody Cancel cancel,
+//                                       @RequestHeader("Pay-Authorization") String authorizationHeader) {
+//    try {
+//        HashMap<String, Object> response= paymentService.removeReceiptIdFromMember(cancel.receiptId);
+//        return ResponseEntity.ok(new HashMap<String, Object>() {{
+//            put("message", "Receipt deleted successfully.");
+//        }});
+//    } catch (Exception e) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                new HashMap<String, String>() {{
+//                    put("error", "Failed to delete receipt: " + e.getMessage());
+//                }}
+//        );
+//    }
+//}
+@DeleteMapping("/delete/receipt/{receiptId}")
+@Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
+public ResponseEntity<?> deleteReceipt(@PathVariable String receiptId,
+                                       @RequestHeader("Pay-Authorization") String authorizationHeader) {
+    try {
+        // 결제 내역 삭제를 시도
+        paymentService.removeReceiptIdFromMember(receiptId);
+
+        // 성공 메시지 반환
+        return ResponseEntity.ok(new HashMap<String, Object>() {{
+            put("message", "Receipt deleted successfully.");
+        }});
+    } catch (IllegalArgumentException e) {
+        // 영수증 ID가 존재하지 않는 경우의 에러 메시지 반환
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new HashMap<String, String>() {{
+                    put("error", "Failed to delete receipt: " + e.getMessage());
+                }}
+        );
+    } catch (Exception e) {
+        // 다른 예외 발생 시의 에러 메시지 반환
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new HashMap<String, String>() {{
+                    put("error", "Failed to delete receipt: " + e.getMessage());
+                }}
+        );
+    }
+}
+
 
     @PostMapping("/request/user/token")
     @Operation(summary = "구매자 토큰 발급받기", description = "구매자 토큰을 발급받는 api")
