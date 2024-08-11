@@ -4,6 +4,7 @@ import com.data.api.PayApi
 import com.data.datasource.remote.PayDataSource
 import com.data.model.request.RequestPayCancel
 import com.data.model.response.ResponsePayCancel
+import com.data.model.response.ResponsePayHistoryDelete
 import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import javax.inject.Inject
@@ -32,5 +33,9 @@ class PayDataSourceImpl @Inject constructor(
         requestPayCancel: RequestPayCancel
     ): ResponsePayCancel {
         return payApi.postPayCancel(header, requestPayCancel)
+    }
+
+    override suspend fun deletePay(header: String, receiptId: String): ResponsePayHistoryDelete {
+        return payApi.deletePay(header, receiptId)
     }
 }

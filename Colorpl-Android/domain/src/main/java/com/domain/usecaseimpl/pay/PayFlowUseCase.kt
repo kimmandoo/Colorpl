@@ -84,4 +84,23 @@ class PayFlowUseCase @Inject constructor(
             }
         }
     }
+
+    suspend fun payHistoryDelete(
+        header: String,
+        receiptId: String
+    ): Flow<DomainResult<Boolean>> {
+        return flow {
+            payRepository.deletePay(header, receiptId).collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        emit(DomainResult.Success(true))
+                    }
+
+                    is ApiResult.Error -> {
+                        emit(DomainResult.Error(result.exception))
+                    }
+                }
+            }
+        }
+    }
 }

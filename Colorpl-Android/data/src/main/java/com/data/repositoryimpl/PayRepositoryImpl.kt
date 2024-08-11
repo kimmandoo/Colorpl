@@ -4,6 +4,7 @@ import com.data.api.safeApiCall
 import com.data.datasource.remote.PayDataSource
 import com.data.model.request.RequestPayCancel
 import com.data.model.response.ResponsePayCancel
+import com.data.model.response.ResponsePayHistoryDelete
 import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import com.data.repository.PayRepository
@@ -50,6 +51,17 @@ class PayRepositoryImpl @Inject constructor(
         return flow {
             emit(safeApiCall {
                 payDataSource.postPayCancel(header, requestPayCancel)
+            })
+        }
+    }
+
+    override suspend fun deletePay(
+        header: String,
+        receiptId: String
+    ): Flow<ApiResult<ResponsePayHistoryDelete>> {
+        return flow {
+            emit(safeApiCall {
+                payDataSource.deletePay(header, receiptId)
             })
         }
     }

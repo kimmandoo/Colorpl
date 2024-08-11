@@ -111,4 +111,21 @@ class PayViewModel @Inject constructor(
                 }
         }
     }
+
+    fun payHistoryDelete(receiptId: String) {
+        viewModelScope.launch {
+            payFlowUseCase.payHistoryDelete(payToken.value, receiptId)
+                .collectLatest { result ->
+                    when (result) {
+                        is DomainResult.Success -> {
+                            getPaymentReceipts()
+                        }
+
+                        is DomainResult.Error -> {
+                            Timber.d("결제 내역 삭제 ${result.exception}")
+                        }
+                    }
+                }
+        }
+    }
 }

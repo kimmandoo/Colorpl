@@ -15,6 +15,7 @@ import com.presentation.viewmodel.PayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class PaymentHistoryFragment :
@@ -73,17 +74,33 @@ class PaymentHistoryFragment :
                 view,
                 DropDownMenu.getDropDown(PaymentResult.getMenu(payResult), requireActivity()),
                 action = { value ->
-                    initDialog(data.receiptId)
+                    Timber.d("receiptId 확인 ${data.receiptId}")
+                    val title = when (value.type) {
+                        DropDownMenu.DELETE -> {
+                            requireActivity().getString(R.string.my_page_pay_history_delete_dialog_title)
+                        }
+
+                        DropDownMenu.REFUND -> {
+                            requireActivity().getString(R.string.my_page_cancel_dialog_title)
+                        }
+                    }
+                    initDialog(data.receiptId, title,
+                        value.type)
                 }
             )
         }
     }
 
-    private fun initDialog(receiptId: String) {
-        CustomDialog(requireActivity()).cancellableDialog(requireActivity().getString(R.string.my_page_cancel_dialog_title),
+    private fun initDialog(receiptId: String, title : String, type : DropDownMenu) {
+        CustomDialog(requireActivity()).cancellableDialog(title,
             complete = {
                 showLoading()
-                payViewModel.payCancel(receiptId)
+                if(type == DropDownMenu.REFUND){
+                    payViewModel.payCancel(receiptId)
+                }else{
+                    payViewModel.payHistoryDelete(receiptId)
+                }
+
             },
             cancel = {})
     }

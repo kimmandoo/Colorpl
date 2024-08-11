@@ -2,6 +2,7 @@ package com.data.repository
 
 import com.data.model.request.RequestPayCancel
 import com.data.model.response.ResponsePayCancel
+import com.data.model.response.ResponsePayHistoryDelete
 import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import com.data.util.ApiResult
@@ -24,4 +25,9 @@ interface PayRepository {
         header: String,
         requestPayCancel: RequestPayCancel
     ): Flow<ApiResult<ResponsePayCancel>>
+
+    suspend fun deletePay(
+        header: String,
+        receiptId: String
+    ): Flow<ApiResult<ResponsePayHistoryDelete>>
 }

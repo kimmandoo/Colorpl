@@ -154,7 +154,7 @@ enum class PaymentResult(val value: Int) {
 
         fun getMenu(mode: PaymentResult): List<Int> {
             return when (mode) {
-                COMPLETE -> listOf(0)
+                COMPLETE -> listOf(0,1)
                 REFUND -> listOf(1)
                 USE -> listOf(2)
             }
