@@ -32,6 +32,7 @@ public class GetSchedulesResponse {
         @Builder
         public static class Timetable {
 
+            private Long showScheduleId;
             private LocalDateTime startTime;
             private LocalDateTime endTime;
             private Integer remainingSeats;
