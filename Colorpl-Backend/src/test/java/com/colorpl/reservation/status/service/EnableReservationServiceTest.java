@@ -28,8 +28,8 @@ class EnableReservationServiceTest {
     void setUp() {
         createReservationStatusService.createReservationStatus(2L);
         seat = Seat.builder()
-            .row(0)
-            .col(0)
+            .row(1)
+            .col(1)
             .build();
     }
 
@@ -41,14 +41,14 @@ class EnableReservationServiceTest {
     @Test
     void enableReservation() {
         disableReservation();
-        enableReservationService.enableReservation(2L, 0, 0);
+        enableReservationService.enableReservation(2L, 1, 1);
         ReservationStatus found = reservationStatusRepository.findById(2L).orElseThrow();
         assertThat(found.getReserved().get(seat.toString())).isEqualTo(true);
     }
 
     @Test
     void enableReservation_assertThatThrownBy() {
-        assertThatThrownBy(() -> enableReservationService.enableReservation(2L, 0, 0)).isInstanceOf(
+        assertThatThrownBy(() -> enableReservationService.enableReservation(2L, 1, 1)).isInstanceOf(
             ReservationStatusAlreadyEnabledException.class);
     }
 

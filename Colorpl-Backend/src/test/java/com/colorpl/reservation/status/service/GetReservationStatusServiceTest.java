@@ -26,8 +26,8 @@ class GetReservationStatusServiceTest {
     void setUp() {
         createReservationStatusService.createReservationStatus(2L);
         seat = Seat.builder()
-            .row(0)
-            .col(0)
+            .row(1)
+            .col(1)
             .build();
     }
 

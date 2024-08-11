@@ -22,10 +22,7 @@ class CreateReservationStatusServiceTest {
 
     @BeforeEach
     void setUp() {
-        seat = Seat.builder()
-            .row(0)
-            .col(0)
-            .build();
+        seat = Seat.builder().row(1).col(1).build();
     }
 
     @AfterEach
