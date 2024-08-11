@@ -1,21 +1,28 @@
 package com.presentation.component.adapter.mypage
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
+import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemPaymentHistoryBinding
-import com.domain.model.Payment
+import com.domain.model.PayReceipt
 import com.presentation.util.PaymentResult
 
 class PaymentHistoryViewHolder(
     val binding: ItemPaymentHistoryBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(payment: Payment) {
+    fun bind(payment: PayReceipt) {
         binding.apply {
-            type = when (payment.type) {
-                0 -> PaymentResult.COMPLETE
-                1 -> PaymentResult.REFUND
-                else -> PaymentResult.USE
-            }
+            type = setPaymentResultType(payment.statusLocale, binding.root.context)
+            payReceipt = payment
+        }
+    }
+
+    fun setPaymentResultType(value: String, context: Context): PaymentResult {
+        return if (value == context.getString(R.string.my_page_payment_complete)) {
+            PaymentResult.COMPLETE
+        } else {
+            PaymentResult.REFUND
         }
     }
 }

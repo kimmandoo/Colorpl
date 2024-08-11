@@ -3,9 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="type"
             type="com.presentation.util.PaymentResult" />
+
+        <variable
+            name="payReceipt"
+            type="com.domain.model.PayReceipt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,21 +36,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="11dp"
-                android:text="결제완료"
+                android:text="@{payReceipt.statusLocale}"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_date"
-                style="@style/suite_medium_10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="2024년 7월 19일 20:21"
-                android:textColor="@color/timber_wolf"
-                app:layout_constraintStart_toStartOf="@+id/tv_status"
-                app:layout_constraintTop_toBottomOf="@+id/tv_status" />
 
             <ImageView
                 android:id="@+id/iv_menu"
@@ -185,7 +182,7 @@
                     style="@style/suite_regular_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_page_payment_price"
+                    android:text="@string/my_page_payment_date"
                     android:textColor="@color/timber_wolf"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -194,9 +191,9 @@
                 <TextView
                     android:id="@+id/tv_time_value"
                     style="@style/suite_medium_12"
+                    changeDateText="@{payReceipt.purchasedAt}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="2024년 06월 22일 20:00"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tv_title_value"
@@ -210,13 +207,13 @@
             android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:setPaymentBackground="@{type}"
             android:clickable="false"
             android:focusable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:setPaymentBackground="@{type}" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

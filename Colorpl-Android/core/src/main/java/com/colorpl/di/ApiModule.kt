@@ -89,7 +89,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun providePayApi(
-        @NoHeaderRetrofit
+        @NormalRetrofit
         retrofit: Retrofit
     ): PayApi = retrofit.create()
 }
