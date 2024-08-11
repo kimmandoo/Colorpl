@@ -24,9 +24,8 @@ class ReservationPlaceAdapter (
     }
 
     override fun onBindViewHolder(holder: ReservationPlaceViewHolder, position: Int) {
-
         holder.bind(getItem(position)) {
-            val result = location == getItem(position).placeName
+            val result = (location == getItem(position).placeName) && (position != 0)
             location = getItem(position).placeName
             result
         }

@@ -41,6 +41,9 @@ class ReservationViewModel @Inject constructor(
     private val _getReservationSchedule = MutableStateFlow<List<ReservationPairInfo>>(listOf())
     val getReservationSchedule: StateFlow<List<ReservationPairInfo>> = _getReservationSchedule
 
+    private val _showPlace = MutableStateFlow("")
+    val showPlace : StateFlow<String> = _showPlace
+
     fun setReservationImg(img: String) {
         _reservationImg.value = img
     }
