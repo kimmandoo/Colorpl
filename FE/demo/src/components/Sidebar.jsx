@@ -3,7 +3,7 @@ import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mu
 import { People as PeopleIcon, Comment as CommentIcon, Movie as MovieIcon, Dashboard as DashboardIcon, Assignment as AssignmentIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-const Sidebar = ({ user, sidebarOpen, setSidebarOpen, expandedMenu, setExpandedMenu }) => {
+const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
 
   const handleMouseEnter = (menu) => {
     setExpandedMenu(menu);
@@ -53,7 +53,7 @@ const Sidebar = ({ user, sidebarOpen, setSidebarOpen, expandedMenu, setExpandedM
             <ListItemIcon sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <DashboardIcon />
               <Typography variant="caption" display="block">
-                Dashboard
+                대시보드
               </Typography>
             </ListItemIcon>
           </ListItem>
@@ -76,7 +76,7 @@ const Sidebar = ({ user, sidebarOpen, setSidebarOpen, expandedMenu, setExpandedM
             <ListItemIcon sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <PeopleIcon />
               <Typography variant="caption" display="block">
-                User Management
+                사용자 <br /> 관리
               </Typography>
             </ListItemIcon>
           </ListItem>
@@ -103,32 +103,32 @@ const Sidebar = ({ user, sidebarOpen, setSidebarOpen, expandedMenu, setExpandedM
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
-              <ListItemText primary="Members" />
+              <ListItemText primary="유저 관리" />
+            </ListItem>
+            <ListItem button component={Link} to="/schedules" onClick={handleItemClick}>
+              <ListItemIcon>
+                <MovieIcon />
+              </ListItemIcon>
+              <ListItemText primary="스케줄 관리" />
             </ListItem>
             <ListItem button component={Link} to="/reviews" onClick={handleItemClick}>
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
-              <ListItemText primary="Reviews" />
+              <ListItemText primary="리뷰 관리" />
             </ListItem>
             <ListItem button component={Link} to="/comments" onClick={handleItemClick}>
               <ListItemIcon>
                 <CommentIcon />
               </ListItemIcon>
-              <ListItemText primary="Comments" />
-            </ListItem>
-            <ListItem button component={Link} to="/tickets" onClick={handleItemClick}>
-              <ListItemIcon>
-                <MovieIcon />
-              </ListItemIcon>
-              <ListItemText primary="Tickets" />
+              <ListItemText primary="댓글 관리" />
             </ListItem>
             {user?.role === 1 && (
-              <ListItem button components={Link} to="/admin-management" onClick={handleItemClick}>
+              <ListItem button component={Link} to="/admin-management" onClick={handleItemClick}>
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Admin_manage "/>
+                <ListItemText primary="관리자 관리" />
               </ListItem>
             )}
           </List>

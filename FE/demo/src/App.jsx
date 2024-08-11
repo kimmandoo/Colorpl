@@ -4,63 +4,23 @@ import { CssBaseline, Box, ThemeProvider } from '@mui/material';
 import Sidebar from './components/Sidebar';
 import TopRightIcons from './components/TopRightIcons';
 import Members from './pages/Members';
+import MemberDetail from './pages/MemberDetail'; // 멤버 상세 페이지
 import Reviews from './pages/Reviews';
 import Comments from './pages/Comments';
-import Tickets from './pages/Tickets';
+import Schedules from './pages/Schedules'; // Schedules 페이지 추가
+import ScheduleDetail from './pages/ScheduleDetail'; // Schedule 상세 페이지
+import ScheduleImageUpdate from './pages/ScheduleImageUpdate'; // Schedule 이미지 업데이트 페이지
 import LoginScreen from './pages/LoginScreen';
 import PrivateRoute from './components/PrivateRoute';
 import DashboardHome from './pages/DashboardHome';
 import AdminManagement from './pages/AdminManagement';
-import MemberModal from './components/MemberModal';
-import ReviewModal from './components/ReviewModal';
-import CommentModal from './components/CommentModal';
-import TicketModal from './components/TicketModal';
 import api from './api';
 import theme from './theme';
 
 const App = () => {
-  const [modalState, setModalState] = useState({ type: '', data: null });
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenu, setExpandedMenu] = useState('');
-
-  const handleCloseModal = () => setModalState({ type: '', data: null });
-
-  const handleViewMember = async (member_id) => {
-    try {
-      const response = await api.get(`/cs2/members/${member_id}/activity`);
-      setModalState({ type: 'member', data: response.data });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleViewReview = async (review_id) => {
-    try {
-      const response = await api.get(`/cs2/reviews/${review_id}/activity`);
-      setModalState({ type: 'review', data: response.data });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleViewComment = async (comment_id) => {
-    try {
-      const response = await api.get(`/cs2/comments/${comment_id}/activity`);
-      setModalState({ type: 'comment', data: response.data });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleViewTicket = async (ticket_id) => {
-    try {
-      const response = await api.get(`/cs2/tickets/${ticket_id}/activity`);
-      setModalState({ type: 'ticket', data: response.data });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -100,7 +60,7 @@ const App = () => {
             <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} expandedMenu={expandedMenu} setExpandedMenu={setExpandedMenu} />
             <TopRightIcons
               user={user}
-              onProfileClick={() => setModalState({ type: 'profile', data: user })}
+              onProfileClick={() => console.log("Profile clicked")}
               onNotificationsClick={() => {}}
               onSettingsClick={() => {}}
               onLogout={handleLogout}
@@ -121,44 +81,18 @@ const App = () => {
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/" element={user ? <Navigate replace to="/dashboard" /> : <Navigate replace to="/login" />} />
             <Route path="/dashboard" element={<PrivateRoute><DashboardHome /></PrivateRoute>} />
-            <Route path="/members" element={<PrivateRoute><Members onViewMember={handleViewMember} /></PrivateRoute>} />
-            <Route path="/reviews" element={<PrivateRoute><Reviews onViewReview={handleViewReview} /></PrivateRoute>} />
-            <Route path="/comments" element={<PrivateRoute><Comments onViewComment={handleViewComment} /></PrivateRoute>} />
-            <Route path="/tickets" element={<PrivateRoute><Tickets onViewTicket={handleViewTicket} /></PrivateRoute>} />
+            <Route path="/members" element={<PrivateRoute><Members /></PrivateRoute>} />
+            <Route path="/members/:member_id" element={<PrivateRoute><MemberDetail /></PrivateRoute>} />
+            <Route path="/reviews" element={<PrivateRoute><Reviews /></PrivateRoute>} />
+            <Route path="/comments" element={<PrivateRoute><Comments /></PrivateRoute>} />
+            <Route path="/schedules" element={<PrivateRoute><Schedules /></PrivateRoute>} /> {/* Schedules 경로 추가 */}
+            <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail /></PrivateRoute>} /> {/* ScheduleDetail 경로 추가 */}
+            <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate /></PrivateRoute>} /> {/* ScheduleImageUpdate 경로 추가 */}
             {user && user.role === 1 && (
               <Route path="/admin-management" element={<PrivateRoute><AdminManagement /></PrivateRoute>} />
             )}
           </Routes>
         </Box>
-        <MemberModal
-          open={modalState.type === 'member'}
-          onClose={handleCloseModal}
-          member={modalState.data}
-          onViewTicket={handleViewTicket}
-          onViewReview={handleViewReview}
-          onViewComment={handleViewComment}
-        />
-        <ReviewModal
-          open={modalState.type === 'review'}
-          onClose={handleCloseModal}
-          review={modalState.data}
-          onViewMember={handleViewMember}
-          onViewTicket={handleViewTicket}
-          onViewComment={handleViewComment}
-        />
-        <CommentModal
-          open={modalState.type === 'comment'}
-          onClose={handleCloseModal}
-          comment={modalState.data}
-          onViewMember={handleViewMember}
-          onViewReview={handleViewReview}
-        />
-        <TicketModal
-          open={modalState.type === 'ticket'}
-          onClose={handleCloseModal}
-          ticket={modalState.data}
-          onViewMember={handleViewMember}
-        />
       </Router>
     </ThemeProvider>
   );
