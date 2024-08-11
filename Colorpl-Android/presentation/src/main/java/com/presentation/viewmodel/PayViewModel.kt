@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.PayCancelParam
 import com.domain.model.PayReceipt
 import com.domain.usecaseimpl.pay.PayFlowUseCase
 import com.domain.util.DomainResult
@@ -91,6 +92,23 @@ class PayViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun payCancel(receiptId: String) {
+        viewModelScope.launch {
+            payFlowUseCase.payCancel(payToken.value, PayCancelParam(receiptId))
+                .collectLatest { result ->
+                    when (result) {
+                        is DomainResult.Success -> {
+                            getPaymentReceipts()
+                        }
+
+                        is DomainResult.Error -> {
+                            Timber.d("결제 취소 ${result.exception}")
+                        }
+                    }
+                }
         }
     }
 }

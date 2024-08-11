@@ -5,9 +5,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentPaymentHistoryBinding
-import com.domain.model.Payment
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.mypage.PaymentHistoryAdapter
+import com.presentation.component.custom.CustomDialog
 import com.presentation.component.custom.showCustomDropDownMenu
 import com.presentation.util.DropDownMenu
 import com.presentation.util.PaymentResult
@@ -15,7 +15,6 @@ import com.presentation.viewmodel.PayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 @AndroidEntryPoint
 class PaymentHistoryFragment :
@@ -55,6 +54,7 @@ class PaymentHistoryFragment :
     private fun observePaymentReceipt() {
         payViewModel.paymentReceipts.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
+                dismissLoading()
                 paymentHistoryAdapter.submitList(it)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -67,17 +67,24 @@ class PaymentHistoryFragment :
         }
 
 
-        paymentHistoryAdapter.setItemClickListener { view, payResult ->
+        paymentHistoryAdapter.setItemClickListener { view, payResult, data ->
             showCustomDropDownMenu(
                 requireActivity(),
                 view,
                 DropDownMenu.getDropDown(PaymentResult.getMenu(payResult), requireActivity()),
                 action = { value ->
-                    Timber.d("데이터 확인 $value")
+                    initDialog(data.receiptId)
                 }
             )
         }
+    }
 
-
+    private fun initDialog(receiptId: String) {
+        CustomDialog(requireActivity()).cancellableDialog(requireActivity().getString(R.string.my_page_cancel_dialog_title),
+            complete = {
+                showLoading()
+                payViewModel.payCancel(receiptId)
+            },
+            cancel = {})
     }
 }

@@ -12,7 +12,7 @@ import com.presentation.util.PaymentResult
 class PaymentHistoryAdapter : ListAdapter<PayReceipt, PaymentHistoryViewHolder>(
     BaseDiffUtil<PayReceipt>()
 ) {
-    private var onMenuClickListener: ((View, PaymentResult) -> Unit)? = null
+    private var onMenuClickListener: ((View, PaymentResult, PayReceipt) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentHistoryViewHolder {
         val binding =
@@ -30,13 +30,14 @@ class PaymentHistoryAdapter : ListAdapter<PayReceipt, PaymentHistoryViewHolder>(
                     holder.setPaymentResultType(
                         getItem(position).statusLocale,
                         holder.binding.root.context
-                    )
+                    ),
+                    getItem(position)
                 )
             }
         }
     }
 
-    fun setItemClickListener(listener: (View, PaymentResult) -> Unit) {
+    fun setItemClickListener(listener: (View, PaymentResult, PayReceipt) -> Unit) {
         this.onMenuClickListener = listener
     }
 

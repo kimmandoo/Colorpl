@@ -1,7 +1,10 @@
 package com.data.api
 
+import com.data.model.request.RequestPayCancel
+import com.data.model.response.ResponsePayCancel
 import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -23,4 +26,11 @@ interface PayApi {
     suspend fun getPaymentReceipts(
         @Header("Pay-Authorization") payAuthorization: String
     ): List<ResponsePayReceipt>
+
+    @POST("api/payment/cancel")
+    suspend fun postPayCancel(
+        @Header("Pay-Authorization") payAuthorization: String,
+        @Body requestPayCancel: RequestPayCancel
+    ): ResponsePayCancel
+
 }

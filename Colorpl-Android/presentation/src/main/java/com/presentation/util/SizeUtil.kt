@@ -1,7 +1,11 @@
 package com.presentation.util
 
+import android.content.Context
 import android.content.res.Resources
+import android.os.Build
+import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.WindowManager
 
 private val displayMetrics
     get() = Resources.getSystem().displayMetrics
@@ -21,3 +25,17 @@ fun dpToPx(dp: Int) =
 
 val Number.dpToPx: Int
     get() = dpToPx(this.toInt())
+
+
+
+fun getSizeX(context: Context) : Int{
+    val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val windowMetrics = wm.currentWindowMetrics
+        windowMetrics.bounds.width()
+    } else {
+        val displayMetrics = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(displayMetrics)
+        displayMetrics.widthPixels
+    }
+}
