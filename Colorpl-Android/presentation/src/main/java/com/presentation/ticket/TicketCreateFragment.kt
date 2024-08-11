@@ -1,11 +1,16 @@
 package com.presentation.ticket
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
@@ -21,8 +26,8 @@ import com.domain.model.Description
 import com.presentation.base.BaseFragment
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
-import com.presentation.util.checkCameraPermission
 import com.presentation.util.getPhotoGallery
+import com.presentation.util.requestCameraPermission
 import com.presentation.util.setCameraLauncher
 import com.presentation.util.setImageLauncher
 import com.presentation.viewmodel.TicketCreateViewModel
@@ -44,6 +49,15 @@ class TicketCreateFragment :
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
 
+    private val cameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                dismissLoading()
+                navigatePopBackStack()
+            }
+        }
 
     override fun initView() {
         observeDescription()
@@ -54,13 +68,18 @@ class TicketCreateFragment :
 
     private fun initUi() {
         when (args.photoType) {
-            TicketType.CAMERA -> {
-                checkCameraPermission {
-                    openCamera()
-                }
+            TicketType.CAMERA_ISSUED, TicketType.CAMERA_UNISSUED -> {
+                requireContext().requestCameraPermission(
+                    onGrant = {
+                        openCamera()
+                    },
+                    onDenied = {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                )
             }
 
-            TicketType.GALLERY -> {
+            TicketType.GALLERY_ISSUED, TicketType.GALLERY_UNISSUED -> {
                 getPhotoGallery(pickImageLauncher)
             }
         }
@@ -92,19 +111,30 @@ class TicketCreateFragment :
         binding.spinner.apply {
             this.adapter = adapter
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
+            val initialPosition = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                items.lastIndex
+            } else {
+                0
+            }
+            setSelection(initialPosition)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
                     view: View,
                     position: Int,
-                    id: Long
+                    id: Long,
                 ) {
                     Timber.tag("spinner").d("${items[position]}")
                     viewModel.setCategory(items[position])
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    viewModel.setCategory(items[0])
+                    val defaultCategory = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                        items.last()
+                    } else {
+                        items.first()
+                    }
+                    viewModel.setCategory(defaultCategory)
                 }
             }
         }
@@ -175,6 +205,6 @@ class TicketCreateFragment :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        loading.dismiss()
+        dismissLoading()
     }
 }
