@@ -59,8 +59,8 @@ class MemberCategories(Base):
 class PriceBySeatClass(Base):
     __tablename__ = 'price_by_seat_class'
     show_detail_id = Column(BigInteger, ForeignKey('show_detail.show_detail_id'), primary_key=True)
-    price_by_seat_class = Column(Integer, primary_key=True)
-    price_by_seat_class_price = Column(String(255))
+    price_by_seat_class_seat_class = Column(String(255), primary_key=True)
+    price_by_seat_class_price = Column(Integer)
 
     show_detail = relationship("ShowDetail", back_populates="price_by_seat_classes")
 
@@ -138,17 +138,18 @@ class ShowDetail(Base):
     show_detail_area = Column(String(255))
     show_detail_cast = Column(String(255))
     show_detail_category = Column(Enum('PLAY', 'MOVIE', 'PERFORMANCE', 'CONCERT', 'MUSICAL', 'EXHIBITION', 'ETC'))
-    # show_hall = Column(String(255))
     show_detail_name = Column(String(255))
     show_detail_poster_image_path = Column(String(255))
     show_detail_runtime = Column(String(255))
     show_detail_state = Column(Enum('COMPLETED', 'SCHEDULED', 'SHOWING'))
-    # theater_id = Column(BigInteger, ForeignKey('theater.theater_id'))
 
     price_by_seat_classes = relationship("PriceBySeatClass", back_populates="show_detail")
     schedules = relationship("ShowSchedule", back_populates="show_detail")
     seats = relationship("Seat", back_populates="show_detail")
     hall = relationship("Hall", back_populates="show_details")
+
+    # show_hall = Column(String(255))
+    # theater_id = Column(BigInteger, ForeignKey('theater.theater_id'))
     # theater = relationship("Theater", back_populates="show_details")
 
 class ShowSchedule(Base):

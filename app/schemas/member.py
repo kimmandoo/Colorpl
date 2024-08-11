@@ -31,11 +31,11 @@ class MemberActivity(BaseModel):
     nickname: Optional[str] = None
     email: Optional[str] = None
     create_date: Optional[datetime] = None
-    categories: Optional[List[str]] = []
-    schedules_count: Optional[int] = 0
-    reviews_count: Optional[int] = 0
-    comments_count: Optional[int] = 0
-    reservations_count: Optional[int] = 0
+    categories: List[str] = []
+    schedules_count: int = 0 
+    reviews_count: int = 0   
+    comments_count: int = 0 
+    reservations_count: int = 0
     type: Optional[str] = None
 
     class Config:
@@ -46,4 +46,4 @@ class MemberSearch(BaseModel):
     email: Optional[str] = None
     create_date_from: Optional[datetime] = None
     create_date_to: Optional[datetime] = None
-    category: Optional[str] = None
+    category: Optional[List[str]] = None

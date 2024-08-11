@@ -1,10 +1,11 @@
 from typing import Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import func, select, join
+from sqlalchemy import func, select, join, or_
 from app.models import Theater, Hall, ShowDetail, ShowSchedule
 from datetime import datetime
 from app.schemas.theater import HallCreate, HallInfo, ShowInfo, TheaterInfo, TheaterWithHallsCreate, TheaterWithHallsUpdate
 from geopy.geocoders import Nominatim
+from app.utils.convert_runtime_to_minutes import convert_runtime_to_minutes
 
 def get_theater_info(db: Session):
     theaters = db.query(Theater).all()
@@ -72,6 +73,34 @@ def get_current_shows_in_hall(db: Session, hall_id: int, start_time: datetime, e
         ShowDetail.hall_id == hall_id,
         ShowSchedule.show_schedule_date_time.between(start_time, end_time)
     ).all()
+
+def get_current_shows_in_hall_with_runtime(db: Session, hall_id: int, start_time: datetime, end_time: datetime):
+    results = db.query(
+        ShowSchedule.show_schedule_date_time,
+        ShowDetail.show_detail_id,
+        ShowDetail.show_detail_name,
+        ShowDetail.show_detail_poster_image_path,
+        ShowDetail.show_detail_runtime  # 원래의 런타임 문자열을 가져옴
+    ).join(ShowDetail, ShowDetail.show_detail_id == ShowSchedule.show_detail_id
+    ).filter(
+        ShowDetail.hall_id == hall_id,
+        ShowSchedule.show_schedule_date_time >= start_time,
+        ShowSchedule.show_schedule_date_time <= end_time
+    ).all()
+
+    # 결과 리스트를 순회하며 런타임을 변환
+    shows_with_runtime = []
+    for result in results:
+        runtime_in_minutes = convert_runtime_to_minutes(result.show_detail_runtime)
+        shows_with_runtime.append({
+            "show_schedule_date_time": result.show_schedule_date_time,
+            "show_detail_id": result.show_detail_id,
+            "show_detail_name": result.show_detail_name,
+            "show_detail_poster_image_path": result.show_detail_poster_image_path,
+            "show_runtime": runtime_in_minutes
+        })
+
+    return shows_with_runtime
 
 
 def get_lat_long_from_address(address: str):
@@ -189,3 +218,33 @@ def add_hall_to_theater(db: Session, theater_id: int, hall_data: HallCreate):
     db.refresh(new_hall)
 
     return new_hall
+
+def search_theater(db: Session, region: str = None, theater_name: str = None, hall_name: str = None, show_detail_name: str = None):
+    query = db.query(Theater).join(Hall, Theater.theater_id == Hall.theater_id, isouter=True)
+
+    filters = []
+
+    if region:
+        filters.append(Theater.theater_address.contains(region))
+    
+    if theater_name:
+        filters.append(Theater.theater_name.contains(theater_name))
+    
+    if hall_name:
+        filters.append(Hall.hall_name.contains(hall_name))
+    
+    if show_detail_name:
+        query = query.join(ShowDetail, Hall.hall_id == ShowDetail.hall_id)
+        filters.append(ShowDetail.show_detail_name.contains(show_detail_name))
+    
+    if filters:
+        query = query.filter(or_(*filters))
+    
+    theaters = query.all()
+
+    if show_detail_name:
+        for theater in theaters:
+            theater.halls = [hall for hall in theater.halls if any(
+                show_detail_name in show.show_detail_name for show in hall.show_details)]
+
+    return theaters

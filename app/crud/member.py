@@ -1,3 +1,4 @@
+from datetime import timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from ..models import Member, Schedule, Review, Comment, Reservation, MemberCategories
@@ -32,17 +33,37 @@ def search_member(db: Session, search: MemberSearch, skip: int = 0, limit: int =
 
 def apply_member_search_filters(query, search: MemberSearch):
     search_data = search.dict(exclude_unset=True)  # Only include fields that are provided
+    
     if "nickname" in search_data:
         query = query.filter(Member.nickname.ilike(f'%{search_data["nickname"]}%'))
+        
     if "email" in search_data:
         query = query.filter(Member.email.ilike(f'%{search_data["email"]}%'))
-    if "create_date_from" in search_data:
+        
+    if "create_date_from" in search_data and "create_date_to" in search_data:
+        if search_data["create_date_from"] == search_data["create_date_to"]:
+            start_of_day = search_data["create_date_from"]
+            end_of_day = start_of_day + timedelta(days=1)
+            query = query.filter(Member.create_date >= start_of_day, Member.create_date < end_of_day)
+        else:
+            query = query.filter(Member.create_date >= search_data["create_date_from"])
+            query = query.filter(Member.create_date <= search_data["create_date_to"])
+    
+    elif "create_date_from" in search_data:
         query = query.filter(Member.create_date >= search_data["create_date_from"])
-    if "create_date_to" in search_data:
+        
+    elif "create_date_to" in search_data:
         query = query.filter(Member.create_date <= search_data["create_date_to"])
+        
     if "category" in search_data:
-        query = query.join(MemberCategories).filter(MemberCategories.categories == search_data["category"])
+        # Ensure that category filtering works correctly with lists
+        if isinstance(search_data["category"], list) and search_data["category"]:
+            query = query.join(MemberCategories).filter(MemberCategories.categories.in_(search_data["category"]))
+        else:
+            query = query.join(MemberCategories).filter(MemberCategories.categories == search_data["category"])
+    
     return query
+
 
 def _get_member_activities(db: Session, members):
     member_activities = []

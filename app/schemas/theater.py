@@ -23,6 +23,10 @@ class ShowInfo(BaseModel):
     show_detail_name: str
     show_detail_poster_image_path: str
     show_schedule_date_time: datetime
+    show_runtime: int
+    
+    class Config:
+        from_attributes = True
 
 class HallCreate(BaseModel):
     hall_name: str = Field(..., example="신한카드홀")
@@ -57,3 +61,8 @@ class TheaterWithHallsUpdate(BaseModel):
     theater_address: Optional[str]
     halls: Optional[List[HallCreate]]
 
+class TheaterSearchRequest(BaseModel):
+    region: Optional[str] = Field(None, example="서울특별시 강남구")
+    theater_name: Optional[str] = Field(None, example="CGV 강남")
+    hall_name: Optional[str] = Field(None, example="1관")
+    show_detail_name: Optional[str] = Field(None, example="인셉션")
