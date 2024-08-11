@@ -68,7 +68,7 @@ class TicketCreateFragment :
 
     private fun initUi() {
         when (args.photoType) {
-            TicketType.CAMERA -> {
+            TicketType.CAMERA_ISSUED, TicketType.CAMERA_UNISSUED -> {
                 requireContext().requestCameraPermission(
                     onGrant = {
                         openCamera()
@@ -79,7 +79,7 @@ class TicketCreateFragment :
                 )
             }
 
-            TicketType.GALLERY -> {
+            TicketType.GALLERY_ISSUED, TicketType.GALLERY_UNISSUED -> {
                 getPhotoGallery(pickImageLauncher)
             }
         }
@@ -111,6 +111,12 @@ class TicketCreateFragment :
         binding.spinner.apply {
             this.adapter = adapter
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
+            val initialPosition = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                items.lastIndex
+            } else {
+                0
+            }
+            setSelection(initialPosition)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -123,7 +129,12 @@ class TicketCreateFragment :
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    viewModel.setCategory(items[0])
+                    val defaultCategory = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                        items.last()
+                    } else {
+                        items.first()
+                    }
+                    viewModel.setCategory(defaultCategory)
                 }
             }
         }

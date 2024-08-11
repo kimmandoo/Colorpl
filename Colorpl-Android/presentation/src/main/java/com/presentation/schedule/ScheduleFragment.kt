@@ -87,7 +87,12 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
             launch {
                 viewModel.tickets.collectLatest { tickets ->
-                    calendarAdapter.submitList(viewModel.matchTicketsToCalendar(viewModel.calendarItems.value, tickets))
+                    calendarAdapter.submitList(
+                        viewModel.matchTicketsToCalendar(
+                            viewModel.calendarItems.value,
+                            tickets
+                        )
+                    )
                     ticketAdapter.submitList(tickets)
                 }
             }
@@ -141,6 +146,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                                 startX = e.x
                                 startY = e.y
                             }
+
                             MotionEvent.ACTION_UP -> {
                                 val endX = e.x
                                 val endY = e.y
@@ -266,12 +272,20 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             type = ticketState,
             action = { ticketType ->
                 val action = when (ticketType) {
-                    TicketType.CAMERA -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA)
+                    TicketType.CAMERA_ISSUED -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_ISSUED)
                     }
 
-                    TicketType.GALLERY -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY)
+                    TicketType.GALLERY_ISSUED -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY_ISSUED)
+                    }
+
+                    TicketType.CAMERA_UNISSUED -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_UNISSUED)
+                    }
+
+                    TicketType.GALLERY_UNISSUED -> {
+                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY_UNISSUED)
                     }
                 }
                 navigateDestination(action)
