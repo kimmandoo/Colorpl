@@ -3,6 +3,7 @@ package com.presentation.feed
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.filter
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -44,6 +46,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         )
     }
 
+    override fun onPause() {
+        super.onPause()
+        Timber.tag("cycle").d("onPause")
+    }
     override fun onResume() {
         super.onResume()
         feedAdapter.refresh()
@@ -54,6 +60,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         initFilter()
         initFeed()
         observeFilter()
+        observeDialog()
         onFeedRegisterClickListener()
         observeRefreshTrigger()
     }
@@ -145,6 +152,21 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     private fun onFeedRegisterClickListener() {
         binding.imgFeedRegister.setOnClickListener {
             navigateDestination(R.id.action_fragment_feed_to_fragment_feed_ticket_select)
+        }
+    }
+
+    private fun observeDialog() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("refresh", false)
+                ?.collectLatest { refresh ->
+                    if (refresh) {
+                        feedAdapter.refresh()
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set("refresh", false)
+                    }
+                }
         }
     }
 }
