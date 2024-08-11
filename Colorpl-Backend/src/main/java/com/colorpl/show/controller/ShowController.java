@@ -59,6 +59,7 @@ public class ShowController {
 
     @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
     public ResponseEntity<?> getShowSchedule(
+        @PathVariable String showDetailId,
         @PathVariable Long showScheduleId
     ) {
         return ResponseEntity.ok(getScheduleService.getSchedule(showScheduleId));
