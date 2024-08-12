@@ -6,6 +6,7 @@ import android.net.Uri
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -35,6 +36,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
+import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class TicketCreateFragment :
@@ -88,19 +94,23 @@ class TicketCreateFragment :
         }
 
         binding.tvConfirm.setOnClickListener {
-            viewModel.setTicketInfo(
-                Description(
-                    title = binding.etTitle.text.toString(),
-                    detail = binding.etDetail.text.toString(),
-                    schedule = binding.etSchedule.text.toString(),
-                    seat = binding.etSeat.text.toString()
+            if(isValidDateFormat(binding.etSchedule.text.toString())){
+                viewModel.setTicketInfo(
+                    Description(
+                        title = binding.etTitle.text.toString(),
+                        detail = binding.etDetail.text.toString(),
+                        schedule = binding.etSchedule.text.toString(),
+                        seat = binding.etSeat.text.toString()
+                    )
                 )
-            )
-            val action =
-                TicketCreateFragmentDirections.actionFragmentTicketCreateToFragmentTicketFinish(
-                    photoUri
-                )
-            findNavController().navigate(action)
+                val action =
+                    TicketCreateFragmentDirections.actionFragmentTicketCreateToFragmentTicketFinish(
+                        photoUri
+                    )
+                findNavController().navigate(action)
+            }else{
+                Toast.makeText(requireContext(), "일정을 0000년 00월 00일 00:00 형식으로 맞춰주세요", Toast.LENGTH_SHORT).show()
+            }
         }
         val items = resources.getStringArray(R.array.ticket_category)
         val adapter =
@@ -211,5 +221,19 @@ class TicketCreateFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         dismissLoading()
+    }
+
+    companion object {
+        private const val DATE_PATTERN = "yyyy년 MM월 dd일 HH:mm"
+        private val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.KOREAN)
+
+        fun isValidDateFormat(input: String): Boolean {
+            return try {
+                LocalDateTime.parse(input, formatter)
+                true
+            } catch (e: DateTimeParseException) {
+                false
+            }
+        }
     }
 }
