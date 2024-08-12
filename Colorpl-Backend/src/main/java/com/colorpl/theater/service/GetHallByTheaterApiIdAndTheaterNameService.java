@@ -19,7 +19,7 @@ public class GetHallByTheaterApiIdAndTheaterNameService {
     public Hall getHallByTheaterApiIdAndTheaterName(String theaterApiId, String theaterName) {
 
         Theater theater = theaterRepository.findByApiId(theaterApiId)
-            .orElse(createTheaterService.createTheaterByApiId(theaterApiId));
+            .orElseGet(() -> createTheaterService.createTheaterByApiId(theaterApiId));
 
         for (Hall hall : theater.getHalls()) {
             if (theaterName.contains(hall.getName())) {

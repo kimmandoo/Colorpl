@@ -2,6 +2,7 @@ package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.CategoryNotFoundException;
 import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowState;
 import com.colorpl.show.dto.ShowDetailApiResponse.Item;
@@ -10,7 +11,9 @@ import com.colorpl.theater.domain.Hall;
 import com.colorpl.theater.repository.TheaterRepository;
 import com.colorpl.theater.service.CreateTheaterService;
 import com.colorpl.theater.service.GetHallByTheaterApiIdAndTheaterNameService;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -52,18 +55,36 @@ public class CreateShowDetailService {
         return showDetail;
     }
 
-    private Map<String, Integer> parse(String priceBySeatClass) {
-        Map<String, Integer> map = new HashMap<>();
+    private Map<SeatClass, Integer> parse(String priceBySeatClass) {
+        Map<SeatClass, Integer> map = new HashMap<>();
+        ArrayList<Integer> prices = new ArrayList<>();
         Arrays.stream(priceBySeatClass.split(", ")).forEach(source -> {
             int index = source.lastIndexOf(" ");
-            String seatClass = source.substring(0, index);
             String price = source.substring(index + 1);
             if (StringUtils.hasText(price)) {
-                map.put(seatClass, Integer.parseInt(price.replaceAll("[^0-9]", "")));
+                prices.add(Integer.parseInt(price.replaceAll("[^0-9]", "")));
             } else {
-                map.put(seatClass, 0);
+                prices.add(0);
             }
         });
+        prices.sort(Collections.reverseOrder());
+
+        if (prices.size() == 1) {
+            map.put(SeatClass.B, prices.get(0));
+        } else if (prices.size() == 2) {
+            map.put(SeatClass.A, prices.get(0));
+            map.put(SeatClass.B, prices.get(1));
+        } else if (prices.size() == 3) {
+            map.put(SeatClass.S, prices.get(0));
+            map.put(SeatClass.A, prices.get(1));
+            map.put(SeatClass.B, prices.get(2));
+        } else {
+            map.put(SeatClass.R, prices.get(0));
+            map.put(SeatClass.S, prices.get(1));
+            map.put(SeatClass.A, prices.get(2));
+            map.put(SeatClass.B, prices.get(3));
+        }
+
         return map;
     }
 }

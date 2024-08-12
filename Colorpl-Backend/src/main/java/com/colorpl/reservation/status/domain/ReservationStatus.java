@@ -4,6 +4,7 @@ import com.colorpl.global.common.exception.InvalidSeatException;
 import com.colorpl.global.common.exception.ReservationStatusAlreadyDisabledException;
 import com.colorpl.global.common.exception.ReservationStatusAlreadyEnabledException;
 import com.colorpl.reservation.domain.ReservationDetail;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
 import java.util.HashMap;
 import java.util.List;
@@ -101,8 +102,8 @@ public class ReservationStatus {
         ShowDetail showDetail,
         List<ReservationDetail> reservationDetails
     ) {
-        IntStream.rangeClosed(1, rows - 1)
-            .forEach(i -> IntStream.rangeClosed(1, cols - 1)
+        IntStream.rangeClosed(0, rows - 1)
+            .forEach(i -> IntStream.rangeClosed(0, cols - 1)
                 .forEach(j -> reserved.put(
                     getKey(i, j),
                     Item.builder()
@@ -129,7 +130,7 @@ public class ReservationStatus {
         private Integer row;
         private Integer col;
         private String name;
-        private String grade;
+        private SeatClass grade;
         private Boolean isReserved;
     }
 }

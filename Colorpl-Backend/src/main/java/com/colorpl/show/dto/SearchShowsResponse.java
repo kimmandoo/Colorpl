@@ -1,6 +1,7 @@
 package com.colorpl.show.dto;
 
 import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ public class SearchShowsResponse {
     private Integer id;
     private String name;
     private String runtime;
-    private Map<String, Integer> priceBySeatClass;
+    private Map<SeatClass, Integer> priceBySeatClass;
     private String posterImagePath;
     private Category category;
 
