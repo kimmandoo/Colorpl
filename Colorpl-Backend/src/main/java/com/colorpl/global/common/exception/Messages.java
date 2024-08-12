@@ -22,7 +22,7 @@ public class Messages {
     public static final String SHOW_DETAIL_NOT_FOUND = "존재하지 않는 공연상세입니다.";
     public static final String THEATER_ALREADY_EXISTS = "이미 등록된 공연시설입니다. apiId=%s";
     public static final String HALL_NOT_FOUND = "존재하지 않는 공연장입니다.";
-    public static final String INVALID_RUNTIME = "유효하지 않은 런타임입니다. 런타임: %s";
+    public static final String INVALID_RUNTIME = "유효하지 않은 런타임입니다. runtime=%s";
     public static final String RESERVATION_STATUS_ALREADY_ENABLED = "이미 예매 가능한 좌석입니다. showScheduleId=%d, row=%d, col=%d";
     public static final String RESERVATION_STATUS_ALREADY_DISABLED = "이미 예매 불가능한 좌석입니다. showScheduleId=%d, row=%d, col=%d";
     public static final String INVALID_SEAT = "유효하지 않은 좌석입니다. row=%d, col=%d";

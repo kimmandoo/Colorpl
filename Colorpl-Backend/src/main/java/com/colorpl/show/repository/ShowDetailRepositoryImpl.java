@@ -2,9 +2,12 @@ package com.colorpl.show.repository;
 
 import static com.colorpl.show.domain.QShowDetail.showDetail;
 import static com.colorpl.show.domain.QShowSchedule.showSchedule;
+import static com.colorpl.theater.domain.QHall.hall;
+import static com.colorpl.theater.domain.QTheater.theater;
 
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.dto.GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition;
 import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -41,19 +44,25 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .select(showDetail).distinct()
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(showDetail.id.eq(id))
+            .where(idEq(id))
             .fetchOne();
     }
 
-//    @Override
-//    public ShowDetail findShowDetailAndSeatsById(Integer id) {
-//        return queryFactory
-//            .select(showDetail).distinct()
-//            .from(showDetail)
-//            .join(showDetail.seats, seat).fetchJoin()
-//            .where(showDetail.id.eq(id))
-//            .fetchOne();
-//    }
+    @Override
+    public ShowDetail getShowDetailAndHallAndTheaterAndShowSchedules(
+        GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition condition) {
+        return queryFactory
+            .select(showDetail).distinct()
+            .from(showDetail)
+            .join(showDetail.hall, hall).fetchJoin()
+            .join(hall.theater, theater).fetchJoin()
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
+            .where(
+                idEq(condition.getShowDetailId()),
+                dateEq(condition.getDate())
+            )
+            .fetchOne();
+    }
 
     private BooleanExpression dateEq(LocalDate date) {
         if (date == null) {
@@ -74,5 +83,9 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
 
     private BooleanExpression categoryEq(Category category) {
         return category != null ? showDetail.category.eq(category) : null;
+    }
+
+    private BooleanExpression idEq(Integer id) {
+        return id != null ? showDetail.id.eq(id) : null;
     }
 }
