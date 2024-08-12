@@ -6,14 +6,19 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.domain.usecase.TmapRouteUseCase
+import com.domain.util.DomainResult
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.presentation.util.distanceChange
+import com.presentation.util.roadTimeChange
 import com.presentation.util.sendNotification
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
@@ -22,10 +27,7 @@ class FcmWorker @AssistedInject constructor(
     @Assisted val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val tMapRouteUseCase: TmapRouteUseCase,
-) :
-
-
-    CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
 
 
     private val mFusedLocationClient: FusedLocationProviderClient by lazy {
@@ -33,12 +35,34 @@ class FcmWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+        val latLng = inputData.getString("latLng").toString()
+        val data = latLng.split(",")
+
         checkLocation { latitude, longitude ->
             val la = latitude
             val long = longitude
             CoroutineScope(Dispatchers.IO).launch {
-                sendNotification(context = context)
-//                tMapRouteUseCase(la.toString(),long.toString(), endRoute.first, endRoute.second)
+                withContext(Dispatchers.IO) {
+                    tMapRouteUseCase.invoke(long.toString(), la.toString(), data[1], data[0])
+                        .collectLatest { result ->
+                            when (result) {
+                                is DomainResult.Success -> {
+                                    val data = result.data
+                                    sendNotification(
+                                        context = context, data?.totalTime?.roadTimeChange(),
+                                        data?.totalDistance?.distanceChange()
+                                    )
+                                }
+
+                                is DomainResult.Error -> {
+                                    Timber.d("알림 등록 에러 ${result.exception}")
+                                }
+                            }
+
+                        }
+
+                }
+
             }
         }
         return Result.success()

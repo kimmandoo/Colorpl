@@ -11,7 +11,7 @@ import com.colorpl.presentation.*
 import com.presentation.MainActivity
 
 
- fun sendNotification(context: Context) {
+fun sendNotification(context: Context, time: String?, distance: String?) {
     val intent = Intent(context, MainActivity::class.java)
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     val pendingIntent = PendingIntent.getActivity(
@@ -23,9 +23,12 @@ import com.presentation.MainActivity
     val channelId = "colorpl"
 
     val notificationBuilder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.ic_send)
-        .setContentTitle("타이틀이여라")
-        .setContentText("바디이여라")
+        .setSmallIcon(R.drawable.ic_colorpl_logo)
+        .setContentTitle(context.getString(R.string.notification_colorpl_title))
+        .setStyle(
+            NotificationCompat.BigTextStyle()
+                .bigText("현재 위치로부터 공연 장소까지 걸리는\n시간 : $time \n거리 : $distance\n늦지 않게 출발하세요!")
+        )
         .setAutoCancel(true)
         .setContentIntent(pendingIntent)
 
@@ -35,7 +38,7 @@ import com.presentation.MainActivity
     val channel = NotificationChannel(
         channelId,
         "Channel",
-        NotificationManager.IMPORTANCE_DEFAULT
+        NotificationManager.IMPORTANCE_HIGH
     )
     notificationManager.createNotificationChannel(channel)
 

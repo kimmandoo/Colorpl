@@ -9,6 +9,7 @@ import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.naver.maps.geometry.LatLng
+import com.presentation.util.Calendar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +62,7 @@ class TicketCreateViewModel @Inject constructor(
         viewModelScope.launch {
             _geocodingLatLng.value = LatLng(0.0, 0.0)
         }
+
     }
 
 
