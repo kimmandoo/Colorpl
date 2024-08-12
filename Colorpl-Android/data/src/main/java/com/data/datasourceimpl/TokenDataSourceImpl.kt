@@ -10,9 +10,12 @@ import com.data.model.response.ResponseSignToken
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Named
 
 
-class TokenDataSourceImpl @Inject constructor(
+class TokenDataSourceImpl @Inject
+constructor(
+    @Named("USER_DATASTORE")
     private val dataStore: DataStore<Preferences>
 ) : TokenDataSource {
 

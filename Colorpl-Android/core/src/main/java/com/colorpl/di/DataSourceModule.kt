@@ -2,6 +2,7 @@ package com.colorpl.di
 
 import com.data.datasource.CommentDataSource
 import com.data.datasource.FeedDataSource
+import com.data.datasource.local.SettingDataSource
 import com.data.datasource.local.TokenDataSource
 import com.data.datasource.remote.FeedUserDataSource
 import com.data.datasource.remote.GeocodingDataSource
@@ -24,6 +25,7 @@ import com.data.datasourceimpl.OpenAiDataSourceImpl
 import com.data.datasourceimpl.PayDataSourceImpl
 import com.data.datasourceimpl.ReservationDataSourceImpl
 import com.data.datasourceimpl.ReviewDataSourceImpl
+import com.data.datasourceimpl.SettingDataSourceImpl
 import com.data.datasourceimpl.SignDataSourceImpl
 import com.data.datasourceimpl.TicketDataSourceImpl
 import com.data.datasourceimpl.TmapRouteDataSourceImpl
@@ -122,4 +124,10 @@ interface DataSourceModule {
     fun bindsPayDataSource(
         payDataSourceImpl: PayDataSourceImpl
     ): PayDataSource
+
+    @Singleton
+    @Binds
+    fun bindsSettingDataSource(
+        settingDataSourceImpl: SettingDataSourceImpl
+    ): SettingDataSource
 }
