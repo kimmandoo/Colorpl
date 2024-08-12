@@ -36,7 +36,6 @@ class OtherMyPageFragment :
                 onFeedContentClickListener(id)
             },
             onEmotionClickListener = { id, isEmpathy ->
-                Timber.d("이거 뭐야 $id, $isEmpathy")
                 onEmotionClickListener(id, isEmpathy)
             },
             onReportClickListener = { onReportClickListener() },
@@ -57,7 +56,6 @@ class OtherMyPageFragment :
     private fun initData() {
         val safeArgs: OtherMyPageFragmentArgs by navArgs()
         safeArgs.memberInfo.apply {
-            Timber.d("데이ㅓㅌ 확인 $this")
             binding.isFollow = isFollowing
             binding.tvFollowRequest.isSelected = isFollowing
             otherMyPageViewModel.setFollowerId(memberId)
@@ -146,7 +144,6 @@ class OtherMyPageFragment :
     }
 
     private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {
-        Timber.d("확인여 $id")
         feedViewModel.toggleEmpathy(id, isEmpathy)
     }
 

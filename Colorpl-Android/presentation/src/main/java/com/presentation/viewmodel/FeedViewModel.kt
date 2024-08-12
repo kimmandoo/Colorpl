@@ -63,7 +63,6 @@ class FeedViewModel @Inject constructor(
 
     fun toggleEmpathy(reviewId: Int, isEmpathy: Boolean) {
         viewModelScope.launch {
-            Timber.d("들어가는거 확인 $isEmpathy")
             val result = if (isEmpathy) {
                 reviewEmpathyUseCase.removeEmpathy(reviewId)
             } else {

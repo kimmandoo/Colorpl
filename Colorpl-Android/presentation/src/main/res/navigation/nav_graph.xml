@@ -225,6 +225,11 @@
         <action
             android:id="@+id/action_fragment_my_review_to_fragment_feed_ticket_select"
             app:destination="@id/fragment_feed_ticket_select" />
+        <action
+            android:id="@+id/action_fragment_my_review_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+
+
     </fragment>
 
     <fragment
