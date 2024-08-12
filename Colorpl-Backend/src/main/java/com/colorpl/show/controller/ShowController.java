@@ -1,13 +1,15 @@
 package com.colorpl.show.controller;
 
-import com.colorpl.show.dto.GetShowSchedulesResponse;
+import com.colorpl.show.dto.CreateShowByApiIdRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.GetShowDetailsRequest;
 import com.colorpl.show.dto.GetShowDetailsResponse;
-import com.colorpl.show.service.GetShowSchedulesService;
+import com.colorpl.show.dto.GetShowSchedulesResponse;
+import com.colorpl.show.service.CreateShowService;
 import com.colorpl.show.service.GetShowDetailService;
 import com.colorpl.show.service.GetShowDetailsService;
 import com.colorpl.show.service.GetShowScheduleService;
+import com.colorpl.show.service.GetShowSchedulesService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +32,7 @@ public class ShowController {
     private final GetShowDetailService getShowDetailService;
     private final GetShowSchedulesService getShowSchedulesService;
     private final GetShowScheduleService getShowScheduleService;
+    private final CreateShowService createShowService;
 
     @GetMapping
     public ResponseEntity<List<GetShowDetailsResponse>> getShowDetails(
@@ -43,7 +48,7 @@ public class ShowController {
     }
 
     @GetMapping("/{showDetailId}/schedules")
-    public ResponseEntity<List<GetShowSchedulesResponse>> getSchedules(
+    public ResponseEntity<List<GetShowSchedulesResponse>> getShowSchedules(
         @PathVariable Integer showDetailId,
         @RequestParam LocalDate date
     ) {
@@ -57,17 +62,14 @@ public class ShowController {
     ) {
         return ResponseEntity.ok(getShowScheduleService.getShowSchedule(showScheduleId));
     }
-//
-//    @DeleteMapping("/{showDetailId}/schedules/{showScheduleId}")
-//    public ResponseEntity<?> deleteSchedule(
-//        @PathVariable Integer showDetailId,
-//        @PathVariable Long showScheduleId
-//    ) {
-//        deleteReservationStatusService.deleteReservationStatus(showScheduleId);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//
+
+    @PostMapping("/createShowByApiId")
+    public ResponseEntity<Integer> createShowByApiId(
+        @RequestBody CreateShowByApiIdRequest request
+    ) {
+        return ResponseEntity.ok(createShowService.createShowByApiId(request.getApiId()));
+    }
+
 //    @PostMapping
 //    public ResponseEntity<Integer> createByApiId(@RequestBody CreateByApiIdRequest request) {
 //
