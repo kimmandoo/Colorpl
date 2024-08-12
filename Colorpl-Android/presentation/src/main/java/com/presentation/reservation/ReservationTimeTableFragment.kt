@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class ReservationTimeTableFragment :
@@ -48,6 +49,9 @@ class ReservationTimeTableFragment :
         initDateAdapter()
         initViewModel()
         observedSelectedDate()
+        observedReservationSchedule()
+        observeReservationSchedule()
+        viewModel.getReservationSchedule(2, "2024-08-09")
     }
 
 
@@ -59,36 +63,35 @@ class ReservationTimeTableFragment :
                 placeName = "병점CGV",
                 theaterList = listOf(
                     Theater(
-                        theaterId = 1,
                         theaterName = "1관",
                         theaterTotalSeatCount = 100,
                         timeTableList = listOf(
                             TimeTable(
-                                timeTableId = 1,
+                                scheduleId = 1,
                                 startTime = "10:00",
                                 endTime = "12:00",
                                 remainingSeatCount = 99
                             ),
                             TimeTable(
-                                timeTableId = 1,
+                                scheduleId = 1,
                                 startTime = "12:30",
                                 endTime = "14:30",
                                 remainingSeatCount = 88
                             ),
                             TimeTable(
-                                timeTableId = 1,
+                                scheduleId = 1,
                                 startTime = "15:00",
                                 endTime = "17:00",
                                 remainingSeatCount = 77
                             ),
                             TimeTable(
-                                timeTableId = 1,
+                                scheduleId = 1,
                                 startTime = "17:30",
                                 endTime = "19:30",
                                 remainingSeatCount = 15
                             ),
                             TimeTable(
-                                timeTableId = 1,
+                                scheduleId = 1,
                                 startTime = "20:00",
                                 endTime = "22:00",
                                 remainingSeatCount = 23
@@ -102,14 +105,16 @@ class ReservationTimeTableFragment :
         )
 
 
-        reservationPlaceAdapter.submitList(
-            data.toModel()
-        )
+//        reservationPlaceAdapter.submitList(
+//            data.toModel()
+//        )
     }
 
     private fun initDateAdapter() {
-        binding.rcReservationDateTable.itemAnimator = null
-        binding.rcReservationDateTable.adapter = reservationDateTableAdapter
+        binding.rcReservationDateTable.apply {
+            this@apply.itemAnimator = null
+            this@apply.adapter = reservationDateTableAdapter
+        }
         val today = LocalDate.now()
         val dateList = (0 until 14).map { i ->
             val date = today.plusDays(i.toLong())
@@ -135,25 +140,47 @@ class ReservationTimeTableFragment :
             .onEach {
                 val dateList = (0 until 14).map { i ->
                     val date = LocalDate.now().plusDays(i.toLong())
+                    val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+                    Timber.tag("viewModel_Schedule").d(viewModel.reservationSchedule.value.toString())
                     DateTableItem(
                         date = date,
                         isSelected = viewModel.reservationDate.value == date,
-                        isEvent = !date.dayOfMonth.toString().contains('6')
+                        isEvent = viewModel.reservationSchedule.value[formattedDate]?: false
                     )
                 }
                 reservationDateTableAdapter.submitList(dateList)
+
+                val formattedDate = viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                viewModel.getReservationSchedule(viewModel.reservationDetailId.value, formattedDate)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observedReservationSchedule() {
+        viewModel.getReservationSchedule.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                reservationPlaceAdapter.submitList(it)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeReservationSchedule() {
+        viewModel.reservationSchedule.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                observedSelectedDate()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
         with(viewModel) {
             setReservationPlace(data.placeName)
-            setReservationTheater(data.theaterName)
+            setReservationTheater(data.hallName)
             setReservationTimeTable(timeTable)
+            getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
+            Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
         }
         ViewPagerManager.moveNext()
         Timber.d("선택된 장소 : ${data.placeName}")
-        Timber.d("선택된 상영관 : ${data.theaterName}")
+        Timber.d("선택된 상영관 : ${data.hallName}")
         Timber.d("선택된 시간표 : ${timeTable.startTime}")
     }
 

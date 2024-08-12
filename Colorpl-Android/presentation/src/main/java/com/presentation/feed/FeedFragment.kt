@@ -103,7 +103,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     private fun observeRefreshTrigger() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.refreshTrigger.collectLatest {
-                refreshFeed()
+                feedAdapter.refresh()
             }
         }
     }

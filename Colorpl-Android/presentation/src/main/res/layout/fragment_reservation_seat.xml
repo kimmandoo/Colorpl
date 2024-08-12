@@ -39,12 +39,12 @@
                 <TextView
                     android:id="@+id/tv_theater"
                     style="@style/suite_bold_20"
-                    android:layout_width="300dp"
-                    android:layout_height="30dp"
+                    android:layout_width="360dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/rectangle_timber_wolf_10"
                     android:gravity="center"
-                    android:text="SCREEN"
+                    android:text="STAGE"
                     android:textColor="@color/eerie_black" />
 
                 <androidx.recyclerview.widget.RecyclerView
