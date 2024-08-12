@@ -32,13 +32,15 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
         initWormDotsIndicator()
         initTopButtonsClickEvent()
         initViewModelData()
-        Timber.d("${args.reservationDetail.title}")
+        Timber.d(args.reservationDetail.title)
     }
 
     private fun initViewModelData() {
         with(args.reservationDetail) {
+            reservationViewModel.setReservationDetailId(reservationInfoId)
             contentImg?.let { reservationViewModel.setReservationImg(it) }
             reservationViewModel.setReservationTitle(title)
+            reservationViewModel.setReservationPriceBySeatClass(priceBySeatClass)
         }
     }
 

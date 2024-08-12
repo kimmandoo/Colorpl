@@ -34,7 +34,7 @@ class ReservationSeatFragment :
         binding.apply {
             showPeopleCountBottomSheet()
             initUi()
-            viewModel.getReservationSeat(2, 109)
+//            viewModel.getReservationSeat(2, 109)
         }
     }
 

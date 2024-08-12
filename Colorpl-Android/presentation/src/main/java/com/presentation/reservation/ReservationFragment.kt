@@ -108,7 +108,7 @@ class ReservationFragment :
                     title = "님과함께 : 테스트",
                     category = "사극",
                     runtime = "3시간 00분",
-                    price = "13,000"
+                    priceBySeatClass = mapOf()
                 )
             )
         }

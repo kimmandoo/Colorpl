@@ -145,7 +145,7 @@ class ReservationTimeTableFragment :
                 }
                 reservationDateTableAdapter.submitList(dateList)
                 val formattedDate = viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                viewModel.getReservationSchedule(2, formattedDate)
+                viewModel.getReservationSchedule(viewModel.reservationDetailId.value, formattedDate)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
@@ -162,6 +162,7 @@ class ReservationTimeTableFragment :
             setReservationPlace(data.placeName)
             setReservationTheater(data.hallName)
             setReservationTimeTable(timeTable)
+            getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
         }
         ViewPagerManager.moveNext()
         Timber.d("선택된 장소 : ${data.placeName}")

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.presentation.util.SeatClass" />
+
         <variable
             name="type"
             type="com.presentation.util.TopButtonsStatus" />
@@ -164,33 +166,6 @@
                     tools:text="2시간 00분"
                     />
 
-                <View
-                    android:id="@+id/v_line_5"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#80D3D3D3"
-                    app:layout_constraintTop_toBottomOf="@id/tv_runtime_info" />
-                <TextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="@string/reservation_detail_content"
-                    style="@style/suite_regular_16"
-                    android:textColor="@color/timber_wolf"
-                    app:layout_constraintTop_toBottomOf="@id/v_line_5" />
-                <TextView
-                    android:id="@+id/tv_content_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓 상처를 치료해줄 사람 어디 없나 가만히 놔두다간 끊임없이 덧나"
-                    style="@style/suite_semibold_14"
-                    android:textColor="@color/white"
-                    app:layout_constraintTop_toBottomOf="@id/tv_content"
-                    tools:text="사람이 죽어 망자가 되면 저승에서 49일에 걸쳐 거짓 상처를 치료해줄 사람 어디 없나 가만히 놔두다간 끊임없이 덧나"
-                    />
 
 
                 <View
@@ -199,7 +174,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:background="#80D3D3D3"
-                    app:layout_constraintTop_toBottomOf="@id/tv_content_info" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime_info" />
                 <TextView
                     android:id="@+id/tv_price_by_seat"
                     android:layout_width="match_parent"
@@ -215,7 +190,9 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{@string/reservation_seat_type_price(`S석 :`, viewModel.reservationInfo.price)}"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.S.value}"
+                    app:flag="@{null}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat"
@@ -227,7 +204,9 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{@string/reservation_seat_type_price(`R석 :`, viewModel.reservationInfo.price)}"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.R.value}"
+                    app:flag="@{null}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_s"
@@ -239,11 +218,27 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="right"
-                    android:text="@{@string/reservation_seat_type_price(`A석 :`, viewModel.reservationInfo.price)}"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.A.value}"
+                    app:flag="@{null}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_r"
                     tools:text="A석 : 14,000원"
+                    />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.B.value}"
+                    app:flag="@{null}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_a"
+                    tools:text="B석 : 14,000원"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
