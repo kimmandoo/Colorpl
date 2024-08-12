@@ -259,6 +259,9 @@
         <argument
             android:name="memberInfo"
             app:argType="com.domain.model.MemberSearch" />
+        <action
+            android:id="@+id/action_fragment_other_my_page_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
 
     </fragment>
 

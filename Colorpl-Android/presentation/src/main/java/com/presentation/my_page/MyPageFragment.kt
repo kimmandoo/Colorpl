@@ -14,6 +14,7 @@ import com.presentation.my_page.model.MyPageEventState
 import com.presentation.util.setDistanceX
 import com.presentation.util.setImageCircleCrop
 import com.presentation.util.setTransactionX
+import com.presentation.viewmodel.FeedViewModel
 import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.onEach
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
 
     private val myPageViewModel: MyPageViewModel by viewModels()
+
 
     private val ticketAdapter: TicketAdapter by lazy {
         TicketAdapter(

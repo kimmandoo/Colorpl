@@ -6,6 +6,7 @@ import com.colorpl.presentation.databinding.ItemFeedBinding
 import com.domain.model.Feed
 import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
+import timber.log.Timber
 
 class FeedViewHolder(
     private val binding: ItemFeedBinding,
@@ -17,6 +18,7 @@ class FeedViewHolder(
 
     fun bind(data: Feed) {
         binding.apply {
+            Timber.d("데이터 확인여 ${data.myempathy}")
             val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
             tvTitle.text = data.title
             tvContent.text = data.content
