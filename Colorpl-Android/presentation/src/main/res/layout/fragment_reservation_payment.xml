@@ -149,10 +149,14 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tv_location"
-                            app:setFormattedSeatsText="@{viewModel.reservationSeat}"
+                            app:setFormattedSeatsText="@{viewModel.reservationSelectedSeat}"
                             tools:text="4매 | F06, F07, F08, F09" />
 
+                        <!--                        android:text="@{viewModel.reservationSelectedSeat.size + `매 | ` + viewModel.reservationSelectedSeat.toString()}"-->
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

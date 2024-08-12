@@ -28,7 +28,7 @@ import javax.inject.Named
 @AndroidEntryPoint
 class ReservationPaymentFragment :
     BaseFragment<FragmentReservationPaymentBinding>(R.layout.fragment_reservation_payment) {
-    private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
+    private val reservationViewModel: ReservationViewModel by viewModels({ requireParentFragment() })
     private val payViewModel: PayViewModel by viewModels()
 
     @Inject
@@ -38,14 +38,20 @@ class ReservationPaymentFragment :
     private var paymentDiscount: Payment.Discount = Payment.Discount.NONE
     private var paymentMethod: Payment.Method = Payment.Method.NONE
 
+    override fun onResume() {
+        super.onResume()
+//        initUi()
+    }
+
     override fun initView() {
         initUi()
         observePaymentResult()
     }
 
     private fun initUi() {
+        binding.viewModel = reservationViewModel
+//        binding.tvSuit.text = reservationViewModel.reservationSelectedSeat.value.toString()
         initPayment()
-        binding.viewModel = viewModel
     }
 
     /** 할인적용 및 결제방법 */
@@ -67,13 +73,13 @@ class ReservationPaymentFragment :
             tvPayNext.setOnClickListener {
                 val bootUser = getBootUser("", "", "", "")
                 val bootItem = mutableListOf(selectItemToPay("", "", 1, 100.0))
-                val selectedSeatList: List<String> = viewModel!!.reservationSeat.value.map { it.toString() }
+                val selectedSeatList: List<Map<String, Any>> = reservationViewModel.reservationSeat.value.map { it.convertToHashMap() }
 
                 val metaDataMap: MutableMap<String, Any> = makeMetaData(
-                    showName = viewModel!!.reservationTitle.value,
-                    showHallName = viewModel!!.reservationPlace.value,
-                    showTheaterName = viewModel!!.reservationTheater.value,
-                    showScheduleId = viewModel!!.reservationDetailId.value,
+                    showName = reservationViewModel.reservationTitle.value,
+                    showHallName = reservationViewModel.reservationPlace.value,
+                    showTheaterName = reservationViewModel.reservationTheater.value,
+                    showScheduleId = reservationViewModel.reservationDetailId.value,
                     selectedSeatList = selectedSeatList,
                     selectedDiscount = null
                 )
@@ -92,7 +98,7 @@ class ReservationPaymentFragment :
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
                     val responseData = Gson().fromJson(data, PayRequest::class.java)
-//                    payViewModel.startPayment(responseData.receipt_id)
+                    payViewModel.startPayment(responseData.receipt_id)
                     false
                 }
             }
@@ -139,6 +145,13 @@ class ReservationPaymentFragment :
                     }
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeReservationSelectedSeat() {
+        reservationViewModel.reservationSelectedSeat.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationSeat ->
+            Timber.tag("observeReservationSeat").d("$reservationSeat")
+//            viewModel.calculateTotalPrice()
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun updateConfirmState() {

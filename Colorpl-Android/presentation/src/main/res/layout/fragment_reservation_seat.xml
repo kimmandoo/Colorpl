@@ -65,35 +65,35 @@
 
             <include
                 android:id="@+id/tv_grade_r"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 layout="@layout/include_seat_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include
                 android:id="@+id/tv_grade_s"
                 layout="@layout/include_seat_grade"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/tv_grade_r"
                 app:layout_constraintStart_toEndOf="@id/tv_grade_r"
                 app:layout_constraintTop_toTopOf="@id/tv_grade_r" />
 
             <include
                 android:id="@+id/tv_grade_a"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="8dp"
                 layout="@layout/include_seat_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@id/tv_grade_r"
                 app:layout_constraintTop_toBottomOf="@id/tv_grade_r" />
 
             <include
                 android:id="@+id/tv_grade_b"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 layout="@layout/include_seat_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/tv_grade_a"
                 app:layout_constraintStart_toEndOf="@id/tv_grade_a"
                 app:layout_constraintTop_toTopOf="@id/tv_grade_a" />
@@ -108,6 +108,7 @@
                 android:paddingVertical="4dp"
                 android:text="인원 변경"
                 android:textColor="@color/white"
+                android:textSize="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -119,7 +120,7 @@
                 android:layout_marginTop="4dp"
                 android:text="28000원"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_person_change" />

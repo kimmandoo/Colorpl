@@ -12,6 +12,7 @@ import com.domain.util.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -52,8 +53,14 @@ class ReservationViewModel @Inject constructor(
     private val _reservationSeat = MutableStateFlow<List<Seat>>(listOf())
     val reservationSeat: StateFlow<List<Seat>> = _reservationSeat
 
+    private val _reservationSelectedSeat = MutableStateFlow<List<Seat>>(listOf())
+    val reservationSelectedSeat: StateFlow<List<Seat>> = _reservationSelectedSeat
+
     private val _reservationPriceBySeatClass = MutableStateFlow<Map<String, Int>>(mapOf())
     val reservationPriceBySeatClass: StateFlow<Map<String, Int>> = _reservationPriceBySeatClass
+
+    private val _reservationTotalPrice = MutableStateFlow(0)
+    val reservationTotalPrice: StateFlow<Int> = _reservationTotalPrice
 
     private val _getReservationSchedule = MutableStateFlow<List<ReservationPairInfo>>(listOf())
     val getReservationSchedule: StateFlow<List<ReservationPairInfo>> = _getReservationSchedule
@@ -101,8 +108,16 @@ class ReservationViewModel @Inject constructor(
         _reservationSeat.value = seatList
     }
 
+    fun setReservationSelectedSeat(seatList: List<Seat>) {
+        _reservationSelectedSeat.value = seatList
+    }
+
     fun setReservationPriceBySeatClass(priceBySeatClass: Map<String, Int>) {
         _reservationPriceBySeatClass.value = priceBySeatClass
+    }
+
+    fun setReservationTotalPrice(totalPrice: Int) {
+        _reservationTotalPrice.value = totalPrice
     }
 
     /**
@@ -155,6 +170,22 @@ class ReservationViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+
+    fun calculateTotalPrice() {
+        val totalPrice = _reservationSeat.value
+            .filter { it.isSelected } // 선택된 좌석만 필터링
+            .sumOf { seat ->
+                Timber.tag("sumOf").d("${_reservationPriceBySeatClass.value[seat.grade]}")
+                _reservationPriceBySeatClass.value[seat.grade] ?: 0
+            }
+        _reservationTotalPrice.value = totalPrice
+    }
+
+    fun clearReservationSeat() {
+        _reservationSeat.value = _reservationSeat.value.map { seat ->
+            seat.copy(isSelected = false) // 모든 좌석의 isSelected를 false로 설정
         }
     }
 }

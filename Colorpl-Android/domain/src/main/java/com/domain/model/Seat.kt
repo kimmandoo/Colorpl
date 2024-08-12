@@ -11,8 +11,16 @@ data class Seat(
     val isSelected: Boolean = false,
 ) : Serializable {
     override fun toString(): String {
-        return "$name:$row:$col"
+        return name
 //        return "${(row + 65).toChar()}${col + 1}"
+    }
+    fun convertToHashMap() : MutableMap<String, Any> {
+        val map = mutableMapOf<String, Any>()
+        map["row"] = row
+        map["col"] = col
+        map["name"] = name
+        grade?.let { map["grade"] = it }
+        return map
     }
 
 }
