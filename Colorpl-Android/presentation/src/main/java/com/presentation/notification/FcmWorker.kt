@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.domain.usecase.TmapRouteUseCase
+import com.domain.usecaseimpl.setting.SettingUseCase
 import com.domain.util.DomainResult
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -17,6 +18,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -27,6 +29,7 @@ class FcmWorker @AssistedInject constructor(
     @Assisted val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val tMapRouteUseCase: TmapRouteUseCase,
+    private val settingUseCase: SettingUseCase
 ) : CoroutineWorker(context, workerParams) {
 
 
@@ -45,12 +48,15 @@ class FcmWorker @AssistedInject constructor(
                 withContext(Dispatchers.IO) {
                     tMapRouteUseCase.invoke(long.toString(), la.toString(), data[1], data[0])
                         .collectLatest { result ->
+                            val setting = settingUseCase.getSettingsInfo().first()
                             when (result) {
                                 is DomainResult.Success -> {
                                     val data = result.data
+
                                     sendNotification(
                                         context = context, data?.totalTime?.roadTimeChange(),
-                                        data?.totalDistance?.distanceChange()
+                                        data?.totalDistance?.distanceChange(),
+                                        setting
                                     )
                                 }
 

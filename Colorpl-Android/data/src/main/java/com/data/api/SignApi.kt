@@ -21,6 +21,7 @@ interface SignApi {
 
     @POST("members/sign-out")
     suspend fun postSignOut(
+        @Header("Authorization") accessToken: String, // "Bearer $accessToken"
         @Header("Refresh-Token") refreshToken: String
     ): Unit
 
