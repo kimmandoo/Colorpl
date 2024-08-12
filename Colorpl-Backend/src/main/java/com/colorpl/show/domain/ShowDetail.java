@@ -1,8 +1,22 @@
 package com.colorpl.show.domain;
 
 import com.colorpl.theater.domain.Hall;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.MapKeyEnumerated;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +58,8 @@ public class ShowDetail {
     @Column(name = "PRICE_BY_SEAT_CLASS_PRICE")
     @ElementCollection
     @MapKeyColumn(name = "PRICE_BY_SEAT_CLASS_SEAT_CLASS")
-    private Map<String, Integer> priceBySeatClass;
+    @MapKeyEnumerated(EnumType.STRING)
+    private Map<SeatClass, Integer> priceBySeatClass;
 
     @Column(name = "SHOW_DETAIL_POSTER_IMAGE_PATH")
     private String posterImagePath;
