@@ -3,16 +3,15 @@ package com.presentation.feed
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.filter
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedBinding
 import com.domain.model.FilterItem
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.adapter.feed.FilterAdapter
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.getFilterItems
 import com.presentation.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +30,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
             onFilterClickListener(filterItem)
         })
     }
+
     private val feedAdapter by lazy {
         FeedAdapter(
             onFeedContentClickListener = { id ->
@@ -44,16 +44,11 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-        feedAdapter.refresh()
-        binding.rvFeed.scrollToPosition(0)
-    }
-
     override fun initView() {
         initFilter()
         initFeed()
         observeFilter()
+        observeDialog()
         onFeedRegisterClickListener()
         observeRefreshTrigger()
     }
@@ -89,9 +84,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
-                val filteredList = if(viewModel.currentFilter.value == "전체"){
+                val filteredList = if (viewModel.currentFilter.value == "전체") {
                     feed
-                }else{
+                } else {
                     feed.filter { it.category == viewModel.currentFilter.value }
                 }
                 feedAdapter.submitData(viewLifecycleOwner.lifecycle, filteredList)
@@ -108,7 +103,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     private fun observeRefreshTrigger() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.refreshTrigger.collectLatest {
-                feedAdapter.refresh()
+                refreshFeed()
             }
         }
     }
@@ -146,5 +141,33 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
         binding.imgFeedRegister.setOnClickListener {
             navigateDestination(R.id.action_fragment_feed_to_fragment_feed_ticket_select)
         }
+    }
+
+    private fun observeDialog() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("refresh", false)
+                ?.collectLatest { refresh ->
+                    if (refresh) {
+                        refreshFeed()
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                            "refresh",
+                            false
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun refreshFeed() {
+        feedAdapter.refresh()
+        binding.rvFeed.scrollToPosition(0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshFeed()
     }
 }

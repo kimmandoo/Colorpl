@@ -15,8 +15,7 @@ class FeedAdapter(
     private val onEmotionClickListener: (Int, Boolean) -> Unit,
     private val onReportClickListener: () -> Unit,
     private val onUserClickListener: () -> Unit,
-
-    ) : PagingDataAdapter<Feed, ViewHolder>(feedCustomDiffUtil) {
+    ) : PagingDataAdapter<Feed, ViewHolder>(BaseDiffUtil<Feed>()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemFeedBinding.inflate(layoutInflater)
@@ -29,23 +28,6 @@ class FeedAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
-        if (payloads.isNotEmpty()) {
-            val bundle = payloads[0] as? Bundle
-            if (bundle != null) {
-                (holder as FeedViewHolder).updateEmpathy(
-                    bundle.getBoolean("myempathy"),
-                    bundle.getInt("empathy")
-                )
-            } else {
-                super.onBindViewHolder(holder, position, payloads)
-            }
-        } else {
-            super.onBindViewHolder(holder, position, payloads)
-        }
-    }
-
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is FeedViewHolder -> {
@@ -53,27 +35,6 @@ class FeedAdapter(
                 item?.let {
                     holder.bind(item)
                 }
-            }
-        }
-    }
-
-    companion object {
-        private val feedCustomDiffUtil = object : DiffUtil.ItemCallback<Feed>() {
-            override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {
-                return oldItem == newItem
-            }
-
-            override fun getChangePayload(oldItem: Feed, newItem: Feed): Any? {
-                return if (oldItem.myempathy != newItem.myempathy || oldItem.empathy != newItem.empathy) {
-                    Bundle().apply {
-                        putBoolean("myempathy", newItem.myempathy)
-                        putInt("empathy", newItem.empathy)
-                    }
-                } else null
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
@@ -35,10 +36,6 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
     private lateinit var photoUri: Uri
     private val viewModel: ReviewViewModel by viewModels()
     private val args: ReviewFragmentArgs by navArgs()
-
-    private val loadingDialog by lazy {
-        LoadingDialog(requireContext())
-    }
 
     override fun initView(savedInstanceState: Bundle?) {
         observeViewModel()
@@ -90,7 +87,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             ),
             image
         )
-        loadingDialog.show()
+        showLoading()
     }
 
     private fun observeViewModel() {
@@ -103,7 +100,8 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
             launch {
                 viewModel.reviewResponse.collectLatest { reviewId ->
-                    loadingDialog.dismiss()
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set("refresh", true)
+                    dismissLoading()
                     if (reviewId > 0) navigatePopBackStack() else {
                         Toast.makeText(requireContext(), "리뷰 등록에 실패했습니다", Toast.LENGTH_SHORT)
                             .show()
