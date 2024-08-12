@@ -17,7 +17,7 @@ public class FindMemberResponse {
     @JsonProperty("isFollowing")
     private boolean isFollowing;
 
-    public static  FindMemberResponse toFindMemberResponse(Member member,boolean isFollowing) {
+    public static  FindMemberResponse toFindMemberResponse(Member member,boolean isFollowing,int reviewCount) {
         int followerCount = member.getFollowerList().size();
         int followingCount = member.getFollowingList().size();
 
@@ -27,7 +27,7 @@ public class FindMemberResponse {
             .nickname(member.getNickname())
             .followerCount(followerCount)
             .followingCount(followingCount)
-//            .reviewCount(reviewCount)
+            .reviewCount(reviewCount)
             .isFollowing(isFollowing)
             .build();
     }
