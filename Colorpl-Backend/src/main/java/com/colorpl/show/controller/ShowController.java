@@ -1,10 +1,13 @@
 package com.colorpl.show.controller;
 
+import com.colorpl.show.dto.GetShowSchedulesResponse;
 import com.colorpl.show.dto.GetShowDetailResponse;
-import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
-import com.colorpl.show.dto.GetShowDetailsByConditionResponse;
+import com.colorpl.show.dto.GetShowDetailsRequest;
+import com.colorpl.show.dto.GetShowDetailsResponse;
+import com.colorpl.show.service.GetShowSchedulesService;
 import com.colorpl.show.service.GetShowDetailService;
-import com.colorpl.show.service.GetShowDetailsByConditionService;
+import com.colorpl.show.service.GetShowDetailsService;
+import com.colorpl.show.service.GetShowScheduleService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ShowController {
 
-    private final GetShowDetailsByConditionService getShowDetailsByConditionService;
+    private final GetShowDetailsService getShowDetailsService;
     private final GetShowDetailService getShowDetailService;
+    private final GetShowSchedulesService getShowSchedulesService;
+    private final GetShowScheduleService getShowScheduleService;
 
     @GetMapping
-    public ResponseEntity<List<GetShowDetailsByConditionResponse>> getShowDetailsByCondition(
-        @ModelAttribute GetShowDetailsByConditionRequest request
+    public ResponseEntity<List<GetShowDetailsResponse>> getShowDetails(
+        @ModelAttribute GetShowDetailsRequest request
     ) {
         return ResponseEntity
-            .ok(getShowDetailsByConditionService.getShowDetailsByCondition(request));
+            .ok(getShowDetailsService.getShowDetails(request));
     }
 
     @GetMapping("/{showDetailId}")
@@ -38,21 +43,20 @@ public class ShowController {
     }
 
     @GetMapping("/{showDetailId}/schedules")
-    public ResponseEntity<?> getSchedules(
+    public ResponseEntity<List<GetShowSchedulesResponse>> getSchedules(
         @PathVariable Integer showDetailId,
         @RequestParam LocalDate date
     ) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(getShowSchedulesService.getShowSchedules(showDetailId, date));
     }
 
-//
-//    @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
-//    public ResponseEntity<?> getShowSchedule(
-//        @PathVariable Integer showDetailId,
-//        @PathVariable Long showScheduleId
-//    ) {
-//        return ResponseEntity.ok(getScheduleService.getSchedule(showScheduleId));
-//    }
+    @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
+    public ResponseEntity<?> getShowSchedule(
+        @PathVariable Integer showDetailId,
+        @PathVariable Long showScheduleId
+    ) {
+        return ResponseEntity.ok(getShowScheduleService.getShowSchedule(showScheduleId));
+    }
 //
 //    @DeleteMapping("/{showDetailId}/schedules/{showScheduleId}")
 //    public ResponseEntity<?> deleteSchedule(

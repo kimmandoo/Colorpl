@@ -7,8 +7,8 @@ import static com.colorpl.theater.domain.QTheater.theater;
 
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
-import com.colorpl.show.dto.GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition;
-import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
+import com.colorpl.show.dto.GetShowDetailsRequest;
+import com.colorpl.show.dto.GetShowSchedulesRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -24,7 +24,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> getShowDetailsByCondition(GetShowDetailsByConditionRequest request) {
+    public List<ShowDetail> getShowDetails(GetShowDetailsRequest request) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
@@ -39,18 +39,16 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     }
 
     @Override
-    public ShowDetail findShowDetailAndShowSchedulesById(Integer id) {
+    public ShowDetail getShowDetail(Integer showDetailId) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(idEq(id))
+            .where(idEq(showDetailId))
             .fetchOne();
     }
 
-    @Override
-    public ShowDetail getShowDetailAndHallAndTheaterAndShowSchedules(
-        GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition condition) {
+    public ShowDetail getShowSchedules(GetShowSchedulesRequest condition) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)

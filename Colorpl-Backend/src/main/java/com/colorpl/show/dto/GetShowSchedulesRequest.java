@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition {
+public class GetShowSchedulesRequest {
 
     private Integer showDetailId;
     private LocalDate date;

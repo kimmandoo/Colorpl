@@ -21,7 +21,7 @@ public class GetShowDetailService {
     @Transactional(readOnly = true)
     public GetShowDetailResponse getShowDetail(Integer showDetailId) {
         ShowDetail showDetail =
-            showDetailRepository.findShowDetailAndShowSchedulesById(showDetailId);
+            showDetailRepository.getShowDetail(showDetailId);
         Set<LocalDate> dateTimes = showDetail.getShowSchedules().stream()
             .map(showSchedule -> showSchedule.getDateTime().toLocalDate())
             .collect(Collectors.toSet());

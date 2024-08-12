@@ -1,17 +1,15 @@
 package com.colorpl.show.repository;
 
 import com.colorpl.show.domain.ShowDetail;
-import com.colorpl.show.dto.GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition;
-import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
+import com.colorpl.show.dto.GetShowSchedulesRequest;
+import com.colorpl.show.dto.GetShowDetailsRequest;
 import java.util.List;
 
 public interface ShowDetailRepositoryCustom {
 
-    List<ShowDetail> getShowDetailsByCondition(GetShowDetailsByConditionRequest request);
+    List<ShowDetail> getShowDetails(GetShowDetailsRequest request);
 
-    ShowDetail findShowDetailAndShowSchedulesById(Integer id);
+    ShowDetail getShowDetail(Integer showDetailId);
 
-    ShowDetail getShowDetailAndHallAndTheaterAndShowSchedules(
-        GetShowDetailAndHallAndTheaterAndShowSchedulesByCondition condition
-    );
+    ShowDetail getShowSchedules(GetShowSchedulesRequest request);
 }

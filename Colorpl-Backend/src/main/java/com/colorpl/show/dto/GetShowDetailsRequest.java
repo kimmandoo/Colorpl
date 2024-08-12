@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class GetShowDetailsByConditionRequest {
+public class GetShowDetailsRequest {
 
     private LocalDate date;
     private String area;
