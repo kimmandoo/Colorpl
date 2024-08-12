@@ -4,7 +4,8 @@ package com.domain.mapper
 import com.domain.model.ReservationInfo
 import timber.log.Timber
 
-fun com.data.model.response.ReservationInfo.toEntity(): ReservationInfo {
+fun com.data.model.response.ResponseReservationInfo.toEntity(): ReservationInfo {
+    Timber.tag("data").d(this.schedule.toString())
     return ReservationInfo(
         reservationInfoId = this.id,
         contentImg = this.posterImagePath,
@@ -12,6 +13,9 @@ fun com.data.model.response.ReservationInfo.toEntity(): ReservationInfo {
         cast = this.cast,
         category = this.category,
         runtime = this.runtime,
-        price = this.priceBySeatClass.getOrDefault("R석", "기본값").toString()
+        priceBySeatClass = this.priceBySeatClass,
+        schedule = this.schedule
+
     )
+
 }

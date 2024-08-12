@@ -19,7 +19,7 @@ class ReservationPlaceViewHolder(
             this.reservationPairInfo = data
 
             val reservationTimeTableAdapter = ReservationTimeTableAdapter(onClickListener = {timeTable ->
-                Toast.makeText(binding.root.context, "${data.placeName} ${data.theaterName} ${timeTable.startTime}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(binding.root.context, "${data.placeName} ${data.hallName} ${timeTable.startTime}", Toast.LENGTH_SHORT).show()
                 timeTableClickListener.onTimeTableClick(data, timeTable)
             })
             rvTheater.adapter = reservationTimeTableAdapter

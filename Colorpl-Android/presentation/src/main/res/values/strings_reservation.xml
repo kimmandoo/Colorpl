@@ -43,4 +43,6 @@
     <string name="reservation_date_today">오늘</string>
     <string name="reservation_date_tomorrow">내일</string>
     <string name="reservation_selected_title">선택한 날짜</string>
+
+
 </resources>

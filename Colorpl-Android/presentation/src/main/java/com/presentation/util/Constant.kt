@@ -218,3 +218,10 @@ class Payment {
         SSAFY;
     }
 }
+
+enum class SeatClass(val value: String) {
+    R("R"),
+    S("S"),
+    A("A"),
+    B("B");
+}
