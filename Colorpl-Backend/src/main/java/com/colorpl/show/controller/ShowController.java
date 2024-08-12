@@ -1,5 +1,6 @@
 package com.colorpl.show.controller;
 
+import com.colorpl.reservation.status.service.DeleteReservationStatusService;
 import com.colorpl.show.dto.CreateByApiIdRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.SearchShowsRequest;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,7 @@ public class ShowController {
     private final GetSchedulesService getSchedulesService;
     private final CreateShowService createShowService;
     private final GetScheduleService getScheduleService;
+    private final DeleteReservationStatusService deleteReservationStatusService;
 
     @GetMapping
     public ResponseEntity<List<SearchShowsResponse>> searchShows(
@@ -59,11 +62,21 @@ public class ShowController {
 
     @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
     public ResponseEntity<?> getShowSchedule(
-        @PathVariable String showDetailId,
+        @PathVariable Integer showDetailId,
         @PathVariable Long showScheduleId
     ) {
         return ResponseEntity.ok(getScheduleService.getSchedule(showScheduleId));
     }
+
+    @DeleteMapping("/{showDetailId}/schedules/{showScheduleId}")
+    public ResponseEntity<?> deleteSchedule(
+        @PathVariable Integer showDetailId,
+        @PathVariable Long showScheduleId
+    ) {
+        deleteReservationStatusService.deleteReservationStatus(showScheduleId);
+        return ResponseEntity.ok().build();
+    }
+
 
     @PostMapping
     public ResponseEntity<Integer> createByApiId(@RequestBody CreateByApiIdRequest request) {

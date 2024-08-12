@@ -106,20 +106,25 @@ public class ReservationStatus {
             .forEach(i -> IntStream.rangeClosed(0, cols - 1)
                 .forEach(j -> reserved.put(
                     getKey(i, j),
-                    Item.builder()
-                        .row(i)
-                        .col(j)
-                        .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j)))
-                        .grade(showDetail.getSeats().stream()
-                            .filter(seat -> seat.getRow().equals(i) && seat.getCol().equals(j))
-                            .findAny().orElseThrow().getSeatClass())
-                        .isReserved(false)
-                        .build()
+                    getItem(showDetail, i, j)
                 )));
-        reservationDetails.forEach(reservationDetail -> {
-            disableReservation(Integer.valueOf(reservationDetail.getRow()),
-                Integer.valueOf(reservationDetail.getCol()), expiration);
-        });
+        reservationDetails.forEach(
+            reservationDetail -> disableReservation(Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol()), expiration));
+    }
+
+    private Item getItem(ShowDetail showDetail, int i, int j) {
+        SeatClass seatClass = showDetail.getSeats().stream()
+            .filter(seat -> seat.getRow().equals(i) && seat.getCol().equals(j)).findAny()
+            .orElseThrow(() -> new IllegalArgumentException(i + " " + j))
+            .getSeatClass();
+        return Item.builder()
+            .row(i)
+            .col(j)
+            .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j)))
+            .grade(seatClass)
+            .isReserved(false)
+            .build();
     }
 
     @Getter
