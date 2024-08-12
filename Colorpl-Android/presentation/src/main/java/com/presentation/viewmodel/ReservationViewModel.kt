@@ -42,6 +42,9 @@ class ReservationViewModel @Inject constructor(
     private val _reservationTheater = MutableStateFlow("")
     val reservationTheater: StateFlow<String> = _reservationTheater
 
+    private val _reservationSchedule = MutableStateFlow<Map<String, Boolean>>(mapOf())
+    val reservationSchedule: StateFlow<Map<String, Boolean>> = _reservationSchedule
+
     private val _reservationTimeTable =
         MutableStateFlow<TimeTable>(TimeTable(1, "10:00", "12:00", 50))
     val reservationTimeTable: StateFlow<TimeTable> = _reservationTimeTable
@@ -86,6 +89,10 @@ class ReservationViewModel @Inject constructor(
         _reservationTheater.value = theater
     }
 
+    fun setReservationSchedule(schedule: Map<String, Boolean>) {
+        _reservationSchedule.value = schedule
+    }
+
     fun setReservationTimeTable(timeTable: TimeTable) {
         _reservationTimeTable.value = timeTable
     }
@@ -113,7 +120,7 @@ class ReservationViewModel @Inject constructor(
                     is DomainResult.Success -> {
                         _getReservationSchedule.value = response.data
                         Timber.tag(this.javaClass.simpleName).d("${response.data}")
-                        Timber.d("예약 정보 조회 성공")
+                                Timber.d("예약 정보 조회 성공")
                     }
 
                     is DomainResult.Error -> {

@@ -10,4 +10,5 @@ data class ReservationInfo (
     val category: String? = null,
     val runtime: String = "",
     val priceBySeatClass: Map<String, Int> = mapOf(),
+    val schedule: Map<String, Boolean>? = null,
 ) : Serializable

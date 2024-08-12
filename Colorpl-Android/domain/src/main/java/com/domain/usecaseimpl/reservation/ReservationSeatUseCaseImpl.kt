@@ -30,6 +30,7 @@ class ReservationSeatUseCaseImpl @Inject constructor(
                     emit(DomainResult.success(seatList))
                 }
                 is ApiResult.Error -> {
+                    Timber.tag("Seat api 요청").e("실패")
                     emit(DomainResult.error(result.exception))
                 }
             }

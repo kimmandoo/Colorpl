@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 fun List<com.data.model.response.TimeTable>.toEntity(): List<TimeTable> {
     return this.map {
         TimeTable(
-            scheduleId = it.scheduleId?: 1,
+            scheduleId = it.showScheduleId?: 1,
             startTime = it.startTime.toHHMMparser(),
             endTime = it.endTime.toHHMMparser(),
             remainingSeatCount = it.remainingSeats?: 100,

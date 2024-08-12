@@ -41,6 +41,12 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
             contentImg?.let { reservationViewModel.setReservationImg(it) }
             reservationViewModel.setReservationTitle(title)
             reservationViewModel.setReservationPriceBySeatClass(priceBySeatClass)
+            if (schedule == null) {
+                Timber.tag("args").e("null")
+            } else {
+                Timber.tag("args").e(schedule.toString())
+            }
+            schedule?.let { reservationViewModel.setReservationSchedule(it) }
         }
     }
 

@@ -50,6 +50,7 @@ class ReservationTimeTableFragment :
         initViewModel()
         observedSelectedDate()
         observedReservationSchedule()
+        observeReservationSchedule()
         viewModel.getReservationSchedule(2, "2024-08-09")
     }
 
@@ -110,8 +111,10 @@ class ReservationTimeTableFragment :
     }
 
     private fun initDateAdapter() {
-        binding.rcReservationDateTable.itemAnimator = null
-        binding.rcReservationDateTable.adapter = reservationDateTableAdapter
+        binding.rcReservationDateTable.apply {
+            this@apply.itemAnimator = null
+            this@apply.adapter = reservationDateTableAdapter
+        }
         val today = LocalDate.now()
         val dateList = (0 until 14).map { i ->
             val date = today.plusDays(i.toLong())
@@ -137,13 +140,17 @@ class ReservationTimeTableFragment :
             .onEach {
                 val dateList = (0 until 14).map { i ->
                     val date = LocalDate.now().plusDays(i.toLong())
+                    val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+                    Timber.tag("viewModel_Schedule").d(viewModel.reservationSchedule.value.toString())
                     DateTableItem(
                         date = date,
                         isSelected = viewModel.reservationDate.value == date,
-                        isEvent = !date.dayOfMonth.toString().contains('6')
+                        isEvent = viewModel.reservationSchedule.value[formattedDate]?: false
                     )
                 }
                 reservationDateTableAdapter.submitList(dateList)
+
                 val formattedDate = viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 viewModel.getReservationSchedule(viewModel.reservationDetailId.value, formattedDate)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -154,7 +161,13 @@ class ReservationTimeTableFragment :
             .onEach {
                 reservationPlaceAdapter.submitList(it)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
 
+    private fun observeReservationSchedule() {
+        viewModel.reservationSchedule.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                observedSelectedDate()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
@@ -163,6 +176,7 @@ class ReservationTimeTableFragment :
             setReservationTheater(data.hallName)
             setReservationTimeTable(timeTable)
             getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
+            Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
         }
         ViewPagerManager.moveNext()
         Timber.d("선택된 장소 : ${data.placeName}")

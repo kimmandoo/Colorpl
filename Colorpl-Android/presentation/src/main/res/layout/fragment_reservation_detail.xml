@@ -82,33 +82,7 @@
                     tools:text="영화"
                     />
 
-                <View
-                    android:id="@+id/v_line_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#80D3D3D3"
-                    app:layout_constraintTop_toBottomOf="@id/tv_category_info" />
-                <TextView
-                    android:id="@+id/tv_genre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="@string/reservation_detail_genre"
-                    style="@style/suite_regular_16"
-                    android:textColor="@color/timber_wolf"
-                    app:layout_constraintTop_toBottomOf="@id/v_line_2" />
-                <TextView
-                    android:id="@+id/tv_genre_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="@{viewModel.reservationInfo.category}"
-                    style="@style/suite_semibold_16"
-                    android:textColor="@color/white"
-                    app:layout_constraintTop_toBottomOf="@id/tv_genre"
-                    tools:text="판타지, 드라마, 액션"
-                    />
+
 
                 <View
                     android:id="@+id/v_line_3"
@@ -116,7 +90,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:background="#80D3D3D3"
-                    app:layout_constraintTop_toBottomOf="@id/tv_genre_info" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_info" />
                 <TextView
                     android:id="@+id/tv_cast"
                     android:layout_width="match_parent"

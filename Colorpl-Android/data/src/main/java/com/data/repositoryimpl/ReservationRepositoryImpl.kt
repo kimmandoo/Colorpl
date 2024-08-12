@@ -2,7 +2,7 @@ package com.data.repositoryimpl
 
 import com.data.api.safeApiCall
 import com.data.datasource.remote.ReservationDataSource
-import com.data.model.response.ReservationInfo
+import com.data.model.response.ResponseReservationInfo
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
 import com.data.repository.ReservationRepository
@@ -15,7 +15,7 @@ class ReservationRepositoryImpl @Inject constructor(
     private val reservationDataSource: ReservationDataSource
 ) : ReservationRepository {
 
-    override suspend fun getReservationAllShows(filters: Map<String, String>): Flow<ApiResult<List<ReservationInfo>>> {
+    override suspend fun getReservationAllShows(filters: Map<String, String>): Flow<ApiResult<List<ResponseReservationInfo>>> {
         return flow {
             emit(safeApiCall {
                 reservationDataSource.getReservationListShows(filters)
@@ -23,7 +23,7 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getReservationShows(showsId: Int): Flow<ApiResult<ReservationInfo>> {
+    override suspend fun getReservationShows(showsId: Int): Flow<ApiResult<ResponseReservationInfo>> {
         return flow {
             emit(safeApiCall {
                 reservationDataSource.getReservationShow(showsId)

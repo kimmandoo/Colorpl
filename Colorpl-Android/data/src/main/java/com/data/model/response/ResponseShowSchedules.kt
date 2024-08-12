@@ -12,7 +12,7 @@ data class Hall(
 )
 
 data class TimeTable(
-    val scheduleId: Int?,
+    val showScheduleId: Int?,
     val startTime: String,
     val endTime: String,
     val remainingSeats: Int?,

@@ -1,11 +1,11 @@
 package com.data.model.response
 
 data class ResponseReservationShows(
-    val items: List<ReservationInfo>
+    val items: List<ResponseReservationInfo>
 )
 
 
-data class ReservationInfo(
+data class ResponseReservationInfo(
     val id: Int,
     val apiId: String?,
     val name: String,
@@ -18,6 +18,7 @@ data class ReservationInfo(
     val state: String?,
     val seats: List<Seat>?,
     val hall: String?,
+    val schedule: Map<String, Boolean>?,
 )
 
 

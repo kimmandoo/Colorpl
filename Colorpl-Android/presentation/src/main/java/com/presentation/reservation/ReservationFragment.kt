@@ -38,7 +38,6 @@ import javax.inject.Named
 class ReservationFragment :
     BaseFragment<FragmentReservationBinding>(R.layout.fragment_reservation) {
 
-
     private val reservationListViewModel: ReservationListViewModel by viewModels()
 
     private val filterAdapter by lazy {
