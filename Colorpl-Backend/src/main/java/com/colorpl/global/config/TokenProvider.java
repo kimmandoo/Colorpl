@@ -69,7 +69,7 @@ public class TokenProvider {
                 .compact(); // JWT 토큰 생성
 
         redisTemplate.opsForValue().set(userSpecification, accessToken, expirationMinutes,
-            TimeUnit.of(ChronoUnit.MINUTES));
+            TimeUnit.MINUTES);
         return accessToken;
     }
 
