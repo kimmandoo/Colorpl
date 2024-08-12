@@ -50,10 +50,15 @@ fun Fragment.setImageLauncher(action: (Uri) -> Unit): ActivityResultLauncher<Int
     }
 }
 
-fun Fragment.setCameraLauncher(action: () -> Unit): ActivityResultLauncher<Uri> {
+fun Fragment.setCameraLauncher(
+    onSuccess: () -> Unit,
+    onFailure: () -> Unit
+): ActivityResultLauncher<Uri> {
     return registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            action()
+            onSuccess()
+        } else {
+            onFailure()
         }
     }
 }
@@ -68,8 +73,8 @@ fun combineImages(context: Context, markerResId: Int, innerImageBitmap: Bitmap):
     val scaledInnerBitmap = Bitmap.createScaledBitmap(innerImageBitmap, 45.dpToPx, 45.dpToPx, true)
 
     // 내부 그림 그리기 (말풍선 중앙에 위치)
-    val left = (combinedBitmap.width-scaledInnerBitmap.width) / 2
-    val top = (combinedBitmap.height-scaledInnerBitmap.height-10.dpToPx) /2
+    val left = (combinedBitmap.width - scaledInnerBitmap.width) / 2
+    val top = (combinedBitmap.height - scaledInnerBitmap.height - 10.dpToPx) / 2
 
     canvas.drawBitmap(scaledInnerBitmap, left.toFloat(), top.toFloat(), null)
 
