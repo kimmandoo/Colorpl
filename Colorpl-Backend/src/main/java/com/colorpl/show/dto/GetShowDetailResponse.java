@@ -1,6 +1,7 @@
 package com.colorpl.show.dto;
 
 import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class GetShowDetailResponse {
     private Integer id;
     private String name;
     private String runtime;
-    private Map<String, Integer> priceBySeatClass;
+    private Map<SeatClass, Integer> priceBySeatClass;
     private String posterImagePath;
     private Category category;
     private List<SeatResponse> seats;
@@ -28,7 +29,7 @@ public class GetShowDetailResponse {
 
         private Integer row;
         private Integer col;
-        private String seatClass;
+        private SeatClass seatClass;
     }
 
     public static GetShowDetailResponse from(ShowDetail showDetail) {
