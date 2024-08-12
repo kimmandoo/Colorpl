@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ public class CreateShowScheduleService {
         LocalDate to,
         ShowDetail showDetail
     ) {
+        ArrayList<ShowSchedule> showSchedules = new ArrayList<>();
         Map<DayOfWeek, List<LocalTime>> schedules = parseSchedule(schedule);
         from.datesUntil(to)
             .filter(date -> schedules.containsKey(date.getDayOfWeek()))
@@ -39,8 +41,9 @@ public class CreateShowScheduleService {
                         .showDetail(showDetail)
                         .dateTime(LocalDateTime.of(date, time))
                         .build();
-                    showScheduleRepository.save(showSchedule);
+                    showSchedules.add(showSchedule);
                 }));
+        showScheduleRepository.saveAll(showSchedules);
     }
 
     private Map<DayOfWeek, List<LocalTime>> parseSchedule(String schedule) {
