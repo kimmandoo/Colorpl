@@ -1,6 +1,5 @@
 package com.colorpl.show.repository;
 
-import static com.colorpl.show.domain.QSeat.seat;
 import static com.colorpl.show.domain.QShowDetail.showDetail;
 import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
@@ -37,14 +36,24 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     }
 
     @Override
-    public ShowDetail findShowDetailAndSeatsById(Integer id) {
+    public ShowDetail findShowDetailAndShowSchedulesById(Integer id) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
-            .join(showDetail.seats, seat).fetchJoin()
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(showDetail.id.eq(id))
             .fetchOne();
     }
+
+//    @Override
+//    public ShowDetail findShowDetailAndSeatsById(Integer id) {
+//        return queryFactory
+//            .select(showDetail).distinct()
+//            .from(showDetail)
+//            .join(showDetail.seats, seat).fetchJoin()
+//            .where(showDetail.id.eq(id))
+//            .fetchOne();
+//    }
 
     private BooleanExpression dateEq(LocalDate date) {
         if (date == null) {

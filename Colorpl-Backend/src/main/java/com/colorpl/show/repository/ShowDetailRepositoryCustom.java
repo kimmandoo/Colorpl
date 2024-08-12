@@ -8,5 +8,5 @@ public interface ShowDetailRepositoryCustom {
 
     List<ShowDetail> getShowDetailsByCondition(GetShowDetailsByConditionRequest request);
 
-    ShowDetail findShowDetailAndSeatsById(Integer id);
+    ShowDetail findShowDetailAndShowSchedulesById(Integer id);
 }

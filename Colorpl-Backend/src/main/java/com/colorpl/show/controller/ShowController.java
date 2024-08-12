@@ -1,14 +1,19 @@
 package com.colorpl.show.controller;
 
+import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
 import com.colorpl.show.dto.GetShowDetailsByConditionResponse;
+import com.colorpl.show.service.GetShowDetailService;
 import com.colorpl.show.service.GetShowDetailsByConditionService;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShowController {
 
     private final GetShowDetailsByConditionService getShowDetailsByConditionService;
+    private final GetShowDetailService getShowDetailService;
 
     @GetMapping
     public ResponseEntity<List<GetShowDetailsByConditionResponse>> getShowDetailsByCondition(
@@ -26,20 +32,19 @@ public class ShowController {
             .ok(getShowDetailsByConditionService.getShowDetailsByCondition(request));
     }
 
-//    @GetMapping("/{showDetailId}")
-//    public ResponseEntity<GetShowDetailResponse> getShowDetail(
-//        @PathVariable Long showDetailId
-//    ) {
-//        return ResponseEntity.ok(getShowDetailService.getShowDetail(showDetailId));
-//    }
-//
-//    @GetMapping("/{showDetailId}/schedules")
-//    public ResponseEntity<?> getSchedules(
-//        @PathVariable Long showDetailId,
-//        @RequestParam LocalDate date
-//    ) {
-//        return ResponseEntity.ok(getSchedulesService.getSchedules(showDetailId, date));
-//    }
+    @GetMapping("/{showDetailId}")
+    public ResponseEntity<GetShowDetailResponse> getShowDetail(@PathVariable Integer showDetailId) {
+        return ResponseEntity.ok(getShowDetailService.getShowDetail(showDetailId));
+    }
+
+    @GetMapping("/{showDetailId}/schedules")
+    public ResponseEntity<?> getSchedules(
+        @PathVariable Integer showDetailId,
+        @RequestParam LocalDate date
+    ) {
+        return ResponseEntity.ok().build();
+    }
+
 //
 //    @GetMapping("/{showDetailId}/schedules/{showScheduleId}")
 //    public ResponseEntity<?> getShowSchedule(
