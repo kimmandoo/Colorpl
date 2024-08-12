@@ -19,9 +19,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public class TokenProvider {
     private final long reissueLimit;
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final BlackListRepository blackListRepository;
+    private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public TokenProvider(
@@ -43,7 +46,8 @@ public class TokenProvider {
             @Value("${refresh-expiration-hours}") long refreshExpirationHours,
             @Value("${jwt.issuer}") String issuer,
             MemberRefreshTokenRepository memberRefreshTokenRepository,
-            BlackListRepository blackListRepository
+            BlackListRepository blackListRepository,
+            RedisTemplate<String, String> redisTemplate
     ) {
         this.secretKey = secretKey;
         this.expirationMinutes = expirationMinutes;
@@ -51,17 +55,22 @@ public class TokenProvider {
         this.issuer = issuer;
         this.memberRefreshTokenRepository = memberRefreshTokenRepository;
         this.blackListRepository = blackListRepository;
+        this.redisTemplate = redisTemplate;
         reissueLimit = refreshExpirationHours * 60 / expirationMinutes;
     }
 
     public String createAccessToken(String userSpecification) {
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
                 .signWith(new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS512.getJcaName()))   // HS512 알고리즘을 사용하여 secretKey를 이용해 서명
                 .setSubject(userSpecification)  // JWT 토큰 제목
                 .setIssuer(issuer)  // JWT 토큰 발급자
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))    // JWT 토큰 발급 시간
                 .setExpiration(Date.from(Instant.now().plus(expirationMinutes, ChronoUnit.MINUTES)))    // JWT 토큰 만료 시간
                 .compact(); // JWT 토큰 생성
+
+        redisTemplate.opsForValue().set(userSpecification, accessToken, expirationMinutes,
+            TimeUnit.MINUTES);
+        return accessToken;
     }
 
 //    @Transactional
@@ -87,6 +96,8 @@ public class TokenProvider {
                 .findByMemberIdAndReissueCountLessThan(memberId, reissueLimit)
                 .orElseThrow(() -> new ExpiredJwtException(null, null, "Refresh token expired."));
 
+
+        redisTemplate.delete(subject);
         // reissueCount 증가
         memberRefreshToken.increaseReissueCount();
 
@@ -143,5 +154,11 @@ public class TokenProvider {
             new String(Base64.getDecoder().decode(oldAccessToken.split("\\.")[1]), StandardCharsets.UTF_8),
             Map.class
         ).get("sub").toString();
+    }
+
+    @Transactional
+    public void invalidateAccessToken(String accessToken) {
+        String subject = validateTokenAndGetSubject(accessToken);
+        redisTemplate.delete(subject); // Redis에서 Access Token 삭제
     }
 }
