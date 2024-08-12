@@ -4,6 +4,7 @@ import com.colorpl.global.common.exception.InvalidSeatException;
 import com.colorpl.global.common.exception.ReservationStatusAlreadyDisabledException;
 import com.colorpl.global.common.exception.ReservationStatusAlreadyEnabledException;
 import com.colorpl.reservation.domain.ReservationDetail;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
 import java.util.HashMap;
 import java.util.List;
@@ -101,24 +102,29 @@ public class ReservationStatus {
         ShowDetail showDetail,
         List<ReservationDetail> reservationDetails
     ) {
-        IntStream.rangeClosed(1, rows - 1)
-            .forEach(i -> IntStream.rangeClosed(1, cols - 1)
+        IntStream.rangeClosed(0, rows - 1)
+            .forEach(i -> IntStream.rangeClosed(0, cols - 1)
                 .forEach(j -> reserved.put(
                     getKey(i, j),
-                    Item.builder()
-                        .row(i)
-                        .col(j)
-                        .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j)))
-                        .grade(showDetail.getSeats().stream()
-                            .filter(seat -> seat.getRow().equals(i) && seat.getCol().equals(j))
-                            .findAny().orElseThrow().getSeatClass())
-                        .isReserved(false)
-                        .build()
+                    getItem(showDetail, i, j)
                 )));
-        reservationDetails.forEach(reservationDetail -> {
-            disableReservation(Integer.valueOf(reservationDetail.getRow()),
-                Integer.valueOf(reservationDetail.getCol()), expiration);
-        });
+        reservationDetails.forEach(
+            reservationDetail -> disableReservation(Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol()), expiration));
+    }
+
+    private Item getItem(ShowDetail showDetail, int i, int j) {
+        SeatClass seatClass = showDetail.getSeats().stream()
+            .filter(seat -> seat.getRow().equals(i) && seat.getCol().equals(j)).findAny()
+            .orElseThrow(() -> new IllegalArgumentException(i + " " + j))
+            .getSeatClass();
+        return Item.builder()
+            .row(i)
+            .col(j)
+            .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j)))
+            .grade(seatClass)
+            .isReserved(false)
+            .build();
     }
 
     @Getter
@@ -129,7 +135,7 @@ public class ReservationStatus {
         private Integer row;
         private Integer col;
         private String name;
-        private String grade;
+        private SeatClass grade;
         private Boolean isReserved;
     }
 }

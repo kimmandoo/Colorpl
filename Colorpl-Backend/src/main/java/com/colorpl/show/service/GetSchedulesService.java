@@ -67,7 +67,8 @@ public class GetSchedulesService {
                 .endTime(showSchedule.getDateTime().plus(duration))
                 .remainingSeats(
                     (int) getReservationStatusService.getReservationStatus(showSchedule.getId())
-                        .getReserved().values().stream().filter(b -> b.equals(true)).count())
+                        .getReserved().values().stream()
+                        .filter(b -> b.getIsReserved().equals(false)).count())
                 .build())
             .toList();
 
