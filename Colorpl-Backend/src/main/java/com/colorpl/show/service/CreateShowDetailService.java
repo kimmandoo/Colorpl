@@ -47,7 +47,7 @@ public class CreateShowDetailService {
             .area(item.getArea())
             .category(Category.fromString(item.getCategory())
                 .orElseThrow(() -> new CategoryNotFoundException(item.getCategory())))
-            .state(ShowState.from(item.getState()))
+            .state(ShowState.fromString(item.getState()).orElseThrow())
             .hall(hall)
             .build();
         createSeatService.create(showDetail);

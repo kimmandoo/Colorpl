@@ -6,7 +6,7 @@ import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
-import com.colorpl.show.dto.SearchShowsRequest;
+import com.colorpl.show.dto.GetShowDetailsByConditionRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -22,11 +22,11 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> searchShows(SearchShowsRequest request) {
+    public List<ShowDetail> getShowDetailsByCondition(GetShowDetailsByConditionRequest request) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
-            .leftJoin(showDetail.showSchedules, showSchedule).fetchJoin()
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
                 areaEq(request.getArea()),
@@ -47,14 +47,11 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     }
 
     private BooleanExpression dateEq(LocalDate date) {
-
         if (date == null) {
             return null;
         }
-
         LocalDateTime from = date.atStartOfDay();
         LocalDateTime to = from.plusDays(1);
-
         return showSchedule.dateTime.between(from, to);
     }
 
