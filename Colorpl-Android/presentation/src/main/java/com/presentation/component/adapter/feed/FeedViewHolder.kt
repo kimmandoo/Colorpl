@@ -24,22 +24,15 @@ class FeedViewHolder(
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
             tvUploadDate.text = data.createdate
-            ivEmotion.setEmotion(data.emotion)
-            updateEmpathy(data.myempathy, data.empathy)
             ivContent.setImageCenterCrop(data.imgurl)
             clickScope.forEach {
                 it.setOnClickListener { onFeedContentClickListener(data.id) }
             }
+            ivEmotion.setEmotion(data.emotion)
+            ivEmotion.isSelected = data.myempathy
             ivEmotion.setOnClickListener {
                 onEmotionClickListener(data.id, data.myempathy)
             }
-        }
-    }
-
-    fun updateEmpathy(myEmpathy: Boolean, empathyCount: Int) {
-        binding.apply {
-            ivEmotion.isSelected = myEmpathy
-            tvEmotion.text = empathyCount.toString()
         }
     }
 }

@@ -8,13 +8,11 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentFeedTicketSelectBinding
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.FeedTicketSelectAdapter
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.addCustomItemDecoration
 import com.presentation.viewmodel.TicketSelectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -26,10 +24,6 @@ class FeedTicketSelectFragment :
         FeedTicketSelectAdapter { }
     }
 
-    private val loadingDialog by lazy {
-        LoadingDialog(requireContext())
-    }
-
     override fun initView(savedInstanceState: Bundle?) {
         observeViewModel()
         initAdapter()
@@ -37,12 +31,27 @@ class FeedTicketSelectFragment :
     }
 
     private fun observeViewModel() {
-        loadingDialog.show()
+        showLoading()
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.tickets.collectLatest { unreviewedList ->
                     feedTicketSelectAdapter.submitList(unreviewedList)
-                    loadingDialog.dismiss()
+                    if (feedTicketSelectAdapter.currentList.isEmpty()) {
+                        binding.tvTitle.text = "리뷰를 남길 티켓이 없습니다"
+                        binding.tvSelect.text = "뒤로 돌아가기"
+                        binding.tvSelect.setOnClickListener {
+                            navigatePopBackStack()
+                        }
+                    } else {
+                        binding.tvSelect.setOnClickListener {
+                            val action =
+                                FeedTicketSelectFragmentDirections.actionFragmentFeedTicketSelectToFragmentReview(
+                                    unreviewedList[binding.vpFeedTicketSelect.currentItem].id
+                                )
+                            navigateDestination(action)
+                        }
+                    }
+                    dismissLoading()
                 }
             }
         }
@@ -55,7 +64,7 @@ class FeedTicketSelectFragment :
             this.addCustomItemDecoration()
             this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    Timber.d("현재 페이지 위치 ${viewModel.tickets.value[position]}")
+
                 }
             })
         }
@@ -64,20 +73,9 @@ class FeedTicketSelectFragment :
 
     private fun initClickEvent() {
         binding.apply {
-            tvSelect.setOnClickListener {
-                navigateToReview()
-            }
             ivBack.setOnClickListener {
                 navigatePopBackStack()
             }
         }
-    }
-
-    private fun navigateToReview() {
-        val action =
-            FeedTicketSelectFragmentDirections.actionFragmentFeedTicketSelectToFragmentReview(
-                viewModel.tickets.value[binding.vpFeedTicketSelect.currentItem].id
-            )
-        navigateDestination(action)
     }
 }
