@@ -49,6 +49,7 @@ class FcmWorker @AssistedInject constructor(
                     tMapRouteUseCase.invoke(long.toString(), la.toString(), data[1], data[0])
                         .collectLatest { result ->
                             val setting = settingUseCase.getSettingsInfo().first()
+                            Timber.tag("Work").d("$setting")
                             when (result) {
                                 is DomainResult.Success -> {
                                     val data = result.data

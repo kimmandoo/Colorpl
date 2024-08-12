@@ -21,7 +21,7 @@ class SingOutUseCase @Inject constructor(
                 }
 
                 is ApiResult.Success -> {
-                    signRepository.signOut(it.data.refreshToken).collect { result ->
+                    signRepository.signOut(it.data.accessToken, it.data.refreshToken).collect { result ->
                         when (result) {
                             is ApiResult.Success -> {
                                 Timber.tag("signout fin").d("${result.data}")

@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import com.colorpl.presentation.R
 import com.domain.model.Setting
 import com.presentation.MainActivity
+import timber.log.Timber
 
 
 fun sendNotification(
@@ -21,6 +22,7 @@ fun sendNotification(
 ) {
 
     if (!settingsInfo.notificationSend) {
+        Timber.tag("NOTI").d("$settingsInfo")
         return
     }
 
