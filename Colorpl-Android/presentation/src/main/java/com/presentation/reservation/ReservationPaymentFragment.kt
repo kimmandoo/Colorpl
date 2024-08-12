@@ -66,12 +66,13 @@ class ReservationPaymentFragment :
             tvPayNext.setOnClickListener {
                 val bootUser = getBootUser("", "", "", "")
                 val bootItem = mutableListOf(selectItemToPay("", "", 1, 100.0))
+                //showScheduleId 좌석 정보 -> metaData로 key Value
                 requestPayment(
                     v = null,
                     applicationId = applicationId,
                     user = bootUser,
                     itemList = bootItem,
-                    orderName = "주문하세요",
+                    orderName = "주문하세요", // 공연이름
                     orderId = "123",
                     context = requireActivity(),
                     manager = requireActivity().supportFragmentManager,

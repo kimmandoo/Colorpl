@@ -119,6 +119,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun login() {
         viewLifecycleOwner.lifecycleScope.launch {
             runCatching {
+
                 CredentialManager.create(requireActivity()).getCredential(
                     request = googleRequest,
                     context = requireActivity(),
@@ -134,6 +135,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
 
     fun handleSignIn(result: GetCredentialResponse) {
+        showLoading()
         val auth = Firebase.auth
         val credential = result.credential
         when (credential) {
@@ -151,11 +153,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 loginViewModel.googleSignIn(idToken)
                                 Timber.d("구글 로그인 성공")
                             } else {
+                                Toast.makeText(
+                                    requireActivity(),
+                                    requireActivity().getString(R.string.login_google_false),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 Timber.d("구글 로그인 실패 ${task.exception}")
                             }
                         }
                 }
             }
         }
+        dismissLoading()
     }
 }

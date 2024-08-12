@@ -10,7 +10,7 @@
     <string name="login">로그인</string>
     <string name="login_google">Google로 시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력하세요.</string>
-
+    <string name="login_google_false">구글 로그인 실패</string>
 
     <!-- Sign up-->
     <string name="sign_up_id">이메일</string>
