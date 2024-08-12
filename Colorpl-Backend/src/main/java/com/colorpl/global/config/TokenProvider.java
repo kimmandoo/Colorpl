@@ -40,16 +40,16 @@ public class TokenProvider {
     public TokenProvider(
             @Value("${jwt.secret-key}") String secretKey,
             @Value("${jwt.expiration-minutes}") long expirationMinutes,
-            @Value("${refresh-expiration-hours}") long refreshExpirationHours,	// 추가
+            @Value("${refresh-expiration-hours}") long refreshExpirationHours,
             @Value("${jwt.issuer}") String issuer,
             MemberRefreshTokenRepository memberRefreshTokenRepository,
             BlackListRepository blackListRepository
     ) {
         this.secretKey = secretKey;
         this.expirationMinutes = expirationMinutes;
-        this.refreshExpirationHours = refreshExpirationHours;	//추가
+        this.refreshExpirationHours = refreshExpirationHours;
         this.issuer = issuer;
-        this.memberRefreshTokenRepository = memberRefreshTokenRepository;	// 추가
+        this.memberRefreshTokenRepository = memberRefreshTokenRepository;
         this.blackListRepository = blackListRepository;
         reissueLimit = refreshExpirationHours * 60 / expirationMinutes;
     }
