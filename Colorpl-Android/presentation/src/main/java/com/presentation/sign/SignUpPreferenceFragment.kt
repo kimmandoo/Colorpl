@@ -1,6 +1,5 @@
 package com.presentation.sign
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -8,7 +7,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpPreferenceBinding
-import com.presentation.MainActivity
 import com.presentation.base.BaseDialogFragment
 import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
@@ -93,6 +91,11 @@ class SignUpPreferenceFragment :
             .onEach {
                 when (it) {
                     is SignUpEventState.SignUpSuccess -> {
+                        Toast.makeText(
+                            requireActivity(),
+                            requireActivity().getString(R.string.sign_up_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         navigatePopBackStack()
                     }
 

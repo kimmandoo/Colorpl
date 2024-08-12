@@ -20,7 +20,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.presentation.MainActivity
 import com.presentation.base.BaseFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.sign.model.SignInEventState
 import com.presentation.util.setPasswordTransformation
 import com.presentation.viewmodel.LoginViewModel
@@ -40,8 +39,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private lateinit var googleRequest: GetCredentialRequest
 
     private val loginViewModel: LoginViewModel by viewModels()
-
-
 
 
     override fun initView() {
@@ -83,6 +80,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 )
             }
             includePassword.ivPasswordToggle.setOnClickListener {
+                includePassword.ivPasswordToggle.isSelected =
+                    !includePassword.ivPasswordToggle.isSelected
                 includePassword.etContent.setPasswordTransformation()
             }
             clGoogleLogin.setOnClickListener {
