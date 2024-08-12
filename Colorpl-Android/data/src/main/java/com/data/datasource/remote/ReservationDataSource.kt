@@ -1,12 +1,24 @@
 package com.data.datasource.remote
 
-import com.data.model.response.ReservationInfo
-import retrofit2.http.QueryMap
+import com.data.model.response.ResponseReservationInfo
+import com.data.model.response.ResponseShowSchedules
+import com.data.model.response.ResponseShowSeat
 
 interface ReservationDataSource {
-    suspend fun getReservationShow(
-        showsId: Int,
-    ): ReservationInfo
+    suspend fun getReservationListShows(filters: Map<String, String>): List<ResponseReservationInfo>
 
-    suspend fun getReservationListShows(filters: Map<String, String>): List<ReservationInfo>
+    suspend fun getReservationShow(
+        showDetailId: Int,
+    ): ResponseReservationInfo
+
+    suspend fun getReservationSchedule(
+        showDetailId: Int,
+        date: String,
+    ): List<ResponseShowSchedules>
+
+    suspend fun getReservationSeat(
+        showDetailId: Int,
+        showScheduleId: Int,
+    ): Map<String, ResponseShowSeat>
+
 }

@@ -15,6 +15,7 @@ import com.domain.model.Seat
 import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
+import com.presentation.util.formatWithCommas
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -291,4 +292,20 @@ fun changeDateText(textView: TextView, date: String) {
     val formattedDate = zonedDateTime.format(formatter)
 
     textView.text = formattedDate
+}
+
+@BindingAdapter("priceBySeatClass", "seatClassKey", "flag")
+fun getReservationPriceBySeatClass(textView: TextView, priceBySeatClass: Map<String, Int>?, key: String?, flag: Boolean?) {
+    if (priceBySeatClass == null || key == null || !priceBySeatClass.containsKey(key)) {
+        textView.visibility = View.GONE
+    } else {
+        val value = priceBySeatClass[key]?.formatWithCommas()
+        val text = when (flag) {
+            true -> "${value}원~"
+            false -> "${value}원"
+            else -> "${key}석 : ${value}원"
+        }
+        textView.text = text
+        textView.visibility = View.VISIBLE
+    }
 }

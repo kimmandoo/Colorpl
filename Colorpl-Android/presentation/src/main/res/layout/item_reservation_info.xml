@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.presentation.util.SeatClass" />
+
         <variable
             name="reservationInfo"
             type="com.domain.model.ReservationInfo" />
@@ -88,7 +90,9 @@
                 style="@style/suite_bold_18"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{reservationInfo.price}"
+                app:priceBySeatClass="@{reservationInfo.priceBySeatClass}"
+                app:seatClassKey="@{SeatClass.B.value}"
+                app:flag="@{true}"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@id/iv_image"
                 app:layout_constraintEnd_toEndOf="parent"

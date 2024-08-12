@@ -28,3 +28,7 @@ fun Int.distanceChange(): String {
     return text
 }
 
+fun Int.formatWithCommas(): String {
+    return String.format("%,d", this)
+}
+

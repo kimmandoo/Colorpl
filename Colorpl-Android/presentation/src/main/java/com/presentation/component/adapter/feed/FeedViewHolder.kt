@@ -1,7 +1,7 @@
 package com.presentation.component.adapter.feed
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.ItemFeedBinding
 import com.domain.model.Feed
 import com.presentation.util.setEmotion
@@ -26,7 +26,11 @@ class FeedViewHolder(
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
             tvUploadDate.text = data.createdate
-            ivContent.setImageCenterCrop(data.imgurl)
+            if (data.imgurl == "http://i11d109.p.ssafy.io/images/noimg.png") {
+                ivContent.visibility = View.GONE
+            } else {
+                ivContent.setImageCenterCrop(data.imgurl)
+            }
             clickScope.forEach {
                 it.setOnClickListener { onFeedContentClickListener(data.id) }
             }

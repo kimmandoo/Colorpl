@@ -13,6 +13,7 @@ import com.presentation.viewmodel.ReservationDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>(R.layout.fragment_reservation_detail) {
@@ -37,7 +38,7 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
             navigatePopBackStack()
         }
         binding.tvReservationNext.setOnClickListener {
-            val action = ReservationDetailFragmentDirections.actionFragmentReservationDetailToFragmentReservationProgress(args.reservationDetail)
+            val action = ReservationDetailFragmentDirections.actionFragmentReservationDetailToFragmentReservationProgress(reservationDetailViewModel.reservationInfo.value)
             Navigation.findNavController(binding.root).navigate(action)
         }
     }
