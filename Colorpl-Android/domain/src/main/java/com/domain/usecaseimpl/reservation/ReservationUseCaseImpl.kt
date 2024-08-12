@@ -9,6 +9,7 @@ import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReservationUseCaseImpl @Inject constructor(
@@ -30,10 +31,4 @@ class ReservationUseCaseImpl @Inject constructor(
                 }
         }
     }
-
-
-    //override suspend fun getReservationInfo(showId: Int): ReservationInfo {
-    //        return reservationRepository.getReservationShows(showId).toEntity()
-    //    }
-
 }

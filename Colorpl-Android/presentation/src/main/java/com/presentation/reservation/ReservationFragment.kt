@@ -38,7 +38,6 @@ import javax.inject.Named
 class ReservationFragment :
     BaseFragment<FragmentReservationBinding>(R.layout.fragment_reservation) {
 
-
     private val reservationListViewModel: ReservationListViewModel by viewModels()
 
     private val filterAdapter by lazy {
@@ -77,7 +76,7 @@ class ReservationFragment :
 
     private fun observeReservationList() {
         reservationListViewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationList ->
-//            reservationInfoAdapter.submitList(reservationList)
+            reservationInfoAdapter.submitList(reservationList)
             Timber.tag("reservationList").d(reservationList.toString())
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -108,11 +107,11 @@ class ReservationFragment :
                     title = "님과함께 : 테스트",
                     category = "사극",
                     runtime = "3시간 00분",
-                    price = "13,000"
+                    priceBySeatClass = mapOf()
                 )
             )
         }
-        reservationInfoAdapter.submitList(testReservationInfo)
+//        reservationInfoAdapter.submitList(testReservationInfo)
     }
 
     private fun initClickListener() {
