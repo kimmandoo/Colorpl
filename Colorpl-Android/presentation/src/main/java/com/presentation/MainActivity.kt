@@ -17,6 +17,7 @@ import com.presentation.util.LocationHelper
 import com.presentation.util.Page
 import com.presentation.util.checkLocationPermission
 import com.presentation.util.locationPermission
+import com.presentation.util.notificationPermission
 import com.presentation.util.requestMapPermission
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -29,6 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     lateinit var naverMapCameraPosition: CameraPosition
 
     override fun init() {
+        notificationPermission()
         locationPermission()
         initBottomNavBar()
         initFCM()

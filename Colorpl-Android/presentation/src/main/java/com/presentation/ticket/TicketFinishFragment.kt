@@ -7,10 +7,14 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketFinishBinding
 import com.presentation.base.BaseFragment
+import com.presentation.notification.FcmWorker
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.TicketCreateViewModel
@@ -45,6 +49,7 @@ class TicketFinishFragment :
             .onEach { ticketId ->
                 when {
                     ticketId >= 0 -> {
+                        initWorkerManager()
                         loading.dismiss()
                         findNavController().navigate(R.id.action_fragment_ticket_finish_to_fragment_schedule)
                         binding.tvConfirm.isEnabled = true
@@ -57,6 +62,12 @@ class TicketFinishFragment :
                     }
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun initWorkerManager() {
+        val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>().build()
+        val workManager = WorkManager.getInstance(requireActivity())
+        workManager.enqueue(fcmWorkRequest)
     }
 
     private fun initUi() {

@@ -5,24 +5,26 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.domain.usecase.NotificationUseCase
+import com.domain.usecase.TmapRouteUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.presentation.util.sendNotification
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 
 @HiltWorker
 class FcmWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted val context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val notificationUseCase : NotificationUseCase
+    private val tMapRouteUseCase: TmapRouteUseCase,
 ) :
+
+
     CoroutineWorker(context, workerParams) {
 
 
@@ -35,7 +37,8 @@ class FcmWorker @AssistedInject constructor(
             val la = latitude
             val long = longitude
             CoroutineScope(Dispatchers.IO).launch {
-                notificationUseCase.getMarkers(latitude = la, long, 2.0)
+                sendNotification(context = context)
+//                tMapRouteUseCase(la.toString(),long.toString(), endRoute.first, endRoute.second)
             }
         }
         return Result.success()
@@ -44,7 +47,7 @@ class FcmWorker @AssistedInject constructor(
     @SuppressLint("MissingPermission")
     fun checkLocation(listener: (Double, Double) -> Unit) {
         mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
-            kotlin.runCatching {
+            runCatching {
                 task.result
             }.onSuccess { location ->
                 listener(location.latitude, location.longitude)
@@ -56,4 +59,6 @@ class FcmWorker @AssistedInject constructor(
             }
         }
     }
+
+
 }
