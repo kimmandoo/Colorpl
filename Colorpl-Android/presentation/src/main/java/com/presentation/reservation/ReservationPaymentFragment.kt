@@ -13,6 +13,7 @@ import com.presentation.reservation.model.PaymentEventState
 import com.presentation.util.Payment
 import com.presentation.util.ViewPagerManager
 import com.presentation.util.getBootUser
+import com.presentation.util.makeMetaData
 import com.presentation.util.requestPayment
 import com.presentation.util.selectItemToPay
 import com.presentation.viewmodel.PayViewModel
@@ -66,6 +67,18 @@ class ReservationPaymentFragment :
             tvPayNext.setOnClickListener {
                 val bootUser = getBootUser("", "", "", "")
                 val bootItem = mutableListOf(selectItemToPay("", "", 1, 100.0))
+                val selectedSeatList: List<String> = viewModel!!.reservationSeat.value.map { it.toString() }
+
+                val metaDataMap: MutableMap<String, Any> = makeMetaData(
+                    showName = viewModel!!.reservationTitle.value,
+                    showHallName = viewModel!!.reservationPlace.value,
+                    showTheaterName = viewModel!!.reservationTheater.value,
+                    showScheduleId = viewModel!!.reservationDetailId.value,
+                    selectedSeatList = selectedSeatList,
+                    selectedDiscount = null
+                )
+
+
                 requestPayment(
                     v = null,
                     applicationId = applicationId,
@@ -75,10 +88,11 @@ class ReservationPaymentFragment :
                     orderId = "123",
                     context = requireActivity(),
                     manager = requireActivity().supportFragmentManager,
+                    metaDataMap = metaDataMap
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
                     val responseData = Gson().fromJson(data, PayRequest::class.java)
-                    payViewModel.startPayment(responseData.receipt_id)
+//                    payViewModel.startPayment(responseData.receipt_id)
                     false
                 }
             }

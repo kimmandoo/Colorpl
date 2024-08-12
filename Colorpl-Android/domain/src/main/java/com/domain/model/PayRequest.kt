@@ -1,5 +1,7 @@
 package com.domain.model
 
+import java.io.Serializable
+
 data class PayRequest(
     val event: String,
     val receipt_id: String,
@@ -14,8 +16,11 @@ data class PayRequest(
     val bootpay_event: Boolean
 ) {
     data class Metadata(
-        val `1`: String,
-        val `2`: String,
-        val `3`: Int
-    )
+        val showName: String,
+        val showHallName: String,
+        val showTheaterName: String,
+        val showScheduleId: Int,
+        val selectedSeatList: List<Seat>,
+        val selectedDiscount: String
+    ) : Serializable
 }
