@@ -2,15 +2,12 @@ package com.presentation.ticket
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
@@ -111,11 +108,12 @@ class TicketCreateFragment :
         binding.spinner.apply {
             this.adapter = adapter
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
-            val initialPosition = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
-                items.lastIndex
-            } else {
-                0
-            }
+            val initialPosition =
+                if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                    items.lastIndex
+                } else {
+                    0
+                }
             setSelection(initialPosition)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -129,11 +127,12 @@ class TicketCreateFragment :
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    val defaultCategory = if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
-                        items.last()
-                    } else {
-                        items.first()
-                    }
+                    val defaultCategory =
+                        if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
+                            items.last()
+                        } else {
+                            items.first()
+                        }
                     viewModel.setCategory(defaultCategory)
                 }
             }
@@ -186,11 +185,17 @@ class TicketCreateFragment :
     }
 
     private fun initCamera() {
-        takePicture = setCameraLauncher {
-            if (::photoUri.isInitialized) {
-                describeImage(photoUri)
+        takePicture = setCameraLauncher(
+            onSuccess = {
+                if (::photoUri.isInitialized) {
+                    describeImage(photoUri)
+                }
+            },
+            onFailure = {
+                dismissLoading()
+                navigatePopBackStack()
             }
-        }
+        )
     }
 
     private fun openCamera() {
