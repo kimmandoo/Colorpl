@@ -10,6 +10,7 @@ import com.colorpl.presentation.databinding.FragmentMyReviewBinding
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.dialog.LoadingDialog
+import com.presentation.util.setVisibility
 import com.presentation.viewmodel.FeedViewModel
 import com.presentation.viewmodel.MyReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +62,7 @@ class MyReviewFragment : BaseFragment<FragmentMyReviewBinding>(R.layout.fragment
             .onEach { loadStates ->
                 val isLoading = loadStates.source.refresh is LoadState.Loading
                 if (!isLoading) {
+                    binding.icEmptyView.clTitle.setVisibility(feedAdapter.itemCount == 0)
                     binding.count = feedAdapter.itemCount
                     loading.dismiss()
                 } else loading.show()

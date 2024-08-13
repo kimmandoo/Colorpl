@@ -8,11 +8,14 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentUserSearchBinding
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.mypage.UserSearchAdapter
+import com.presentation.my_page.model.MyPageEventState
 import com.presentation.util.imeOptionsActionCheck
+import com.presentation.util.setVisibility
 import com.presentation.viewmodel.MemberSearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MemberSearchFragment :
@@ -23,9 +26,8 @@ class MemberSearchFragment :
     override fun initView() {
         initAdapter()
         initClickEvent()
-
+        observeMemberSearchEvent()
         observeSearchText()
-        observeMemberSearch()
     }
 
     override fun onResume() {
@@ -44,13 +46,7 @@ class MemberSearchFragment :
         }
     }
 
-    private fun observeMemberSearch() {
-        memberSearchViewModel.memberSearchInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach {
-                userSearchAdapter.submitList(it)
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
-    }
+
 
     private fun initAdapter() {
         userSearchAdapter = UserSearchAdapter()
@@ -58,6 +54,25 @@ class MemberSearchFragment :
             adapter = userSearchAdapter
             itemAnimator = null
         }
+    }
+
+    private fun observeMemberSearchEvent(){
+        binding.icEmptyView.clTitle.setVisibility(false)
+        memberSearchViewModel.memberSearchEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when(it){
+                    is MyPageEventState.MemberSearchError -> {
+                        binding.icEmptyView.clTitle.setVisibility(true)
+                        binding.rcSearch.setVisibility(false)
+                    }
+                    is MyPageEventState.MemberSearchSuccess -> {
+                        binding.icEmptyView.clTitle.setVisibility(it.data.isEmpty())
+                        binding.rcSearch.setVisibility(it.data.isNotEmpty())
+                        userSearchAdapter.submitList(it.data)
+                    }
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 

@@ -13,6 +13,7 @@ import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.my_page.model.OtherMyPageEventState
 import com.presentation.util.setImageCircleCrop
+import com.presentation.util.setVisibility
 import com.presentation.viewmodel.FeedViewModel
 import com.presentation.viewmodel.MyPageViewModel
 import com.presentation.viewmodel.OtherMyPageViewModel
@@ -80,7 +81,11 @@ class OtherMyPageFragment :
         feedAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { loadStates ->
                 val isLoading = loadStates.source.refresh is LoadState.Loading
-                if (!isLoading) loading.dismiss() else loading.show()
+                if (!isLoading) {
+                    binding.icEmptyView.clTitle.setVisibility(feedAdapter.itemCount == 0)
+                    binding.rcFeed.setVisibility(feedAdapter.itemCount > 0)
+                    loading.dismiss()
+                } else loading.show()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
