@@ -94,8 +94,8 @@ public class PaymentController {
 //    }
 
     @PostMapping("/confirm")
-    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
     @Transactional
+    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
     public ResponseEntity<?> confirmPayment(
             @RequestHeader("Pay-Authorization") String authorizationHeader,
             @RequestParam String receiptId) {
