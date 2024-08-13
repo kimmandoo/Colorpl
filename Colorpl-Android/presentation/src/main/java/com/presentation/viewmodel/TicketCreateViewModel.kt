@@ -45,18 +45,45 @@ class TicketCreateViewModel @Inject constructor(
     val ticketInfo: StateFlow<Boolean> = _ticketInfo
     private val _scheduleInfo = MutableStateFlow<Boolean>(false)
     val scheduleInfo: StateFlow<Boolean> = _scheduleInfo
+    private val _setSchedule = MutableStateFlow<String>("")
+    val setSchedule: StateFlow<String> = _setSchedule
+    private val _setTitle = MutableStateFlow<String>("")
+    val setTitle: StateFlow<String> = _setTitle
+    private val _setSeat = MutableStateFlow<String>("")
+    val setSeat: StateFlow<String> = _setSeat
+    private val _setDetail = MutableStateFlow<String>("")
+    val setDetail: StateFlow<String> = _setDetail
 
     fun setCategory(text: String) {
         _category.value = text
         stateConfirm()
     }
 
-    fun setJuso(text:String){
+    fun setJuso(text: String) {
         _juso.value = text
     }
 
-    fun setSchedule(text: String) {
-        _scheduleInfo.value = isValidDateFormat(text)
+    fun setTitle(text: String) {
+        _setTitle.value = text
+    }
+
+    fun setLocation(text: String) {
+        _setDetail.value = text
+    }
+
+    fun setSeat(text: String) {
+        _setSeat.value = text
+    }
+
+    fun updateSchedule(text: String) {
+        _setSchedule.value = text
+    }
+
+    private fun setSchedule(date: String) {
+        if (isValidDateFormat(date)) {
+            _setSchedule.value = date
+            _scheduleInfo.value = true
+        }
     }
 
     fun clearCategory() {
@@ -98,10 +125,10 @@ class TicketCreateViewModel @Inject constructor(
             _description.value?.let { ticket ->
                 ticketUseCase.createTicket(
                     image, TicketRequest(
-                        name = ticket.title,
-                        location = ticket.detail,
-                        dateTime = ticket.schedule,
-                        seat = ticket.seat!!,
+                        name = _setTitle.value,
+                        location = _setDetail.value,
+                        dateTime = _setSchedule.value,
+                        seat = _setSeat.value,
                         category = _category.value,
                         latitude = _geocodingLatLng.value.latitude,
                         longitude = _geocodingLatLng.value.longitude,
@@ -127,7 +154,12 @@ class TicketCreateViewModel @Inject constructor(
             openAiUseCase(base64String).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
+                        setTitle(it.data.title)
+                        setLocation(it.data.detail)
                         setSchedule(it.data.schedule)
+                        it.data.seat?.let { seat ->
+                            setSeat(seat)
+                        }
                         _description.value = it.data
                         stateConfirm()
                     }

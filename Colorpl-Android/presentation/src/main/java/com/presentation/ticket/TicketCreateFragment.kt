@@ -109,6 +109,10 @@ class TicketCreateFragment :
 
         binding.tvConfirm.setOnClickListener {
             if (viewModel.ticketInfo.value) {
+                viewModel.updateSchedule(binding.tvSchedule.text.toString())
+                viewModel.setSeat(binding.etSeat.text.toString())
+                viewModel.setTitle(binding.etTitle.text.toString())
+                viewModel.setLocation(binding.etDetail.text.toString())
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.createTicket(
                         ImageProcessingUtil(binding.root.context).uriToCompressedFile(photoUri)!!,
@@ -173,14 +177,17 @@ class TicketCreateFragment :
                 }
             }
         }
+
         viewModel.ticketInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
             binding.tvConfirm.isSelected = state
             binding.tvConfirm.isEnabled = state
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
         viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
             binding.tvConfirm.isSelected = state != ""
             binding.tvConfirm.isEnabled = state != ""
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+
         viewModel.geocodingLatLng.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { latlng ->
             Timber.d("$latlng")
             if (latlng.latitude != 0.0 && latlng.longitude != 0.0) {
