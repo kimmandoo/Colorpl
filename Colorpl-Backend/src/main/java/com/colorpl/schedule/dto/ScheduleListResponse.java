@@ -58,14 +58,14 @@ public class ScheduleListResponse {
                 .build();
         } else if (schedule instanceof ReservationSchedule reservationSchedule) {
             response = builder
-                .seat(reservationSchedule.getReservationDetail().getRow() + " "
-                    + reservationSchedule.getReservationDetail().getCol())
+                .seat(reservationSchedule.getReservation().getReservationDetails().get(0).getRow() + " "
+                    + reservationSchedule.getReservation().getReservationDetails().get(0).getCol())
                 .dateTime(
-                    reservationSchedule.getReservationDetail().getShowSchedule().getDateTime())
-                .name(reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
+                .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                     .getName())
                 .category(
-                    reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                         .getCategory())
                 .build();
         }
