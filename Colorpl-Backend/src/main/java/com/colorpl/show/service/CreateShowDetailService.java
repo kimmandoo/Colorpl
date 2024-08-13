@@ -1,8 +1,10 @@
 package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.CategoryNotFoundException;
+import com.colorpl.global.common.exception.InvalidAreaException;
 import com.colorpl.global.common.exception.InvalidSeatClassException;
 import com.colorpl.global.common.exception.ShowStateNotFoundException;
+import com.colorpl.show.domain.Area;
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
@@ -46,7 +48,8 @@ public class CreateShowDetailService {
             .runtime(item.getRuntime())
             .priceBySeatClass(parsePriceBySeatClass(item.getPriceBySeatClass()))
             .posterImagePath(item.getPosterImagePath())
-            .area(item.getArea())
+            .area(Area.fromString(item.getArea())
+                .orElseThrow(() -> new InvalidAreaException(item.getArea())))
             .category(category)
             .state(state)
             .build();

@@ -5,6 +5,7 @@ import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 import static com.colorpl.theater.domain.QHall.hall;
 import static com.colorpl.theater.domain.QTheater.theater;
 
+import com.colorpl.show.domain.Area;
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetShowDetailsRequest;
@@ -31,7 +32,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
-                areaEq(request.getArea()),
+                areaIn(request.getArea()),
                 nameContains(request.getKeyword()),
                 categoryEq(request.getCategory())
             )
@@ -71,8 +72,8 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         return showSchedule.dateTime.between(from, to);
     }
 
-    private BooleanExpression areaEq(String area) {
-        return area != null ? showDetail.area.eq(area) : null;
+    private BooleanExpression areaIn(List<Area> area) {
+        return area != null ? showDetail.area.in(area) : null;
     }
 
     private BooleanExpression nameContains(String keyword) {
