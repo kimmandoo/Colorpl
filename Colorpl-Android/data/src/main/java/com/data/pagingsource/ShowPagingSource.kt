@@ -39,7 +39,7 @@ class ShowPagingSource(
         return when (val result =
             safeApiCall { reservationDataSource.getReservationListShows(updatedFilters) }) {
             is ApiResult.Success -> {
-                val response = result.data.items
+                val response = result.data
                 Timber.tag("pagedShow").d("${response}")
                 // 다음 페이지의 cursorId는 현재 페이지의 마지막 아이템 id로 설정합니다.
                 val nextCursorId = if (response.isEmpty()) null else response.last().id

@@ -13,7 +13,7 @@ class ReservationDataSourceImpl @Inject constructor(
     private val reservationApi: ReservationApi
 ) : ReservationDataSource {
 
-    override suspend fun getReservationListShows(filters: Map<String, String?>): ResponsePagedShow {
+    override suspend fun getReservationListShows(filters: Map<String, String?>): List<Show> {
         Timber.tag("showDataSourceImplTag").d(filters.toString())
         return reservationApi.getReservationListShows(filters)
     }

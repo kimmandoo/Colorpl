@@ -12,7 +12,7 @@ import retrofit2.http.QueryMap
 interface ReservationApi {
 
     @GET("shows")
-    suspend fun getReservationListShows(@QueryMap filters: Map<String, String?>): ResponsePagedShow
+    suspend fun getReservationListShows(@QueryMap filters: Map<String, String?>): List<Show>
 
     @GET("shows/{showDetailId}")
     suspend fun getReservationShow(
