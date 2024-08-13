@@ -5,6 +5,8 @@ import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 import static com.colorpl.theater.domain.QHall.hall;
 import static com.colorpl.theater.domain.QTheater.theater;
 
+import com.colorpl.global.common.exception.InvalidAreaException;
+import com.colorpl.show.domain.Area;
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetShowDetailsRequest;
@@ -31,7 +33,8 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
-                areaEq(request.getArea()),
+                areaEq(Area.fromString(request.getArea())
+                    .orElseThrow(() -> new InvalidAreaException(request.getArea()))),
                 nameContains(request.getKeyword()),
                 categoryEq(request.getCategory())
             )
@@ -71,7 +74,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         return showSchedule.dateTime.between(from, to);
     }
 
-    private BooleanExpression areaEq(String area) {
+    private BooleanExpression areaEq(Area area) {
         return area != null ? showDetail.area.eq(area) : null;
     }
 
