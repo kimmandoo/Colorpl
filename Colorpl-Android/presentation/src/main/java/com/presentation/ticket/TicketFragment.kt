@@ -23,6 +23,7 @@ import com.presentation.base.BaseMapDialogFragment
 import com.presentation.util.LocationHelper
 import com.presentation.util.checkLocationPermission
 import com.presentation.util.distanceChange
+import com.presentation.util.formatIsoToKorean
 import com.presentation.util.ignoreParentScroll
 import com.presentation.util.roadTimeChange
 import com.presentation.util.setEmotion
@@ -42,7 +43,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     private lateinit var locationSource: FusedLocationSource
     private val args: TicketFragmentArgs by navArgs()
     private val ticket by lazy { args.ticket }
-    var currentLocation: LatLng? = null
+    private var currentLocation: LatLng? = null
     lateinit var action: NavDirections
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -83,7 +84,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         binding.apply {
             binding.titleText = ticket.name
             ivPoster.setImageCenterCrop(ticket.imgUrl)
-            includeDate.tvTitle.text = ticket.dateTime
+            includeDate.tvTitle.text = ticket.dateTime.formatIsoToKorean()
             includePlace.tvTitle.text = ticket.location
             includeSeat.tvTitle.text = ticket.seat
             includePlace.tvTitleHint.text = getString(R.string.ticket_place)

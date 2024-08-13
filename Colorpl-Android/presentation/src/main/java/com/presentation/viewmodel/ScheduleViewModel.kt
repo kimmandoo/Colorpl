@@ -38,6 +38,9 @@ class ScheduleViewModel @Inject constructor(
     private val _tickets = MutableStateFlow<List<TicketResponse>>(emptyList())
     val tickets: StateFlow<List<TicketResponse>> = _tickets
 
+    private val _filteredTickets = MutableStateFlow<List<TicketResponse>>(emptyList())
+    val filteredTickets: StateFlow<List<TicketResponse>> = _filteredTickets
+
     private val _displayDate = MutableStateFlow("")
     val displayDate: StateFlow<String> = _displayDate
 
@@ -45,7 +48,6 @@ class ScheduleViewModel @Inject constructor(
     val calendarMode: StateFlow<CalendarMode> = _calendarMode
 
     init {
-        getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
         updateCalendar(Calendar.CURRENT)
     }
 
@@ -65,6 +67,16 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    fun filterTicketsForSelectedWeek() {
+        val startOfWeek = findStartOfWeek(_selectedDate.value)
+        val endOfWeek = startOfWeek.plusDays(6)
+
+        _filteredTickets.value = _tickets.value.filter { ticket ->
+            val ticketDate = ticket.dateTime.toLocalDate()
+            ticketDate in startOfWeek..endOfWeek
+        }.toMutableList()
+    }
+
 
     fun getMonthlyTicket(pattern: String) {
         viewModelScope.launch {
@@ -77,24 +89,6 @@ class ScheduleViewModel @Inject constructor(
                     is DomainResult.Success -> {
                         _tickets.value = it.data
                         matchTicketsToCalendar(_calendarItems.value, it.data)
-                    }
-                }
-            }
-        }
-    }
-
-    fun getAllTicket() {
-        viewModelScope.launch {
-            ticketUseCase.getAllTicket().collect {
-                when (it) {
-                    is DomainResult.Success -> {
-                        _tickets.value = it.data
-                        _calendarItems.value = matchTicketsToCalendar(_calendarItems.value, it.data)
-                        Timber.tag("tickets").d("${it.data}")
-                    }
-
-                    is DomainResult.Error -> {
-                        Timber.tag("tickets").d("${it.exception}")
                     }
                 }
             }
@@ -117,25 +111,36 @@ class ScheduleViewModel @Inject constructor(
                     isWeek = true
                 )
             }
+        Timber.tag("calendar").d("$clickedItem \n $updatedList")
+
         _calendarItems.value = updatedList
         _selectedDate.value = clickedItem.date
         _clickedDate.value = clickedItem.copy(isSelected = true, isWeek = true)
         updateDisplayDate()
+        filterTicketsForSelectedWeek()
     }
 
-    fun swipeUpdateCalendar(direction: Int){
-        if(direction == 1){
-            when(_calendarMode.value){
+    fun swipeUpdateCalendar(direction: Int) {
+        if (direction == 1) {
+            when (_calendarMode.value) {
                 CalendarMode.MONTH -> updateCalendar(Calendar.NEXT)
                 CalendarMode.WEEK -> updateCalendarWeekMode(Calendar.NEXT)
             }
-        }else{
-            when(_calendarMode.value){
+        } else {
+            when (_calendarMode.value) {
                 CalendarMode.MONTH -> updateCalendar(Calendar.PREVIOUS)
                 CalendarMode.WEEK -> updateCalendarWeekMode(Calendar.PREVIOUS)
             }
         }
     }
+
+    fun restoreCalendarMode() {
+        if (_calendarMode.value == CalendarMode.WEEK) {
+            _calendarMode.value = CalendarMode.MONTH
+            updateCalendar(Calendar.RESTORE)
+        }
+    }
+
 
     fun updateCalendar(
         state: Calendar,
@@ -162,8 +167,7 @@ class ScheduleViewModel @Inject constructor(
             }
 
             Calendar.RESTORE -> {
-                _calendarMode.value = CalendarMode.MONTH
-                _clickedDate.value?.date
+                _clickedDate.value?.date ?: LocalDate.now()
             }
         }
         getMonthlyTicket(_selectedDate.value.getPattern("yyyy-MM-dd"))
@@ -182,6 +186,7 @@ class ScheduleViewModel @Inject constructor(
         _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.value)
         _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
+        _filteredTickets.value = _tickets.value
     }
 
     fun updateCalendarWeekMode(
@@ -215,6 +220,7 @@ class ScheduleViewModel @Inject constructor(
             )
         }
         updateDisplayDate()
+        filterTicketsForSelectedWeek()
     }
 
     private fun findStartOfWeek(targetDate: LocalDate): LocalDate {

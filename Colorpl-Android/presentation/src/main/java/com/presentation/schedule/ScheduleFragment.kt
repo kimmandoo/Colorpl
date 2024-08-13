@@ -1,6 +1,5 @@
 package com.presentation.schedule
 
-import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
@@ -94,18 +93,26 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                             tickets
                         )
                     )
-                    ticketAdapter.submitList(tickets)
                 }
             }
+
+            launch {
+                viewModel.filteredTickets.collectLatest { filteredTickets ->
+                    ticketAdapter.submitList(filteredTickets.sortedByDescending { it.dateTime })
+                }
+            }
+
             launch {
                 viewModel.calendarMode.collectLatest { mode ->
                     when (mode) {
                         CalendarMode.MONTH -> {
                             setMonthMode()
+                            ticketAdapter.submitList(viewModel.tickets.value.sortedByDescending { it.dateTime })  // 월 모드일 때는 모든 티켓 표시
                         }
 
                         CalendarMode.WEEK -> {
                             setWeekMode()
+                            viewModel.filterTicketsForSelectedWeek()  // 주 모드로 변경 시 티켓 필터링
                         }
                     }
                 }
@@ -173,10 +180,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initTicketView() {
         binding.apply {
-            rvTicket.adapter = ticketAdapter
-            rvTicket.overScrollControl { direction, deltaDistance ->
-                if (viewModel.clickedDate.value != null) {
-                    handlePull(direction)
+            rvTicket.apply {
+                adapter = ticketAdapter
+                itemAnimator = null
+                overScrollControl { direction, deltaDistance ->
+                    if (viewModel.clickedDate.value != null) {
+                        handlePull(direction)
+                    }
                 }
             }
         }
@@ -189,7 +199,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         }
         if (handlePullState > 5) {
-            viewModel.updateCalendar(Calendar.RESTORE)
+            viewModel.restoreCalendarMode()
             handlePullState = 0
         }
     }
