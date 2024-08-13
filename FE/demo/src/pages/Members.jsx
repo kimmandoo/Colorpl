@@ -1,93 +1,118 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography, Chip } from '@mui/material';
+import {
+  Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField,
+  FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography,
+  Chip
+} from '@mui/material';
 import api from '../api';
 
 const Members = () => {
   const [members, setMembers] = useState([]);
-  const [totalMembers, setTotalMembers] = useState(0); // 총 회원 수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const membersPerPage = 10; // 페이지당 회원 수
-  const [error, setError] = useState(''); // 에러 메시지 상태
-  const [open, setOpen] = useState(false); // Snackbar 열기 상태
-  const [selectedOptions, setSelectedOptions] = useState({}); // 선택된 검색 옵션
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const membersPerPage = 10;
+  const maxPages = 100;
+  const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [loading, setLoading] = useState(false);  // 요청 중 상태 관리
 
   const [searchParams, setSearchParams] = useState({
     nickname: '',
     email: '',
     create_date_from: '',
     create_date_to: '',
-    category: []  // 빈 배열로 초기화
+    category: []
   });
 
   const navigate = useNavigate();
 
-  // 데이터 로드 요청 (검색 또는 기본 데이터 로드)
-  const loadData = useCallback(async (params) => {
-    try {
-      const response = await api.post('/cs/members/search', params, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      console.log('Search results:', response.data); // 응답 데이터 로그
+  // 빈 값 제거 함수
+  const cleanSearchParams = (params) => {
+    const cleanedParams = { ...params };
+    Object.keys(cleanedParams).forEach((key) => {
+      if (!cleanedParams[key] || cleanedParams[key].length === 0) {
+        delete cleanedParams[key];
+      }
+    });
+    return cleanedParams;
+  };
 
+  // 데이터 로드 요청 (activity 엔드포인트)
+  const fetchActivityData = useCallback(async (params) => {
+    setLoading(true);
+    try {
+      const response = await api.get('/cs/members/activity', { params });
       if (Array.isArray(response.data)) {
-        // 응답이 배열인 경우 바로 할당
         setMembers(response.data);
-        setTotalMembers(response.data.length);
+        setTotalMembers(response.data.length > 0 ? response.data[0].total_count : 0);
       } else {
-        console.error('Unexpected response structure:', response.data);
         setMembers([]);
         setTotalMembers(0);
       }
+    } catch (error) {
+      console.error('회원 정보를 불러오는데 실패했습니다.', error);
+      setError('회원 정보를 불러오는데 실패했습니다.');
+      setOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-      setSelectedOptions(params); // 사용자가 선택한 옵션을 저장
+  // 검색 요청 (search 엔드포인트)
+  const fetchSearchData = useCallback(async (params) => {
+    setLoading(true);
+    try {
+      const cleanedParams = cleanSearchParams(params);
+      const response = await api.post('/cs/members/search', cleanedParams, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (Array.isArray(response.data)) {
+        setMembers(response.data);
+        setTotalMembers(response.data.length > 0 ? response.data[0].total_count : 0);
+      } else {
+        setMembers([]);
+        setTotalMembers(0);
+      }
+      setSelectedOptions(cleanedParams);
     } catch (error) {
       console.error('데이터를 불러오는데 실패했습니다.', error);
       setError('데이터를 불러오는데 실패했습니다.');
       setOpen(true);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
+  // 최초 렌더링 및 의존성에 따른 데이터 로드
   useEffect(() => {
-    // 페이지 로드 시 기본 데이터를 GET 요청으로 가져옴
-    const fetchInitialData = async () => {
-      try {
-        const response = await api.get('/cs/members/activity', {
-          params: {
-            skip: (currentPage - 1) * membersPerPage,
-            limit: membersPerPage,
-          },
-        });
-  
-        console.log('Fetched members:', response.data); // 응답 데이터 로그
-        setMembers(Array.isArray(response.data) ? response.data : []);
-        setTotalMembers(response.data.length || 0);
-      } catch (error) {
-        console.error('회원 정보를 불러오는데 실패했습니다.', error);
-        setError('회원 정보를 불러오는데 실패했습니다.');
-        setOpen(true);
-      }
-    };
-  
-    fetchInitialData();
-  }, [currentPage]); // 이제 currentPage만 의존성으로 추가
+    if (loading) return;
 
-  // 검색 기능을 활성화하는 POST 요청
+    const skip = (currentPage - 1) * membersPerPage;
+    const params = { skip, limit: membersPerPage };
+
+    if (Object.keys(selectedOptions).length > 0) {
+      fetchSearchData({ ...selectedOptions, skip, limit: membersPerPage });
+    } else {
+      fetchActivityData(params);
+    }
+  }, [currentPage, selectedOptions, fetchActivityData, fetchSearchData]);
+
+  // 검색 요청 핸들러
   const handleSearch = () => {
-    const params = {
-      nickname: searchParams.nickname || undefined,
-      email: searchParams.email || undefined,
-      create_date_from: searchParams.create_date_from || undefined,
-      create_date_to: searchParams.create_date_to || undefined,
-      category: searchParams.category.length > 0 ? searchParams.category : undefined,
-      skip: (currentPage - 1) * membersPerPage,
+    if (loading) return;
+    setCurrentPage(1);
+    fetchSearchData({
+      ...searchParams,
+      skip: 0,
       limit: membersPerPage,
-    };
-
-    loadData(params);
+    });
   };
 
+  // 검색 조건 초기화 핸들러
   const handleReset = () => {
+    if (loading) return;
     setSearchParams({
       nickname: '',
       email: '',
@@ -95,25 +120,33 @@ const Members = () => {
       create_date_to: '',
       category: []
     });
-    setSelectedOptions({}); // 선택된 옵션 초기화
+    setSelectedOptions({});
     setCurrentPage(1);
-    loadData({ skip: 0, limit: membersPerPage });
+    fetchActivityData({ skip: 0, limit: membersPerPage });
   };
 
-  const handleCategoryChange = (event) => {
-    setSearchParams({ ...searchParams, category: event.target.value });
-  };
-
+  // 페이지 변경 핸들러
   const handlePageChange = (event, value) => {
+    if (loading) return;
     setCurrentPage(value);
   };
 
+  // Snackbar 닫기 핸들러
   const handleCloseSnackbar = () => {
-    setOpen(false); // Snackbar 닫기
+    setOpen(false);
+  };
+
+  // 클릭 이벤트 핸들러
+  const handleCellClick = (endpoint, memberId, nickname) => {
+    if (loading) return;
+    navigate(endpoint, {
+      state: { member_id: memberId, nickname: nickname },
+    });
   };
 
   return (
     <Box>
+      {/* 검색 영역 */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
         <TextField
           label="닉네임"
@@ -148,7 +181,7 @@ const Members = () => {
           <Select
             multiple
             value={searchParams.category}
-            onChange={handleCategoryChange}
+            onChange={(e) => setSearchParams({ ...searchParams, category: e.target.value })}
           >
             <MenuItem value="PLAY">연극</MenuItem>
             <MenuItem value="MOVIE">영화</MenuItem>
@@ -159,27 +192,19 @@ const Members = () => {
             <MenuItem value="ETC">기타</MenuItem>
           </Select>
         </FormControl>
-        <Button variant="contained" onClick={handleSearch} sx={{ width: '100px' }}>검색</Button>
-        <Button variant="outlined" onClick={handleReset} sx={{ width: '100px' }}>초기화</Button>
+        <Button variant="contained" onClick={handleSearch} sx={{ width: '100px' }} disabled={loading}>검색</Button>
+        <Button variant="outlined" onClick={handleReset} sx={{ width: '100px' }} disabled={loading}>초기화</Button>
       </Box>
-      
-      {/* 선택된 검색 옵션을 표시하는 영역 */}
+
+      {/* 선택된 검색 옵션 표시 */}
       {Object.keys(selectedOptions).length > 0 && (
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle1">선택된 검색 옵션:</Typography>
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            {selectedOptions.nickname && (
-              <Chip label={`닉네임: ${selectedOptions.nickname}`} />
-            )}
-            {selectedOptions.email && (
-              <Chip label={`이메일: ${selectedOptions.email}`} />
-            )}
-            {selectedOptions.create_date_from && (
-              <Chip label={`가입일(시작): ${selectedOptions.create_date_from}`} />
-            )}
-            {selectedOptions.create_date_to && (
-              <Chip label={`가입일(끝): ${selectedOptions.create_date_to}`} />
-            )}
+            {selectedOptions.nickname && <Chip label={`닉네임: ${selectedOptions.nickname}`} />}
+            {selectedOptions.email && <Chip label={`이메일: ${selectedOptions.email}`} />}
+            {selectedOptions.create_date_from && <Chip label={`가입일(시작): ${selectedOptions.create_date_from}`} />}
+            {selectedOptions.create_date_to && <Chip label={`가입일(끝): ${selectedOptions.create_date_to}`} />}
             {selectedOptions.category && selectedOptions.category.length > 0 && (
               <Chip label={`카테고리: ${selectedOptions.category.join(', ')}`} />
             )}
@@ -187,7 +212,7 @@ const Members = () => {
         </Box>
       )}
 
-      {/* 데이터가 로드되지 않았거나 비어 있을 때 메시지 표시 */}
+      {/* 데이터가 없을 때 메시지 표시 */}
       {members.length === 0 ? (
         <Typography variant="body1">검색 결과가 없습니다.</Typography>
       ) : (
@@ -216,13 +241,18 @@ const Members = () => {
                 <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.type}</TableCell>
                 <TableCell>{member.categories ? member.categories.join(', ') : 'N/A'}</TableCell>
                 <TableCell
-                  onClick={() => navigate('/schedules', { state: { nickname: member.nickname } })}
+                  onClick={() => handleCellClick('/schedules', member.member_id, member.nickname)}
                   style={{ cursor: 'pointer' }}
                 >
                   {member.schedules_count}
                 </TableCell>
-                <TableCell onClick={() => navigate(`/reviews?member_id=${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.reviews_count}</TableCell>
-                <TableCell onClick={() => navigate(`/comments?member_id=${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.comments_count}</TableCell>
+                <TableCell 
+                  onClick={() => handleCellClick('/reviews', member.member_id, member.nickname)} 
+                  style={{ cursor: 'pointer' }}
+                >
+                  {member.reviews_count}
+                </TableCell>
+                <TableCell onClick={() => handleCellClick('/comments', member.member_id, member.nickname)} style={{ cursor: 'pointer' }}>{member.comments_count}</TableCell>
                 <TableCell onClick={() => navigate(`/reservations?member_id=${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.reservations_count}</TableCell>
               </TableRow>
             ))}
@@ -231,9 +261,15 @@ const Members = () => {
       )}
 
       <Pagination
-        count={Math.ceil(totalMembers / membersPerPage)}
-        page={currentPage}
+        count={maxPages}
+        page={currentPage || 1} // NaN 방지를 위해 기본값 설정
         onChange={handlePageChange}
+        variant="outlined"
+        shape="rounded"
+        showFirstButton
+        showLastButton
+        siblingCount={3} // 중앙에 표시될 페이지 수
+        boundaryCount={2} // 양쪽 끝에 표시될 페이지 수
         sx={{ mt: 2 }}
       />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar}>

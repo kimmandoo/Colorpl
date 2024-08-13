@@ -4,6 +4,7 @@ from datetime import datetime
 from ..utils.enum import Category
 
 class ScheduleActivity(BaseModel):
+    member_id: int
     schedule_id: int
     nickname: Optional[str] = None
     email: Optional[str] = None
@@ -12,12 +13,14 @@ class ScheduleActivity(BaseModel):
     schedule_name: Optional[str] = None
     schedule_category: Optional[Category] = None
     review_written: bool
+    review_id: Optional[int] = None
     is_reserved: bool
 
     class Config:
         from_attributes = True
 
 class ScheduleDetail(BaseModel):
+    member_id: int
     schedule_id: int
     nickname: Optional[str] = None
     email: Optional[str] = None
@@ -31,12 +34,14 @@ class ScheduleDetail(BaseModel):
     schedule_seat: Optional[str] = None
     schedule_image: Optional[str] = None
     review_written: bool
+    review_id: Optional[int] = None
     is_reserved: bool
 
     class Config:
         from_attributes = True
 
 class ScheduleCreate(BaseModel):
+    member_id: int
     schedule_name: str
     schedule_date_time: datetime
     schedule_category: Category
@@ -49,6 +54,7 @@ class ScheduleCreate(BaseModel):
     reserve_detail_id: Optional[int] = None
 
 class ScheduleUpdateDTO(BaseModel):
+    member_id: Optional[int]
     schedule_name: Optional[str] = None
     schedule_date_time: Optional[datetime] = None
     schedule_category: Optional[Category] = None
@@ -62,6 +68,7 @@ class ScheduleUpdateDTO(BaseModel):
         from_attributes = True
 
 class ScheduleSearch(BaseModel):
+    member_id: Optional[int] = None
     nickname: Optional[str] = None
     email: Optional[str] = None
     schedule_name: Optional[str] = None

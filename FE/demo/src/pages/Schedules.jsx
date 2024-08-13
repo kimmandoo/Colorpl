@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography, Chip, Checkbox, FormControlLabel } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography, Chip, Checkbox, FormControlLabel, Modal } from '@mui/material';
 import api from '../api';
 
 const Schedules = () => {
   const [schedules, setSchedules] = useState([]);
-  const [totalSchedules, setTotalSchedules] = useState(0); // 총 스케줄 수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const schedulesPerPage = 10; // 페이지당 스케줄 수
-  const [error, setError] = useState(''); // 에러 메시지 상태
-  const [open, setOpen] = useState(false); // Snackbar 열기 상태
-  const [selectedOptions, setSelectedOptions] = useState({}); // 선택된 검색 옵션
+  const [currentPage, setCurrentPage] = useState(1);
+  const schedulesPerPage = 10;
+  const maxPages = 100;
+  const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   const [searchParams, setSearchParams] = useState({
     nickname: '',
@@ -22,25 +24,37 @@ const Schedules = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 데이터 로드 요청 (검색 또는 기본 데이터 로드)
+  // 빈 값 제거 함수
+  const cleanSearchParams = (params) => {
+    const cleanedParams = { ...params };
+    Object.keys(cleanedParams).forEach((key) => {
+      if (cleanedParams[key] === '' || cleanedParams[key] === null || cleanedParams[key] === undefined) {
+        delete cleanedParams[key];
+      }
+    });
+    return cleanedParams;
+  };
+
   const loadData = useCallback(async (params) => {
     try {
-      const response = await api.post('/cs/schedules/search', params, {
+      const cleanedParams = cleanSearchParams(params);
+      const response = await api.post('/cs/schedules/search', cleanedParams, {
         headers: { 'Content-Type': 'application/json' }
       });
-      console.log('Search results:', response.data); // 응답 데이터 로그
-
+      
       if (Array.isArray(response.data)) {
         setSchedules(response.data);
-        setTotalSchedules(response.data.length);
+        if (response.data.length === 0) {
+          setOpen(true);
+        }
       } else {
-        console.error('Unexpected response structure:', response.data);
         setSchedules([]);
-        setTotalSchedules(0);
+        setOpen(true);
       }
 
-      setSelectedOptions(params); // 사용자가 선택한 옵션을 저장
+      setSelectedOptions(cleanedParams);
     } catch (error) {
       console.error('데이터를 불러오는데 실패했습니다.', error);
       setError('데이터를 불러오는데 실패했습니다.');
@@ -49,38 +63,44 @@ const Schedules = () => {
   }, []);
 
   useEffect(() => {
-    // 페이지 로드 시 기본 데이터를 GET 요청으로 가져옴
     const fetchInitialData = async () => {
-      try {
-        const response = await api.get('/cs/schedules', {
-          params: {
-            skip: (currentPage - 1) * schedulesPerPage,
-            limit: schedulesPerPage,
-          },
-        });
-  
-        console.log('Fetched schedules:', response.data); // 응답 데이터 로그
-        setSchedules(Array.isArray(response.data) ? response.data : []);
-        setTotalSchedules(response.data.length || 0);
-      } catch (error) {
-        console.error('스케줄 정보를 불러오는데 실패했습니다.', error);
-        setError('스케줄 정보를 불러오는데 실패했습니다.');
-        setOpen(true);
+      const skip = (currentPage - 1) * schedulesPerPage;
+
+      if (location.state) {
+        const { member_id, nickname } = location.state;
+        const params = { member_id, nickname, skip, limit: schedulesPerPage };
+        loadData(params);
+      } else {
+        try {
+          const response = await api.get('/cs/schedules', {
+            params: {
+              skip,
+              limit: schedulesPerPage,
+            },
+          });
+
+          if (response.data.length === 0 && currentPage > 1) {
+            setOpen(true);
+          } else {
+            setSchedules(Array.isArray(response.data) ? response.data : []);
+          }
+        } catch (error) {
+          console.error('스케줄 정보를 불러오는데 실패했습니다.', error);
+          setError('스케줄 정보를 불러오는데 실패했습니다.');
+          setOpen(true);
+        }
       }
     };
-  
+
     fetchInitialData();
-  }, [currentPage]);
+  }, [currentPage, location.state, loadData]);
 
   const handleSearch = () => {
+    setCurrentPage(1);
+
     const params = {
-      nickname: searchParams.nickname || undefined,
-      email: searchParams.email || undefined,
-      schedule_name: searchParams.schedule_name || undefined,
-      schedule_category: searchParams.schedule_category || undefined,
-      review_written: searchParams.review_written || undefined,
-      is_reserved: searchParams.is_reserved || undefined,
-      skip: (currentPage - 1) * schedulesPerPage,
+      ...searchParams,
+      skip: 0,
       limit: schedulesPerPage,
     };
 
@@ -99,6 +119,8 @@ const Schedules = () => {
     setSelectedOptions({});
     setCurrentPage(1);
     loadData({ skip: 0, limit: schedulesPerPage });
+
+    navigate(location.pathname, { replace: true }); // URL에서 state 제거
   };
 
   const handlePageChange = (event, value) => {
@@ -107,6 +129,10 @@ const Schedules = () => {
 
   const handleCloseSnackbar = () => {
     setOpen(false); 
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -167,7 +193,6 @@ const Schedules = () => {
         <Button variant="outlined" onClick={handleReset} sx={{ width: '100px' }}>초기화</Button>
       </Box>
       
-      {/* 선택된 검색 옵션을 표시하는 영역 */}
       {Object.keys(selectedOptions).length > 0 && (
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle1">선택된 검색 옵션:</Typography>
@@ -212,17 +237,31 @@ const Schedules = () => {
           </TableHead>
           <TableBody>
             {schedules.map((schedule) => (
-              <TableRow key={schedule.schedule_id} hover onClick={() => navigate(`/schedules/${schedule.schedule_id}`)} style={{ cursor: 'pointer' }}>
-                <TableCell>{schedule.schedule_id}</TableCell>
-                <TableCell>{schedule.nickname}</TableCell>
-                <TableCell>{schedule.email}</TableCell>
-                <TableCell>{new Date(schedule.schedule_date_time).toLocaleString('ko-KR')}</TableCell>
-                <TableCell>
+              <TableRow key={schedule.schedule_id} hover style={{ cursor: 'pointer' }}>
+                <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>{schedule.schedule_id}</TableCell>
+                <TableCell onClick={() => navigate(`/members/${schedule.member_id}`)}>{schedule.nickname}</TableCell>
+                <TableCell onClick={() => navigate(`/members/${schedule.member_id}`)}>{schedule.email}</TableCell>
+                <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>{new Date(schedule.schedule_date_time).toLocaleString('ko-KR')}</TableCell>
+                <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>
                   {schedule.schedule_name.length > 20 ? `${schedule.schedule_name.substring(0, 20)}...` : schedule.schedule_name}
                 </TableCell>
-                <TableCell>{schedule.schedule_category}</TableCell>
-                <TableCell>{schedule.review_written ? 'Yes' : 'No'}</TableCell>
-                <TableCell>{schedule.is_reserved ? 'Yes' : 'No'}</TableCell>
+                <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>{schedule.schedule_category}</TableCell>
+                <TableCell onClick={() => {
+                  if (schedule.review_written && schedule.review_id) {
+                    navigate(`/reviews/${schedule.review_id}`);
+                  } else {
+                    setModalMessage('등록된 리뷰가 없습니다');
+                    setOpenModal(true);
+                  }
+                }}>{schedule.review_written ? 'Yes' : 'No'}</TableCell>
+                <TableCell onClick={() => {
+                  if (schedule.is_reserved) {
+                    navigate(`/reservations/${schedule.reservation_id}`);
+                  } else {
+                    setModalMessage('등록된 예매가 없습니다');
+                    setOpenModal(true);
+                  }
+                }}>{schedule.is_reserved ? 'Yes' : 'No'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -230,9 +269,15 @@ const Schedules = () => {
       )}
 
       <Pagination
-        count={Math.ceil(totalSchedules / schedulesPerPage)}
-        page={currentPage}
+        count={maxPages}
+        page={currentPage || 1}
         onChange={handlePageChange}
+        variant="outlined"
+        shape="rounded"
+        showFirstButton
+        showLastButton
+        siblingCount={3}
+        boundaryCount={2}
         sx={{ mt: 2 }}
       />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar}>
@@ -240,6 +285,13 @@ const Schedules = () => {
           {error}
         </Alert>
       </Snackbar>
+
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', p: 4 }}>
+          <Typography>{modalMessage}</Typography>
+          <Button onClick={handleCloseModal} sx={{ mt: 2 }}>닫기</Button>
+        </Box>
+      </Modal>
     </Box>
   );
 };

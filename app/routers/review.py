@@ -21,10 +21,13 @@ def get_review_by_id(review_id: int, db: Session = Depends(get_db)):
 
 @router.patch("/reviews/{review_id}", response_model=ReviewDetail)
 def update_review(review_id: int, review_update: ReviewUpdateDTO, db: Session = Depends(get_db)):
-    review = crud_review.update_review(db, review_id, review_update)
-    if not review:
+    updated_review = crud_review.update_review(db, review_id, review_update)
+    
+    if not updated_review:
         raise HTTPException(status_code=404, detail="Review not found")
-    return review
+    
+    return updated_review
+
 
 @router.post("/reviews/search", response_model=List[ReviewActivity])
 def search_reviews(search: ReviewSearch, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):

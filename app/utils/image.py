@@ -2,6 +2,9 @@ import os
 import uuid
 from fastapi import UploadFile
 from pathlib import Path
+from fastapi import APIRouter
+
+router = APIRouter()
 
 # EC2 서버의 절대 경로 설정 (확인된 경로)
 UPLOAD_DIRECTORY = "/home/ubuntu/backend/images"

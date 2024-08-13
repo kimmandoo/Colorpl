@@ -4,7 +4,7 @@ from typing import List
 from app.database import get_db
 from app.schemas.member import MemberDetail, MemberUpdateDTO, MemberActivity, MemberSearch
 from app.crud import member as crud_member
-from datetime import datetime
+# from datetime import datetime
 
 router = APIRouter()
 
@@ -21,9 +21,7 @@ def update_member(member_id: int, member_update: MemberUpdateDTO, db: Session = 
     updated_data = member_update.dict(exclude_unset=True)
     for key, value in updated_data.items():
         setattr(member, key, value)
-
     # member.update_date = datetime.utcnow()
-
     db.commit()
     db.refresh(member)
     return member

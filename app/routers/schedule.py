@@ -44,12 +44,12 @@ def update_schedule_endpoint(
     db.commit()
     db.refresh(schedule)
 
-    # Review and reservation status checks
     review_written = has_review(db, schedule.schedule_id)
     is_reserved = schedule.reserve_detail_id is not None
 
     return {
         "schedule_id": schedule.schedule_id,
+        "member_id":schedule.member_id,
         "nickname": schedule.member.nickname,
         "email": schedule.member.email,
         "dtype": schedule.dtype,

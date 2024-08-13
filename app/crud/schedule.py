@@ -4,13 +4,14 @@ from app.schemas.schedule import ScheduleActivity, ScheduleDetail, ScheduleCreat
 from sqlalchemy import func
 from typing import Optional, List
 
-def get_schedules(db: Session, search: ScheduleSearch = None, skip: int = 0, limit: int = 10) -> List[ScheduleActivity]:
+def get_schedules(db: Session, search: Optional[ScheduleSearch] = None, skip: int = 0, limit: int = 10) -> List[ScheduleActivity]:
     query = db.query(
         Schedule.schedule_id,
         Schedule.schedule_date_time,
         Schedule.schedule_name,
         Schedule.schedule_category,
         Schedule.dtype,
+        Member.member_id,
         Member.nickname,
         Member.email,
         Schedule.reserve_detail_id
@@ -21,28 +22,37 @@ def get_schedules(db: Session, search: ScheduleSearch = None, skip: int = 0, lim
 
     schedules = query.offset(skip).limit(limit).all()
 
-    return [
-        ScheduleActivity(
-            schedule_id=schedule.schedule_id,
-            nickname=schedule.nickname,
-            email=schedule.email,
-            dtype=schedule.dtype,
-            schedule_date_time=schedule.schedule_date_time,
-            schedule_name=schedule.schedule_name,
-            schedule_category=schedule.schedule_category,
-            review_written=has_review(db, schedule.schedule_id),
-            is_reserved=schedule.reserve_detail_id is not None
-        )
-        for schedule in schedules
-    ]
+    schedule_activities = []
+    for schedule in schedules:
+        review = db.query(Review).filter(Review.schedule_id == schedule.schedule_id).first()
+        review_id = review.review_id if review else None
 
-def get_schedule_by_id(db: Session, schedule_id: int):
+        schedule_activities.append(
+            ScheduleActivity(
+                member_id=schedule.member_id,
+                schedule_id=schedule.schedule_id,
+                nickname=schedule.nickname,
+                email=schedule.email,
+                dtype=schedule.dtype,
+                schedule_date_time=schedule.schedule_date_time,
+                schedule_name=schedule.schedule_name,
+                schedule_category=schedule.schedule_category,
+                review_written=bool(review),
+                review_id=review_id,
+                is_reserved=schedule.reserve_detail_id is not None
+            )
+        )
+
+    return schedule_activities
+
+def get_schedule_by_id(db: Session, schedule_id: int) -> Optional[ScheduleDetail]:
     query = db.query(
         Schedule.schedule_id,
         Schedule.schedule_date_time,
         Schedule.schedule_name,
         Schedule.schedule_category,
         Schedule.dtype,
+        Member.member_id,
         Member.nickname,
         Member.email,
         Schedule.schedule_latitude,
@@ -54,21 +64,23 @@ def get_schedule_by_id(db: Session, schedule_id: int):
 
     if query:
         review_written = has_review(db, schedule_id)
-        return {
-            "schedule_id": query.schedule_id,
-            "nickname": query.nickname,
-            "email": query.email,
-            "dtype": query.dtype,
-            "schedule_date_time": query.schedule_date_time,
-            "schedule_name": query.schedule_name,
-            "schedule_category": query.schedule_category,
-            "review_written": review_written,
-            "schedule_latitude": query.schedule_latitude,
-            "schedule_longitude": query.schedule_longitude,
-            "schedule_location": query.schedule_location,
-            "schedule_seat": query.schedule_seat,
-            "schedule_image": query.schedule_image,
-        }
+        return ScheduleDetail(
+            member_id=query.member_id,
+            schedule_id=query.schedule_id,
+            nickname=query.nickname,
+            email=query.email,
+            dtype=query.dtype,
+            schedule_date_time=query.schedule_date_time,
+            schedule_name=query.schedule_name,
+            schedule_category=query.schedule_category,
+            review_written=review_written,
+            schedule_latitude=query.schedule_latitude,
+            schedule_longitude=query.schedule_longitude,
+            schedule_location=query.schedule_location,
+            schedule_seat=query.schedule_seat,
+            schedule_image=query.schedule_image,
+            is_reserved=query.reserve_detail_id is not None,
+        )
     return None
 
 def get_schedule_detail(db: Session, schedule_id: int) -> Optional[ScheduleDetail]:
@@ -76,7 +88,11 @@ def get_schedule_detail(db: Session, schedule_id: int) -> Optional[ScheduleDetai
     if not schedule:
         return None
     
+    review = db.query(Review).filter(Review.schedule_id == schedule_id).first()
+    review_id = review.review_id if review else None
+
     return ScheduleDetail(
+        member_id = schedule.member_id,
         schedule_id=schedule.schedule_id,
         nickname=schedule.member.nickname,
         email=schedule.member.email,
@@ -90,11 +106,15 @@ def get_schedule_detail(db: Session, schedule_id: int) -> Optional[ScheduleDetai
         schedule_seat=schedule.schedule_seat,
         schedule_image=schedule.schedule_image,
         review_written=has_review(db, schedule.schedule_id),
+        review_id=review_id,
         is_reserved=schedule.reserve_detail_id is not None
     )
 
 def apply_schedule_search_filters(query, search: ScheduleSearch):
     search_data = search.dict(exclude_unset=True)
+    
+    if "member_id" in search_data:
+        query = query.filter(Member.member_id == search_data["member_id"])
     
     if "nickname" in search_data:
         query = query.filter(Member.nickname.ilike(f'%{search_data["nickname"]}%'))
@@ -110,9 +130,9 @@ def apply_schedule_search_filters(query, search: ScheduleSearch):
     
     if "review_written" in search_data:
         if search_data["review_written"]:
-            query = query.filter(Review.schedule_id == Schedule.schedule_id)
+            query = query.join(Review, Review.schedule_id == Schedule.schedule_id).filter(Review.review_id.isnot(None))
         else:
-            query = query.outerjoin(Review).filter(Review.schedule_id.is_(None))
+            query = query.outerjoin(Review, Review.schedule_id == Schedule.schedule_id).filter(Review.review_id.is_(None))
     
     if "is_reserved" in search_data:
         if search_data["is_reserved"]:
@@ -121,7 +141,6 @@ def apply_schedule_search_filters(query, search: ScheduleSearch):
             query = query.filter(Schedule.reserve_detail_id.is_(None))
     
     return query
-
 
 def has_review(db: Session, schedule_id: int) -> bool:
     review_count = db.query(func.count(Review.review_id)).filter(Review.schedule_id == schedule_id).scalar()

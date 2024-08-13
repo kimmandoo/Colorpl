@@ -32,7 +32,10 @@ def search_member(db: Session, search: MemberSearch, skip: int = 0, limit: int =
     return _get_member_activities(db, members)
 
 def apply_member_search_filters(query, search: MemberSearch):
-    search_data = search.dict(exclude_unset=True)  # Only include fields that are provided
+    search_data = search.dict(exclude_unset=True)
+
+    if "member_id" in search_data:
+        query = query.filter(Member.member_id == search_data["member_id"])
     
     if "nickname" in search_data:
         query = query.filter(Member.nickname.ilike(f'%{search_data["nickname"]}%'))
@@ -56,14 +59,12 @@ def apply_member_search_filters(query, search: MemberSearch):
         query = query.filter(Member.create_date <= search_data["create_date_to"])
         
     if "category" in search_data:
-        # Ensure that category filtering works correctly with lists
         if isinstance(search_data["category"], list) and search_data["category"]:
             query = query.join(MemberCategories).filter(MemberCategories.categories.in_(search_data["category"]))
         else:
             query = query.join(MemberCategories).filter(MemberCategories.categories == search_data["category"])
     
     return query
-
 
 def _get_member_activities(db: Session, members):
     member_activities = []

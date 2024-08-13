@@ -6,7 +6,9 @@ import TopRightIcons from './components/TopRightIcons';
 import Members from './pages/Members';
 import MemberDetail from './pages/MemberDetail'; // 멤버 상세 페이지
 import Reviews from './pages/Reviews';
+import ReviewDetail from './pages/ReviewDetail';
 import Comments from './pages/Comments';
+import CommentDetail from './pages/CommentDetail';
 import Schedules from './pages/Schedules'; // Schedules 페이지 추가
 import ScheduleDetail from './pages/ScheduleDetail'; // Schedule 상세 페이지
 import ScheduleImageUpdate from './pages/ScheduleImageUpdate'; // Schedule 이미지 업데이트 페이지
@@ -84,9 +86,11 @@ const App = () => {
             <Route path="/members" element={<PrivateRoute><Members /></PrivateRoute>} />
             <Route path="/members/:member_id" element={<PrivateRoute><MemberDetail /></PrivateRoute>} />
             <Route path="/reviews" element={<PrivateRoute><Reviews /></PrivateRoute>} />
+            <Route path="/reviews/:review_id" element={<PrivateRoute><ReviewDetail /></PrivateRoute>} />
             <Route path="/comments" element={<PrivateRoute><Comments /></PrivateRoute>} />
+            <Route path="/comments/:comment_id" element={<PrivateRoute><CommentDetail /></PrivateRoute>} />
             <Route path="/schedules" element={<PrivateRoute><Schedules /></PrivateRoute>} /> {/* Schedules 경로 추가 */}
-            <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail /></PrivateRoute>} /> {/* ScheduleDetail 경로 추가 */}
+            <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail /></PrivateRoute>} /> ScheduleDetail 경로 추가
             <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate /></PrivateRoute>} /> {/* ScheduleImageUpdate 경로 추가 */}
             {user && user.role === 1 && (
               <Route path="/admin-management" element={<PrivateRoute><AdminManagement /></PrivateRoute>} />

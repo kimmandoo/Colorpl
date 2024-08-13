@@ -42,6 +42,7 @@ class MemberActivity(BaseModel):
         from_attributes = True
 
 class MemberSearch(BaseModel):
+    member_id: Optional[int] = None
     nickname: Optional[str] = None
     email: Optional[str] = None
     create_date_from: Optional[datetime] = None

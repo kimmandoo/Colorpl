@@ -89,13 +89,13 @@ class ReservationDetail(Base, BaseEntity):
 
 class Review(Base, BaseEntity):
     __tablename__ = 'review'
-    # empathy_number = Column(Integer)
-    is_spoiler = Column(Boolean)
-    review_emotion = Column(Integer)
+    emphathy_number = Column(Integer)
     review_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
-    schedule_id = Column(BigInteger, ForeignKey('schedule.schedule_id'))
+    review_emotion = Column(Integer)
     review_content = Column(String(255))
     review_filename = Column(String(255))
+    is_spoiler = Column(Boolean)
+    schedule_id = Column(BigInteger, ForeignKey('schedule.schedule_id'))
 
     comments = relationship("Comment", back_populates="review")
     empathies = relationship("Empathy", back_populates="review")

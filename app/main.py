@@ -12,6 +12,7 @@ from app.routers.comment import router as router_comment
 from app.routers.reservation import router as router_reservation
 from app.routers.show import router as router_show
 from app.routers.theater import router as router_theater
+from app.utils.image import router as router_image
 
 app = FastAPI()
 
@@ -32,6 +33,7 @@ app.include_router(router_comment, prefix='/cs', tags=["comment"])
 app.include_router(router_reservation, prefix='/vm', tags=["reservation"])
 app.include_router(router_show, prefix='/vm', tags=["show"])
 app.include_router(router_theater, prefix='/vm', tags=["theater"])
+app.include_router(router_image, prefix='/utils', tags=["utils"])
 
 @app.on_event("startup")
 def on_startup():
