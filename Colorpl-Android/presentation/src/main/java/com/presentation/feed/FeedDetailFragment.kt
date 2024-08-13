@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
@@ -44,6 +45,11 @@ class FeedDetailFragment :
                 )
             )
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isBackPressedEnabled = false
     }
 
     private lateinit var commentDialog: ReviewEditDialog
@@ -104,6 +110,10 @@ class FeedDetailFragment :
                     etComment.text.clear()
                 }
             }
+            includeTop.ivBack.setOnClickListener {
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("refresh", true)
+                navigatePopBackStack()
+            }
             tvEdit.setOnClickListener {
                 editDialog.show()
             }
@@ -154,6 +164,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentDeleteResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    feedViewModel.getReviewDetail(args.reviewId)
                     dismissLoading()
                     commentAdapter.refresh()
                 }
@@ -161,6 +172,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentEditResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    feedViewModel.getReviewDetail(args.reviewId)
                     binding.root.context.hideKeyboard(requireView())
                     commentDialog.dismiss()
                     dismissLoading()
@@ -170,6 +182,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.commentCreateResponse.collectLatest {
                     feedViewModel.getComment(args.reviewId)
+                    feedViewModel.getReviewDetail(args.reviewId)
                     binding.etComment.clearFocus()
                     dismissLoading()
                     commentAdapter.refresh()

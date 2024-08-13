@@ -158,6 +158,19 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                         )
                     }
                 }
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("refresh_comment", false)
+                ?.collectLatest { refresh ->
+                    if (refresh) {
+                        feedAdapter.refresh()
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                            "refresh_comment",
+                            false
+                        )
+                    }
+                }
         }
     }
 
