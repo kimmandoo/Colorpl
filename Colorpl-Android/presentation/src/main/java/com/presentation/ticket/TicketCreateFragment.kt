@@ -17,17 +17,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
 import com.domain.model.Description
 import com.presentation.base.BaseFragment
+import com.presentation.notification.FcmWorker
 import com.presentation.util.ImageProcessingUtil
 import com.presentation.util.TicketType
 import com.presentation.util.getPhotoGallery
+import com.presentation.util.hourToMills
 import com.presentation.util.requestCameraPermission
 import com.presentation.util.setCameraLauncher
 import com.presentation.util.setImageLauncher
+import com.presentation.util.stringToCalendar
 import com.presentation.viewmodel.TicketCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -40,6 +47,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class TicketCreateFragment :
@@ -63,6 +71,7 @@ class TicketCreateFragment :
 
     override fun initView() {
         observeDescription()
+        observeTicketResponse()
         initGalleryPhoto()
         initCamera()
         initUi()
@@ -93,6 +102,15 @@ class TicketCreateFragment :
         }
 
         binding.tvConfirm.setOnClickListener {
+            if (viewModel.ticketInfo.value) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.createTicket(
+                        ImageProcessingUtil(binding.root.context).uriToCompressedFile(photoUri)!!,
+                    )
+                    binding.tvConfirm.isEnabled = false
+                    showLoading()
+                }
+            }
             if (isValidDateFormat(binding.etSchedule.text.toString())) {
                 viewModel.setTicketInfo(
                     Description(
@@ -102,11 +120,6 @@ class TicketCreateFragment :
                         seat = binding.etSeat.text.toString()
                     )
                 )
-                val action =
-                    TicketCreateFragmentDirections.actionFragmentTicketCreateToFragmentTicketFinish(
-                        photoUri
-                    )
-                findNavController().navigate(action)
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -119,6 +132,7 @@ class TicketCreateFragment :
         val items = resources.getStringArray(R.array.ticket_category)
         val adapter =
             ArrayAdapter(requireContext(), R.layout.item_category_spinner, listOf(hint) + items)
+
         binding.spinner.apply {
             this.adapter = adapter
             setSelection(0)
@@ -170,7 +184,6 @@ class TicketCreateFragment :
             binding.tvConfirm.isEnabled = state
         }.launchIn(viewLifecycleOwner.lifecycleScope)
         viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
-            Timber.d("$state")
             binding.tvConfirm.isSelected = state != ""
             binding.tvConfirm.isEnabled = state != ""
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -180,6 +193,47 @@ class TicketCreateFragment :
                 binding.cbFindRoute.isChecked = false
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeTicketResponse() {
+        viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { ticketId ->
+                when {
+                    ticketId >= 0 -> {
+                        if (viewModel.geocodingLatLng.value.latitude != 0.0 || viewModel.geocodingLatLng.value.longitude != 0.0) {
+                            initWorkerManager()
+                        }
+                        dismissLoading()
+                        Toast.makeText(requireContext(), "티켓을 생성했습니다", Toast.LENGTH_SHORT).show()
+                        navigatePopBackStack()
+                    }
+
+                    ticketId < 0 -> {
+                        dismissLoading()
+                        Toast.makeText(requireContext(), "티켓 생성에 실패했습니다", Toast.LENGTH_SHORT).show()
+                        binding.tvConfirm.isEnabled = true
+                    }
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun initWorkerManager() {
+        val description = viewModel.description.value
+        val ticketDate = stringToCalendar(description?.schedule ?: "")?.timeInMillis ?: 0
+        val currentTime = System.currentTimeMillis()
+        val delay = ticketDate - hourToMills(4) - currentTime
+        val latLng = viewModel.geocodingLatLng.value
+        val data = Data.Builder()
+            .putString("latLng", "${latLng.latitude},${latLng.longitude}")
+            .build()
+        Timber.d("지도 데이터 확인 ${viewModel.geocodingLatLng.value}")
+        val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>()
+            .setInputData(data)
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .build()
+
+        val workManager = WorkManager.getInstance(requireActivity())
+        workManager.enqueue(fcmWorkRequest)
     }
 
     private fun describeImage(uri: Uri) {

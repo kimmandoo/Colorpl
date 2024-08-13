@@ -50,7 +50,6 @@ enum class Page(val hideBottomNav: Boolean) {
     PAYMENT_HISTORY(true),
     NOTICE(true),
     TICKET_CREATE(true),
-    TICKET_FINISH(true),
     RESERVATION_DETAIL(true),
     RESERVATION_PROGRESS(true),
     MAP(false),
@@ -87,7 +86,6 @@ enum class Page(val hideBottomNav: Boolean) {
             SETTING -> R.id.fragment_setting
             TICKET -> R.id.fragment_ticket
             SCHEDULE -> R.id.fragment_schedule
-            TICKET_FINISH -> R.id.fragment_ticket_finish
             ADDRESS -> R.id.dialog_ticket_address
             OTHER_MY_PAGE -> R.id.fragment_other_my_page
         }
