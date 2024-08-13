@@ -3,6 +3,8 @@ package com.presentation.util
 import android.content.Context
 import android.view.View
 import androidx.fragment.app.FragmentManager
+import com.domain.model.Seat
+import com.google.gson.Gson
 import kr.co.bootpay.android.Bootpay
 import kr.co.bootpay.android.events.BootpayEventListener
 import kr.co.bootpay.android.models.BootItem
@@ -66,6 +68,7 @@ fun requestPayment(
     orderId: String,
     context: Context,
     manager: FragmentManager,
+    metaDataMap: Map<String, Any>,
     checkClientValidation: (String) -> Boolean
 ) {
     val payload = Payload()
@@ -79,11 +82,8 @@ fun requestPayment(
         .setPrice(totalPrice)
         .setUser(user)
 
-    val map: MutableMap<String, Any> = HashMap()
-    map["1"] = "abcdef"
-    map["2"] = "abcdef55"
-    map["3"] = 1234
-    payload.metadata = map
+    payload.metadata = metaDataMap
+
     Bootpay.init(manager, context)
         .setPayload(payload)
         .setEventListener(object : BootpayEventListener {
@@ -116,4 +116,23 @@ fun requestPayment(
         }).requestPayment()
 }
 
+fun makeMetaData(
+    showName: String,
+    showHallName: String,
+    showTheaterName: String,
+    showDetailId: Int,
+    showScheduleId: Int,
+    selectedSeatList: List<Map<String, Any>>,
+    selectedDiscount: String?,
+) : MutableMap<String, Any> {
+    val map: MutableMap<String, Any> = HashMap()
+    map["showName"] = showName
+    map["showHallName"] = showHallName
+    map["showTheaterName"] = showTheaterName
+    map["showDetailId"] = showDetailId
+    map["showScheduleId"] = showScheduleId
+    map["selectedSeatList"] = selectedSeatList
+    selectedDiscount?.let { map["selectedDiscount"] = it }
+    return map
+}
 
