@@ -1,6 +1,7 @@
 package com.colorpl.payment.service;
 
 import com.colorpl.global.common.exception.MemberNotFoundException;
+import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.member.service.MemberService;
@@ -11,7 +12,12 @@ import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
+import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.reservation.service.ReservationService;
+import com.colorpl.schedule.domain.ReservationSchedule;
+import com.colorpl.schedule.dto.CreateReservationScheduleRequest;
+import com.colorpl.schedule.repository.ReservationScheduleRepository;
+import com.colorpl.schedule.service.CreateReservationScheduleService;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowDetailRepository;
@@ -47,8 +53,10 @@ public class PaymentService {
     private final MemberRepository memberRepository;
     private final ReservationDetailRepository reservationDetailRepository;
     private final ShowScheduleRepository showScheduleRepository;
+    private final ReservationScheduleRepository reservationScheduleRepository;
+    private final ReservationRepository reservationRepository;
+    private final CreateReservationScheduleService createReservationScheduleService;
     private final ShowDetailRepository showDetailRepository;
-
     @Value("${bootpay.api.application-id}")
     private String applicationId;
 
@@ -156,6 +164,52 @@ public class PaymentService {
 
             // 결제 승인
             HashMap<String, Object> confirmResponse = bootpay.confirm(receiptId);
+
+
+
+
+            ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
+                .orElseThrow(() -> new RuntimeException("ShowSchedule not found with id: " + showScheduleId));
+
+            String posterImagePath = showSchedule.getShowDetail().getPosterImagePath();
+
+            // ReservationSchedule 생성
+            for (ReservationDetailDTO reservationDetailDTO : reservationDetails) {
+                // CreateReservationScheduleRequest 생성
+                CreateReservationScheduleRequest scheduleRequest = CreateReservationScheduleRequest
+                    .builder()
+                    .reservationDetailId(reservationDetailDTO.getId())
+                    .build();
+
+                // CreateReservationScheduleService를 사용하여 예약 스케줄 생성
+                createReservationScheduleService.createByImageUrl(scheduleRequest, posterImagePath);
+            }
+
+//
+//            // ShowSchedule 조회
+//            ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
+//                .orElseThrow(() -> new RuntimeException("ShowSchedule not found with id: " + showScheduleId));
+//
+//            // ShowDetail에서 posterImagePath 가져오기
+//            String posterImagePath = showSchedule.getShowDetail().getPosterImagePath();
+//
+//            // 예약 세부 정보와 멤버 정보를 기반으로 예약 스케줄 생성
+//            for (ReservationDetailDTO reservationDetailDTO : reservationDetails) {
+//                Long reservationDetailId = reservationDetailDTO.getId();
+//
+//                // ReservationDetail 조회
+//                ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(
+//                        reservationDetailId, memberId)
+//                    .orElseThrow(ReservationDetailNotFoundException::new);
+//
+//                // ReservationSchedule 생성 및 저장
+//                ReservationSchedule reservationSchedule = ReservationSchedule.builder()
+//                    .member(member)
+//                    .image(posterImagePath)
+//                    .reservationDetail(reservationDetail)
+//                    .build();
+//                reservationScheduleRepository.save(reservationSchedule);
+//            }
             return confirmResponse;
         } catch (RuntimeException e) {
             // 예외 발생 시 롤백
@@ -168,39 +222,6 @@ public class PaymentService {
         }
     }
 
-
-    //    public HashMap<String, Object> confirmPayment(String receiptId, String authorizationHeader) throws Exception {
-//        HashMap<String, Object> response = new HashMap<>();
-//
-//        try {
-//            // 결제 승인
-//            response = bootpay.confirm(receiptId);
-//
-//            Integer memberId = memberService.getCurrentMemberId();
-//            Member member = memberRepository.findById(memberId)
-//                    .orElseThrow(MemberNotFoundException::new);
-//
-//            // 영수증 ID 추가
-//            member.addReceiptId(receiptId);
-//            memberRepository.save(member);
-//
-//
-//            // 결제 데이터에서 예매 정보 추출
-//            Map<String, Object> metadata = (Map<String, Object>) response.get("metadata");
-//            List<String> selectedSeatList = (List<String>) metadata.get("selectedSeatList");
-//            Long showScheduleId = ((Number) metadata.get("showScheduleId")).longValue();
-//
-//            // ReservationDTO 생성
-//            ReservationDTO reservationDTO = createReservationDTO(selectedSeatList, showScheduleId, response);
-//            reservationService.createReservation(memberId, reservationDTO);
-//
-//        } catch (Exception e) {
-//            // 예외 발생 시 트랜잭션 롤백을 명시적으로 처리할 수 있음
-//            throw new RuntimeException("Failed to confirm payment: " + e.getMessage(), e);
-//        }
-//
-//        return response;
-//    }
     public HashMap<String, Object> cancelPayment(Cancel cancel, String authorizationHeader) throws Exception {
         String paymentToken = authorizationHeader.replace("Bearer ", "");
         Integer memberId = memberService.getCurrentMemberId();
@@ -209,8 +230,6 @@ public class PaymentService {
 
         return response;
     }
-
-
 
     @Transactional
     public ResponseEntity<String> removeReceiptIdFromMember(String receiptId) throws MemberNotFoundException {
@@ -274,11 +293,9 @@ public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
                 .build();
     }
 
-
     ShowSchedule showSchedule = showDetail.getShowSchedules().stream()
             .findFirst()
             .orElse(null);
-
 
     List<ReservationDetail> reservationDetails = reservationDetailRepository.findByShowScheduleId(showSchedule != null ? showSchedule.getId() : null);
 
