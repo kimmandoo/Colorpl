@@ -57,7 +57,6 @@ class ReservationFragment :
         initShow()
         initClickListener()
         initViewModel()
-        initShow()
 //        observeReservationList()
         initSearchWindow()
     }

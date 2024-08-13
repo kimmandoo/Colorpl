@@ -6,6 +6,7 @@ import com.data.model.paging.reservation.ResponsePagedShow
 import com.data.model.paging.reservation.Show
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReservationDataSourceImpl @Inject constructor(
@@ -13,6 +14,7 @@ class ReservationDataSourceImpl @Inject constructor(
 ) : ReservationDataSource {
 
     override suspend fun getReservationListShows(filters: Map<String, String?>): ResponsePagedShow {
+        Timber.tag("showDataSourceImplTag").d(filters.toString())
         return reservationApi.getReservationListShows(filters)
     }
 

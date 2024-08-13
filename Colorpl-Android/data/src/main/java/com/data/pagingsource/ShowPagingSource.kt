@@ -10,7 +10,10 @@ import timber.log.Timber
 
 class ShowPagingSource(
     private val reservationDataSource: ReservationDataSource,
-    private val filters: Map<String, String?>
+    private val filters: Map<String, String?>,
+    private val limit: Int
+
+
 
 ) : PagingSource<Int, Show>() {
     override fun getRefreshKey(state: PagingState<Int, Show>): Int? {
@@ -21,14 +24,17 @@ class ShowPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Show> {
         val cursorId = params.key
-        filters + ("limit" to 20.toString())
+
 
         // cursorId가 null이면 초기 호출을 의미하므로 필터에서 해당 항목을 제거합니다.
         val updatedFilters = if (cursorId != null) {
             filters + ("cursorId" to cursorId.toString())
+            filters + ("limit" to limit.toString())
         } else {
             filters - "cursorId"
+            filters + ("limit" to limit.toString())
         }
+        Timber.tag("pagedShow").d("updatedFilters : $updatedFilters")
 
         return when (val result =
             safeApiCall { reservationDataSource.getReservationListShows(updatedFilters) }) {
