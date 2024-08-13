@@ -51,6 +51,15 @@
             app:layout_constraintStart_toEndOf="@+id/tv_review_count"
             app:layout_constraintTop_toTopOf="@+id/tv_review_count" />
 
+        <include
+            android:id="@+id/ic_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/include_empty_view"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_count_value"
+            android:layout_marginTop="30dp"
+            app:title="@{@string/my_page_my_review_empty}"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_feed"
             android:layout_width="match_parent"
