@@ -64,7 +64,7 @@ public class ShowDetail {
     private String posterImagePath;
 
     @Column(name = "SHOW_DETAIL_AREA")
-    private String area;
+    private Area area;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "SHOW_DETAIL_CATEGORY")
