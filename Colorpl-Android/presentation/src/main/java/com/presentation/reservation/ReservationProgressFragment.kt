@@ -17,7 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBinding>(R.layout.fragment_reservation_progress) {
+class ReservationProgressFragment :
+    BaseFragment<FragmentReservationProgressBinding>(R.layout.fragment_reservation_progress) {
     private val args: ReservationProgressFragmentArgs by navArgs()
     private val reservationViewModel: ReservationViewModel by viewModels()
 
@@ -73,8 +74,9 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
      * @param position 페이지 */
     private fun handlePageSelected(position: Int) {
         val status = when (position) {
-            0, 3 -> TopButtonsStatus.EXIT
+            0 -> TopButtonsStatus.EXIT
             1, 2 -> TopButtonsStatus.BOTH
+            3 -> TopButtonsStatus.NONE
             else -> throw IllegalStateException("Unexpected position $position")
         }
         binding.type = status
@@ -103,10 +105,10 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
     /** 상단 버튼 클릭 이벤트 설정 */
     private fun initTopButtonsClickEvent() {
         binding.includeTopCenter.apply {
-            ivBack.setOnClickListener{
+            ivBack.setOnClickListener {
                 ViewPagerManager.movePrevious()
             }
-            ivExit.setOnClickListener {
+            tvExit.setOnClickListener {
                 navigatePopBackStack()
             }
         }
@@ -128,12 +130,13 @@ class ReservationProgressFragment : BaseFragment<FragmentReservationProgressBind
             }
         }
     }
-     companion object{
-         private const val TIME_TABLE = 0
-         private const val SEAT = 1
-         private const val PAYMENT = 2
-         private const val COMPLETE = 3
 
-     }
+    companion object {
+        private const val TIME_TABLE = 0
+        private const val SEAT = 1
+        private const val PAYMENT = 2
+        private const val COMPLETE = 3
+
+    }
 
 }

@@ -56,6 +56,7 @@ class PaymentHistoryFragment :
         payViewModel.paymentReceipts.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 dismissLoading()
+                binding.emptyVisible = it.isEmpty()
                 paymentHistoryAdapter.submitList(it)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -84,20 +85,22 @@ class PaymentHistoryFragment :
                             requireActivity().getString(R.string.my_page_cancel_dialog_title)
                         }
                     }
-                    initDialog(data.receiptId, title,
-                        value.type)
+                    initDialog(
+                        data.receiptId, title,
+                        value.type
+                    )
                 }
             )
         }
     }
 
-    private fun initDialog(receiptId: String, title : String, type : DropDownMenu) {
+    private fun initDialog(receiptId: String, title: String, type: DropDownMenu) {
         CustomDialog(requireActivity()).cancellableDialog(title,
             complete = {
                 showLoading()
-                if(type == DropDownMenu.REFUND){
+                if (type == DropDownMenu.REFUND) {
                     payViewModel.payCancel(receiptId)
-                }else{
+                } else {
                     payViewModel.payHistoryDelete(receiptId)
                 }
 

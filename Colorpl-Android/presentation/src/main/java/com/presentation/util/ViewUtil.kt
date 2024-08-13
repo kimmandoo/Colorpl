@@ -134,3 +134,11 @@ fun ViewPager2.addCustomItemDecoration() {
 
         }
 }
+
+fun View.setVisibility(value : Boolean){
+    if(value){
+        this.visibility = View.VISIBLE
+    }else{
+        this.visibility = View.GONE
+    }
+}

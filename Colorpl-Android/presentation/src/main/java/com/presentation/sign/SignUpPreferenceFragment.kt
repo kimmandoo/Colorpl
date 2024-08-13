@@ -48,14 +48,14 @@ class SignUpPreferenceFragment :
                     val selected = if (signUpViewModel.userPreference.getItemCount() < 2) {
                         item[view]?.let { item ->
                             signUpViewModel.userPreference.addOrRemove(
-                                item.getTitle()
+                                item.getKey()
                             )
                         }
                         !it.isSelected
                     } else {
                         item[view]?.let { item ->
                             signUpViewModel.userPreference.remove(
-                                item.getTitle()
+                                item.getKey()
                             )
                         }
                         false

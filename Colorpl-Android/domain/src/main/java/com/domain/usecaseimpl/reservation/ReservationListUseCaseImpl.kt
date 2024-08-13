@@ -15,7 +15,7 @@ class ReservationListUseCaseImpl @Inject constructor(
     private val reservationRepository: ReservationRepository
 ) : ReservationListUseCase {
     override suspend fun invoke(
-        filters: Map<String, String>
+        filters: Map<String, String?>
     ): Flow<DomainResult<List<ReservationInfo>>> = flow {
         reservationRepository.getReservationAllShows(
             filters = filters
