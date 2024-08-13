@@ -15,7 +15,7 @@ import com.colorpl.reservation.service.ReservationService;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowDetailRepository;
-import com.colorpl.show.repository.ShowScheduleRepository;
+import com.colorpl.show.repository.ShowScheduleRepositoryImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import kr.co.bootpay.Bootpay;
@@ -46,7 +46,7 @@ public class PaymentService {
     private final ReservationService reservationService;
     private final MemberRepository memberRepository;
     private final ReservationDetailRepository reservationDetailRepository;
-    private final ShowScheduleRepository showScheduleRepository;
+    private final ShowScheduleRepositoryImpl showScheduleRepository;
     private final ShowDetailRepository showDetailRepository;
 
     @Value("${bootpay.api.application-id}")

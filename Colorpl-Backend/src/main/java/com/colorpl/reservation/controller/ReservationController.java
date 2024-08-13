@@ -6,7 +6,7 @@ import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
 import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.reservation.service.ReservationService;
-import com.colorpl.show.repository.ShowScheduleRepository;
+import com.colorpl.show.repository.ShowScheduleRepositoryImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final MemberService memberService;
 
-    private final ShowScheduleRepository showScheduleRepository;
+    private final ShowScheduleRepositoryImpl showScheduleRepository;
     private final ReservationRepository reservationRepository;
     private final ReservationDetailRepository reservationDetailRepository;
 

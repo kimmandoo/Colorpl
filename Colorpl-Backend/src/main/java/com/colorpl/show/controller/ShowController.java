@@ -1,6 +1,7 @@
 package com.colorpl.show.controller;
 
 import com.colorpl.show.dto.CreateShowByApiIdRequest;
+import com.colorpl.show.dto.CreateShowByDateRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
 import com.colorpl.show.dto.GetShowDetailsRequest;
 import com.colorpl.show.dto.GetShowDetailsResponse;
@@ -10,6 +11,7 @@ import com.colorpl.show.service.GetShowDetailService;
 import com.colorpl.show.service.GetShowDetailsService;
 import com.colorpl.show.service.GetShowScheduleService;
 import com.colorpl.show.service.GetShowSchedulesService;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/shows")
@@ -67,19 +70,23 @@ public class ShowController {
     public ResponseEntity<Integer> createShowByApiId(
         @RequestBody CreateShowByApiIdRequest request
     ) {
-        return ResponseEntity.ok(createShowService.createShowByApiId(request.getApiId()));
+        Integer showDetailId = createShowService.createShowByApiId(request.getApiId());
+        return ResponseEntity.created(getLocation(showDetailId)).body(showDetailId);
     }
 
-//    @PostMapping
-//    public ResponseEntity<Integer> createByApiId(@RequestBody CreateByApiIdRequest request) {
-//
-//        Integer id = createShowService.createByApiId(request.getApiId());
-//
-//        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-//            .path("/shows/{id}")
-//            .buildAndExpand(id)
-//            .toUri();
-//
-//        return ResponseEntity.created(uri).body(id);
-//    }
+    @PostMapping("/createShowByDate")
+    public ResponseEntity<Void> createShowByDate(
+        @RequestBody CreateShowByDateRequest request
+    ) {
+        createShowService.createShowByDate(request.getFrom(), request.getTo());
+        return ResponseEntity.ok().build();
+    }
+
+    private URI getLocation(Integer showDetailId) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+            .path("/shows")
+            .path("/{showDetailId}")
+            .buildAndExpand(showDetailId)
+            .toUri();
+    }
 }
