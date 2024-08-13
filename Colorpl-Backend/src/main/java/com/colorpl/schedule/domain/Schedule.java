@@ -35,9 +35,6 @@ public abstract class Schedule {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @Column(name = "SCHEDULE_IMAGE")
-    private String image;
-
     @OneToOne(mappedBy = "schedule")
     private Review review;
 

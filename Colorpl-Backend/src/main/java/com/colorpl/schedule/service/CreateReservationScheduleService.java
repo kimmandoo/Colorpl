@@ -37,8 +37,6 @@ public class CreateReservationScheduleService {
 
         ReservationSchedule reservationSchedule = ReservationSchedule.builder()
             .member(member)
-            .image(reservation.getReservationDetails().get(0).getShowSchedule().getShowDetail()
-                .getPosterImagePath())
             .reservation(reservation)
             .build();
         scheduleRepository.save(reservationSchedule);

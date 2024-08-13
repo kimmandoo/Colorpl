@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class CustomSchedule extends Schedule {
 
+    @Column(name = "SCHEDULE_IMAGE")
+    private String image;
+
     @Column(name = "SCHEDULE_SEAT")
     private String seat;
 
@@ -56,7 +59,8 @@ public class CustomSchedule extends Schedule {
         Double latitude,
         Double longitude
     ) {
-        super(id, member, image, review);
+        super(id, member, review);
+        this.image = image;
         this.seat = seat;
         this.dateTime = dateTime;
         this.name = name;
