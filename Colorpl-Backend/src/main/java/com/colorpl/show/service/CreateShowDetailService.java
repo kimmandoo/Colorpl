@@ -11,15 +11,14 @@ import com.colorpl.show.dto.ShowDetailApiResponse.Item;
 import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.theater.domain.Hall;
 import com.colorpl.theater.service.GetHallService;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -45,7 +44,7 @@ public class CreateShowDetailService {
             .hall(hall)
             .cast(item.getCast())
             .runtime(item.getRuntime())
-            .priceBySeatClass(parsePricesBySeatClass(item.getPriceBySeatClass()))
+            .priceBySeatClass(parsePriceBySeatClass(item.getPriceBySeatClass()))
             .posterImagePath(item.getPosterImagePath())
             .area(item.getArea())
             .category(category)
@@ -56,9 +55,9 @@ public class CreateShowDetailService {
         return showDetail;
     }
 
-    private Map<SeatClass, Integer> parsePricesBySeatClass(String source) {
+    private Map<SeatClass, Integer> parsePriceBySeatClass(String source) {
         List<Integer> prices = Arrays.stream(source.split(", "))
-            .map(this::parsePriceBySeatClass)
+            .map(this::parsePrice)
             .sorted()
             .limit(4)
             .toList();
@@ -71,15 +70,15 @@ public class CreateShowDetailService {
             ));
     }
 
-    private Integer parsePriceBySeatClass(String source) {
-        String price = source.substring(source.indexOf(" ") + 1, source.length() - 1);
+    private Integer parsePrice(String source) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(source);
+        StringBuilder price = new StringBuilder();
+        while (matcher.find()) {
+            price.append(matcher.group());
+        }
         if (StringUtils.hasText(price)) {
-            NumberStyleFormatter formatter = new NumberStyleFormatter();
-            try {
-                return formatter.parse(price, Locale.KOREA).intValue();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+            return Integer.valueOf(price.toString());
         }
         return 0;
     }

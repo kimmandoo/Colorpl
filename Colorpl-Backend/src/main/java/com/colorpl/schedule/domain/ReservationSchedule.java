@@ -1,7 +1,7 @@
 package com.colorpl.schedule.domain;
 
 import com.colorpl.member.Member;
-import com.colorpl.reservation.domain.ReservationDetail;
+import com.colorpl.reservation.domain.Reservation;
 import com.colorpl.review.domain.Review;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class ReservationSchedule extends Schedule {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RESERVE_DETAIL_ID")
-    private ReservationDetail reservationDetail;
+    @JoinColumn(name = "RESERVE_ID")
+    private Reservation reservation;
 
     @Builder
     public ReservationSchedule(
@@ -29,10 +29,10 @@ public class ReservationSchedule extends Schedule {
         Member member,
         String image,
         Review review,
-        ReservationDetail reservationDetail
+        Reservation reservation
     ) {
         super(id, member, image, review);
-        this.reservationDetail = reservationDetail;
+        this.reservation = reservation;
 
         member.getSchedules().add(this);
     }
