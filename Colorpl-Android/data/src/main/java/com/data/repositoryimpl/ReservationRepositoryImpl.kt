@@ -25,7 +25,7 @@ class ReservationRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
                 enablePlaceholders = false,
-                initialLoadSize = PAGE_SIZE
+                initialLoadSize = PAGE_SIZE,
             ),
             pagingSourceFactory = { ShowPagingSource(reservationDataSource, filters, 20) }
         ).flow

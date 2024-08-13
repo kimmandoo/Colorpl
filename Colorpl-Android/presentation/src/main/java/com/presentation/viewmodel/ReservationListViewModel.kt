@@ -3,6 +3,7 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.domain.model.ReservationInfo
 import com.domain.model.ShowParam
 import com.domain.usecase.ReservationListUseCase
@@ -113,7 +114,7 @@ class ReservationListViewModel @Inject constructor(
     /** 예매 아이템 전체 조회. */
     fun getReservationList(filter: Map<String, String?>) {
         viewModelScope.launch {
-            getReservationListUseCase(filters = filter).collectLatest { pagedData ->
+            getReservationListUseCase(filters = filter).cachedIn(viewModelScope).collectLatest { pagedData ->
                 _pagedShow.value = pagedData
             }
         }

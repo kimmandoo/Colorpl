@@ -7,6 +7,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
 import com.domain.model.FilterItem
@@ -21,6 +23,7 @@ import com.presentation.util.Category
 import com.presentation.util.ShowType
 import com.presentation.util.getFilterItems
 import com.presentation.util.hideKeyboard
+import com.presentation.util.overScrollControl
 import com.presentation.viewmodel.ReservationListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -57,7 +60,6 @@ class ReservationFragment :
         initShow()
         initClickListener()
         initViewModel()
-//        observeReservationList()
         initSearchWindow()
     }
 
@@ -69,16 +71,17 @@ class ReservationFragment :
         reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { show ->
                 reservationInfoAdapter.submitData(viewLifecycleOwner.lifecycle, show)
+                dismissLoading()
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         reservationInfoAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { loadStates ->
-                val isLoading = loadStates.source.refresh is LoadState.Loading
+                val isLoading =
+                    loadStates.source.refresh is LoadState.Loading || loadStates.source.append is LoadState.Loading
                 if (!isLoading) dismissLoading() else showLoading()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
-
 
 
 
