@@ -1,12 +1,16 @@
-package com.colorpl.global.common.storage;
+package com.colorpl.global.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -30,6 +34,16 @@ public class FileSystemStorageService implements StorageService {
             throw new RuntimeException(e);
         }
         return new UploadFile(originalFilename, storeFilename);
+    }
+
+    @Override
+    public void deleteFile(String filename) {
+        Path path = Paths.get(fileDir, filename);
+        File file = path.toFile();
+
+        while (!file.delete()) {
+            log.info("파일 삭제에 실패했습니다. {}", filename);
+        }
     }
 
     private String createStoreFilename(String originalFilename) {
