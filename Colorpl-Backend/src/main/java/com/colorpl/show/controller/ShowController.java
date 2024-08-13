@@ -1,9 +1,10 @@
 package com.colorpl.show.controller;
 
+import com.colorpl.show.domain.Area;
+import com.colorpl.show.domain.Category;
 import com.colorpl.show.dto.CreateShowByApiIdRequest;
 import com.colorpl.show.dto.CreateShowByDateRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
-import com.colorpl.show.dto.GetShowDetailsRequest;
 import com.colorpl.show.dto.GetShowDetailsResponse;
 import com.colorpl.show.dto.GetShowSchedulesResponse;
 import com.colorpl.show.service.CreateShowService;
@@ -17,7 +18,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,10 +39,20 @@ public class ShowController {
 
     @GetMapping
     public ResponseEntity<List<GetShowDetailsResponse>> getShowDetails(
-        @ModelAttribute GetShowDetailsRequest request
+        @RequestParam(required = false) LocalDate date,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) List<Area> area,
+        @RequestParam(required = false) Category category,
+        @RequestParam(required = false) Integer cursorId,
+        @RequestParam(defaultValue = "10") int limit
     ) {
-        return ResponseEntity
-            .ok(getShowDetailsService.getShowDetails(request));
+        return ResponseEntity.ok(getShowDetailsService.getShowDetails(
+            date,
+            keyword,
+            area,
+            category,
+            cursorId,
+            limit));
     }
 
     @GetMapping("/{showDetailId}")
