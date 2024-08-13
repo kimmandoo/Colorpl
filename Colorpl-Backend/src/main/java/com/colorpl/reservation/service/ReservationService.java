@@ -2,7 +2,6 @@ package com.colorpl.reservation.service;
 
 import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
 import com.colorpl.global.common.exception.ReservationNotFoundException;
 import com.colorpl.global.common.exception.ShowScheduleNotFoundException;
 import com.colorpl.member.Member;
@@ -335,11 +334,12 @@ public class ReservationService {
         reservationDetailRepository.saveAll(newReservationDetails); // 새로운 예약 상세 정보 저장
 
         // 새로 추가된 예약 상세에 대해 예약 불가능 상태로 변경
-        newReservationDetails.forEach(reservationDetail -> disableReservationService.disableReservation(
-            reservationDetail.getShowSchedule().getId(),
-            Integer.valueOf(reservationDetail.getRow()),
-            Integer.valueOf(reservationDetail.getCol())
-        ));
+        newReservationDetails.forEach(
+            reservationDetail -> disableReservationService.disableReservation(
+                reservationDetail.getShowSchedule().getId(),
+                Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol())
+            ));
 
         // 예약 저장 및 DTO 변환
         Reservation updatedReservation = reservationRepository.save(reservation);
@@ -347,7 +347,6 @@ public class ReservationService {
         // 변경된 예약 반환
         return ReservationDTO.toReservationDTO(updatedReservation);
     }
-
 
 //    @Transactional
 //    public ReservationDTO createReservation(Integer memberId, ReservationDTO reservationDTO) {

@@ -51,8 +51,8 @@ public class CreateShowDetailService {
             .category(category)
             .state(state)
             .build();
-        createSeatService.createSeat(showDetail);
         showDetailRepository.save(showDetail);
+        createSeatService.createSeat(showDetail);
         return showDetail;
     }
 

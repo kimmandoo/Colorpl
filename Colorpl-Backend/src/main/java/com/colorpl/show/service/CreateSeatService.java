@@ -6,6 +6,7 @@ import com.colorpl.global.common.exception.InvalidSeatClassException;
 import com.colorpl.show.domain.Seat;
 import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
+import com.colorpl.show.repository.SeatRepository;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateSeatService {
 
+    private final SeatRepository seatRepository;
     @Value("${seat.rows}")
     private int rows;
     @Value("${seat.cols}")
@@ -38,6 +40,7 @@ public class CreateSeatService {
                             .orElseThrow(() -> new InvalidSeatClassException(seatClass)))
                         .build());
             });
+        seatRepository.batchInsert(showDetail.getSeats());
     }
 
     private int getSeatClass(int index, ShowDetail showDetail) {

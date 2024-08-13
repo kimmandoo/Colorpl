@@ -15,7 +15,7 @@ import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.show.domain.ShowSchedule;
-import com.colorpl.show.repository.ShowScheduleRepository;
+import com.colorpl.show.repository.ShowScheduleRepositoryImpl;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ class ReservationScheduleRepositoryCustomTest {
     @Autowired
     ShowDetailRepository showDetailRepository;
     @Autowired
-    ShowScheduleRepository showScheduleRepository;
+    ShowScheduleRepositoryImpl showScheduleRepository;
 
     @Test
     void monthlyReservationScheduleList() {
