@@ -1,12 +1,14 @@
 package com.colorpl.show.repository;
 
-import static com.colorpl.show.domain.QSeat.seat;
 import static com.colorpl.show.domain.QShowDetail.showDetail;
 import static com.colorpl.show.domain.QShowSchedule.showSchedule;
+import static com.colorpl.theater.domain.QHall.hall;
+import static com.colorpl.theater.domain.QTheater.theater;
 
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
-import com.colorpl.show.dto.SearchShowsRequest;
+import com.colorpl.show.dto.GetShowDetailsRequest;
+import com.colorpl.show.dto.GetShowSchedulesRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -22,11 +24,11 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> searchShows(SearchShowsRequest request) {
+    public List<ShowDetail> getShowDetails(GetShowDetailsRequest request) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
-            .leftJoin(showDetail.showSchedules, showSchedule).fetchJoin()
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
                 areaEq(request.getArea()),
@@ -37,24 +39,35 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     }
 
     @Override
-    public ShowDetail findShowDetailAndSeatsById(Integer id) {
+    public ShowDetail getShowDetail(Integer showDetailId) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
-            .join(showDetail.seats, seat).fetchJoin()
-            .where(showDetail.id.eq(id))
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
+            .where(idEq(showDetailId))
+            .fetchOne();
+    }
+
+    public ShowDetail getShowSchedules(GetShowSchedulesRequest condition) {
+        return queryFactory
+            .select(showDetail).distinct()
+            .from(showDetail)
+            .join(showDetail.hall, hall).fetchJoin()
+            .join(hall.theater, theater).fetchJoin()
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
+            .where(
+                idEq(condition.getShowDetailId()),
+                dateEq(condition.getDate())
+            )
             .fetchOne();
     }
 
     private BooleanExpression dateEq(LocalDate date) {
-
         if (date == null) {
             return null;
         }
-
         LocalDateTime from = date.atStartOfDay();
         LocalDateTime to = from.plusDays(1);
-
         return showSchedule.dateTime.between(from, to);
     }
 
@@ -68,5 +81,9 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
 
     private BooleanExpression categoryEq(Category category) {
         return category != null ? showDetail.category.eq(category) : null;
+    }
+
+    private BooleanExpression idEq(Integer id) {
+        return id != null ? showDetail.id.eq(id) : null;
     }
 }

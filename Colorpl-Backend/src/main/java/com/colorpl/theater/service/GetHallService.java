@@ -10,23 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class GetHallByTheaterApiIdAndTheaterNameService {
+public class GetHallService {
 
     private final TheaterRepository theaterRepository;
     private final CreateTheaterService createTheaterService;
 
-    @Transactional(readOnly = true)
-    public Hall getHallByTheaterApiIdAndTheaterName(String theaterApiId, String theaterName) {
-
+    @Transactional
+    public Hall getHall(String theaterApiId, String theaterName) {
         Theater theater = theaterRepository.findByApiId(theaterApiId)
             .orElseGet(() -> createTheaterService.createTheaterByApiId(theaterApiId));
-
-        for (Hall hall : theater.getHalls()) {
-            if (theaterName.contains(hall.getName())) {
-                return hall;
-            }
-        }
-
-        throw new HallNotFoundException(theaterName);
+        return theater.getHalls().stream()
+            .filter(hall -> theaterName.contains(hall.getName()))
+            .findAny()
+            .orElseThrow(() -> new HallNotFoundException(theaterName));
     }
 }
