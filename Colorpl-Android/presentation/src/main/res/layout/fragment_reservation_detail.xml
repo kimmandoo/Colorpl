@@ -4,6 +4,7 @@
 
     <data>
         <import type="com.presentation.util.SeatClass" />
+        <import type="com.presentation.util.Category" />
 
         <variable
             name="type"
@@ -75,7 +76,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="@{viewModel.reservationInfo.category}"
                     style="@style/suite_semibold_16"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/tv_category"
