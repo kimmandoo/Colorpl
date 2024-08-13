@@ -17,6 +17,7 @@ public class GetShowDetailResponse {
 
     private Integer id;
     private String name;
+    private String cast;
     private String runtime;
     private Map<SeatClass, Integer> priceBySeatClass;
     private String posterImagePath;
@@ -30,6 +31,7 @@ public class GetShowDetailResponse {
         return GetShowDetailResponse.builder()
             .id(showDetail.getId())
             .name(showDetail.getName())
+            .cast(showDetail.getCast())
             .runtime(showDetail.getRuntime())
             .priceBySeatClass(showDetail.getPriceBySeatClass())
             .posterImagePath(showDetail.getPosterImagePath())
