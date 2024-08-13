@@ -1,6 +1,5 @@
 package com.presentation.util
 
-import android.content.Context
 import android.widget.EdgeEffect
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
@@ -31,6 +30,14 @@ fun RecyclerView.overScrollControl(logic: (Int, Float) -> Unit) {
     }
 }
 
+fun String.formatIsoToKorean(): String {
+    val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일\na h시", Locale.KOREAN)
+
+    val dateTime = LocalDateTime.parse(this, isoFormatter)
+    return dateTime.format(outputFormatter)
+}
+
 fun LocalDate.getPattern(pattern: String): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return this.format(formatter)
@@ -52,10 +59,10 @@ fun stringToCalendar(dateString: String): Calendar? {
     }.getOrNull()
 }
 
-fun hourToMills(hour : Int) : Int{
+fun hourToMills(hour: Int): Int {
     return hour * 60 * 60 * 1000
 }
 
-fun minToMills(min : Int) : Int{
+fun minToMills(min: Int): Int {
     return min * 60 * 1000
 }

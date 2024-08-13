@@ -15,19 +15,6 @@ class TicketCreateDialog(
     BaseDialog<DialogTicketBinding>(context, R.layout.dialog_ticket) {
     override fun onCreateDialog() {
         when (type) {
-            TicketState.ISSUED -> {
-                binding.apply {
-                    tvCamera.setOnClickListener {
-                        action(TicketType.CAMERA_ISSUED)
-                        dismiss()
-                    }
-                    tvGallery.setOnClickListener {
-                        action(TicketType.GALLERY_ISSUED)
-                        dismiss()
-                    }
-                }
-            }
-
             TicketState.UNISSUED -> {
                 binding.apply {
                     tvCamera.setOnClickListener {
@@ -41,7 +28,5 @@ class TicketCreateDialog(
                 }
             }
         }
-
     }
-
 }

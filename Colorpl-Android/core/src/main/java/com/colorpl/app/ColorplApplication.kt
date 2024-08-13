@@ -1,6 +1,7 @@
 package com.colorpl.app
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.colorpl.BuildConfig
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
@@ -35,6 +36,7 @@ class ColorplApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         Timber.plant(Timber.DebugTree())
         // NaverMapSdk
         NaverMapSdk.getInstance(this).client =

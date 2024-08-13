@@ -22,9 +22,11 @@ import com.presentation.util.TicketState
 import com.presentation.util.TicketType
 import com.presentation.util.getPattern
 import com.presentation.util.overScrollControl
+import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 
 
@@ -47,8 +49,8 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private val popUpAdapter by lazy {
         CustomPopupAdapter(
             listOf(
-                getString(R.string.schedule_ticket_issued),
-                getString(R.string.schedule_ticket_unissued)
+                "",
+                getString(R.string.schedule_ticket_unissued),
             )
         )
     }
@@ -80,7 +82,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     calendarAdapter.submitList(
                         viewModel.matchTicketsToCalendar(
                             calendarList,
-                            viewModel.tickets.value
+                            viewModel.tickets.last()
                         )
                     )
                 }
@@ -93,18 +95,29 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                             tickets
                         )
                     )
-                    ticketAdapter.submitList(tickets)
                 }
             }
+
+            launch {
+                viewModel.filteredTickets.collectLatest { filteredTickets ->
+                    ticketAdapter.submitList(filteredTickets.filter { it.dateTime.toLocalDate() == viewModel.clickedDate.value?.date }
+                        .sortedByDescending { it.dateTime })
+                }
+            }
+
             launch {
                 viewModel.calendarMode.collectLatest { mode ->
                     when (mode) {
                         CalendarMode.MONTH -> {
                             setMonthMode()
+                            ticketAdapter.submitList(
+                                viewModel.tickets.last()
+                                    .sortedByDescending { it.dateTime })  // 월 모드일 때는 모든 티켓 표시
                         }
 
                         CalendarMode.WEEK -> {
                             setWeekMode()
+                            viewModel.filterTicketsForSelectedWeek()  // 주 모드로 변경 시 티켓 필터링
                         }
                     }
                 }
@@ -172,10 +185,13 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     private fun initTicketView() {
         binding.apply {
-            rvTicket.adapter = ticketAdapter
-            rvTicket.overScrollControl { direction, deltaDistance ->
-                if (viewModel.clickedDate.value != null) {
-                    handlePull(direction)
+            rvTicket.apply {
+                adapter = ticketAdapter
+                itemAnimator = null
+                overScrollControl { direction, deltaDistance ->
+                    if (viewModel.clickedDate.value != null) {
+                        handlePull(direction)
+                    }
                 }
             }
         }
@@ -188,7 +204,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         }
         if (handlePullState > 5) {
-            viewModel.updateCalendar(Calendar.RESTORE)
+            viewModel.restoreCalendarMode()
             handlePullState = 0
         }
     }
@@ -223,12 +239,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         val listPopupWindow = ListPopupWindow(binding.root.context)
         listPopupWindow.apply {
             animationStyle = R.style.FABPopupAnimation
+
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,
                     android.R.color.transparent
                 )
             )
+
             setAdapter(popUpAdapter)
             anchorView = binding.fabAddTicket
             width =
@@ -237,10 +255,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             isModal = true
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
-                    TicketState.ISSUED.state -> {
-                        showTicketCreateDialog(TicketState.ISSUED)
-                    }
-
                     TicketState.UNISSUED.state -> {
                         showTicketCreateDialog(TicketState.UNISSUED)
                     }
@@ -272,14 +286,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             type = ticketState,
             action = { ticketType ->
                 val action = when (ticketType) {
-                    TicketType.CAMERA_ISSUED -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_ISSUED)
-                    }
-
-                    TicketType.GALLERY_ISSUED -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY_ISSUED)
-                    }
-
                     TicketType.CAMERA_UNISSUED -> {
                         ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_UNISSUED)
                     }

@@ -33,6 +33,7 @@ class TicketAddressDialog :
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         binding.locationIvBack.setOnClickListener {
+            findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
             viewModel.cancelGetAddress()
             navigatePopBackStack()
         }
