@@ -3,8 +3,8 @@ package com.colorpl.member.service;
 import static com.colorpl.member.dto.MemberDTO.toMemberDTO;
 
 import com.colorpl.global.common.exception.*;
-import com.colorpl.global.common.storage.StorageService;
-import com.colorpl.global.common.storage.UploadFile;
+import com.colorpl.global.storage.StorageService;
+import com.colorpl.global.storage.UploadFile;
 import com.colorpl.global.config.TokenProvider;
 import com.colorpl.member.Member;
 import com.colorpl.member.MemberRefreshToken;

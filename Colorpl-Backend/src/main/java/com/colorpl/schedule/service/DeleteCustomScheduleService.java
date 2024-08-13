@@ -1,6 +1,9 @@
 package com.colorpl.schedule.service;
 
+import com.colorpl.global.common.exception.ReviewNotFoundException;
 import com.colorpl.global.common.exception.ScheduleNotFoundException;
+import com.colorpl.global.storage.StorageService;
+import com.colorpl.review.service.ReviewService;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.repository.CustomScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeleteCustomScheduleService {
 
     private final CustomScheduleRepository customScheduleRepository;
+    private final StorageService storageService;
+    private final ReviewService reviewService;
 
     @Transactional
     public void deleteCustomSchedule(Long id) {
@@ -19,7 +24,14 @@ public class DeleteCustomScheduleService {
         CustomSchedule customSchedule = customScheduleRepository.findById(id)
             .orElseThrow(() -> new ScheduleNotFoundException(id));
 
-        // 이미지 삭제
+        if (customSchedule.getImage() != null) {
+            storageService.deleteFile(customSchedule.getImage());
+        }
+
+        if (customSchedule.getReview().isPresent()) {
+            reviewService.deleteById(customSchedule.getReview().orElseThrow(
+                ReviewNotFoundException::new).getId());
+        }
 
         customScheduleRepository.deleteById(id);
     }

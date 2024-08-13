@@ -89,4 +89,8 @@ public class CustomSchedule extends Schedule {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+    public void updateImage(String image) {
+        this.image = image;
+    }
 }
