@@ -5,7 +5,6 @@ import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 import static com.colorpl.theater.domain.QHall.hall;
 import static com.colorpl.theater.domain.QTheater.theater;
 
-import com.colorpl.global.common.exception.InvalidAreaException;
 import com.colorpl.show.domain.Area;
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
@@ -33,8 +32,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
-                areaEq(Area.fromString(request.getArea())
-                    .orElseThrow(() -> new InvalidAreaException(request.getArea()))),
+                areaEq(request.getArea()),
                 nameContains(request.getKeyword()),
                 categoryEq(request.getCategory())
             )
