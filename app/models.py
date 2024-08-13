@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, BigInteger, Enum, DateTime, Fore
 from sqlalchemy.orm import relationship, Session
 from datetime import datetime
 from app.database import Base
+from app.utils.enum import Category, Region, ShowState, SeatGrade
 
 class BaseEntity:
     create_date = Column(DateTime, default=datetime.utcnow)
@@ -58,8 +59,8 @@ class MemberCategories(Base):
 
 class PriceBySeatClass(Base):
     __tablename__ = 'price_by_seat_class'
-    show_detail_id = Column(BigInteger, ForeignKey('show_detail.show_detail_id'), primary_key=True)
-    price_by_seat_class_seat_class = Column(String(255), primary_key=True)
+    show_detail_id = Column(Integer, ForeignKey('show_detail.show_detail_id'), primary_key=True)
+    price_by_seat_class_seat_class = Column(Enum(SeatGrade), primary_key=True)
     price_by_seat_class_price = Column(Integer)
 
     show_detail = relationship("ShowDetail", back_populates="price_by_seat_classes")
@@ -125,23 +126,23 @@ class Seat(Base):
     seat_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     seat_col = Column(Integer)
     seat_row = Column(Integer)
-    seat_class = Column(String(255))
+    seat_class = Column(Enum(SeatGrade, native_enum=False), nullable=False)
     show_detail_id = Column(BigInteger, ForeignKey('show_detail.show_detail_id'))
 
     show_detail = relationship("ShowDetail", back_populates="seats")
 
 class ShowDetail(Base):
     __tablename__ = 'show_detail'
-    hall_id = Column(Integer, ForeignKey('hall.hall_id'))
-    show_detail_id = Column(BigInteger, primary_key=True, index=True)
+    show_detail_id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
     show_detail_api_id = Column(String(255))
-    show_detail_area = Column(String(255))
+    show_detail_area = Column(Enum(Region))
     show_detail_cast = Column(String(255))
-    show_detail_category = Column(Enum('PLAY', 'MOVIE', 'PERFORMANCE', 'CONCERT', 'MUSICAL', 'EXHIBITION', 'ETC'))
+    show_detail_category = Column(Enum(Category))
     show_detail_name = Column(String(255))
     show_detail_poster_image_path = Column(String(255))
     show_detail_runtime = Column(String(255))
-    show_detail_state = Column(Enum('COMPLETED', 'SCHEDULED', 'SHOWING'))
+    show_detail_state = Column(Enum(ShowState))
+    hall_id = Column(Integer, ForeignKey('hall.hall_id'))
 
     price_by_seat_classes = relationship("PriceBySeatClass", back_populates="show_detail")
     schedules = relationship("ShowSchedule", back_populates="show_detail")
@@ -170,5 +171,5 @@ class Theater(Base):
     theater_api_id = Column(String(255))
     theater_name = Column(String(255))
 
-    # show_details = relationship("ShowDetail", back_populates="theater")
     halls = relationship("Hall", back_populates="theater")
+    # show_details = relationship("ShowDetail", back_populates="theater")

@@ -16,6 +16,7 @@ import LoginScreen from './pages/LoginScreen';
 import PrivateRoute from './components/PrivateRoute';
 import DashboardHome from './pages/DashboardHome';
 import AdminManagement from './pages/AdminManagement';
+import MultiStepForm from './pages/MultiStepForm';
 import api from './api';
 import theme from './theme';
 
@@ -92,6 +93,7 @@ const App = () => {
             <Route path="/schedules" element={<PrivateRoute><Schedules /></PrivateRoute>} /> {/* Schedules 경로 추가 */}
             <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail /></PrivateRoute>} /> ScheduleDetail 경로 추가
             <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate /></PrivateRoute>} /> {/* ScheduleImageUpdate 경로 추가 */}
+            <Route path="/register-show" element={<PrivateRoute><MultiStepForm /></PrivateRoute>} />
             {user && user.role === 1 && (
               <Route path="/admin-management" element={<PrivateRoute><AdminManagement /></PrivateRoute>} />
             )}

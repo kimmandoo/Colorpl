@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextFiel
 import api from '../api';
 
 const Schedules = () => {
-  const [schedules, setSchedules] = useState([]);
+  const [schedules, setSchedules] = useState([]); // 초기값을 빈 배열로 설정
   const [currentPage, setCurrentPage] = useState(1);
   const schedulesPerPage = 10;
   const maxPages = 100;
@@ -26,7 +26,6 @@ const Schedules = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 빈 값 제거 함수
   const cleanSearchParams = (params) => {
     const cleanedParams = { ...params };
     Object.keys(cleanedParams).forEach((key) => {
@@ -44,20 +43,18 @@ const Schedules = () => {
         headers: { 'Content-Type': 'application/json' }
       });
       
-      if (Array.isArray(response.data)) {
-        setSchedules(response.data);
-        if (response.data.length === 0) {
+      // 응답이 배열인지 확인하고, 그렇지 않으면 빈 배열로 설정
+      setSchedules(Array.isArray(response.data) ? response.data : []);
+      
+      if (Array.isArray(response.data) && response.data.length === 0) {
           setOpen(true);
-        }
-      } else {
-        setSchedules([]);
-        setOpen(true);
       }
 
       setSelectedOptions(cleanedParams);
     } catch (error) {
       console.error('데이터를 불러오는데 실패했습니다.', error);
       setError('데이터를 불러오는데 실패했습니다.');
+      setSchedules([]); // 에러가 발생해도 schedules를 빈 배열로 설정
       setOpen(true);
     }
   }, []);
@@ -79,14 +76,15 @@ const Schedules = () => {
             },
           });
 
+          setSchedules(Array.isArray(response.data) ? response.data : []); // 배열인지 확인 후 설정
+
           if (response.data.length === 0 && currentPage > 1) {
             setOpen(true);
-          } else {
-            setSchedules(Array.isArray(response.data) ? response.data : []);
           }
         } catch (error) {
           console.error('스케줄 정보를 불러오는데 실패했습니다.', error);
           setError('스케줄 정보를 불러오는데 실패했습니다.');
+          setSchedules([]); // 에러가 발생해도 schedules를 빈 배열로 설정
           setOpen(true);
         }
       }
@@ -120,7 +118,7 @@ const Schedules = () => {
     setCurrentPage(1);
     loadData({ skip: 0, limit: schedulesPerPage });
 
-    navigate(location.pathname, { replace: true }); // URL에서 state 제거
+    navigate(location.pathname, { replace: true });
   };
 
   const handlePageChange = (event, value) => {
@@ -243,7 +241,7 @@ const Schedules = () => {
                 <TableCell onClick={() => navigate(`/members/${schedule.member_id}`)}>{schedule.email}</TableCell>
                 <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>{new Date(schedule.schedule_date_time).toLocaleString('ko-KR')}</TableCell>
                 <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>
-                  {schedule.schedule_name.length > 20 ? `${schedule.schedule_name.substring(0, 20)}...` : schedule.schedule_name}
+                  {schedule.schedule_name && schedule.schedule_name.length > 20 ? `${schedule.schedule_name.substring(0, 20)}...` : schedule.schedule_name}
                 </TableCell>
                 <TableCell onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}>{schedule.schedule_category}</TableCell>
                 <TableCell onClick={() => {

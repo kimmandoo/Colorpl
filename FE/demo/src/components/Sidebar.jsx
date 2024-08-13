@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { People as PeopleIcon, Comment as CommentIcon, Movie as MovieIcon, Dashboard as DashboardIcon, Assignment as AssignmentIcon } from '@mui/icons-material';
+import { People as PeopleIcon, Comment as CommentIcon, Movie as MovieIcon, Dashboard as DashboardIcon, Assignment as AssignmentIcon, Store as StoreIcon, TheaterComedy as TheaterComedyIcon, ManageAccounts as ManageAccountsIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
@@ -80,6 +80,29 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </Typography>
             </ListItemIcon>
           </ListItem>
+          <ListItem
+            button
+            onMouseEnter={() => handleMouseEnter('salesManagement')}
+            onMouseLeave={handleMouseLeave}
+            sx={{
+              justifyContent: 'center',
+              flexDirection: 'column',
+              '&:hover': {
+                bgcolor: 'rgba(0, 0, 0, 0.08)',
+                '& .MuiListItemIcon-root': {
+                  bgcolor: 'rgba(0, 0, 0, 0.08)',
+                  borderRadius: '50%',
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <StoreIcon />
+              <Typography variant="caption" display="block">
+                판매 <br /> 관리
+              </Typography>
+            </ListItemIcon>
+          </ListItem>
         </List>
       </Box>
 
@@ -126,11 +149,49 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
             {user?.role === 1 && (
               <ListItem button component={Link} to="/admin-management" onClick={handleItemClick}>
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <ManageAccountsIcon />
                 </ListItemIcon>
                 <ListItemText primary="관리자 관리" />
               </ListItem>
             )}
+          </List>
+        </Box>
+      )}
+
+      {expandedMenu === 'salesManagement' && (
+        <Box
+          sx={{
+            width: 200,
+            height: '100%',
+            bgcolor: 'background.paper',
+            position: 'fixed',
+            left: 80,
+            py: 2,
+            overflowX: 'hidden',
+            boxShadow: 3,
+          }}
+          onMouseEnter={() => handleMouseEnter('salesManagement')}
+          onMouseLeave={handleMouseLeave}
+        >
+          <List>
+            <ListItem button component={Link} to="/register-show" onClick={handleItemClick}>
+              <ListItemIcon>
+                <TheaterComedyIcon />
+              </ListItemIcon>
+              <ListItemText primary="공연 등록" />
+            </ListItem>
+            <ListItem button onClick={handleItemClick}>
+              <ListItemIcon>
+                <MovieIcon />
+              </ListItemIcon>
+              <ListItemText primary="공연 관리" />
+            </ListItem>
+            <ListItem button onClick={handleItemClick}>
+              <ListItemIcon>
+                <StoreIcon />
+              </ListItemIcon>
+              <ListItemText primary="극장 관리" />
+            </ListItem>
           </List>
         </Box>
       )}
