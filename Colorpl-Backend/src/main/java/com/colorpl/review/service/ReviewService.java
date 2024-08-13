@@ -315,10 +315,10 @@ public class ReviewService {
         } else if (schedule != null
                 && schedule instanceof ReservationSchedule reservationSchedule) {
             return builder
-                    .title(reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                    .title(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                             .getName())
                     .category(
-                            reservationSchedule.getReservationDetail().getShowSchedule().getShowDetail()
+                        reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                                     .getCategory().toString())
                     .build();
         }
