@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.domain.model.ReservationInfo
 import com.domain.model.ShowParam
 import com.domain.usecase.ReservationListUseCase
@@ -21,8 +22,8 @@ import javax.inject.Inject
 class ReservationListViewModel @Inject constructor(
     private val getReservationListUseCase: ReservationListUseCase,
 ) : ViewModel() {
-    private val _reservationList = MutableStateFlow<List<ReservationInfo>>(listOf(ReservationInfo()))
-    val reservationList: MutableStateFlow<List<ReservationInfo>> = _reservationList
+    private val _pagedShow = MutableStateFlow<PagingData<ReservationInfo>?>(null)
+    val pagedShow: MutableStateFlow<PagingData<ReservationInfo>?> = _pagedShow
 
 
     private val _showParam = MutableStateFlow<ShowParam>(ShowParam())
@@ -39,10 +40,10 @@ class ReservationListViewModel @Inject constructor(
         _date.value = value
     }
 
-    private val _area = MutableStateFlow<List<Area>>(emptyList())
-    val area: StateFlow<List<Area>> get() = _area
+    private val _area = MutableStateFlow<List<Area>?>(null)
+    val area: StateFlow<List<Area>?> get() = _area
 
-    fun setArea(area: List<Area>) {
+    fun setArea(area: List<Area>?) {
         _area.value = area
     }
 
@@ -104,6 +105,7 @@ class ReservationListViewModel @Inject constructor(
         setShowParam(ShowParam())
         getReservationList(setFilter())
         setDate(null)
+        setArea(null)
     }
 
 
@@ -111,17 +113,8 @@ class ReservationListViewModel @Inject constructor(
     /** 예매 아이템 전체 조회. */
     fun getReservationList(filter: Map<String, String?>) {
         viewModelScope.launch {
-            getReservationListUseCase(filters = filter).collectLatest { response ->
-                when (response) {
-                    is DomainResult.Success -> {
-                        Timber.d("예매 정보 조회 성공 ${response.data}")
-                        _reservationList.value = response.data
-                    }
-
-                    is DomainResult.Error -> {
-                        Timber.d("예매 정보 조회 실패 ${response.exception}")
-                    }
-                }
+            getReservationListUseCase(filters = filter).collectLatest { pagedData ->
+                _pagedShow.value = pagedData
             }
         }
     }

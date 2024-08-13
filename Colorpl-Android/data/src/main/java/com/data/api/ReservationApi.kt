@@ -1,6 +1,7 @@
 package com.data.api
 
-import com.data.model.response.ResponseReservationInfo
+import com.data.model.paging.reservation.ResponsePagedShow
+import com.data.model.paging.reservation.Show
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
 import retrofit2.http.GET
@@ -11,12 +12,12 @@ import retrofit2.http.QueryMap
 interface ReservationApi {
 
     @GET("shows")
-    suspend fun getReservationListShows(@QueryMap(encoded = true) filters: Map<String, String?>): List<ResponseReservationInfo>
+    suspend fun getReservationListShows(@QueryMap(encoded = true) filters: Map<String, String?>): ResponsePagedShow
 
     @GET("shows/{showDetailId}")
     suspend fun getReservationShow(
         @Path("showDetailId") showDetailId: Int
-    ): ResponseReservationInfo
+    ): Show
 
     @GET("shows/{showDetailId}/schedules")
     suspend fun getReservationSchedule(

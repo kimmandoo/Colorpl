@@ -1,10 +1,15 @@
 package com.data.repositoryimpl
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.data.api.safeApiCall
 import com.data.datasource.remote.ReservationDataSource
-import com.data.model.response.ResponseReservationInfo
+import com.data.model.paging.reservation.Show
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
+import com.data.pagingsource.ShowPagingSource
 import com.data.repository.ReservationRepository
 import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
@@ -15,15 +20,18 @@ class ReservationRepositoryImpl @Inject constructor(
     private val reservationDataSource: ReservationDataSource
 ) : ReservationRepository {
 
-    override suspend fun getReservationAllShows(filters: Map<String, String?>): Flow<ApiResult<List<ResponseReservationInfo>>> {
-        return flow {
-            emit(safeApiCall {
-                reservationDataSource.getReservationListShows(filters)
-            })
-        }
+    override suspend fun getReservationAllShows(filters: Map<String, String?>): Flow<PagingData<Show>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false,
+                initialLoadSize = PAGE_SIZE
+            ),
+            pagingSourceFactory = { ShowPagingSource(reservationDataSource, filters) }
+        ).flow
     }
 
-    override suspend fun getReservationShows(showsId: Int): Flow<ApiResult<ResponseReservationInfo>> {
+    override suspend fun getReservationShows(showsId: Int): Flow<ApiResult<Show>> {
         return flow {
             emit(safeApiCall {
                 reservationDataSource.getReservationShow(showsId)

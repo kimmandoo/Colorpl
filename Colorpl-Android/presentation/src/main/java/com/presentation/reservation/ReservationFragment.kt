@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.paging.LoadState
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
 import com.domain.model.FilterItem
@@ -20,8 +21,6 @@ import com.presentation.util.Category
 import com.presentation.util.ShowType
 import com.presentation.util.getFilterItems
 import com.presentation.util.hideKeyboard
-import com.presentation.util.setVisibility
-import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.ReservationListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -55,26 +54,47 @@ class ReservationFragment :
 
     override fun initView() {
         initFilter()
-        initReservationInfo()
+        initShow()
         initClickListener()
         initViewModel()
-        observeReservationList()
+        initShow()
+//        observeReservationList()
         initSearchWindow()
     }
 
+    private fun initShow() {
+        binding.rvReservationInfo.apply {
+            adapter = reservationInfoAdapter
+            itemAnimator = null
+        }
+        reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
+            pagingData?.let { show ->
+                reservationInfoAdapter.submitData(viewLifecycleOwner.lifecycle, show)
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-    private fun observeReservationList() {
-        reservationListViewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { reservationList ->
-                binding.apply {
-                    icEmptyView.clTitle.setVisibility(reservationList.isEmpty())
-                    rvReservationInfo.setVisibility(reservationList.isNotEmpty())
-                }
-
-                reservationInfoAdapter.submitList(reservationList)
-                Timber.tag("reservationList").d(reservationList.toString())
+        reservationInfoAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { loadStates ->
+                val isLoading = loadStates.source.refresh is LoadState.Loading
+                if (!isLoading) dismissLoading() else showLoading()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
+
+
+
+//    private fun observeReservationList() {
+//        reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+//            .onEach { reservationList ->
+//                binding.apply {
+//                    icEmptyView.clTitle.setVisibility(reservationList.isEmpty())
+//                    rvReservationInfo.setVisibility(reservationList.isNotEmpty())
+//                }
+//
+//                reservationInfoAdapter.submitData(reservationList)
+//                Timber.tag("reservationList").d(reservationList.toString())
+//            }.launchIn(viewLifecycleOwner.lifecycleScope)
+//    }
 
     private fun initFilter() {
         binding.rvFilter.apply {
@@ -88,26 +108,7 @@ class ReservationFragment :
         binding.viewModel = reservationListViewModel
     }
 
-    private fun initReservationInfo() {
-        binding.rvReservationInfo.apply {
-            adapter = reservationInfoAdapter
-            itemAnimator = null
-        }
-        val testReservationInfo = mutableListOf<ReservationInfo>()
-        repeat(10) {
-            testReservationInfo.add(
-                ReservationInfo(
-                    reservationInfoId = 2,
-                    contentImg = null,
-                    title = "님과함께 : 테스트",
-                    category = "사극",
-                    runtime = "3시간 00분",
-                    priceBySeatClass = mapOf()
-                )
-            )
-        }
-//        reservationInfoAdapter.submitList(testReservationInfo)
-    }
+
 
     private fun initClickListener() {
         binding.apply {

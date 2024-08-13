@@ -2,6 +2,7 @@ package com.presentation.component.adapter.reservation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.colorpl.presentation.databinding.ItemReservationInfoBinding
@@ -10,7 +11,7 @@ import com.presentation.base.BaseDiffUtil
 
 class ReservationInfoAdapter (
     private val onClickListener: (ReservationInfo) -> Unit,
-) : ListAdapter<ReservationInfo, ViewHolder>(BaseDiffUtil<ReservationInfo>()){
+) : PagingDataAdapter<ReservationInfo, ViewHolder>(BaseDiffUtil<ReservationInfo>()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -24,7 +25,7 @@ class ReservationInfoAdapter (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is ReservationInfoViewHolder -> {
-                holder.bind(getItem(position))
+                getItem(position)?.let { holder.bind(it) }
             }
         }
     }

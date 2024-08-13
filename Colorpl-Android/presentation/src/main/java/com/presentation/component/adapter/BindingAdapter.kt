@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.colorpl.presentation.R
 import com.domain.model.Seat
+import com.presentation.util.Area
 import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
@@ -284,6 +285,15 @@ fun setSearchDate(view: TextView, date: LocalDate?) {
         view.text = formattedDate
     } ?: run {
         view.text = "날짜"
+    }
+}
+
+@BindingAdapter("searchArea")
+fun setSearchArea(view: TextView, area: List<Area>?) {
+    area?.let {
+        view.text = it.joinToString(separator = ", ") { it.name }
+    } ?: run {
+        view.text = "지역"
     }
 }
 

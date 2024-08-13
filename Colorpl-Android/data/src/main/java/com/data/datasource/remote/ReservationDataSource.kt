@@ -1,15 +1,16 @@
 package com.data.datasource.remote
 
-import com.data.model.response.ResponseReservationInfo
+import com.data.model.paging.reservation.ResponsePagedShow
+import com.data.model.paging.reservation.Show
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
 
 interface ReservationDataSource {
-    suspend fun getReservationListShows(filters: Map<String, String?>): List<ResponseReservationInfo>
+    suspend fun getReservationListShows(filters: Map<String, String?>): ResponsePagedShow
 
     suspend fun getReservationShow(
         showDetailId: Int,
-    ): ResponseReservationInfo
+    ): Show
 
     suspend fun getReservationSchedule(
         showDetailId: Int,
