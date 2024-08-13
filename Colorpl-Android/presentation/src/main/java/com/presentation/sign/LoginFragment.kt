@@ -20,7 +20,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.presentation.MainActivity
 import com.presentation.base.BaseFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.sign.model.SignInEventState
 import com.presentation.util.setPasswordTransformation
 import com.presentation.viewmodel.LoginViewModel
@@ -40,8 +39,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private lateinit var googleRequest: GetCredentialRequest
 
     private val loginViewModel: LoginViewModel by viewModels()
-
-
 
 
     override fun initView() {
@@ -83,6 +80,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                 )
             }
             includePassword.ivPasswordToggle.setOnClickListener {
+                includePassword.ivPasswordToggle.isSelected =
+                    !includePassword.ivPasswordToggle.isSelected
                 includePassword.etContent.setPasswordTransformation()
             }
             clGoogleLogin.setOnClickListener {
@@ -120,6 +119,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
     private fun login() {
         viewLifecycleOwner.lifecycleScope.launch {
             runCatching {
+
                 CredentialManager.create(requireActivity()).getCredential(
                     request = googleRequest,
                     context = requireActivity(),
@@ -135,6 +135,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
 
     fun handleSignIn(result: GetCredentialResponse) {
+        showLoading()
         val auth = Firebase.auth
         val credential = result.credential
         when (credential) {
@@ -152,11 +153,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                                 loginViewModel.googleSignIn(idToken)
                                 Timber.d("구글 로그인 성공")
                             } else {
+                                Toast.makeText(
+                                    requireActivity(),
+                                    requireActivity().getString(R.string.login_google_false),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 Timber.d("구글 로그인 실패 ${task.exception}")
                             }
                         }
                 }
             }
         }
+        dismissLoading()
     }
 }

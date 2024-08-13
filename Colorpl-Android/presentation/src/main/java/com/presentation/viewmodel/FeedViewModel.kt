@@ -69,7 +69,7 @@ class FeedViewModel @Inject constructor(
                 reviewEmpathyUseCase.addEmpathy(reviewId)
             }
 
-            result.collect {
+            result.collectLatest {
                 when (it) {
                     is DomainResult.Error -> {
                         Timber.tag("empathy").d("${it.exception}")

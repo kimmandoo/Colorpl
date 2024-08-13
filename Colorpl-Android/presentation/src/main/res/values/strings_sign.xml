@@ -10,7 +10,7 @@
     <string name="login">로그인</string>
     <string name="login_google">Google로 시작하기</string>
     <string name="login_nickname_hint">닉네임을 입력하세요.</string>
-
+    <string name="login_google_false">구글 로그인 실패</string>
 
     <!-- Sign up-->
     <string name="sign_up_id">이메일</string>
@@ -25,7 +25,7 @@
     <string name="sign_up_profile_image_hint">프로필 이미지를 알려주세요.</string>
     <string name="sign_up_next">다음</string>
     <string name="sign_up_complete">완료</string>
-
+    <string name="sign_up_success">회원가입 성공!</string>
     <!-- Sign Up Category -->
     <string name="sign_up_category_title">좋아하시는 취향을 알려주세요.(최대 2개)</string>
     <string name="sign_up_category_movie">영화</string>
