@@ -2,7 +2,6 @@ package com.colorpl.reservation.service;
 
 import com.colorpl.global.common.exception.MemberMismatchException;
 import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
 import com.colorpl.global.common.exception.ReservationNotFoundException;
 import com.colorpl.global.common.exception.ShowScheduleNotFoundException;
 import com.colorpl.member.Member;
@@ -202,6 +201,77 @@ public class ReservationService {
 //        // 변경된 예약 반환
 //        return ReservationDTO.toReservationDTO(updatedReservation);
 //    }
+//    @Transactional
+//    public ReservationDTO updateReservation(Integer memberId, Long reservationId,
+//        ReservationDTO reservationDTO) {
+//        // 예약을 가져오고 멤버 ID를 확인
+//        Reservation reservation = reservationRepository.findById(reservationId)
+//            .filter(res -> res.getMember().getId().equals(memberId))
+//            .orElseThrow(MemberMismatchException::new);
+//
+//        // 기존 예약 정보를 업데이트
+//        reservation.updateReservation(reservationDTO.getDate(), reservationDTO.getAmount(),
+//            reservationDTO.getComment(), reservationDTO.isRefunded());
+//
+//        // 새로 추가된 예약 상세 정보를 저장하기 위한 ID 목록
+//        Set<Long> newReservationDetailIds = reservationDTO.getReservationDetails().stream()
+//            .map(ReservationDetailDTO::getId)
+//            .filter(Objects::nonNull)
+//            .collect(Collectors.toSet());
+//
+//        // 기존 예약 상세 항목을 업데이트하거나 삭제
+//        List<ReservationDetail> existingDetails = new ArrayList<>(
+//            reservation.getReservationDetails());
+//        existingDetails.forEach(existingDetail -> {
+//            if (newReservationDetailIds.contains(existingDetail.getId())) {
+//                // 새로 받은 DTO로 업데이트
+//                ReservationDetailDTO detailDTO = reservationDTO.getReservationDetails().stream()
+//                    .filter(dto -> dto.getId().equals(existingDetail.getId()))
+//                    .findFirst()
+//                    .orElseThrow(ReservationDetailNotFoundException::new);
+//
+//                ShowSchedule showSchedule = showScheduleRepository.findById(
+//                        detailDTO.getShowScheduleId())
+//                    .orElseThrow(ShowScheduleNotFoundException::new);
+//
+//                existingDetail.updateDetail(detailDTO.getRow(), detailDTO.getCol(), showSchedule);
+//                reservationDetailRepository.save(existingDetail); // 업데이트된 정보 저장
+//            } else {
+//                // 기존 예약 상세가 새 데이터에 없으면 삭제
+//                reservation.removeReservationDetail(existingDetail);
+//                reservationDetailRepository.delete(existingDetail); // 삭제된 정보 반영
+//            }
+//        });
+//
+//        // 새로운 예약 상세 항목 추가
+//        List<ReservationDetail> newReservationDetails = reservationDTO.getReservationDetails()
+//            .stream()
+//            .filter(detailDTO -> detailDTO.getId() == null) // ID가 없는 항목은 새 항목
+//            .map(detailDTO -> {
+//                ShowSchedule showSchedule = showScheduleRepository.findById(
+//                        detailDTO.getShowScheduleId())
+//                    .orElseThrow(ShowScheduleNotFoundException::new);
+//
+//                ReservationDetail newDetail = ReservationDetail.builder()
+//                    .row(detailDTO.getRow())
+//                    .col(detailDTO.getCol())
+//                    .showSchedule(showSchedule)
+//                    .reservation(reservation)
+//                    .build();
+//
+//                reservation.addReservationDetail(newDetail);
+//                return newDetail;
+//            })
+//            .toList();
+//
+//        reservationDetailRepository.saveAll(newReservationDetails); // 새로운 예약 상세 정보 저장
+//
+//        // 예약 저장 및 DTO 변환
+//        Reservation updatedReservation = reservationRepository.save(reservation);
+//
+//        // 변경된 예약 반환
+//        return ReservationDTO.toReservationDTO(updatedReservation);
+//    }
     @Transactional
     public ReservationDTO updateReservation(Integer memberId, Long reservationId,
         ReservationDTO reservationDTO) {
@@ -223,26 +293,22 @@ public class ReservationService {
         // 기존 예약 상세 항목을 업데이트하거나 삭제
         List<ReservationDetail> existingDetails = new ArrayList<>(
             reservation.getReservationDetails());
-        existingDetails.forEach(existingDetail -> {
-            if (newReservationDetailIds.contains(existingDetail.getId())) {
-                // 새로 받은 DTO로 업데이트
-                ReservationDetailDTO detailDTO = reservationDTO.getReservationDetails().stream()
-                    .filter(dto -> dto.getId().equals(existingDetail.getId()))
-                    .findFirst()
-                    .orElseThrow(ReservationDetailNotFoundException::new);
 
-                ShowSchedule showSchedule = showScheduleRepository.findById(
-                        detailDTO.getShowScheduleId())
-                    .orElseThrow(ShowScheduleNotFoundException::new);
-
-                existingDetail.updateDetail(detailDTO.getRow(), detailDTO.getCol(), showSchedule);
-                reservationDetailRepository.save(existingDetail); // 업데이트된 정보 저장
-            } else {
+        // 삭제된 항목 처리
+        existingDetails.stream()
+            .filter(existingDetail -> !newReservationDetailIds.contains(existingDetail.getId()))
+            .forEach(existingDetail -> {
                 // 기존 예약 상세가 새 데이터에 없으면 삭제
                 reservation.removeReservationDetail(existingDetail);
                 reservationDetailRepository.delete(existingDetail); // 삭제된 정보 반영
-            }
-        });
+
+                // 삭제된 예약 상세에 대해 예약 가능 상태로 변경
+                enableReservationService.enableReservation(
+                    existingDetail.getShowSchedule().getId(),
+                    Integer.valueOf(existingDetail.getRow()),
+                    Integer.valueOf(existingDetail.getCol())
+                );
+            });
 
         // 새로운 예약 상세 항목 추가
         List<ReservationDetail> newReservationDetails = reservationDTO.getReservationDetails()
@@ -257,7 +323,7 @@ public class ReservationService {
                     .row(detailDTO.getRow())
                     .col(detailDTO.getCol())
                     .showSchedule(showSchedule)
-                    .reservation(reservation)
+                    .reservation(reservation) // Reservation 설정
                     .build();
 
                 reservation.addReservationDetail(newDetail);
@@ -266,6 +332,14 @@ public class ReservationService {
             .toList();
 
         reservationDetailRepository.saveAll(newReservationDetails); // 새로운 예약 상세 정보 저장
+
+        // 새로 추가된 예약 상세에 대해 예약 불가능 상태로 변경
+        newReservationDetails.forEach(
+            reservationDetail -> disableReservationService.disableReservation(
+                reservationDetail.getShowSchedule().getId(),
+                Integer.valueOf(reservationDetail.getRow()),
+                Integer.valueOf(reservationDetail.getCol())
+            ));
 
         // 예약 저장 및 DTO 변환
         Reservation updatedReservation = reservationRepository.save(reservation);

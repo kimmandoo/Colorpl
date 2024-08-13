@@ -14,71 +14,59 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@RequiredArgsConstructor
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class CreateShowService {
 
-    private final CreateShowDetailService createShowDetailService;
-    private final CreateShowScheduleService createShowScheduleService;
-    private final RetrieveShowDetailApiService retrieveShowDetailApiService;
     private final RetrieveShowListApiService retrieveShowListApiService;
     private final ShowDetailRepository showDetailRepository;
-
+    private final RetrieveShowDetailApiService retrieveShowDetailApiService;
+    private final CreateShowDetailService createShowDetailService;
+    private final CreateShowScheduleService createShowScheduleService;
     @Value("${days.to.add}")
-    private Long daysToAdd;
+    private long daysToAdd;
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void createScheduled() {
-        createByDate(LocalDate.now(), LocalDate.now().plusDays(daysToAdd));
+    public void createShowScheduled() {
+        createShowByDate(LocalDate.now(), LocalDate.now().plusDays(daysToAdd));
     }
 
-    public void createByDate(LocalDate from, LocalDate to) {
-
+    public void createShowByDate(LocalDate from, LocalDate to) {
         int page = 1;
-
-        ShowListApiResponse response = retrieveShowListApiService.retrieve(from, to, page++);
-
+        ShowListApiResponse response = retrieveShowListApiService.retrieve(from, to, page);
         while (!response.getItems().isEmpty()) {
-
-            response.getItems().forEach(i -> {
+            response.getItems().forEach(item -> {
                 try {
-                    create(i.getApiId());
+                    createShow(item.getApiId());
                 } catch (ShowAlreadyExistsException ignored) {
-                    System.out.println(i.getApiId() + "duplicated");
+
                 }
             });
-
             response = retrieveShowListApiService.retrieve(from, to, page++);
         }
     }
 
-    public Integer createByApiId(String apiId) {
-        return create(apiId);
+    @Transactional
+    public Integer createShowByApiId(String apiId) {
+        return createShow(apiId);
     }
 
-    private Integer create(String apiId) {
-
+    private Integer createShow(String apiId) {
         if (showDetailRepository.existsByApiId(apiId)) {
-            throw new ShowAlreadyExistsException();
+            throw new ShowAlreadyExistsException(apiId);
         }
-
         ShowDetailApiResponse response = retrieveShowDetailApiService.retrieve(apiId);
-
-        ShowDetail showDetail = createShowDetailService.create(response.getItem());
-
+        ShowDetail showDetail = createShowDetailService.createShowDetail(response.getItem());
         if (StringUtils.hasText(response.getItem().getStartDate()) &&
             StringUtils.hasText(response.getItem().getEndDate()) &&
-            StringUtils.hasText(response.getItem().getSchedule())) {
-
+            StringUtils.hasText(response.getItem().getSchedule())
+        ) {
+            String schedule = response.getItem().getSchedule();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
             LocalDate startDate = LocalDate.parse(response.getItem().getStartDate(), formatter);
             LocalDate endDate = LocalDate.parse(response.getItem().getEndDate(), formatter);
-            String schedule = response.getItem().getSchedule();
-
-            createShowScheduleService.create(showDetail, startDate, endDate, schedule);
+            createShowScheduleService.createShowSchedule(schedule, startDate, endDate, showDetail);
         }
-
         return showDetail.getId();
     }
 }
