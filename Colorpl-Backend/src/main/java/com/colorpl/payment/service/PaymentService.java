@@ -182,7 +182,7 @@ public class PaymentService {
                     .build();
 
                 // CreateReservationScheduleService를 사용하여 예약 스케줄 생성
-                createReservationScheduleService.createByImageUrl(scheduleRequest, posterImagePath);
+//                createReservationScheduleService.createByImageUrl(scheduleRequest, posterImagePath);
             }
 
 //

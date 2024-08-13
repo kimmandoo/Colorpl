@@ -1,11 +1,13 @@
 package com.colorpl.schedule.repository;
 
+import static com.colorpl.reservation.domain.QReservation.*;
 import static com.colorpl.reservation.domain.QReservationDetail.reservationDetail;
 import static com.colorpl.schedule.domain.QReservationSchedule.reservationSchedule;
 import static com.colorpl.show.domain.QShowDetail.showDetail;
 import static com.colorpl.show.domain.QShowSchedule.showSchedule;
 
 import com.colorpl.member.Member;
+import com.colorpl.reservation.domain.QReservation;
 import com.colorpl.schedule.domain.ReservationSchedule;
 import com.colorpl.schedule.dto.SearchScheduleCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,7 +28,8 @@ public class ReservationScheduleRepositoryImpl implements ReservationScheduleRep
         return queryFactory
             .select(reservationSchedule)
             .from(reservationSchedule)
-            .join(reservationSchedule.reservationDetail, reservationDetail).fetchJoin()
+            .join(reservationSchedule.reservation, reservation).fetchJoin()
+            .join(reservation.reservationDetails, reservationDetail).fetchJoin()
             .join(reservationDetail.showSchedule, showSchedule).fetchJoin()
             .join(showSchedule.showDetail, showDetail).fetchJoin()
             .where(
