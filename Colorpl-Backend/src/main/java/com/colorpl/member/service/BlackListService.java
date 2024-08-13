@@ -17,7 +17,9 @@ public class BlackListService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public void signOut(String refreshToken) throws JsonProcessingException {
+    public void signOut(String accessToken,String refreshToken) throws JsonProcessingException {
+
+        tokenProvider.invalidateAccessToken(accessToken);
         String cleanedRefreshToken = refreshToken.trim();
         validateAndBlacklistRefreshToken(cleanedRefreshToken);
     }

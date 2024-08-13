@@ -284,6 +284,23 @@ public class MemberService {
 //            .map(FindMemberResponse::toFindMemberResponse)
 //            .collect(Collectors.toList());
 //    }
+//    @Transactional
+//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
+//        List<Member> members = memberRepository.findByNickname(nickname);
+//        if (members.isEmpty()) {
+//            throw new MemberNotFoundException();
+//        }
+//
+//        Integer currentMemberId = getCurrentMemberId(); // 현재 로그인된 사용자의 ID를 가져옴
+//
+//        return members.stream()
+//            .map(member -> {
+//                boolean isFollowing = isFollowing(currentMemberId, member.getId());
+//                return FindMemberResponse.toFindMemberResponse(member, isFollowing);
+//            })
+//            .collect(Collectors.toList());
+//    }
+
     @Transactional
     public List<FindMemberResponse> findMembersByNickname(String nickname) {
         List<Member> members = memberRepository.findByNickname(nickname);
@@ -296,11 +313,15 @@ public class MemberService {
         return members.stream()
             .map(member -> {
                 boolean isFollowing = isFollowing(currentMemberId, member.getId());
-                return FindMemberResponse.toFindMemberResponse(member, isFollowing);
+
+                // 각 멤버의 리뷰 수 조회
+                int reviewCount = reviewService.findReviewNumbersOfMember(member.getId()).getNumbers();
+
+                // 리뷰 수를 포함한 FindMemberResponse 생성
+                return FindMemberResponse.toFindMemberResponse(member, isFollowing, reviewCount);
             })
             .collect(Collectors.toList());
     }
-
 
     @Transactional
     public boolean isFollowing(Integer memberId, Integer targetMemberId) {

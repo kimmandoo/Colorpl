@@ -56,7 +56,7 @@ public class MemberController {
 
 
     @PostMapping("/sign-in")
-    @Operation(summary = "로그인", description = "로그인을 진행하는 API")
+    @Operation(summary = "로그인", description = "로그인을 진행하는 API, Access Token의 정보는 Redis에 저장")
     public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
         SignInResponse memberDTO = memberService.signIn(signInRequest.getEmail(), signInRequest.getPassword());
         return ResponseEntity.ok(memberDTO);
@@ -133,10 +133,13 @@ public class MemberController {
     }
 
     @PostMapping("/sign-out")
-    @Operation(summary = "로그아웃", description = "로그인 된 사용자의 로그 아웃을 진행하는 API, Refresh Token을 BlackList 처리")
+    @Operation(summary = "로그아웃", description = "로그인 된 사용자의 로그 아웃을 진행하는 API, Refresh Token을 BlackList 처리 + Access Token은 Redis에서 삭제")
     public ResponseEntity<Void> signOut(@RequestHeader("Refresh-Token") String refreshToken) {
         try {
-            blackListService.signOut(refreshToken);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String accessToken = (String) authentication.getCredentials();
+            blackListService.signOut(accessToken,refreshToken);
             return ResponseEntity.noContent().build();
         } catch (JsonProcessingException e) {
             return ResponseEntity.badRequest().build();

@@ -12,10 +12,7 @@ import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
-import com.colorpl.review.dto.NonReadReviewResponse;
-import com.colorpl.review.dto.ReadReviewResponse;
-import com.colorpl.review.dto.RequestDTO;
-import com.colorpl.review.dto.ReviewDTO;
+import com.colorpl.review.dto.*;
 import com.colorpl.review.dto.ReviewDTO.ReviewDTOBuilder;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
@@ -126,11 +123,12 @@ public class ReviewService {
     }
 
     // 특정 멤버의 리뷰 개수 조회
-    public NonReadReviewResponse findReviewNumbersOfMember(Integer memberId, int page, int size) {
+    public NumbersReviewResponse findReviewNumbersOfMember(Integer memberId) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
-
+        Integer page = 0;
+        Integer size = 10;
         // 관련 일정 추출
         List<Schedule> schedules = member.getSchedules();
 
@@ -143,8 +141,7 @@ public class ReviewService {
                 .toList();
 
         // Create and return response
-        NonReadReviewResponse response = NonReadReviewResponse.builder()
-                .reviewId(1L)
+        NumbersReviewResponse response = NumbersReviewResponse.builder()
                 .numbers(reviews.size())
                 .build();
 
@@ -171,10 +168,10 @@ public class ReviewService {
         // 멤버 및 티켓 가져오기
         Member member = memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::new);
-
+        System.out.println("no pass");
         Schedule schedule = scheduleRepository.findById(requestDTO.getScheduleId())
             .orElseThrow(() -> new RuntimeException("Schedule not found"));
-
+        System.out.println("pass");
         String filename;
         UploadFile uploadFile = null;
 
@@ -185,6 +182,7 @@ public class ReviewService {
         } else {
             // No file provided, use a placeholder filename or null
             filename = "noimg"; // Placeholder filename
+            System.out.println("no img");
         }
 
         System.out.println("uploaded image name" + uploadFile);
