@@ -28,9 +28,9 @@ class SignRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signOut(refreshToken: String): Flow<ApiResult<Any?>> = flow {
+    override suspend fun signOut(accessToken: String, refreshToken: String): Flow<ApiResult<Any?>> = flow {
         emit(safeApiCall {
-            signDataSource.postSignOut(refreshToken)
+            signDataSource.postSignOut(accessToken, refreshToken)
         })
     }
 

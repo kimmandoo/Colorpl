@@ -94,7 +94,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     private fun connectNaverMap(naverMap: NaverMap) {
         this@MapFragment.naverMap = naverMap
         observeTicketList()
-        setMarker()
+
         naverMap.setup(locationSource)
         this@MapFragment.locationOverlay = this@MapFragment.naverMap.locationOverlay
         this@MapFragment.locationOverlay.setupOverlay(
@@ -135,6 +135,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         Timber.tag(this::class.java.simpleName).d("티켓 리스트 관찰")
         mapViewModel.ticketList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
             Timber.d("이미지 확인 $it")
+            setMarker()
             clickMarker(
                 markerBuilder,
                 requireActivity(),
@@ -152,6 +153,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     companion object {
 
-        private const val DEFAULT_ZOOM = 15.0
+        private const val DEFAULT_ZOOM = 7.0
     }
 }

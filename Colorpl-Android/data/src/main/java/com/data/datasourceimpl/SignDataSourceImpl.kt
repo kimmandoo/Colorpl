@@ -14,8 +14,8 @@ import javax.inject.Inject
 class SignDataSourceImpl @Inject constructor(
     private val signApi: SignApi
 ) : SignDataSource {
-    override suspend fun postSignOut(refreshToken: String): Any? {
-        return signApi.postSignOut(refreshToken)
+    override suspend fun postSignOut(accessToken: String, refreshToken: String): Any? {
+        return signApi.postSignOut( "Bearer $accessToken",refreshToken)
     }
 
     override suspend fun postSignIn(requestSignIn: RequestSignIn): ResponseSignIn {

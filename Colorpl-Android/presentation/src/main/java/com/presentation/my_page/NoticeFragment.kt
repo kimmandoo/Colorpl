@@ -25,14 +25,11 @@ class NoticeFragment : BaseFragment<FragmentNoticeBinding>(R.layout.fragment_not
         }
 
         noticeAdapter.submitList(
-            listOf("가나다라마바사아자 차카타파하 가나다라 마바사아자차카타파하 가나 다라마바사 아자  차카타파 하 가나다라비가나다 라마바사아자차카 타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라비가나다라마바사아자차카 타파하가나다라마바 사 아자차카 타 파하가나다라마바 사 아자차카타파하가나다라비"
-                , "가나다라마바 사아자 차카타파하가나 다라마바 사아자차 카  타파하가나 다라마바  사아 자 차카타파 하가나 라비가나다 마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라비가나다라마바사 차카타파하가나 다라마바사아 자차카타파하가나다라마 바사아자 차카타파 하가나다라비", "" +
-                        "쩜", "개", "쩜")
-
+            listOf("")
         )
     }
 
-    private fun initClickEvent(){
+    private fun initClickEvent() {
         binding.includeTop.clBack.setOnClickListener {
             navigatePopBackStack()
         }

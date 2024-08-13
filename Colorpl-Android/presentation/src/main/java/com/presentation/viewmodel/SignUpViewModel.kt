@@ -28,6 +28,12 @@ class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
+    private val _nowType = MutableStateFlow<Sign>(Sign.ID)
+    val nowType: StateFlow<Sign> get() = _nowType
+
+    fun setNowType(value: Sign) {
+        _nowType.value = value
+    }
 
     private val _typeEvent = MutableSharedFlow<Sign>()
     val typeEvent: SharedFlow<Sign>
@@ -35,6 +41,7 @@ class SignUpViewModel @Inject constructor(
 
     fun setTypeEvent(type: Sign) {
         viewModelScope.launch {
+            setNowType(type)
             _typeEvent.emit(type)
         }
     }
@@ -51,7 +58,7 @@ class SignUpViewModel @Inject constructor(
 
 
     private val _userImageFile = MutableStateFlow<File?>(null)
-    val userImageFile : StateFlow<File?> get() = _userImageFile
+    val userImageFile: StateFlow<File?> get() = _userImageFile
 
     fun setUserEmail(value: String) {
         _userEmail.value = value
@@ -65,7 +72,7 @@ class SignUpViewModel @Inject constructor(
         _userPassWord.value = value
     }
 
-    fun setUserImageFile(value : File?){
+    fun setUserImageFile(value: File?) {
         _userImageFile.value = value
     }
 
@@ -138,7 +145,9 @@ class SignUpViewModel @Inject constructor(
 
 
     fun clearData() {
-        Timber.d("삭제가 왜 호출됨")
+        setTypeEvent(Sign.ID)
+        userPreference.clear()
+        setUserImageFile(null)
         setUserEmail("")
         setUserNickName("")
         setPassWord("")

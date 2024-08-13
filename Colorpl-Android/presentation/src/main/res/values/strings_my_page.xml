@@ -9,6 +9,10 @@
     <string name="my_page_my_review">나의리뷰</string>
     <string name="my_page_search_user">유저찾기</string>
 
+    <string name="my_page_notice_title">컬러플 앱 1.0.0버전 완성</string>
+    <string name="my_page_notice_content">드디어 문화 생활에 집합체! 컬러플 앱의 1.0.0 버전이 완성되었습니다.
+        재밌고 즐거운 문화생활을 컬러플을 통해 즐기시길 바라며, &#10; 각종 버그 및 QA 사항은 문의하기를 통해 문의해주시면 감사드리겠습니다.
+        다들 건강하세요!</string>
 
     <string name="my_page_nick_name">닉네임</string>
     <string name="my_page_nick_name_error">닉네임을 입력해주세요.</string>
