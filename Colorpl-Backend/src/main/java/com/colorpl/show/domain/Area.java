@@ -1,10 +1,8 @@
 package com.colorpl.show.domain;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public enum Area {
     SEOUL("서울특별시"),
@@ -23,7 +21,8 @@ public enum Area {
     JEOLLANAMDO("전라남도"),
     GYEONGSANGBUKDO("경상북도"),
     GYEONGSANGNAMDO("경상남도"),
-    JEJU("제주특별자치도");
+    JEJU("제주특별자치도"),
+    ETC("기타");
 
     private final String name;
 
@@ -36,8 +35,15 @@ public enum Area {
         return name;
     }
 
-    private static final Map<String, Area> stringToEnum = Stream.of(values())
-        .collect(Collectors.toMap(Objects::toString, e -> e));
+    private static final Map<String, Area> stringToEnum = new HashMap<>();
+
+    static {
+        for (Area e : values()) {
+            stringToEnum.put(e.toString(), e);
+        }
+        stringToEnum.put("강원도", GANGWON);
+        stringToEnum.put("해외", ETC);
+    }
 
     public static Optional<Area> fromString(String name) {
         return Optional.ofNullable(stringToEnum.get(name));
