@@ -12,22 +12,29 @@ class SeatViewHolder(
     fun bind(seat: Seat) {
         binding.apply {
             tvSeat.text = seat.name
-            clItem.setBackgroundResource(
-                when (seat.grade) {
-                    "R" -> R.drawable.selector_timber_wolf_to_imperial_red_for_seat
-                    "S" -> R.drawable.selector_timber_wolf_to_green_for_seat
-                    "A" -> R.drawable.selector_timber_wolf_to_blue_for_seat
-                    "B" -> R.drawable.selector_timber_wolf_to_purple_for_seat
-                    else -> R.color.eerie_black
-                }
-            )
+
+            if(seat.isReserved){
+                clItem.setBackgroundResource (
+                    R.color.eerie_black
+                )
+            }else{
+                clItem.setBackgroundResource(
+                    when (seat.grade) {
+                        "R" -> R.drawable.selector_timber_wolf_to_imperial_red_for_seat
+                        "S" -> R.drawable.selector_timber_wolf_to_green_for_seat
+                        "A" -> R.drawable.selector_timber_wolf_to_blue_for_seat
+                        "B" -> R.drawable.selector_timber_wolf_to_purple_for_seat
+                        else -> R.color.eerie_black
+                    }
+                )
+            }
             with(seat.isSelected) {
                 clItem.isSelected = this
                 tvSeat.isSelected = this
             }
 
             tvSeat.setOnClickListener {
-                if (seat.grade != null) onSeatSelected(seat)
+                if (!seat.isReserved && seat.grade != null) onSeatSelected(seat)
             }
         }
     }

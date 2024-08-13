@@ -1,6 +1,5 @@
 package com.presentation.reservation
 
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -8,10 +7,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationTimeTableBinding
 import com.domain.model.DateTableItem
 import com.domain.model.ReservationPairInfo
-import com.domain.model.ReservationPlace
-import com.domain.model.Theater
 import com.domain.model.TimeTable
-import com.domain.model.toModel
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.reservation.process.OnTimeTableClickListener
 import com.presentation.component.adapter.reservation.process.ReservationDateTableAdapter
@@ -35,79 +31,23 @@ class ReservationTimeTableFragment :
     }
     private val reservationDateTableAdapter by lazy {
         ReservationDateTableAdapter { dateItem ->
-            onDateTableClick(dateItem)
             viewModel.setReservationDate(dateItem.date)
         }
     }
 
-    private fun onDateTableClick(dateTable: DateTableItem) {
-        Toast.makeText(requireContext(), "${dateTable.date}", Toast.LENGTH_SHORT).show()
-    }
-
     override fun initView() {
-        initAdapter()
+        initTimeTableAdapter()
         initDateAdapter()
         initViewModel()
         observedSelectedDate()
         observedReservationSchedule()
         observeReservationSchedule()
-        viewModel.getReservationSchedule(2, "2024-08-09")
+        observedSelectedDate()
     }
 
 
-    private fun initAdapter() {
+    private fun initTimeTableAdapter() {
         binding.rcReservationTimeTable.adapter = reservationPlaceAdapter
-        val data = listOf(
-            ReservationPlace.DEFAULT,
-            ReservationPlace.DEFAULT.copy(
-                placeName = "병점CGV",
-                theaterList = listOf(
-                    Theater(
-                        theaterName = "1관",
-                        theaterTotalSeatCount = 100,
-                        timeTableList = listOf(
-                            TimeTable(
-                                scheduleId = 1,
-                                startTime = "10:00",
-                                endTime = "12:00",
-                                remainingSeatCount = 99
-                            ),
-                            TimeTable(
-                                scheduleId = 1,
-                                startTime = "12:30",
-                                endTime = "14:30",
-                                remainingSeatCount = 88
-                            ),
-                            TimeTable(
-                                scheduleId = 1,
-                                startTime = "15:00",
-                                endTime = "17:00",
-                                remainingSeatCount = 77
-                            ),
-                            TimeTable(
-                                scheduleId = 1,
-                                startTime = "17:30",
-                                endTime = "19:30",
-                                remainingSeatCount = 15
-                            ),
-                            TimeTable(
-                                scheduleId = 1,
-                                startTime = "20:00",
-                                endTime = "22:00",
-                                remainingSeatCount = 23
-                            )
-                        )
-                    ),
-                )
-
-            ),
-            ReservationPlace.DEFAULT.copy(placeName = "오산CGV"),
-        )
-
-
-//        reservationPlaceAdapter.submitList(
-//            data.toModel()
-//        )
     }
 
     private fun initDateAdapter() {
@@ -115,17 +55,6 @@ class ReservationTimeTableFragment :
             this@apply.itemAnimator = null
             this@apply.adapter = reservationDateTableAdapter
         }
-        val today = LocalDate.now()
-        val dateList = (0 until 14).map { i ->
-            val date = today.plusDays(i.toLong())
-            DateTableItem(
-                date = date,
-                isSelected = i == 0,
-                isEvent = !date.dayOfMonth.toString().contains('6')
-            )
-        }
-
-        reservationDateTableAdapter.submitList(dateList)
     }
 
     private fun initViewModel() {
@@ -166,7 +95,7 @@ class ReservationTimeTableFragment :
     private fun observeReservationSchedule() {
         viewModel.reservationSchedule.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
-                observedSelectedDate()
+//                observedSelectedDate()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
