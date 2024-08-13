@@ -1,5 +1,6 @@
 package com.presentation.my_page
 
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,11 +13,14 @@ import com.presentation.component.adapter.feed.FeedAdapter
 import com.presentation.component.dialog.LoadingDialog
 import com.presentation.my_page.model.OtherMyPageEventState
 import com.presentation.util.setImageCircleCrop
+import com.presentation.viewmodel.FeedViewModel
 import com.presentation.viewmodel.MyPageViewModel
 import com.presentation.viewmodel.OtherMyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -24,14 +28,18 @@ class OtherMyPageFragment :
     BaseFragment<FragmentOtherMyPageBinding>(R.layout.fragment_other_my_page) {
     private val myPageViewModel: MyPageViewModel by viewModels()
     private val otherMyPageViewModel: OtherMyPageViewModel by viewModels()
+    private val feedViewModel: FeedViewModel by viewModels()
+
     private val feedAdapter by lazy {
         FeedAdapter(
             onFeedContentClickListener = { id ->
-
+                onFeedContentClickListener(id)
             },
-            onEmotionClickListener = { id, isEmpathy -> },
-            onReportClickListener = { },
-            onUserClickListener = { }
+            onEmotionClickListener = { id, isEmpathy ->
+                onEmotionClickListener(id, isEmpathy)
+            },
+            onReportClickListener = { onReportClickListener() },
+            onUserClickListener = { onUserClickListener() },
         )
     }
 
@@ -40,6 +48,7 @@ class OtherMyPageFragment :
         initFeed()
         initClickEvent()
         observeUiState()
+        observeRefreshTrigger()
         observeEventState()
     }
 
@@ -47,7 +56,6 @@ class OtherMyPageFragment :
     private fun initData() {
         val safeArgs: OtherMyPageFragmentArgs by navArgs()
         safeArgs.memberInfo.apply {
-            Timber.d("데이ㅓㅌ 확인 $this")
             binding.isFollow = isFollowing
             binding.tvFollowRequest.isSelected = isFollowing
             otherMyPageViewModel.setFollowerId(memberId)
@@ -65,7 +73,7 @@ class OtherMyPageFragment :
         otherMyPageViewModel.otherFeedData.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { pagingData ->
                 pagingData.let { feed ->
-                    feedAdapter.submitData(feed)
+                    feedAdapter.submitData(viewLifecycleOwner.lifecycle, feed)
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -105,6 +113,13 @@ class OtherMyPageFragment :
 
 
     }
+    private fun observeRefreshTrigger() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            feedViewModel.refreshTrigger.collectLatest {
+                feedAdapter.refresh()
+            }
+        }
+    }
 
     private fun initClickEvent() {
         binding.apply {
@@ -119,5 +134,24 @@ class OtherMyPageFragment :
                 }
             }
         }
+    }
+
+    private fun onFeedContentClickListener(reviewId: Int) {
+        navigateDestinationBundle(
+            R.id.action_fragment_other_my_page_to_fragment_feed_detail,
+            bundleOf("reviewId" to reviewId)
+        )
+    }
+
+    private fun onEmotionClickListener(id: Int, isEmpathy: Boolean) {
+        feedViewModel.toggleEmpathy(id, isEmpathy)
+    }
+
+    private fun onReportClickListener() {
+
+    }
+
+    private fun onUserClickListener() {
+
     }
 }
