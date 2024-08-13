@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class GetScheduleService {
+public class GetShowScheduleService {
 
     private final GetReservationStatusService getReservationStatusService;
 
     @Transactional(readOnly = true)
-    public Map<String, Item> getSchedule(Long showScheduleId) {
+    public Map<String, Item> getShowSchedule(Long showScheduleId) {
         return getReservationStatusService.getReservationStatus(showScheduleId).getReserved();
     }
 }
