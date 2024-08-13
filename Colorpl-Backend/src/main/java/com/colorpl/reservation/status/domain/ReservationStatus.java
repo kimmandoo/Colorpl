@@ -102,8 +102,8 @@ public class ReservationStatus {
         ShowDetail showDetail,
         List<ReservationDetail> reservationDetails
     ) {
-        IntStream.rangeClosed(0, rows - 1)
-            .forEach(i -> IntStream.rangeClosed(0, cols - 1)
+        IntStream.range(0, rows)
+            .forEach(i -> IntStream.range(0, cols)
                 .forEach(j -> reserved.put(
                     getKey(i, j),
                     getItem(showDetail, i, j)
@@ -121,7 +121,7 @@ public class ReservationStatus {
         return Item.builder()
             .row(i)
             .col(j)
-            .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j)))
+            .name(String.valueOf((char) ('A' + i)).concat(String.valueOf(j + 1)))
             .grade(seatClass)
             .isReserved(false)
             .build();
