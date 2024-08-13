@@ -11,7 +11,6 @@ public class BootUser {
     private String phone;
     private String username;
 
-    // Getters and Setters
 
     public void setId(String id) {
         this.id = id;

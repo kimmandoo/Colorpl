@@ -63,15 +63,6 @@ public class MemberController {
     }
 
 
-//    @PutMapping
-//    @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
-//    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO) {
-//        Integer memberId = memberService.getCurrentMemberId();
-//
-//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
-//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
-//    }
-
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "멤버 수정", description = "로그인 된 멤버 정보를 수정하는 API")
@@ -112,14 +103,6 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
-
-//    // 나의 리뷰 조회
-//    @GetMapping("/{memberId}/reviews")
-//    public ResponseEntity<List<Review>> getMyReviews(@PathVariable Integer memberId) {
-//        List<Review> reviews = memberService.getMyReviews(memberId);
-//        return new ResponseEntity<>(reviews, HttpStatus.OK);
-//    }
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('USER')")
@@ -208,13 +191,6 @@ public class MemberController {
         return ResponseEntity.ok(followingCount);
     }
 
-//    @GetMapping("/search/{nickname}")
-//    @Operation(summary = "닉네임으로 멤버 검색", description = "특정 닉네임을 가진 모든 멤버를 조회하는 API")
-//    public ResponseEntity<List<MemberDTO>> getMembersByNickname(@PathVariable String nickname) {
-//        List<MemberDTO> members = memberService.findMembersByNickname(nickname);
-//        return ResponseEntity.ok(members);
-//    }
-
 
     @GetMapping("/search/{nickname}")
     @Operation(summary = "닉네임으로 멤버 검색", description = "닉네임으로 멤버를 검색하고 해당 멤버의 정보를 조회하는 API")
@@ -223,17 +199,7 @@ public class MemberController {
         return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
-
-//
 ////------------------------관리자용--------------------------//
-//    @PutMapping("/{memberId}")
-//    @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")
-//    public ResponseEntity<MemberDTO> updateMember(@PathVariable Integer memberId, @RequestBody MemberDTO memberDTO) {
-//        Member updatedMember = memberService.updateMemberInfo(memberId, memberDTO);
-//        return ResponseEntity.ok(MemberDTO.toMemberDTO(updatedMember));
-//    }
-
-
 
     @PutMapping("/{memberId}")
     @Operation(summary = "특정 멤버 수정", description = "특정 멤버의 정보를 수정하는 API, 관리자용")

@@ -37,11 +37,18 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
+<<<<<<< HEAD
+                dateEq(request.getDate()),
+                areaIn(request.getArea()),
+                nameContains(request.getKeyword()),
+                categoryEq(request.getCategory())
+=======
                 dateEq(date),
                 nameContains(keyword),
                 areaIn(area),
                 categoryEq(category),
                 cursorIdGt(cursorId)
+>>>>>>> origin/develop-backend
             )
             .limit(limit)
             .fetch();

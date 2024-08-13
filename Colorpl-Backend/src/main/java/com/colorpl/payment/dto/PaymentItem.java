@@ -11,5 +11,4 @@ public class PaymentItem {
     private int quantity;
     private double price;
 
-    // Getters and setters
 }

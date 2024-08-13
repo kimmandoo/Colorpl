@@ -14,7 +14,6 @@ public class PaymentRequest {
     private BootUser user;
     private List<BootItem> items;
 
-    // Getters and Setters
 
     public String getOrderName() {
         return orderName;

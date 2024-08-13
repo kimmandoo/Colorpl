@@ -76,8 +76,6 @@ public class Member extends BaseEntity {
     @CollectionTable(name = "member_receipts", joinColumns = @JoinColumn(name = "member_id"))
     private List<String> receiptIds = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)  // 리뷰와 연관된 코드 추가
-//    private List<Review> reviews;
 
     @ManyToMany
     @JoinTable(name = "member_following", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
