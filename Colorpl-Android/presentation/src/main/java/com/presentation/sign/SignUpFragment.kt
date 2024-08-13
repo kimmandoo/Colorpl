@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -93,6 +94,12 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
         signUpViewModel.nextButton.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 binding.apply {
+                    val event = if (it) {
+                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                    } else {
+                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                    }
+                    requireActivity().window.setSoftInputMode(event)
                     buttonVisible = !it
                     tvComplete.isSelected = it
                     tvComplete.isEnabled = it

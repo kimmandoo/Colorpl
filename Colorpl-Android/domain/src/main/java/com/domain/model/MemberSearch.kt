@@ -7,7 +7,7 @@ data class MemberSearch(
     val followingCount: Int,
     val memberId: Int,
     val nickname: String,
-    val profileImage: String,
+    val profileImage: String ?= "",
     val reviewCount: Int,
     val isFollowing : Boolean
 ) : Serializable

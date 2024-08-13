@@ -56,6 +56,7 @@ class ProfileUpdateFragment :
                 if (it?.isNotEmpty() == true) {
                     profileUpdateViewModel.setUpdateNickName(it.toString())
                     binding.tvComplete.isSelected = true
+                    binding.tilNickName.error = null
                 } else {
                     binding.tilNickName.error = getString(R.string.my_page_nick_name_error)
                 }
