@@ -8,7 +8,6 @@ import static com.colorpl.theater.domain.QTheater.theater;
 import com.colorpl.show.domain.Area;
 import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
-import com.colorpl.show.dto.GetShowDetailsRequest;
 import com.colorpl.show.dto.GetShowSchedulesRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,17 +24,33 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> getShowDetails(GetShowDetailsRequest request) {
+    public List<ShowDetail> getShowDetails(
+        LocalDate date,
+        String keyword,
+        List<Area> area,
+        Category category,
+        Integer cursorId,
+        int limit
+    ) {
         return queryFactory
             .select(showDetail).distinct()
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
+<<<<<<< HEAD
                 dateEq(request.getDate()),
                 areaIn(request.getArea()),
                 nameContains(request.getKeyword()),
                 categoryEq(request.getCategory())
+=======
+                dateEq(date),
+                nameContains(keyword),
+                areaIn(area),
+                categoryEq(category),
+                cursorIdGt(cursorId)
+>>>>>>> origin/develop-backend
             )
+            .limit(limit)
             .fetch();
     }
 
@@ -45,7 +60,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .select(showDetail).distinct()
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(idEq(showDetailId))
+            .where(showDetailIdEq(showDetailId))
             .fetchOne();
     }
 
@@ -57,7 +72,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .join(hall.theater, theater).fetchJoin()
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
-                idEq(condition.getShowDetailId()),
+                showDetailIdEq(condition.getShowDetailId()),
                 dateEq(condition.getDate())
             )
             .fetchOne();
@@ -72,19 +87,23 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         return showSchedule.dateTime.between(from, to);
     }
 
-    private BooleanExpression areaIn(List<Area> area) {
-        return area != null ? showDetail.area.in(area) : null;
-    }
-
     private BooleanExpression nameContains(String keyword) {
         return keyword != null ? showDetail.name.contains(keyword) : null;
+    }
+
+    private BooleanExpression areaIn(List<Area> area) {
+        return area != null ? showDetail.area.in(area) : null;
     }
 
     private BooleanExpression categoryEq(Category category) {
         return category != null ? showDetail.category.eq(category) : null;
     }
 
-    private BooleanExpression idEq(Integer id) {
-        return id != null ? showDetail.id.eq(id) : null;
+    private BooleanExpression cursorIdGt(Integer cursorId) {
+        return cursorId != null ? showDetail.id.gt(cursorId) : null;
+    }
+
+    private BooleanExpression showDetailIdEq(Integer showDetailId) {
+        return showDetailId != null ? showDetail.id.eq(showDetailId) : null;
     }
 }

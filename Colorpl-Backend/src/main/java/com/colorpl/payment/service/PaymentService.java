@@ -232,53 +232,7 @@ public class PaymentService {
                 })
                 .collect(Collectors.toList());
     }
-//public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
-//
-//    HashMap<String, Object> receiptDetails = bootpay.getReceipt(receiptId);
-//    String orderName = (String) receiptDetails.get("order_name");
-//
-//    ShowDetail showDetail = findShowDetailByOrderName(orderName).orElse(null);
-//
-//    if (showDetail == null) {
-//        return ReceiptDTO.builder()
-//                .receiptId(receiptId)
-//                .orderName(orderName)
-//                .purchasedAt((String) receiptDetails.get("purchased_at"))
-//                .price((int) receiptDetails.get("price"))
-//                .statusLocale((String) receiptDetails.get("status_locale"))
-//                .seats(null)
-//                .showDateTime(null)
-//                .theaterName(null)
-//                .showDetailPosterImagePath(null)
-//                .build();
-//    }
-//
-//    ShowSchedule showSchedule = showDetail.getShowSchedules().stream()
-//            .findFirst()
-//            .orElse(null);
-//
-//    List<ReservationDetail> reservationDetails = reservationDetailRepository.findByShowScheduleId(showSchedule != null ? showSchedule.getId() : null);
-//
-//
-//    List<SeatInfoDTO> seatInfos = reservationDetails.stream()
-//            .map(reservationDetail -> SeatInfoDTO.builder()
-//                    .row(reservationDetail.getRow())
-//                    .col(reservationDetail.getCol())
-//                    .build())
-//            .collect(Collectors.toList());
-//
-//    return ReceiptDTO.builder()
-//            .receiptId(receiptId)
-//            .orderName(orderName)
-//            .purchasedAt((String) receiptDetails.get("purchased_at"))
-//            .price((int) receiptDetails.get("price"))
-//            .statusLocale((String) receiptDetails.get("status_locale"))
-//            .seats(seatInfos)  // 좌석 정보 리스트 추가
-//            .showDateTime(showSchedule != null ? showSchedule.getDateTime() : null)
-//            .theaterName(showDetail.getHall() != null ? showDetail.getHall().getTheater().getName() : null)
-//            .showDetailPosterImagePath(showDetail.getPosterImagePath())
-//            .build();
-//}
+
     public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
 
         // Bootpay에서 영수증 정보 조회

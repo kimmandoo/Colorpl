@@ -11,6 +11,4 @@ public class UserTokenRequest {
     private String phone;
     private int gender;
     private String birth;
-
-    // Getters and setters
 }
