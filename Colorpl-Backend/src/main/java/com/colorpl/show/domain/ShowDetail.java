@@ -1,7 +1,6 @@
 package com.colorpl.show.domain;
 
 import com.colorpl.theater.domain.Hall;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -75,11 +74,11 @@ public class ShowDetail {
     @Column(name = "SHOW_DETAIL_STATE")
     private ShowState state;
 
-    @OneToMany(mappedBy = "showDetail", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "showDetail")
     @Builder.Default
     private List<ShowSchedule> showSchedules = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "showDetail", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "showDetail")
     private List<Seat> seats = new ArrayList<>();
 }

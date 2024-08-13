@@ -1,7 +1,6 @@
 package com.colorpl.show.service;
 
 import com.colorpl.global.common.exception.InvalidRuntimeException;
-import com.colorpl.global.common.exception.ShowScheduleNotFoundException;
 import com.colorpl.reservation.status.service.GetReservationStatusService;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetShowSchedulesRequest;
@@ -34,9 +33,6 @@ public class GetShowSchedulesService {
         GetShowSchedulesRequest request = GetShowSchedulesRequest.builder()
             .showDetailId(showDetailId).date(date).build();
         ShowDetail showDetail = showDetailRepository.getShowSchedules(request);
-        if (showDetail == null) {
-            throw new ShowScheduleNotFoundException();
-        }
         Hall hall = Hall.builder().name(showDetail.getHall().getName()).countSeats(rows * cols)
             .build();
         showDetail.getShowSchedules().forEach(showSchedule -> {

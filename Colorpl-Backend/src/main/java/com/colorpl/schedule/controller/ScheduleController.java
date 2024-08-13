@@ -1,7 +1,6 @@
 package com.colorpl.schedule.controller;
 
 import com.colorpl.schedule.dto.CreateCustomScheduleRequest;
-import com.colorpl.schedule.dto.CreateReservationScheduleRequest;
 import com.colorpl.schedule.dto.ScheduleListResponse;
 import com.colorpl.schedule.service.CreateCustomScheduleService;
 import com.colorpl.schedule.service.CreateReservationScheduleService;
@@ -44,15 +43,6 @@ public class ScheduleController {
         @RequestPart(required = false) MultipartFile file
     ) {
         Long id = createCustomScheduleService.create(request, file);
-        return ResponseEntity.created(getLocation(id)).body(id);
-    }
-
-    @PostMapping("/reservation")
-    public ResponseEntity<Long> createReservationSchedule(
-        @RequestPart CreateReservationScheduleRequest request,
-        @RequestPart(required = false) MultipartFile file
-    ) {
-        Long id = createReservationScheduleService.create(request, file);
         return ResponseEntity.created(getLocation(id)).body(id);
     }
 
