@@ -7,12 +7,15 @@ import jakarta.transaction.Transactional;
 import kr.co.bootpay.model.request.Cancel;
 import kr.co.bootpay.model.request.UserToken;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    private static final Logger log = LoggerFactory.getLogger(kr.co.bootpay.service.PaymentService.class);
     @GetMapping("/token")
     @Operation(summary = "사용자 토큰 발급", description = "Back-end 결제 api 사용을 위한 Authorization Token을 발급, 발급받은 토큰은 별도의 Bearer을 안붙이고 사용 가능")
     public ResponseEntity<?> getAccessToken() {
@@ -53,19 +57,65 @@ public class PaymentController {
         }
     }
 
+//    @PostMapping("/confirm")
+//    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
+//    @Transactional
+//    public ResponseEntity<?> confirmPayment(
+//            @RequestHeader("Pay-Authorization") String authorizationHeader,
+//            @RequestParam String receiptId) {
+//        try {
+//            HashMap<String, Object> response = paymentService.confirmPayment(receiptId, authorizationHeader);
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                    new HashMap<String, String>() {{
+//                        put("error", "Failed to confirm payment: " + e.getMessage());
+//                    }}
+//            );
+//        }
+//    }
+
+//    @PostMapping("/confirm")
+//    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
+//    @Transactional
+//    public ResponseEntity<?> confirmPayment(
+//            @RequestHeader("Pay-Authorization") String authorizationHeader,
+//            @RequestParam String receiptId) {
+//        try {
+//            HashMap<String, Object> response = paymentService.confirmPaymentFromReceipt(receiptId, authorizationHeader);
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+//                    new HashMap<String, String>() {{
+//                        put("error", "Failed to confirm payment: " + e.getMessage());
+//                    }}
+//            );
+//        }
+//    }
+
     @PostMapping("/confirm")
-    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
     @Transactional
+    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
     public ResponseEntity<?> confirmPayment(
             @RequestHeader("Pay-Authorization") String authorizationHeader,
             @RequestParam String receiptId) {
         try {
-            HashMap<String, Object> response = paymentService.confirmPayment(receiptId, authorizationHeader);
+            HashMap<String, Object> response = paymentService.confirmPaymentFromReceipt(receiptId, authorizationHeader);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            // 롤백된 경우 오류 처리
+            log.error("RuntimeException occurred during payment confirmation: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new HashMap<String, String>() {{
                         put("error", "Failed to confirm payment: " + e.getMessage());
+                    }}
+            );
+        } catch (Exception e) {
+            // 일반 예외 발생 시 오류 처리
+            log.error("Exception occurred during payment confirmation: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new HashMap<String, String>() {{
+                        put("error", "Unexpected error: " + e.getMessage());
                     }}
             );
         }
@@ -87,42 +137,6 @@ public class PaymentController {
             );
         }
     }
-//
-//    @PostMapping("/delete/receipt")
-//    @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
-//    public ResponseEntity<HashMap<String, Object>> deleteReceipt(@RequestBody Cancel cancel,
-//                                                                 @RequestHeader("Pay-Authorization") String authorizationHeader) {
-//        try {
-//            HashMap<String, Object> response = paymentService.removeReceiptIdFromMember(cancel, authorizationHeader);
-//            return ResponseEntity.ok(response);
-//        }catch(Exception e){
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                        new HashMap<String, String>() {{
-//                            put("error", "Failed to cancel payment: " + e.getMessage());
-//                        }}
-//                );
-//            }
-//
-//        }
-//    }
-
-//@PostMapping("/delete/receipt")
-//@Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
-//public ResponseEntity<?> deleteReceipt(@RequestBody Cancel cancel,
-//                                       @RequestHeader("Pay-Authorization") String authorizationHeader) {
-//    try {
-//        HashMap<String, Object> response= paymentService.removeReceiptIdFromMember(cancel.receiptId);
-//        return ResponseEntity.ok(new HashMap<String, Object>() {{
-//            put("message", "Receipt deleted successfully.");
-//        }});
-//    } catch (Exception e) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                new HashMap<String, String>() {{
-//                    put("error", "Failed to delete receipt: " + e.getMessage());
-//                }}
-//        );
-//    }
-//}
 @DeleteMapping("/delete/receipt/{receiptId}")
 @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
 public ResponseEntity<?> deleteReceipt(@PathVariable String receiptId,
