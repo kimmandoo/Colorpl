@@ -1,4 +1,4 @@
-package com.colorpl.global.common.storage;
+package com.colorpl.global.storage;
 
 import lombok.Builder;
 import lombok.Getter;

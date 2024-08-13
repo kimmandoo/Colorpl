@@ -5,14 +5,17 @@ import com.colorpl.comment.dto.CommentDTO;
 import com.colorpl.comment.repository.CommentRepository;
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReviewNotFoundException;
-import com.colorpl.global.common.storage.StorageService;
-import com.colorpl.global.common.storage.UploadFile;
+import com.colorpl.global.storage.StorageService;
+import com.colorpl.global.storage.UploadFile;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;
 import com.colorpl.review.domain.EmpathyId;
 import com.colorpl.review.domain.Review;
-import com.colorpl.review.dto.*;
+import com.colorpl.review.dto.NumbersReviewResponse;
+import com.colorpl.review.dto.ReadReviewResponse;
+import com.colorpl.review.dto.RequestDTO;
+import com.colorpl.review.dto.ReviewDTO;
 import com.colorpl.review.dto.ReviewDTO.ReviewDTOBuilder;
 import com.colorpl.review.repository.EmpathyRepository;
 import com.colorpl.review.repository.ReviewRepository;
@@ -25,8 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -126,7 +127,7 @@ public class ReviewService {
     public NumbersReviewResponse findReviewNumbersOfMember(Integer memberId) {
         // id로 멤버 찾기
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
         Integer page = 0;
         Integer size = 10;
         // 관련 일정 추출
@@ -134,16 +135,16 @@ public class ReviewService {
 
         // null 인 일정 외 모두 추출
         List<Review> reviews = schedules.stream()
-                .map(Schedule::getReview)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .distinct()
-                .toList();
+            .map(Schedule::getReview)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .distinct()
+            .toList();
 
         // Create and return response
         NumbersReviewResponse response = NumbersReviewResponse.builder()
-                .numbers(reviews.size())
-                .build();
+            .numbers(reviews.size())
+            .build();
 
         return response;
     }
@@ -216,13 +217,15 @@ public class ReviewService {
     @Transactional
     public void deleteById(Long id) {
         // 리뷰 찾기, 못찾으면 NoSuchElementException
-        if (!reviewRepository.existsById(id)) {
-            throw new ReviewNotFoundException();
+        Review review = reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+
+        if (review.getFilename() != null) {
+            storageService.deleteFile(review.getFilename());
         }
+
         // 삭제
         reviewRepository.deleteById(id);
     }
-
 
     public Optional<Empathy> findByReviewAndMember(Long reviewId, Integer memberId) {
         EmpathyId empathyId = new EmpathyId(reviewId, memberId);
@@ -230,18 +233,15 @@ public class ReviewService {
     }
 
 
-
-
     public ReviewDTO toReviewDTO(Integer memberId, Review review) {
 
-
-
         List<CommentDTO> commentDTOs = review.getComments().stream()
-                .map(CommentDTO::toCommentDTO)
-                .toList();
+            .map(CommentDTO::toCommentDTO)
+            .toList();
         int totalComments = commentDTOs.size();
 
-        System.out.println("//////////////////////////////////////////////////////////////////////");
+        System.out.println(
+            "//////////////////////////////////////////////////////////////////////");
         // testing
         String getClass = review.getSchedule().getClass().getName();
         System.out.println(getClass);
@@ -249,18 +249,18 @@ public class ReviewService {
 //        Schedule schedule = review.getSchedule();
 
         boolean myReviewCheck = review.getSchedule() != null &&
-                review.getSchedule().getMember() != null &&
-                review.getSchedule().getMember().getId() != null &&
-                review.getSchedule().getMember().getId().equals(memberId);
+            review.getSchedule().getMember() != null &&
+            review.getSchedule().getMember().getId() != null &&
+            review.getSchedule().getMember().getId().equals(memberId);
 
         int size = 10; // Assuming fixed size for comment pages
         int pages = (int) Math.ceil((double) totalComments / size);
 
         String formattedDate =
-                review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
+            review.getCreateDate() != null ? review.getCreateDate().format(formatter) : null;
 
         boolean myEmpathy = empathyRepository.findById(new EmpathyId(review.getId(), memberId))
-                .isPresent();
+            .isPresent();
 
         String basePath = "images/";
         String filename = review.getFilename();
@@ -269,61 +269,64 @@ public class ReviewService {
         if ("noimg".equals(filename)) {
             // Special case for "noimg"
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(basePath)
-                    .path("noimg.png") // or any specific path for placeholder image
-                    .build()
-                    .toUriString();
+                .path(basePath)
+                .path("noimg.png") // or any specific path for placeholder image
+                .build()
+                .toUriString();
         } else {
             // Standard case
             filepath = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(basePath)
-                    .path(filename)
-                    .build()
-                    .toUriString();
+                .path(basePath)
+                .path(filename)
+                .build()
+                .toUriString();
         }
 
         Schedule schedule = review.getSchedule();
         if (schedule instanceof HibernateProxy) {
-            schedule = (Schedule) ((HibernateProxy) schedule).getHibernateLazyInitializer().getImplementation();
+            schedule = (Schedule) ((HibernateProxy) schedule).getHibernateLazyInitializer()
+                .getImplementation();
         }
-
 
         ReviewDTOBuilder builder = ReviewDTO.builder()
-                .id(review.getId())
-                .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
-                .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
-                        ? review.getSchedule().getMember().getNickname() : null)
-                .imgurl(filepath)
-                .content(review.getContent())
-                .spoiler(review.getSpoiler())
-                .emotion(review.getEmotion())
-                .createdate(formattedDate)
-                .empathy(review.getEmphathy())
-                .myempathy(myEmpathy)
-                .commentpagesize(pages)
-                .commentscount(totalComments)
-                .myreview(myReviewCheck);
+            .id(review.getId())
+            .scheduleId(review.getSchedule() != null ? review.getSchedule().getId() : null)
+            .writer(review.getSchedule() != null && review.getSchedule().getMember() != null
+                ? review.getSchedule().getMember().getNickname() : null)
+            .imgurl(filepath)
+            .content(review.getContent())
+            .spoiler(review.getSpoiler())
+            .emotion(review.getEmotion())
+            .createdate(formattedDate)
+            .empathy(review.getEmphathy())
+            .myempathy(myEmpathy)
+            .commentpagesize(pages)
+            .commentscount(totalComments)
+            .myreview(myReviewCheck);
 
         if (schedule != null
-                && schedule instanceof CustomSchedule customSchedule) {
+            && schedule instanceof CustomSchedule customSchedule) {
             return builder
-                    .title(customSchedule.getName() != null ? customSchedule.getName() : null)
-                    .category(
-                            customSchedule.getCategory() != null ? customSchedule.getCategory().toString()
-                                    : null)
-                    .build();
+                .title(customSchedule.getName() != null ? customSchedule.getName() : null)
+                .category(
+                    customSchedule.getCategory() != null ? customSchedule.getCategory().toString()
+                        : null)
+                .build();
         } else if (schedule != null
-                && schedule instanceof ReservationSchedule reservationSchedule) {
+            && schedule instanceof ReservationSchedule reservationSchedule) {
             return builder
-                    .title(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
-                            .getName())
-                    .category(
-                        reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
-                                    .getCategory().toString())
-                    .build();
+                .title(reservationSchedule.getReservation().getReservationDetails().get(0)
+                    .getShowSchedule().getShowDetail()
+                    .getName())
+                .category(
+                    reservationSchedule.getReservation().getReservationDetails().get(0)
+                        .getShowSchedule().getShowDetail()
+                        .getCategory().toString())
+                .build();
         }
 
-        System.out.println("//////////////////////////////////////////////////////////////////////");
+        System.out.println(
+            "//////////////////////////////////////////////////////////////////////");
         // testing
         String getClass2 = review.getSchedule().getClass().getName();
         System.out.println(getClass2);

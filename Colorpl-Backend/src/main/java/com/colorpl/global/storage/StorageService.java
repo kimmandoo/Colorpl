@@ -1,4 +1,4 @@
-package com.colorpl.global.common.storage;
+package com.colorpl.global.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +8,5 @@ public interface StorageService {
 
     UploadFile storeFile(MultipartFile multipartFile);
 
-
-
+    void deleteFile(String filename);
 }
