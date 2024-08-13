@@ -71,7 +71,7 @@ class TicketCreateFragment :
 
     private fun initUi() {
         when (args.photoType) {
-            TicketType.CAMERA_ISSUED, TicketType.CAMERA_UNISSUED -> {
+            TicketType.CAMERA_UNISSUED -> {
                 requireContext().requestCameraPermission(
                     onGrant = {
                         openCamera()
@@ -82,7 +82,7 @@ class TicketCreateFragment :
                 )
             }
 
-            TicketType.GALLERY_ISSUED, TicketType.GALLERY_UNISSUED -> {
+            TicketType.GALLERY_UNISSUED -> {
                 getPhotoGallery(pickImageLauncher)
             }
         }

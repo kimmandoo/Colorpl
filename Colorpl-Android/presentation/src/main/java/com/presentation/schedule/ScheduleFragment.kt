@@ -1,5 +1,6 @@
 package com.presentation.schedule
 
+import android.view.Gravity
 import android.view.MotionEvent
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
@@ -47,8 +48,8 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     private val popUpAdapter by lazy {
         CustomPopupAdapter(
             listOf(
-                getString(R.string.schedule_ticket_issued),
-                getString(R.string.schedule_ticket_unissued)
+                "",
+                getString(R.string.schedule_ticket_unissued),
             )
         )
     }
@@ -223,12 +224,14 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         val listPopupWindow = ListPopupWindow(binding.root.context)
         listPopupWindow.apply {
             animationStyle = R.style.FABPopupAnimation
+
             setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,
                     android.R.color.transparent
                 )
             )
+
             setAdapter(popUpAdapter)
             anchorView = binding.fabAddTicket
             width =
@@ -237,10 +240,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             isModal = true
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
-                    TicketState.ISSUED.state -> {
-                        showTicketCreateDialog(TicketState.ISSUED)
-                    }
-
                     TicketState.UNISSUED.state -> {
                         showTicketCreateDialog(TicketState.UNISSUED)
                     }
@@ -272,14 +271,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             type = ticketState,
             action = { ticketType ->
                 val action = when (ticketType) {
-                    TicketType.CAMERA_ISSUED -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_ISSUED)
-                    }
-
-                    TicketType.GALLERY_ISSUED -> {
-                        ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.GALLERY_ISSUED)
-                    }
-
                     TicketType.CAMERA_UNISSUED -> {
                         ScheduleFragmentDirections.actionFragmentScheduleToNavTicketGraph(TicketType.CAMERA_UNISSUED)
                     }

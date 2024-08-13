@@ -24,6 +24,6 @@ class CustomPopupAdapter(private val items: List<String>) : BaseAdapter() {
             convertView.tag as FABViewHolder
         }
 
-        return holder.bind(items[position], position)
+        return holder.bind(items[position])
     }
 }

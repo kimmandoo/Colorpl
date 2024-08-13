@@ -21,13 +21,10 @@ enum class ReviewMode {
 }
 
 enum class TicketState(val state: Int) {
-    ISSUED(0),
     UNISSUED(1)
 }
 
 enum class TicketType() {
-    CAMERA_ISSUED,
-    GALLERY_ISSUED,
     CAMERA_UNISSUED,
     GALLERY_UNISSUED,
 }
