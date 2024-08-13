@@ -29,4 +29,5 @@ public class Messages {
     public static final String SHOW_STATE_NOT_FOUND = "존재하지 않는 공연상태입니다. state=%s";
     public static final String INVALID_SEAT_CLASS = "유효하지 않은 좌석등급입니다. numberOfSeatClasses=%d";
     public static final String INVALID_DAY_OF_WEEK = "유효하지 않은 요일입니다. dayOfWeek=%s";
+    public static final String INVALID_AREA = "유효하지 않은 지역입니다. area=%s";
 }
