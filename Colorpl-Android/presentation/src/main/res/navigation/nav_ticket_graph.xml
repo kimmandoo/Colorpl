@@ -22,33 +22,8 @@
             android:name="photoType"
             app:argType="com.presentation.util.TicketType" />
         <action
-            android:id="@+id/action_fragment_ticket_create_to_fragment_ticket_finish"
-            app:destination="@id/fragment_ticket_finish">
-            <argument
-                android:name="imageUrl"
-                app:argType="android.net.Uri"
-                app:nullable="true" />
-        </action>
-        <action
             android:id="@+id/action_fragment_ticket_create_to_dialog_ticket_address"
             app:destination="@id/dialog_ticket_address" />
 
-    </fragment>
-    <fragment
-        android:id="@+id/fragment_ticket_finish"
-        android:name="com.presentation.ticket.TicketFinishFragment"
-        tools:layout="@layout/fragment_ticket_finish"
-        android:label="TicketFinishFragment">
-        <argument
-            android:name="imageUrl"
-            app:argType="android.net.Uri"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_fragment_ticket_finish_to_fragment_schedule"
-            app:destination="@id/fragment_schedule"
-            app:enterAnim="@anim/anim_slide_in_right"
-            app:popEnterAnim="@anim/anim_slide_in_right"
-            app:popUpTo="@id/fragment_schedule"
-            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

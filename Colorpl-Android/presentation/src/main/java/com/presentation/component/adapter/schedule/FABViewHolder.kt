@@ -12,17 +12,12 @@ class FABViewHolder(private val binding: ItemPopUpBinding) {
         itemView.tag = this
     }
 
-    fun bind(item: String, position: Int): View {
-        binding.tvTitle.text = item
-        when (position) {
-            TicketState.ISSUED.state -> {
-                binding.ivIcon.setImageResource(R.drawable.ic_issued_ticket)
-            }
-
-            TicketState.UNISSUED.state -> {
-                binding.ivIcon.setImageResource(R.drawable.ic_unissued_ticket)
-            }
+    fun bind(item: String): View {
+        if (item.isEmpty()) {
+            itemView.visibility = View.INVISIBLE
         }
+        binding.tvTitle.text = item
+        binding.ivIcon.setImageResource(R.drawable.ic_issued_ticket)
         binding.executePendingBindings()
         return itemView
     }
