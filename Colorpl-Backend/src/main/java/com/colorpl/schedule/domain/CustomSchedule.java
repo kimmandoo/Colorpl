@@ -71,4 +71,22 @@ public class CustomSchedule extends Schedule {
 
         member.getSchedules().add(this);
     }
+
+    public void updateCustomSchedule(
+        String seat,
+        LocalDateTime dateTime,
+        String name,
+        Category category,
+        String location,
+        Double latitude,
+        Double longitude
+    ) {
+        this.seat = seat;
+        this.dateTime = dateTime;
+        this.name = name;
+        this.category = category;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }
