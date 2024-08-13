@@ -22,9 +22,11 @@ import com.presentation.util.TicketState
 import com.presentation.util.TicketType
 import com.presentation.util.getPattern
 import com.presentation.util.overScrollControl
+import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 
 
@@ -80,7 +82,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     calendarAdapter.submitList(
                         viewModel.matchTicketsToCalendar(
                             calendarList,
-                            viewModel.tickets.value
+                            viewModel.tickets.last()
                         )
                     )
                 }
@@ -98,7 +100,8 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
             launch {
                 viewModel.filteredTickets.collectLatest { filteredTickets ->
-                    ticketAdapter.submitList(filteredTickets.sortedByDescending { it.dateTime })
+                    ticketAdapter.submitList(filteredTickets.filter { it.dateTime.toLocalDate() == viewModel.clickedDate.value?.date }
+                        .sortedByDescending { it.dateTime })
                 }
             }
 
@@ -107,7 +110,9 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                     when (mode) {
                         CalendarMode.MONTH -> {
                             setMonthMode()
-                            ticketAdapter.submitList(viewModel.tickets.value.sortedByDescending { it.dateTime })  // 월 모드일 때는 모든 티켓 표시
+                            ticketAdapter.submitList(
+                                viewModel.tickets.last()
+                                    .sortedByDescending { it.dateTime })  // 월 모드일 때는 모든 티켓 표시
                         }
 
                         CalendarMode.WEEK -> {

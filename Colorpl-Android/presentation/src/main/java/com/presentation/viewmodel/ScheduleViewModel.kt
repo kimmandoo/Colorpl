@@ -11,8 +11,12 @@ import com.presentation.util.CalendarMode
 import com.presentation.util.getPattern
 import com.presentation.util.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.DayOfWeek
@@ -35,11 +39,11 @@ class ScheduleViewModel @Inject constructor(
     private val _calendarItems = MutableStateFlow<List<CalendarItem>>(emptyList())
     val calendarItems: StateFlow<List<CalendarItem>> = _calendarItems
 
-    private val _tickets = MutableStateFlow<List<TicketResponse>>(emptyList())
-    val tickets: StateFlow<List<TicketResponse>> = _tickets
+    private val _tickets = MutableSharedFlow<List<TicketResponse>>(replay = 1)
+    val tickets: SharedFlow<List<TicketResponse>> = _tickets.asSharedFlow()
 
-    private val _filteredTickets = MutableStateFlow<List<TicketResponse>>(emptyList())
-    val filteredTickets: StateFlow<List<TicketResponse>> = _filteredTickets
+    private val _filteredTickets = MutableSharedFlow<List<TicketResponse>>(replay = 1)
+    val filteredTickets: SharedFlow<List<TicketResponse>> = _filteredTickets.asSharedFlow()
 
     private val _displayDate = MutableStateFlow("")
     val displayDate: StateFlow<String> = _displayDate
@@ -68,13 +72,17 @@ class ScheduleViewModel @Inject constructor(
     }
 
     fun filterTicketsForSelectedWeek() {
-        val startOfWeek = findStartOfWeek(_selectedDate.value)
-        val endOfWeek = startOfWeek.plusDays(6)
+        viewModelScope.launch {
+            val startOfWeek = findStartOfWeek(_selectedDate.value)
+            val endOfWeek = startOfWeek.plusDays(6)
 
-        _filteredTickets.value = _tickets.value.filter { ticket ->
-            val ticketDate = ticket.dateTime.toLocalDate()
-            ticketDate in startOfWeek..endOfWeek
-        }.toMutableList()
+            val filteredList = _tickets.replayCache.firstOrNull()?.filter { ticket ->
+                val ticketDate = ticket.dateTime.toLocalDate()
+                ticketDate in startOfWeek..endOfWeek
+            } ?: emptyList()
+
+            _filteredTickets.emit(filteredList)
+        }
     }
 
 
@@ -87,8 +95,8 @@ class ScheduleViewModel @Inject constructor(
                     }
 
                     is DomainResult.Success -> {
-                        _tickets.value = it.data
-                        matchTicketsToCalendar(_calendarItems.value, it.data)
+                        _tickets.emit(it.data)
+                        _calendarItems.value = matchTicketsToCalendar(_calendarItems.value, it.data)
                     }
                 }
             }
@@ -183,10 +191,12 @@ class ScheduleViewModel @Inject constructor(
             createCalendar(_selectedDate.value)
         }
         _calendarItems.value = updateList
-        _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.value)
         _calendarMode.value = CalendarMode.MONTH
         updateDisplayDate()
-        _filteredTickets.value = _tickets.value
+        viewModelScope.launch {
+            _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.last())
+            _filteredTickets.emit(_tickets.replayCache.firstOrNull() ?: emptyList())
+        }
     }
 
     fun updateCalendarWeekMode(
