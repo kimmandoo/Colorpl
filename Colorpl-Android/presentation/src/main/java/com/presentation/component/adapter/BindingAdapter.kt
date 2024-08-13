@@ -151,6 +151,12 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
             Category.EXHIBITION -> {
                 context.getString(R.string.sign_up_category_exhibition)
             }
+            Category.ETC -> {
+                context.getString(R.string.sign_up_category_etc)
+            }
+            Category.PERFORMANCE -> {
+                context.getString(R.string.sign_up_category_performance)
+            }
         }
         textView.text = text
     }
@@ -178,6 +184,12 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
             }
 
             Category.EXHIBITION -> {
+                ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
+            }
+            Category.ETC -> {
+                ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
+            }
+            Category.PERFORMANCE -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
             }
         }

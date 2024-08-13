@@ -11,7 +11,7 @@ class ReservationDataSourceImpl @Inject constructor(
     private val reservationApi: ReservationApi
 ) : ReservationDataSource {
 
-    override suspend fun getReservationListShows(filters: Map<String, String>): List<ResponseReservationInfo> {
+    override suspend fun getReservationListShows(filters: Map<String, String?>): List<ResponseReservationInfo> {
         return reservationApi.getReservationListShows(filters)
     }
 

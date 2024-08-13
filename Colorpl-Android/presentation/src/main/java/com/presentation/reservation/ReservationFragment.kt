@@ -1,8 +1,7 @@
 package com.presentation.reservation
 
-import android.view.View
-import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,23 +15,22 @@ import com.presentation.component.adapter.feed.FilterAdapter
 import com.presentation.component.adapter.reservation.ReservationInfoAdapter
 import com.presentation.component.dialog.DateRangePickerDialog
 import com.presentation.component.dialog.LocationPickerDialog
+import com.presentation.util.Category
+import com.presentation.util.ShowType
 import com.presentation.util.getFilterItems
+import com.presentation.util.hideKeyboard
+import com.presentation.util.setVisibility
+import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.ReservationListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kr.co.bootpay.android.Bootpay
-import kr.co.bootpay.android.events.BootpayEventListener
-import kr.co.bootpay.android.models.BootItem
-import kr.co.bootpay.android.models.BootUser
-import kr.co.bootpay.android.models.Payload
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Calendar
+import java.time.format.DateTimeFormatter
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class ReservationFragment :
@@ -58,27 +56,23 @@ class ReservationFragment :
         initFilter()
         initReservationInfo()
         initClickListener()
-        initReservationList()
         initViewModel()
-
         observeReservationList()
-
         initSearchWindow()
-        observeSearchKeyword()
-        observeSearchDate()
-        observeSearchArea()
-        observeSearchCategory()
     }
 
-    private fun initReservationList() {
-        reservationListViewModel.getReservationList()
-    }
 
     private fun observeReservationList() {
-        reservationListViewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationList ->
-            reservationInfoAdapter.submitList(reservationList)
-            Timber.tag("reservationList").d(reservationList.toString())
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        reservationListViewModel.reservationList.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { reservationList ->
+                binding.apply {
+                    icEmptyView.clTitle.setVisibility(reservationList.isEmpty())
+                    rvReservationInfo.setVisibility(reservationList.isNotEmpty())
+                }
+
+                reservationInfoAdapter.submitList(reservationList)
+                Timber.tag("reservationList").d(reservationList.toString())
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initFilter() {
@@ -122,8 +116,16 @@ class ReservationFragment :
             clSelectLocation.setOnClickListener {
                 showLocationPickerDialog()
             }
-            ivFilter.setOnClickListener {
-                initReservationList()
+            tvClear.setOnClickListener {
+                svSearch.clearFocus()
+                svSearch.setQuery("", false)
+                reservationListViewModel.dataClear()
+                onFilterClickListener(FilterItem("전체"))
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(300L)
+                    binding.rvReservationInfo.scrollToPosition(0)
+                }
             }
         }
     }
@@ -131,6 +133,11 @@ class ReservationFragment :
     private fun onFilterClickListener(clickedItem: FilterItem) {
         val updatedList = filterAdapter.currentList.map { item ->
             if (item.name == clickedItem.name) {
+                Timber.d("확인 $item")
+                reservationListViewModel.setParam(
+                    ShowType.CATEGORY,
+                    Category.getTitle(item.name)?.getKey() ?: ""
+                )
                 item.copy(isSelected = true)
             } else {
                 item.copy(isSelected = false)
@@ -146,46 +153,22 @@ class ReservationFragment :
         Navigation.findNavController(binding.root).navigate(action)
     }
 
-    private fun observeSearchDate() {
-        reservationListViewModel.searchDate.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { date ->
-            Timber.tag("선택한 날짜").d(date.toString())
-            reservationListViewModel.getReservationList()
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
 
-    private fun observeSearchArea() {
-        reservationListViewModel.searchArea.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { location ->
-            binding.tvSelectLocation.text = location
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
 
-    private fun observeSearchKeyword() {
-        reservationListViewModel.searchKeyword.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { keyword ->
-                reservationListViewModel.getReservationList()
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun observeSearchCategory() {
-        reservationListViewModel.searchCategory.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { category ->
-
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
 
     private fun initSearchWindow() {
         binding.apply {
-            svSearch.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+            svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     // 검색 버튼을 눌렀을 때 호출
                     query?.let {
-                        Timber.tag("click").d(it)
-                        reservationListViewModel.setKeyword(it)
+                        reservationListViewModel.setParam(ShowType.KEYWORD, it)
                     } ?: run {
-                        // query가 null인 경우에도 빈 문자열로 검색을 트리거
-                        Timber.tag("click").d("")
-                        reservationListViewModel.setKeyword("")
+                        reservationListViewModel.dataClear()
+                        binding.svSearch.clearFocus()
+                        requireActivity().hideKeyboard(binding.root)
                     }
+                    requireActivity().hideKeyboard(binding.root)
                     return true
                 }
 
@@ -196,22 +179,28 @@ class ReservationFragment :
                     }
                     return true
                 }
-
             })
         }
     }
 
     /** 날짜 선택 캘린더 Dialog */
     private fun showDateRangePickerDialog() {
-        val initialDate = reservationListViewModel.searchDate.value ?: LocalDate.now()
+        val initialDate = reservationListViewModel.date.value ?: LocalDate.now()
         Timber.tag("date").d(initialDate.toString())
-        val dateRangePickerDialog = DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
-            // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-            val selectedDate = LocalDate.of(year, month, day)
-            reservationListViewModel.setDate(selectedDate)
-        }
+        val dateRangePickerDialog =
+            DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
+                // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
+                val selectedDate = LocalDate.of(year, month, day)
+                reservationListViewModel.setDate(selectedDate)
+                val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
+                val data = selectedDate.format(dateFormat)
+                binding.tvSelectDate.text = data
+                reservationListViewModel.setParam(ShowType.DATE, data)
+            }
         dateRangePickerDialog.show()
     }
+
+
 
     /** 지역 선택 리스트 Dialog */
     private fun showLocationPickerDialog() {
@@ -220,11 +209,10 @@ class ReservationFragment :
         val locationPickerDialog =
             LocationPickerDialog(requireContext(), locationList) { selectedCity ->
                 binding.tvSelectLocation.text = selectedCity
-                reservationListViewModel.setArea(selectedCity)
+                reservationListViewModel.setParam(ShowType.LOCATION, selectedCity)
             }
         locationPickerDialog.show()
     }
-
 
 
 }

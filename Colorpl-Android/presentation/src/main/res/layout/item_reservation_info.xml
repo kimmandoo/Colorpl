@@ -9,6 +9,7 @@
         <variable
             name="reservationInfo"
             type="com.domain.model.ReservationInfo" />
+
     </data>
 
 
@@ -67,7 +68,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@{reservationInfo.category}"
                 android:textColor="@color/timber_wolf"
                 app:layout_constraintStart_toStartOf="@id/tv_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_title"

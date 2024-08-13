@@ -7,7 +7,7 @@ import com.data.util.ApiResult
 import kotlinx.coroutines.flow.Flow
 
 interface ReservationRepository {
-    suspend fun getReservationAllShows(filters: Map<String, String>): Flow<ApiResult<List<ResponseReservationInfo>>>
+    suspend fun getReservationAllShows(filters: Map<String, String?>): Flow<ApiResult<List<ResponseReservationInfo>>>
 
     suspend fun getReservationShows(showDetailId: Int): Flow<ApiResult<ResponseReservationInfo>>
 
