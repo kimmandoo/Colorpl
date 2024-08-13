@@ -1,15 +1,20 @@
 package com.colorpl.show.service;
 
+import static com.colorpl.show.service.SeatRatio.SEAT_RATIO;
+
+import com.colorpl.global.common.exception.InvalidSeatClassException;
 import com.colorpl.show.domain.Seat;
+import com.colorpl.show.domain.SeatClass;
 import com.colorpl.show.domain.ShowDetail;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class CreateSeatService {
 
     @Value("${seat.rows}")
@@ -17,39 +22,31 @@ public class CreateSeatService {
     @Value("${seat.cols}")
     private int cols;
 
-    private double[][] weights = {
-        {},
-        {1.000},
-        {.2500, .7500},
-        {.1111, .2778, .6111},
-        {.0625, .1458, .2708, .5208},
-//            {.0400, .0900, .1567, .2567, .4567},
-//            {.0278, .0611, .1028, .1583, .2417, .4083},
-//            {.0204, .0442, .0728, .1085, .1561, .2276, .3704},
-//            {.0156, .0335, .0543, .0793, .1106, .1522, .2147, .3397},
-//            {.0123, .0262, .0421, .0606, .0828, .1106, .1477, .2032, .3143},
-//            {.0100, .0211, .0336, .0479, .0646, .0846, .1096, .1429, .1929, .2929},
-    };
+    @Transactional
+    public void createSeat(ShowDetail showDetail) {
+        double[] seatRatio = SEAT_RATIO[showDetail.getPriceBySeatClass().size()];
+        IntStream.range(0, rows)
+            .forEach(i -> {
+                int index = Arrays.binarySearch(seatRatio, (double) i / rows * cols);
+                int seatClass = getSeatClass(index, showDetail);
+                IntStream.range(0, cols)
+                    .forEach(j -> Seat.builder()
+                        .showDetail(showDetail)
+                        .row(i)
+                        .col(j)
+                        .seatClass(SeatClass.fromInteger(seatClass)
+                            .orElseThrow(() -> new InvalidSeatClassException(seatClass)))
+                        .build());
+            });
+    }
 
-    public void create(ShowDetail showDetail) {
-        int index = 0;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (index < showDetail.getPriceBySeatClass().size() - 1) {
-                    if (i * cols + j > rows * cols * weights[showDetail.getPriceBySeatClass()
-                        .size()][index]) {
-                        index++;
-                    }
-                }
-                Seat seat = Seat.builder()
-                    .showDetail(showDetail)
-                    .row(i)
-                    .col(j)
-                    .seatClass(
-                        showDetail.getPriceBySeatClass().keySet().stream().toList().get(index))
-                    .build();
-                showDetail.getSeats().add(seat);
-            }
+    private int getSeatClass(int index, ShowDetail showDetail) {
+        if (index < 0) {
+            index = -index - 1;
         }
+        if (index == showDetail.getPriceBySeatClass().size()) {
+            index -= 1;
+        }
+        return index;
     }
 }

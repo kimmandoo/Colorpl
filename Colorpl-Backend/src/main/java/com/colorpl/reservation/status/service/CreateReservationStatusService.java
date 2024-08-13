@@ -36,7 +36,7 @@ public class CreateReservationStatusService {
         ShowSchedule showSchedule = showScheduleRepository
             .findById(showScheduleId)
             .orElseThrow(ShowScheduleNotFoundException::new);
-        ShowDetail showDetail = showDetailRepository.findShowDetailAndSeatsById(
+        ShowDetail showDetail = showDetailRepository.getShowDetail(
             showSchedule.getShowDetail().getId());
         List<ReservationDetail> reservationDetails = reservationDetailRepository
             .findByShowSchedule(showSchedule);

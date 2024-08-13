@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class GetSchedulesResponse {
+public class GetShowSchedulesResponse {
 
     private String name;
     @Builder.Default
@@ -26,16 +26,16 @@ public class GetSchedulesResponse {
         private Integer countSeats;
         @Builder.Default
         private List<Timetable> timetable = new ArrayList<>();
+    }
 
-        @Getter
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        @Builder
-        public static class Timetable {
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder
+    public static class Timetable {
 
-            private Long showScheduleId;
-            private LocalDateTime startTime;
-            private LocalDateTime endTime;
-            private Integer remainingSeats;
-        }
+        private Long showScheduleId;
+        private LocalDateTime startTime;
+        private LocalDateTime endTime;
+        private Integer remainingSeats;
     }
 }

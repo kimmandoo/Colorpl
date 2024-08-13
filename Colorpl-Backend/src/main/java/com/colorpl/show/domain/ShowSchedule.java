@@ -10,27 +10,32 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class ShowSchedule {
 
-    @Column(name = "SHOW_SCHEDULE_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SHOW_SCHEDULE_ID")
     private Long id;
 
-    @JoinColumn(name = "SHOW_DETAIL_ID")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SHOW_DETAIL_ID")
     private ShowDetail showDetail;
 
     @Column(name = "SHOW_SCHEDULE_DATE_TIME")
     private LocalDateTime dateTime;
+
+    @Builder
+    public ShowSchedule(LocalDateTime dateTime, Long id, ShowDetail showDetail) {
+        this.dateTime = dateTime;
+        this.id = id;
+        this.showDetail = showDetail;
+        showDetail.getShowSchedules().add(this);
+    }
 }
