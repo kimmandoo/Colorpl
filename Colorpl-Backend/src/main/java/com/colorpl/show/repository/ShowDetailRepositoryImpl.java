@@ -32,7 +32,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
             .where(
                 dateEq(request.getDate()),
-                areaEq(request.getArea()),
+                areaIn(request.getArea()),
                 nameContains(request.getKeyword()),
                 categoryEq(request.getCategory())
             )
@@ -72,8 +72,8 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         return showSchedule.dateTime.between(from, to);
     }
 
-    private BooleanExpression areaEq(Area area) {
-        return area != null ? showDetail.area.eq(area) : null;
+    private BooleanExpression areaIn(List<Area> area) {
+        return area != null ? showDetail.area.in(area) : null;
     }
 
     private BooleanExpression nameContains(String keyword) {
