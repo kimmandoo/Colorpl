@@ -163,10 +163,12 @@ public class PaymentService {
             ReservationDTO reservation = reservationService.createReservation(memberId, reservationDTO);
             Long reservationId = reservation.getId();
 
-            createReservationScheduleService.create(reservationId);
+            Long scheduleId = createReservationScheduleService.create(reservationId);
 
             // 결제 승인
             HashMap<String, Object> confirmResponse = bootpay.confirm(receiptId);
+
+            confirmResponse.put("scheduleId", scheduleId);
 
             return confirmResponse;
         } catch (RuntimeException e) {
