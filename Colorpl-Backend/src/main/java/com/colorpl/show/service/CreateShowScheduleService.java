@@ -1,5 +1,6 @@
 package com.colorpl.show.service;
 
+import com.colorpl.global.common.exception.InvalidDayOfWeekException;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowScheduleRepository;
@@ -17,41 +18,50 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class CreateShowScheduleService {
 
     private final ShowScheduleRepository showScheduleRepository;
 
-    public void create(ShowDetail showDetail, LocalDate startDate, LocalDate endDate,
-        String schedule) {
+    @Transactional
+    public void createShowSchedule(
+        String schedule,
+        LocalDate from,
+        LocalDate to,
+        ShowDetail showDetail
+    ) {
+        ArrayList<ShowSchedule> showSchedules = new ArrayList<>();
         Map<DayOfWeek, List<LocalTime>> schedules = parseSchedule(schedule);
-        for (LocalDate date : startDate.datesUntil(endDate).toList()) {
-            for (LocalTime time : schedules.getOrDefault(date.getDayOfWeek(), new ArrayList<>())) {
-                ShowSchedule showSchedule = ShowSchedule.builder().showDetail(showDetail)
-                    .dateTime(LocalDateTime.of(date, time)).build();
-                showScheduleRepository.save(showSchedule);
-            }
-        }
+        from.datesUntil(to)
+            .filter(date -> schedules.containsKey(date.getDayOfWeek()))
+            .forEach(date -> schedules.get(date.getDayOfWeek())
+                .forEach(time -> {
+                    ShowSchedule showSchedule = ShowSchedule.builder()
+                        .showDetail(showDetail)
+                        .dateTime(LocalDateTime.of(date, time))
+                        .build();
+                    showSchedules.add(showSchedule);
+                }));
+        showScheduleRepository.saveAll(showSchedules);
     }
 
     private Map<DayOfWeek, List<LocalTime>> parseSchedule(String schedule) {
         Map<DayOfWeek, List<LocalTime>> map = new HashMap<>();
         for (String s : schedule.split(", ")) {
-            int index = s.indexOf('(');
+            int index = s.lastIndexOf('(');
             String[] daysOfWeek = s.substring(0, index).split(" ~ ");
-            List<LocalTime> times = Arrays.stream(s.substring(index + 1, s.length() - 1).split(","))
-                .map(this::parseTime).toList();
+            List<LocalTime> times = Arrays.stream(s.substring(index + 1, s.length() - 1)
+                    .split(","))
+                .map(this::parseTime)
+                .toList();
+            if (daysOfWeek[0].equals("HOL")) {
+                map.put(DayOfWeek.SATURDAY, times);
+                map.put(DayOfWeek.SUNDAY, times);
+                continue;
+            }
             switch (daysOfWeek.length) {
-                case 1 -> {
-                    if (daysOfWeek[0].equals("HOL")) {
-                        map.put(DayOfWeek.SATURDAY, times);
-                        map.put(DayOfWeek.SUNDAY, times);
-                    } else {
-                        map.put(parseDayOfWeek(daysOfWeek[0]), times);
-                    }
-                }
+                case 1 -> map.put(parseDayOfWeek(daysOfWeek[0]), times);
                 case 2 -> {
                     DayOfWeek from = parseDayOfWeek(daysOfWeek[0]);
                     DayOfWeek to = parseDayOfWeek(daysOfWeek[1]);
@@ -59,8 +69,7 @@ public class CreateShowScheduleService {
                         map.put(DayOfWeek.of(i), times);
                     }
                 }
-                default -> throw new IllegalArgumentException(
-                    "Invalid day of week: " + Arrays.toString(daysOfWeek));
+                default -> throw new IllegalArgumentException(Arrays.toString(daysOfWeek));
             }
         }
         return map;
@@ -75,7 +84,7 @@ public class CreateShowScheduleService {
             case "금요일" -> DayOfWeek.FRIDAY;
             case "토요일" -> DayOfWeek.SATURDAY;
             case "일요일" -> DayOfWeek.SUNDAY;
-            default -> throw new IllegalArgumentException("Invalid day of week: " + dayOfWeek);
+            default -> throw new InvalidDayOfWeekException(dayOfWeek);
         };
     }
 
