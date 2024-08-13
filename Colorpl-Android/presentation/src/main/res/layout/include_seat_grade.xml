@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:paddingEnd="12dp"
-        android:text="24000원"
+        android:text="0원"
         android:textColor="@color/white"
         android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="@id/tv_grade_cnt"

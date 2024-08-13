@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.presentation.viewmodel.ReservationViewModel" />
@@ -10,6 +11,7 @@
         <variable
             name="paymentDiscount"
             type="com.presentation.util.Payment.Discount" />
+
         <variable
             name="paymentMethod"
             type="com.presentation.util.Payment.Method" />
@@ -70,10 +72,10 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/test_feed"
-                        app:loadImageToReservationDetail="@{viewModel.reservationImg}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_reservation_info"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_reservation_info" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_reservation_info"
+                        app:loadImageToReservationDetail="@{viewModel.reservationImg}" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cl_content"
@@ -155,7 +157,6 @@
                         <!--                        android:text="@{viewModel.reservationSelectedSeat.size + `매 | ` + viewModel.reservationSelectedSeat.toString()}"-->
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -325,10 +326,11 @@
                 style="@style/suite_medium_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/reservation_pay"
                 android:textColor="@color/timber_wolf"
+                android:textSize="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -337,9 +339,10 @@
                 style="@style/suite_medium_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:text="48,000원 -"
+                android:layout_marginStart="5dp"
+                android:text="0원"
                 android:textColor="@color/white"
+                android:textSize="12dp"
                 app:layout_constraintStart_toEndOf="@+id/tv_pay"
                 app:layout_constraintTop_toTopOf="@+id/tv_pay" />
 
@@ -348,10 +351,11 @@
                 style="@style/suite_medium_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/reservation_discount_pay"
                 android:textColor="@color/timber_wolf"
+                android:textSize="12dp"
                 app:layout_constraintStart_toEndOf="@+id/tv_pay_value"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -360,34 +364,37 @@
                 style="@style/suite_medium_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="5dp"
                 android:text="0원"
                 android:textColor="@color/white"
+                android:textSize="12dp"
                 app:layout_constraintStart_toEndOf="@+id/tv_discount_pay"
                 app:layout_constraintTop_toTopOf="@+id/tv_discount_pay" />
 
 
             <TextView
                 android:id="@+id/tv_result_pay"
-                style="@style/suite_medium_14"
+                style="@style/suite_medium_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="7dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/reservation_result_pay"
                 android:textColor="@color/white"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_pay"
                 app:layout_constraintTop_toBottomOf="@+id/tv_pay" />
 
             <TextView
                 android:id="@+id/tv_result_pay_value"
-                style="@style/suite_bold_14"
+                style="@style/suite_bold_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
-                android:text="48,000원"
+                android:layout_marginStart="5dp"
+                android:text="0원"
                 android:textColor="@color/imperial_red"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_result_pay"
                 app:layout_constraintStart_toEndOf="@+id/tv_result_pay"
                 app:layout_constraintTop_toTopOf="@+id/tv_result_pay" />
@@ -395,6 +402,7 @@
             <TextView
                 android:id="@+id/tv_pay_next"
                 style="@style/suite_medium_16"
+                android:textSize="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@color/selector_timber_wolf_to_imperial_red"

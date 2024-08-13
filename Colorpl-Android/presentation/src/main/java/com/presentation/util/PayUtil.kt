@@ -120,6 +120,7 @@ fun makeMetaData(
     showName: String,
     showHallName: String,
     showTheaterName: String,
+    showDetailId: Int,
     showScheduleId: Int,
     selectedSeatList: List<Map<String, Any>>,
     selectedDiscount: String?,
@@ -128,6 +129,7 @@ fun makeMetaData(
     map["showName"] = showName
     map["showHallName"] = showHallName
     map["showTheaterName"] = showTheaterName
+    map["showDetailId"] = showDetailId
     map["showScheduleId"] = showScheduleId
     map["selectedSeatList"] = selectedSeatList
     selectedDiscount?.let { map["selectedDiscount"] = it }

@@ -36,7 +36,6 @@ class ReservationSeatFragment :
         binding.apply {
             showPeopleCountBottomSheet()
             initUi()
-//            viewModel.getReservationSeat(2, 109)
         }
     }
 
@@ -63,28 +62,28 @@ class ReservationSeatFragment :
                 this.tvGrade.text = SeatClass.R.value
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_imperial_red_8_stroke_4_imperial_red)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0.formatWithCommas())
+                this.tvGradePrice.text = getString(R.string.reservation_price, 0.formatWithCommas())
             }
 
             tvGradeS.apply {
                 this.tvGrade.text = SeatClass.S.value
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_green_8_stroke_4_green)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0.formatWithCommas())
+                this.tvGradePrice.text = getString(R.string.reservation_price, 0.formatWithCommas())
             }
 
             tvGradeA.apply {
                 this.tvGrade.text = SeatClass.A.value
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_blue_8_stroke_4_blue)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0.formatWithCommas())
+                this.tvGradePrice.text = getString(R.string.reservation_price, 0.formatWithCommas())
             }
 
             tvGradeB.apply {
                 this.tvGrade.text = SeatClass.B.value
                 this.tvGrade.setBackgroundResource(R.drawable.rectangle_purple_8_stroke_4_purple)
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, 0)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, 0.formatWithCommas())
+                this.tvGradePrice.text = getString(R.string.reservation_price, 0.formatWithCommas())
             }
         }
 
@@ -97,35 +96,17 @@ class ReservationSeatFragment :
         dialog.show()
     }
 
-//    private fun initViewModel() {
-//        binding.apply {
-//            this@apply.viewModel = viewModel
-//        }
-//    }
 
     private fun bottomSheetClickListener(count: Int) {
         peopleCount = count
         selectedSeats.clear()
         viewModel.clearReservationSeat()
         updateUiOfChangedPeopleCount()
-//        seatAdapter.submitList(createSeats(ROW_SIZE, COL_SIZE))
         observeReservationSeat()
         observeReservationTotalPrice()
         findCenterPosition()
-//        binding.tvPrice.text =
-//            getString(R.string.reservation_seat_price, selectedSeats.sumOf { it.price })
     }
 
-//    private fun createSeats(rowSize: Int, colSize: Int): List<Seat> {
-//        return List(rowSize * colSize) { index ->
-//            Seat(
-//                row = index / colSize,
-//                col = index % colSize,
-//                grade = (1..5).random(),
-//                isSelected = false
-//            )
-//        }
-//    }
 
     private fun updateSeatSelection(seat: Seat) {
         val currentList = seatAdapter.currentList.toMutableList()
@@ -160,32 +141,30 @@ class ReservationSeatFragment :
                 val rPrice = viewModel.reservationPriceBySeatClass.value[SeatClass.R.value] ?: 0
                 val totalPrice = (rCount * rPrice).formatWithCommas()
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, rCount)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, totalPrice)
+                this.tvGradePrice.text = getString(R.string.reservation_price, totalPrice)
             }
             tvGradeS.apply {
                 val sCount = gradeCount[SeatClass.S.value] ?: 0
                 val sPrice = viewModel.reservationPriceBySeatClass.value[SeatClass.S.value] ?: 0
                 val totalPrice = (sCount * sPrice).formatWithCommas()
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, sCount)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, totalPrice)
+                this.tvGradePrice.text = getString(R.string.reservation_price, totalPrice)
             }
             tvGradeA.apply {
                 val aCount = gradeCount[SeatClass.A.value] ?: 0
                 val aPrice = viewModel.reservationPriceBySeatClass.value[SeatClass.A.value] ?: 0
                 val totalPrice = (aCount * aPrice).formatWithCommas()
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, aCount)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, totalPrice)
+                this.tvGradePrice.text = getString(R.string.reservation_price, totalPrice)
             }
             tvGradeB.apply {
                 val bCount = gradeCount[SeatClass.B.value] ?: 0
                 val bPrice = viewModel.reservationPriceBySeatClass.value[SeatClass.B.value] ?: 0
                 val totalPrice = (bCount * bPrice).formatWithCommas()
                 this.tvGradeCnt.text = getString(R.string.reservation_seat_cnt, bCount)
-                this.tvGradePrice.text = getString(R.string.reservation_seat_price, totalPrice)
+                this.tvGradePrice.text = getString(R.string.reservation_price, totalPrice)
             }
         }
-//            binding.tvPrice.text =
-//                getString(R.string.reservation_seat_price, selectedSeats.sumOf { it.price })
 
         updateConfirmState()
     }
@@ -195,9 +174,11 @@ class ReservationSeatFragment :
     private fun updateConfirmState() {
         binding.tvNext.isSelected = if (selectedSeats.size == peopleCount) {
             binding.tvNext.text = "선택완료"
+            binding.tvNext.isEnabled = true
             true
         } else {
             binding.tvNext.text = "선택(${selectedSeats.size}/$peopleCount)"
+            binding.tvNext.isEnabled = false
             false
         }
     }
@@ -223,9 +204,9 @@ class ReservationSeatFragment :
     }
 
     private fun observeReservationTotalPrice() {
-        viewModel.reservationTotalPrice.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { totalPrice ->
+        viewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { totalPrice ->
             Timber.tag("totalPrice").d("$totalPrice")
-            binding.tvPrice.text = getString(R.string.reservation_seat_price, totalPrice.formatWithCommas())
+            binding.tvPrice.text = getString(R.string.reservation_price, totalPrice.amountOfAfter.formatWithCommas())
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

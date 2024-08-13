@@ -3,16 +3,17 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.ReservationPairInfo
+import com.domain.model.ReservationPayInfo
 import com.domain.model.Seat
 import com.domain.model.TimeTable
 import com.domain.usecase.ReservationScheduleUseCase
 import com.domain.usecase.ReservationSeatUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.util.DomainResult
+import com.presentation.util.Payment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -59,8 +60,14 @@ class ReservationViewModel @Inject constructor(
     private val _reservationPriceBySeatClass = MutableStateFlow<Map<String, Int>>(mapOf())
     val reservationPriceBySeatClass: StateFlow<Map<String, Int>> = _reservationPriceBySeatClass
 
-    private val _reservationTotalPrice = MutableStateFlow(0)
-    val reservationTotalPrice: StateFlow<Int> = _reservationTotalPrice
+    private val _reservationPayInfo = MutableStateFlow(ReservationPayInfo())
+    val reservationPayInfo: StateFlow<ReservationPayInfo> = _reservationPayInfo
+
+    private val _reservationPayDiscount = MutableStateFlow(Payment.Discount.NONE)
+    val reservationPayDiscount: StateFlow<Payment.Discount> = _reservationPayDiscount
+
+    private val _reservationPayMethod = MutableStateFlow(Payment.Method.NONE)
+    val reservationPayMethod: StateFlow<Payment.Method> = _reservationPayMethod
 
     private val _getReservationSchedule = MutableStateFlow<List<ReservationPairInfo>>(listOf())
     val getReservationSchedule: StateFlow<List<ReservationPairInfo>> = _getReservationSchedule
@@ -116,8 +123,16 @@ class ReservationViewModel @Inject constructor(
         _reservationPriceBySeatClass.value = priceBySeatClass
     }
 
-    fun setReservationTotalPrice(totalPrice: Int) {
-        _reservationTotalPrice.value = totalPrice
+    fun setReservationTotalPrice(totalPrice: ReservationPayInfo) {
+        _reservationPayInfo.value = totalPrice
+    }
+
+    fun setReservationPayDiscount(discount: Payment.Discount) {
+        _reservationPayDiscount.value = discount
+    }
+
+    fun setReservationPayMethod(method: Payment.Method) {
+        _reservationPayMethod.value = method
     }
 
     /**
@@ -173,6 +188,7 @@ class ReservationViewModel @Inject constructor(
         }
     }
 
+    /** 선택된 좌석 총 가격을 계산. */
     fun calculateTotalPrice() {
         val totalPrice = _reservationSeat.value
             .filter { it.isSelected } // 선택된 좌석만 필터링
@@ -180,12 +196,38 @@ class ReservationViewModel @Inject constructor(
                 Timber.tag("sumOf").d("${_reservationPriceBySeatClass.value[seat.grade]}")
                 _reservationPriceBySeatClass.value[seat.grade] ?: 0
             }
-        _reservationTotalPrice.value = totalPrice
+        _reservationPayInfo.value = _reservationPayInfo.value.copy(amountOfBefore = totalPrice)
     }
 
+    /** 모든 좌석의 `isSelected`를 `false`로 설정. */
     fun clearReservationSeat() {
         _reservationSeat.value = _reservationSeat.value.map { seat ->
-            seat.copy(isSelected = false) // 모든 좌석의 isSelected를 false로 설정
+            seat.copy(isSelected = false) //
+        }
+    }
+
+    fun updatePayInfo() {
+        when(reservationPayDiscount.value) {
+            Payment.Discount.SSAFY_TRAINEE -> {
+                val discountPrice = _reservationPayInfo.value.amountOfBefore - 100
+                _reservationPayInfo.value = _reservationPayInfo.value.copy(
+                    amountOfDiscount = discountPrice,
+                )
+            }
+            Payment.Discount.COUPON -> {
+                val beforePrice = _reservationPayInfo.value.amountOfBefore
+                val discountPrice = (beforePrice * 0.5).toInt() // 50% 할인 적용
+                _reservationPayInfo.value = _reservationPayInfo.value.copy(
+                    amountOfDiscount = discountPrice,
+                )
+            }
+            Payment.Discount.NONE -> {
+                _reservationPayInfo.value = _reservationPayInfo.value.copy(
+                    amountOfDiscount = 0,
+                )
+            }
+
+
         }
     }
 }

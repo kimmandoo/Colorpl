@@ -19,6 +19,7 @@ data class PayRequest(
         val showName: String,
         val showHallName: String,
         val showTheaterName: String,
+        val showDetailId: Int,
         val showScheduleId: Int,
         val selectedSeatList: List<Seat>,
         val selectedDiscount: String
