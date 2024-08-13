@@ -6,6 +6,7 @@ import com.domain.model.ReservationInfo
 import com.domain.model.ShowParam
 import com.domain.usecase.ReservationListUseCase
 import com.domain.util.DomainResult
+import com.presentation.util.Area
 import com.presentation.util.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,14 @@ class ReservationListViewModel @Inject constructor(
     fun setDate(value : LocalDate?){
         _date.value = value
     }
+
+    private val _area = MutableStateFlow<List<Area>>(emptyList())
+    val area: StateFlow<List<Area>> get() = _area
+
+    fun setArea(area: List<Area>) {
+        _area.value = area
+    }
+
 
 
     init {

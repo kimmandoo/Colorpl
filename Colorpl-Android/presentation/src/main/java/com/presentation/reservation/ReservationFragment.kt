@@ -15,6 +15,7 @@ import com.presentation.component.adapter.feed.FilterAdapter
 import com.presentation.component.adapter.reservation.ReservationInfoAdapter
 import com.presentation.component.dialog.DateRangePickerDialog
 import com.presentation.component.dialog.LocationPickerDialog
+import com.presentation.util.Area
 import com.presentation.util.Category
 import com.presentation.util.ShowType
 import com.presentation.util.getFilterItems
@@ -205,12 +206,24 @@ class ReservationFragment :
     /** 지역 선택 리스트 Dialog */
     private fun showLocationPickerDialog() {
         Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-        val locationList = arrayOf("전국", "서울", "경기·인천", "강원", "충청·대전·세종", "경상·대구·울산·부산", "전라·광주")
+
+        // 지역 이름 리스트를 추출
+        val locationList = Area.AREA_PAIR_LIST.map { it.first }.toTypedArray()
+
         val locationPickerDialog =
             LocationPickerDialog(requireContext(), locationList) { selectedCity ->
+                // 선택된 지역을 찾기 위해 AREA_PAIR_LIST에서 검색
+                val selectedAreaPair = Area.AREA_PAIR_LIST.find { it.first == selectedCity }
+
+                // 선택된 지역에 대한 후속 처리
                 binding.tvSelectLocation.text = selectedCity
-                reservationListViewModel.setParam(ShowType.LOCATION, selectedCity)
+                selectedAreaPair?.second?.let { areas ->
+                    val areaCodes = areas.joinToString(",") { it.name }
+                    Timber.tag("area").d(areaCodes)
+                    reservationListViewModel.setParam(ShowType.LOCATION, areaCodes)
+                }
             }
+
         locationPickerDialog.show()
     }
 
