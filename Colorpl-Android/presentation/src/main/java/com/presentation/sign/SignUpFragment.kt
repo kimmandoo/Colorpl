@@ -92,9 +92,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
     private fun observeNextButton() { //다음 버튼 활성화
         signUpViewModel.nextButton.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
-                binding.tvNext.apply {
-                    isSelected = it
-                    isEnabled = it
+                binding.apply {
+                    buttonVisible = !it
+                    tvComplete.isSelected = it
+                    tvComplete.isEnabled = it
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -141,7 +142,11 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode == RESULT_OK) {
                     it.data?.data?.let { uri ->
-                        signUpViewModel.setUserImageFile(ImageProcessingUtil(requireActivity()).uriToCompressedFile(uri))
+                        signUpViewModel.setUserImageFile(
+                            ImageProcessingUtil(requireActivity()).uriToCompressedFile(
+                                uri
+                            )
+                        )
                         binding.ivProfile.setImageCircleCrop(uri)
                     }
                 }
@@ -150,23 +155,44 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(R.layout.fragment_sig
 
 
     private fun initClickEvent() {
-        binding.includePassword.ivPasswordToggle.setOnClickListener { // password Toggle
-            binding.includePassword.etContent.setPasswordTransformation()
-        }
+        binding.apply {
+            includePassword.ivPasswordToggle.setOnClickListener { // password Toggle
+                includePassword.ivPasswordToggle.isSelected =
+                    !includePassword.ivPasswordToggle.isSelected
+                includePassword.etContent.setPasswordTransformation()
+            }
 
-        binding.ivProfile.setOnClickListener { //프로필 이미지 클릭
-            getPhotoGallery(pickImageLauncher)
-        }
+            ivProfile.setOnClickListener { //프로필 이미지 클릭
+                getPhotoGallery(pickImageLauncher)
+            }
 
-        binding.ivBack.setOnClickListener { //뒤로 가기
-            signUpViewModel.clearData()
-            navigatePopBackStack()
-        }
+            ivBack.setOnClickListener { //뒤로 가기
+                signUpViewModel.clearData()
+                navigatePopBackStack()
+            }
 
-        binding.tvNext.setOnClickListener {
-            navigateDestination(
-                R.id.action_fragment_sign_up_to_fragment_sign_up_preference
-            )
+            tvComplete.setOnClickListener {
+                navigateDestination(
+                    R.id.action_fragment_sign_up_to_fragment_sign_up_preference
+                )
+            }
+            tvNext.setOnClickListener {
+                when (signUpViewModel.nowType.value) {
+                    Sign.ID -> {
+                        signUpViewModel.setTypeEvent(Sign.PASSWORD)
+                    }
+
+                    Sign.PASSWORD -> {
+                        signUpViewModel.setTypeEvent(Sign.NICKNAME)
+                    }
+
+                    Sign.NICKNAME -> {
+                        signUpViewModel.setTypeEvent(Sign.PROFILE)
+                    }
+
+                    else -> {}
+                }
+            }
         }
     }
 

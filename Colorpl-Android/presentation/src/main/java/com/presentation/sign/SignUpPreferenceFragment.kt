@@ -1,6 +1,5 @@
 package com.presentation.sign
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -8,10 +7,11 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentSignUpPreferenceBinding
-import com.presentation.MainActivity
 import com.presentation.base.BaseDialogFragment
 import com.presentation.sign.model.SignUpEventState
 import com.presentation.util.Category
+import com.presentation.util.Sign
+import com.presentation.util.onBackButtonPressed
 import com.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -28,6 +28,7 @@ class SignUpPreferenceFragment :
         initClickEvent()
         observeCompleteButton()
         observeSignUp()
+        backEvent()
     }
 
 
@@ -66,8 +67,7 @@ class SignUpPreferenceFragment :
                 }
             }
             ivBack.setOnClickListener {
-                signUpViewModel.userPreference.clear()
-                navigatePopBackStack()
+                initBackEvent()
             }
 
             tvNext.setOnClickListener { //회원 가입 로직 및 성공시 Main 이동
@@ -93,6 +93,12 @@ class SignUpPreferenceFragment :
             .onEach {
                 when (it) {
                     is SignUpEventState.SignUpSuccess -> {
+                        signUpViewModel.clearData()
+                        Toast.makeText(
+                            requireActivity(),
+                            requireActivity().getString(R.string.sign_up_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         navigatePopBackStack()
                     }
 
@@ -106,5 +112,15 @@ class SignUpPreferenceFragment :
 
     }
 
+    private fun backEvent() {
+        requireActivity().onBackButtonPressed(viewLifecycleOwner) {
+            initBackEvent()
+        }
+    }
+
+    private fun initBackEvent() {
+        signUpViewModel.clearData()
+        navigatePopBackStack()
+    }
 
 }
