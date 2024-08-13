@@ -29,7 +29,7 @@ public class RetrieveShowListApiServiceImpl implements RetrieveShowListApiServic
     public ShowListApiResponse retrieve(LocalDate from, LocalDate to, int page) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         URI uri = UriComponentsBuilder.fromHttpUrl(showApiUrl)
-            .path("pblprfr")
+            .path("/pblprfr")
             .queryParam("service", showApiKey)
             .queryParam("stdate", from.format(formatter))
             .queryParam("eddate", to.format(formatter))

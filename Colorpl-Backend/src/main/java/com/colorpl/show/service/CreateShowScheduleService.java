@@ -43,7 +43,7 @@ public class CreateShowScheduleService {
                         .build();
                     showSchedules.add(showSchedule);
                 }));
-        showScheduleRepository.saveAll(showSchedules);
+        showScheduleRepository.batchInsert(showSchedules);
     }
 
     private Map<DayOfWeek, List<LocalTime>> parseSchedule(String schedule) {
