@@ -19,6 +19,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,14 +37,26 @@ class TicketCreateViewModel @Inject constructor(
     val category: StateFlow<String> = _category
     private val _geocodingLatLng = MutableStateFlow<LatLng>(LatLng(0.0, 0.0))
     val geocodingLatLng: StateFlow<LatLng> = _geocodingLatLng
+    private val _juso = MutableStateFlow("")
+    val juso: StateFlow<String> = _juso
     private val _createResponse = MutableSharedFlow<Int>()
     val createResponse: SharedFlow<Int> = _createResponse.asSharedFlow()
     private val _ticketInfo = MutableStateFlow<Boolean>(false)
     val ticketInfo: StateFlow<Boolean> = _ticketInfo
+    private val _scheduleInfo = MutableStateFlow<Boolean>(false)
+    val scheduleInfo: StateFlow<Boolean> = _scheduleInfo
 
     fun setCategory(text: String) {
         _category.value = text
         stateConfirm()
+    }
+
+    fun setJuso(text:String){
+        _juso.value = text
+    }
+
+    fun setSchedule(text: String) {
+        _scheduleInfo.value = isValidDateFormat(text)
     }
 
     fun clearCategory() {
@@ -50,6 +66,7 @@ class TicketCreateViewModel @Inject constructor(
 
     fun getAddress(address: String) {
         viewModelScope.launch {
+            setJuso(address)
             geocodingUseCase(address).collectLatest { response ->
                 when (response) {
                     is DomainResult.Error -> {
@@ -110,6 +127,7 @@ class TicketCreateViewModel @Inject constructor(
             openAiUseCase(base64String).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
+                        setSchedule(it.data.schedule)
                         _description.value = it.data
                         stateConfirm()
                     }
@@ -122,8 +140,17 @@ class TicketCreateViewModel @Inject constructor(
         }
     }
 
-    fun setTicketInfo(description: Description) {
-        _description.value = description
-    }
+    companion object {
+        private const val DATE_PATTERN = "yyyy년 MM월 dd일 HH:mm"
+        private val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.KOREAN)
 
+        fun isValidDateFormat(input: String): Boolean {
+            return try {
+                LocalDateTime.parse(input, formatter)
+                true
+            } catch (e: DateTimeParseException) {
+                false
+            }
+        }
+    }
 }

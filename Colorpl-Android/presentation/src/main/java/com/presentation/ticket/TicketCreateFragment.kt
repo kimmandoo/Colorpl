@@ -1,6 +1,8 @@
 package com.presentation.ticket
 
 import android.Manifest
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.view.View
@@ -24,7 +26,6 @@ import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
-import com.domain.model.Description
 import com.presentation.base.BaseFragment
 import com.presentation.notification.FcmWorker
 import com.presentation.util.ImageProcessingUtil
@@ -43,9 +44,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -72,6 +73,8 @@ class TicketCreateFragment :
     override fun initView() {
         observeDescription()
         observeTicketResponse()
+        observeJuso()
+        observeDialog()
         initGalleryPhoto()
         initCamera()
         initUi()
@@ -95,10 +98,13 @@ class TicketCreateFragment :
             }
         }
 
-        binding.cbFindRoute.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
-            }
+        binding.cbFindRoute.setOnClickListener {
+            showLoading()
+            findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
+        }
+
+        binding.tvSchedule.setOnClickListener {
+            showDatePicker()
         }
 
         binding.tvConfirm.setOnClickListener {
@@ -110,22 +116,6 @@ class TicketCreateFragment :
                     binding.tvConfirm.isEnabled = false
                     showLoading()
                 }
-            }
-            if (isValidDateFormat(binding.etSchedule.text.toString())) {
-                viewModel.setTicketInfo(
-                    Description(
-                        title = binding.etTitle.text.toString(),
-                        detail = binding.etDetail.text.toString(),
-                        schedule = binding.etSchedule.text.toString(),
-                        seat = binding.etSeat.text.toString()
-                    )
-                )
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "일정을 0000년 00월 00일 00:00 형식으로 맞춰주세요",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
         val hint = "카테고리를 선택하세요"
@@ -172,8 +162,12 @@ class TicketCreateFragment :
                         binding.apply {
                             etTitle.setText(data.title)
                             etDetail.setText(data.detail)
-                            etSchedule.setText(data.schedule)
                             etSeat.setText(data.seat)
+                            if (viewModel.scheduleInfo.value) {
+                                tvSchedule.text = data.schedule
+                            } else {
+                                tvSchedule.text = "일정을 선택해주세요"
+                            }
                         }
                     }
                 }
@@ -189,8 +183,9 @@ class TicketCreateFragment :
         }.launchIn(viewLifecycleOwner.lifecycleScope)
         viewModel.geocodingLatLng.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { latlng ->
             Timber.d("$latlng")
-            if (latlng.latitude == 0.0 || latlng.longitude == 0.0) {
-                binding.cbFindRoute.isChecked = false
+            if (latlng.latitude != 0.0 && latlng.longitude != 0.0) {
+                dismissLoading()
+                binding.cbFindRoute.text = "길찾기를 제공합니다"
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -274,22 +269,91 @@ class TicketCreateFragment :
         takePicture.launch(photoUri)
     }
 
+    private fun observeJuso() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.juso.collectLatest { juso ->
+                binding.tvHintJuso.text = juso
+                binding.tvHintJuso.visibility = if (juso.isNotEmpty()) View.VISIBLE else View.GONE
+            }
+        }
+    }
+
+    private fun showDatePicker() {
+        val currentDateTime = Calendar.getInstance()
+        val selectedDateString = binding.tvSchedule.text.toString()
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm", Locale.getDefault())
+        val calendar = if (selectedDateString.isNotEmpty() && selectedDateString != "일정을 선택해주세요") {
+            try {
+                Calendar.getInstance().apply {
+                    time = dateFormat.parse(selectedDateString) ?: Date()
+                }
+            } catch (e: Exception) {
+                currentDateTime
+            }
+        } else {
+            currentDateTime
+        }
+
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            val selectedDate = Calendar.getInstance()
+            selectedDate.set(selectedYear, selectedMonth, selectedDay)
+            showTimePicker(selectedDate)
+        }, year, month, day).show()
+    }
+
+    private fun showTimePicker(dateCalendar: Calendar) {
+        val currentTime = Calendar.getInstance()
+        val selectedDateString = binding.tvSchedule.text.toString()
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm", Locale.getDefault())
+
+        val calendar = if (selectedDateString.isNotEmpty() && selectedDateString != "일정을 선택해주세요") {
+            try {
+                Calendar.getInstance().apply {
+                    time = dateFormat.parse(selectedDateString) ?: Date()
+                }
+            } catch (e: Exception) {
+                currentTime
+            }
+        } else {
+            currentTime
+        }
+
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        TimePickerDialog(requireContext(), { _, selectedHour, selectedMinute ->
+            dateCalendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+            dateCalendar.set(Calendar.MINUTE, selectedMinute)
+            val selectedDateTime = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm", Locale.getDefault())
+                .format(dateCalendar.time)
+            binding.tvSchedule.text = selectedDateTime
+        }, hour, minute, false).show()
+    }
+
+    private fun observeDialog() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("closed", false)
+                ?.collectLatest { closed ->
+                    if (closed) {
+                        dismissLoading()
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                            "closed",
+                            false
+                        )
+                    }
+                }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         dismissLoading()
-    }
-
-    companion object {
-        private const val DATE_PATTERN = "yyyy년 MM월 dd일 HH:mm"
-        private val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.KOREAN)
-
-        fun isValidDateFormat(input: String): Boolean {
-            return try {
-                LocalDateTime.parse(input, formatter)
-                true
-            } catch (e: DateTimeParseException) {
-                false
-            }
-        }
     }
 }
