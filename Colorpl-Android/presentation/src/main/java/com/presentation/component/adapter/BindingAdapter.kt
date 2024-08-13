@@ -16,6 +16,7 @@ import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
 import com.presentation.util.formatWithCommas
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -220,6 +221,7 @@ fun visiblePaymentResult(imageView: ImageView, type: PaymentResult) {
 
 @BindingAdapter("setFormattedSeatsText")
 fun setFormattedSeatsText(textView: TextView, seats: List<Seat>?) {
+    Timber.tag("selectedSeats").d("seats: $seats")
     seats?.let {
         val seatText = "${seats.size}매 | ${seats.joinToString(separator = ", ") { it.toString() }}"
         textView.text = seatText

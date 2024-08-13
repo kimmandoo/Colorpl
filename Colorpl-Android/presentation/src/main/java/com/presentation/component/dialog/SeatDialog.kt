@@ -5,10 +5,8 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.DialogSeatPersonBinding
 import com.presentation.base.BaseBottomSheetDialog
 
-class SeatDialog(context: Context, private val onClicked: (Int) -> Unit) :
+class SeatDialog(context: Context, private var peopleCount: Int, private val onClicked: (Int) -> Unit) :
     BaseBottomSheetDialog<DialogSeatPersonBinding>(context, R.layout.dialog_seat_person) {
-
-    private var peopleCount = 1
 
     override fun initView() {
         binding.apply {

@@ -33,9 +33,9 @@ class ReservationDateTableViewHolder(
                 setTextColor(
                     when {
                         data.isSelected -> context.getColor(R.color.white)
+                        data.isEvent.not() -> context.getColor(R.color.light_gray)
                         data.date.dayOfWeek == java.time.DayOfWeek.SATURDAY -> context.getColor(R.color.blue)
                         data.date.dayOfWeek == java.time.DayOfWeek.SUNDAY -> context.getColor(R.color.imperial_red)
-                        data.isEvent.not() -> context.getColor(R.color.light_gray)
                         else -> context.getColor(R.color.eerie_black)
                     }
                 )
@@ -45,9 +45,9 @@ class ReservationDateTableViewHolder(
                 setTextColor(
                     when {
                         data.isSelected -> context.getColor(R.color.white)
+                        data.isEvent.not() -> context.getColor(R.color.light_gray)
                         data.date.dayOfWeek == java.time.DayOfWeek.SATURDAY -> context.getColor(R.color.blue)
                         data.date.dayOfWeek == java.time.DayOfWeek.SUNDAY -> context.getColor(R.color.imperial_red)
-                        data.isEvent.not() -> context.getColor(R.color.light_gray)
                         else -> context.getColor(R.color.eerie_black)
                     }
                 )
