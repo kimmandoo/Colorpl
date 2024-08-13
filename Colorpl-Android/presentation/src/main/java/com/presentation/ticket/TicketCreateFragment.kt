@@ -40,7 +40,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
-import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class TicketCreateFragment :
@@ -94,7 +93,7 @@ class TicketCreateFragment :
         }
 
         binding.tvConfirm.setOnClickListener {
-            if(isValidDateFormat(binding.etSchedule.text.toString())){
+            if (isValidDateFormat(binding.etSchedule.text.toString())) {
                 viewModel.setTicketInfo(
                     Description(
                         title = binding.etTitle.text.toString(),
@@ -108,23 +107,22 @@ class TicketCreateFragment :
                         photoUri
                     )
                 findNavController().navigate(action)
-            }else{
-                Toast.makeText(requireContext(), "일정을 0000년 00월 00일 00:00 형식으로 맞춰주세요", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "일정을 0000년 00월 00일 00:00 형식으로 맞춰주세요",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+        val hint = "카테고리를 선택하세요"
         val items = resources.getStringArray(R.array.ticket_category)
         val adapter =
-            ArrayAdapter(requireContext(), R.layout.item_category_spinner, items)
+            ArrayAdapter(requireContext(), R.layout.item_category_spinner, listOf(hint) + items)
         binding.spinner.apply {
             this.adapter = adapter
+            setSelection(0)
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
-            val initialPosition =
-                if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
-                    items.lastIndex
-                } else {
-                    0
-                }
-            setSelection(initialPosition)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -132,17 +130,17 @@ class TicketCreateFragment :
                     position: Int,
                     id: Long,
                 ) {
-                    Timber.tag("spinner").d("${items[position]}")
-                    viewModel.setCategory(items[position])
+                    if (position > 0) {
+                        // 실제 카테고리가 선택된 경우
+                        val selectedCategory = items[position - 1]
+                        viewModel.setCategory(selectedCategory)
+                    } else {
+                        viewModel.clearCategory()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    val defaultCategory =
-                        if (args.photoType == TicketType.CAMERA_UNISSUED || args.photoType == TicketType.GALLERY_UNISSUED) {
-                            items.last()
-                        } else {
-                            items.first()
-                        }
+                    val defaultCategory = items.last()
                     viewModel.setCategory(defaultCategory)
                 }
             }
@@ -167,6 +165,10 @@ class TicketCreateFragment :
                 }
             }
         }
+        viewModel.ticketInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
+            binding.tvConfirm.isSelected = state
+            binding.tvConfirm.isEnabled = state
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
         viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
             Timber.d("$state")
             binding.tvConfirm.isSelected = state != ""

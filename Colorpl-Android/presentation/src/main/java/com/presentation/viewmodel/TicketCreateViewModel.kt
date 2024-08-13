@@ -9,7 +9,6 @@ import com.domain.usecase.OpenAiUseCase
 import com.domain.usecase.TicketUseCase
 import com.domain.util.DomainResult
 import com.naver.maps.geometry.LatLng
-import com.presentation.util.Calendar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,9 +35,17 @@ class TicketCreateViewModel @Inject constructor(
     val geocodingLatLng: StateFlow<LatLng> = _geocodingLatLng
     private val _createResponse = MutableSharedFlow<Int>()
     val createResponse: SharedFlow<Int> = _createResponse.asSharedFlow()
+    private val _ticketInfo = MutableStateFlow<Boolean>(false)
+    val ticketInfo: StateFlow<Boolean> = _ticketInfo
 
     fun setCategory(text: String) {
         _category.value = text
+        stateConfirm()
+    }
+
+    fun clearCategory() {
+        _category.value = ""
+        stateConfirm()
     }
 
     fun getAddress(address: String) {
@@ -62,7 +69,10 @@ class TicketCreateViewModel @Inject constructor(
         viewModelScope.launch {
             _geocodingLatLng.value = LatLng(0.0, 0.0)
         }
+    }
 
+    private fun stateConfirm() {
+        _ticketInfo.value = (_description.value != null && _category.value != "")
     }
 
 
@@ -83,6 +93,7 @@ class TicketCreateViewModel @Inject constructor(
                     when (response) {
                         is DomainResult.Success -> {
                             _createResponse.emit(response.data)
+                            stateConfirm()
                         }
 
                         is DomainResult.Error -> {
@@ -100,6 +111,7 @@ class TicketCreateViewModel @Inject constructor(
                 when (it) {
                     is DomainResult.Success -> {
                         _description.value = it.data
+                        stateConfirm()
                     }
 
                     is DomainResult.Error -> {
