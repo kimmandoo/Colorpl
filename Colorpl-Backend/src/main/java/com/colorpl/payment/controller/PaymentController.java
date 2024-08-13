@@ -57,42 +57,6 @@ public class PaymentController {
         }
     }
 
-//    @PostMapping("/confirm")
-//    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
-//    @Transactional
-//    public ResponseEntity<?> confirmPayment(
-//            @RequestHeader("Pay-Authorization") String authorizationHeader,
-//            @RequestParam String receiptId) {
-//        try {
-//            HashMap<String, Object> response = paymentService.confirmPayment(receiptId, authorizationHeader);
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                    new HashMap<String, String>() {{
-//                        put("error", "Failed to confirm payment: " + e.getMessage());
-//                    }}
-//            );
-//        }
-//    }
-
-//    @PostMapping("/confirm")
-//    @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
-//    @Transactional
-//    public ResponseEntity<?> confirmPayment(
-//            @RequestHeader("Pay-Authorization") String authorizationHeader,
-//            @RequestParam String receiptId) {
-//        try {
-//            HashMap<String, Object> response = paymentService.confirmPaymentFromReceipt(receiptId, authorizationHeader);
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                    new HashMap<String, String>() {{
-//                        put("error", "Failed to confirm payment: " + e.getMessage());
-//                    }}
-//            );
-//        }
-//    }
-
     @PostMapping("/confirm")
     @Transactional
     @Operation(summary = "결제 승인", description = "영수증 ID를 param으로 받아서 결제를 승인하는 API")
@@ -137,34 +101,34 @@ public class PaymentController {
             );
         }
     }
-@DeleteMapping("/delete/receipt/{receiptId}")
-@Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
-public ResponseEntity<?> deleteReceipt(@PathVariable String receiptId,
-                                       @RequestHeader("Pay-Authorization") String authorizationHeader) {
-    try {
-        // 결제 내역 삭제를 시도
-        paymentService.removeReceiptIdFromMember(receiptId);
+    @DeleteMapping("/delete/receipt/{receiptId}")
+    @Operation(summary = "결제 내역 삭제", description = "특정 결제 내역을 삭제하는 API")
+    public ResponseEntity<?> deleteReceipt(@PathVariable String receiptId,
+                                           @RequestHeader("Pay-Authorization") String authorizationHeader) {
+        try {
+            // 결제 내역 삭제를 시도
+            paymentService.removeReceiptIdFromMember(receiptId);
 
-        // 성공 메시지 반환
-        return ResponseEntity.ok(new HashMap<String, Object>() {{
-            put("message", "Receipt deleted successfully.");
-        }});
-    } catch (IllegalArgumentException e) {
-        // 영수증 ID가 존재하지 않는 경우의 에러 메시지 반환
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new HashMap<String, String>() {{
-                    put("error", "Failed to delete receipt: " + e.getMessage());
-                }}
-        );
-    } catch (Exception e) {
-        // 다른 예외 발생 시의 에러 메시지 반환
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new HashMap<String, String>() {{
-                    put("error", "Failed to delete receipt: " + e.getMessage());
-                }}
-        );
+            // 성공 메시지 반환
+            return ResponseEntity.ok(new HashMap<String, Object>() {{
+                put("message", "Receipt deleted successfully.");
+            }});
+        } catch (IllegalArgumentException e) {
+            // 영수증 ID가 존재하지 않는 경우의 에러 메시지 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new HashMap<String, String>() {{
+                        put("error", "Failed to delete receipt: " + e.getMessage());
+                    }}
+            );
+        } catch (Exception e) {
+            // 다른 예외 발생 시의 에러 메시지 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new HashMap<String, String>() {{
+                        put("error", "Failed to delete receipt: " + e.getMessage());
+                    }}
+            );
+        }
     }
-}
 
 
     @PostMapping("/request/user/token")

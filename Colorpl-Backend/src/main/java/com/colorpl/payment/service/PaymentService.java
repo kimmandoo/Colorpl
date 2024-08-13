@@ -160,56 +160,16 @@ public class PaymentService {
             member.addReceiptId(receiptId);
             memberRepository.save(member);
 
-            reservationService.createReservation(memberId, reservationDTO);
+            ReservationDTO reservation = reservationService.createReservation(memberId, reservationDTO);
+            Long reservationId = reservation.getId();
+
+            Long scheduleId = createReservationScheduleService.create(reservationId);
 
             // 결제 승인
             HashMap<String, Object> confirmResponse = bootpay.confirm(receiptId);
 
+            confirmResponse.put("scheduleId", scheduleId);
 
-
-
-            ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
-                .orElseThrow(() -> new RuntimeException("ShowSchedule not found with id: " + showScheduleId));
-
-            String posterImagePath = showSchedule.getShowDetail().getPosterImagePath();
-
-            // ReservationSchedule 생성
-            for (ReservationDetailDTO reservationDetailDTO : reservationDetails) {
-                // CreateReservationScheduleRequest 생성
-                CreateReservationScheduleRequest scheduleRequest = CreateReservationScheduleRequest
-                    .builder()
-                    .reservationDetailId(reservationDetailDTO.getId())
-                    .build();
-
-                // CreateReservationScheduleService를 사용하여 예약 스케줄 생성
-//                createReservationScheduleService.createByImageUrl(scheduleRequest, posterImagePath);
-            }
-
-//
-//            // ShowSchedule 조회
-//            ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
-//                .orElseThrow(() -> new RuntimeException("ShowSchedule not found with id: " + showScheduleId));
-//
-//            // ShowDetail에서 posterImagePath 가져오기
-//            String posterImagePath = showSchedule.getShowDetail().getPosterImagePath();
-//
-//            // 예약 세부 정보와 멤버 정보를 기반으로 예약 스케줄 생성
-//            for (ReservationDetailDTO reservationDetailDTO : reservationDetails) {
-//                Long reservationDetailId = reservationDetailDTO.getId();
-//
-//                // ReservationDetail 조회
-//                ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(
-//                        reservationDetailId, memberId)
-//                    .orElseThrow(ReservationDetailNotFoundException::new);
-//
-//                // ReservationSchedule 생성 및 저장
-//                ReservationSchedule reservationSchedule = ReservationSchedule.builder()
-//                    .member(member)
-//                    .image(posterImagePath)
-//                    .reservationDetail(reservationDetail)
-//                    .build();
-//                reservationScheduleRepository.save(reservationSchedule);
-//            }
             return confirmResponse;
         } catch (RuntimeException e) {
             // 예외 발생 시 롤백
@@ -272,53 +232,58 @@ public class PaymentService {
                 })
                 .collect(Collectors.toList());
     }
-public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
 
-    HashMap<String, Object> receiptDetails = bootpay.getReceipt(receiptId);
-    String orderName = (String) receiptDetails.get("order_name");
+    public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
 
-    ShowDetail showDetail = findShowDetailByOrderName(orderName).orElse(null);
+        // Bootpay에서 영수증 정보 조회
+        HashMap<String, Object> receiptDetails = bootpay.getReceipt(receiptId);
 
-    if (showDetail == null) {
-        return ReceiptDTO.builder()
-                .receiptId(receiptId)
-                .orderName(orderName)
-                .purchasedAt((String) receiptDetails.get("purchased_at"))
-                .price((int) receiptDetails.get("price"))
-                .statusLocale((String) receiptDetails.get("status_locale"))
-                .seats(null)
-                .showDateTime(null)
-                .theaterName(null)
-                .showDetailPosterImagePath(null)
-                .build();
-    }
+        // orderName 추출
+        String orderName = (String) receiptDetails.get("order_name");
 
-    ShowSchedule showSchedule = showDetail.getShowSchedules().stream()
-            .findFirst()
-            .orElse(null);
+        // metadata에서 필요한 값 추출
+        Map<String, Object> metadata = (Map<String, Object>) receiptDetails.get("metadata");
+        if (metadata == null) {
+            throw new RuntimeException("Metadata is null in payment data.");
+        }
 
-    List<ReservationDetail> reservationDetails = reservationDetailRepository.findByShowScheduleId(showSchedule != null ? showSchedule.getId() : null);
+        // selectedSeatList 추출 및 변환
+        List<Map<String, Object>> selectedSeatList = (List<Map<String, Object>>) metadata.get("selectedSeatList");
+        List<SeatInfoDTO> seats = selectedSeatList.stream()
+            .map(seat -> SeatInfoDTO.builder()
+                .row((byte) ((Number) seat.get("row")).intValue())
+                .col((byte) ((Number) seat.get("col")).intValue())
+                .name((String) seat.get("grade"))
+                .grade((String) seat.get("name"))
 
-
-    List<SeatInfoDTO> seatInfos = reservationDetails.stream()
-            .map(reservationDetail -> SeatInfoDTO.builder()
-                    .row(reservationDetail.getRow())
-                    .col(reservationDetail.getCol())
-                    .build())
+                .build())
             .collect(Collectors.toList());
 
-    return ReceiptDTO.builder()
+        Long showScheduleId = ((Number) metadata.get("showScheduleId")).longValue();
+        ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
+            .orElseThrow(() -> new RuntimeException("ShowSchedule not found for id: " + showScheduleId));
+        LocalDateTime showDateTime = showSchedule.getDateTime();
+        // theaterName 설정
+        String theaterName = (String) metadata.get("showTheaterName");
+
+        // showDetail을 찾는 메서드를 통해 포스터 이미지 경로 설정
+        ShowDetail showDetail = findShowDetailByOrderName(orderName).orElse(null);
+        String showDetailPosterImagePath = showDetail != null ? showDetail.getPosterImagePath() : null;
+
+        // ReceiptDTO 생성
+        return ReceiptDTO.builder()
             .receiptId(receiptId)
             .orderName(orderName)
             .purchasedAt((String) receiptDetails.get("purchased_at"))
             .price((int) receiptDetails.get("price"))
             .statusLocale((String) receiptDetails.get("status_locale"))
-            .seats(seatInfos)  // 좌석 정보 리스트 추가
-            .showDateTime(showSchedule != null ? showSchedule.getDateTime() : null)
-            .theaterName(showDetail.getHall() != null ? showDetail.getHall().getTheater().getName() : null)
-            .showDetailPosterImagePath(showDetail.getPosterImagePath())
+            .seats(seats)
+            .showDateTime(showDateTime) // 필요한 경우 실제 공연 시간으로 설정
+            .theaterName(theaterName)
+            .showDetailPosterImagePath(showDetailPosterImagePath)
             .build();
-}
+    }
+
     private Optional<ShowDetail> findShowDetailByOrderName(String orderName) {
 
         return showDetailRepository.findAll().stream()

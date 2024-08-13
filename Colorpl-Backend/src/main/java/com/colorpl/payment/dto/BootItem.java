@@ -11,7 +11,6 @@ public class BootItem {
     private int qty;
     private double price;
 
-    // Getters and Setters
 
     public BootItem setName(String name) {
         this.name = name;

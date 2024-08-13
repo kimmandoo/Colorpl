@@ -8,4 +8,6 @@ import lombok.Getter;
 public class SeatInfoDTO {
     private Byte row;
     private Byte col;
+    private String name;
+    private String grade;
 }

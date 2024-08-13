@@ -126,15 +126,6 @@ public class MemberService {
         }
     }
 
-//    멤버 정보 업데이트
-//    @Transactional
-//    public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO) {
-//        Member existingMember = memberRepository.findById(memberId)
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
-//
-//        existingMember.updateMember(Member.toMember(memberDTO, passwordEncoder), passwordEncoder);
-//        return memberRepository.save(existingMember);
-//    }
     @Transactional
     public Member updateMemberInfo(Integer memberId, MemberDTO memberDTO, MultipartFile profileImage) {
         // 1. 멤버 존재 확인
@@ -274,33 +265,6 @@ public class MemberService {
         return Integer.parseInt(userDetails.getUsername());
     }
 
-//    @Transactional
-//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
-//        List<Member> members = memberRepository.findByNickname(nickname);
-//        if (members.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//        return members.stream()
-//            .map(FindMemberResponse::toFindMemberResponse)
-//            .collect(Collectors.toList());
-//    }
-//    @Transactional
-//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
-//        List<Member> members = memberRepository.findByNickname(nickname);
-//        if (members.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//
-//        Integer currentMemberId = getCurrentMemberId(); // 현재 로그인된 사용자의 ID를 가져옴
-//
-//        return members.stream()
-//            .map(member -> {
-//                boolean isFollowing = isFollowing(currentMemberId, member.getId());
-//                return FindMemberResponse.toFindMemberResponse(member, isFollowing);
-//            })
-//            .collect(Collectors.toList());
-//    }
-
     @Transactional
     public List<FindMemberResponse> findMembersByNickname(String nickname) {
         List<Member> members = memberRepository.findByNickname(nickname);
@@ -332,19 +296,5 @@ public class MemberService {
 
         return member.getFollowingList().contains(targetMember);
     }
-//    @Transactional
-//    public List<FindMemberResponse> findMembersByNickname(String nickname) {
-//        List<Member> members = memberRepository.findByNickname(nickname);
-//        if (members.isEmpty()) {
-//            throw new MemberNotFoundException();
-//        }
-//
-//        return members.stream()
-//            .map(member -> {
-//                int reviewCount = reviewService.getReviewsCountOfMember(member.getId());
-//                return FindMemberResponse.toFindMemberResponse(member, reviewCount);
-//            })
-//            .collect(Collectors.toList());
-//    }
 
 }
