@@ -17,6 +17,8 @@ class ReservationCompleteFragment :
         initClickEvent()
     }
 
+
+
     private fun initClickEvent() {
         binding.apply {
             tvComplete.setOnClickListener {

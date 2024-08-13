@@ -20,7 +20,15 @@ fun List<ResponsePayReceipt>.toEntity(): List<PayReceipt> {
             orderName = it.orderName,
             price = it.price,
             purchasedAt = it.purchasedAt,
-            statusLocale = it.statusLocale
+            statusLocale = it.statusLocale,
+            showDateTime = it.showDateTime,
+            showDetailPosterImagePath = it.showDetailPosterImagePath,
+            seatInfoDto = it.seatInfoDto.map {
+                PayReceipt.SeatInfoDto(
+                    row = it.row,
+                    col = it.col
+                )
+            }
         )
     }
 }

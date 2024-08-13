@@ -5,7 +5,7 @@ import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
 
 interface ReservationDataSource {
-    suspend fun getReservationListShows(filters: Map<String, String>): List<ResponseReservationInfo>
+    suspend fun getReservationListShows(filters: Map<String, String?>): List<ResponseReservationInfo>
 
     suspend fun getReservationShow(
         showDetailId: Int,

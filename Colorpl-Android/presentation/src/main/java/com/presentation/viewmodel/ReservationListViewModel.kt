@@ -3,75 +3,118 @@ package com.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.ReservationInfo
+import com.domain.model.ShowParam
 import com.domain.usecase.ReservationListUseCase
 import com.domain.util.DomainResult
+import com.presentation.util.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ReservationListViewModel @Inject constructor(
     private val getReservationListUseCase: ReservationListUseCase,
 ) : ViewModel() {
-    private val _reservationList = MutableStateFlow<List<ReservationInfo>>(listOf())
+    private val _reservationList = MutableStateFlow<List<ReservationInfo>>(listOf(ReservationInfo()))
     val reservationList: MutableStateFlow<List<ReservationInfo>> = _reservationList
 
-    private val _searchDate = MutableStateFlow<LocalDate?>(null)
-    val searchDate: MutableStateFlow<LocalDate?> = _searchDate
 
-    private val _searchArea = MutableStateFlow("")
-    val searchArea: MutableStateFlow<String> = _searchArea
+    private val _showParam = MutableStateFlow<ShowParam>(ShowParam())
+    val showParam: StateFlow<ShowParam> get() = _showParam
 
-    private val _searchKeyword = MutableStateFlow("")
-    val searchKeyword: MutableStateFlow<String> = _searchKeyword
+    fun setShowParam(value: ShowParam) {
+        _showParam.value = value
+    }
 
-    private val _searchCategory = MutableStateFlow("")
-    val searchCategory: MutableStateFlow<String> = _searchCategory
+    private val _date = MutableStateFlow<LocalDate?>(null)
+    val date : StateFlow<LocalDate?> get() = _date
+
+    fun setDate(value : LocalDate?){
+        _date.value = value
+    }
+
+
+    init {
+        getReservationList(setFilter())
+    }
+
+    fun setParam(type: ShowType, param: String) {
+        when (type) {
+            ShowType.KEYWORD -> {
+                setShowParam(
+                    _showParam.value.copy(
+                        keyword = param
+                    )
+                )
+            }
+
+            ShowType.DATE -> {
+                setShowParam(
+                    _showParam.value.copy(
+                        date = param
+                    )
+                )
+            }
+
+            ShowType.CATEGORY -> {
+                setShowParam(
+                    _showParam.value.copy(
+                        category = param
+                    )
+                )
+            }
+
+            ShowType.LOCATION -> {
+                setShowParam(
+                    _showParam.value.copy(
+                        area = param
+                    )
+                )
+            }
+        }
+        getReservationList(filter = setFilter())
+    }
+
+    fun setFilter(): Map<String, String?> {
+        val data = showParam.value
+        Timber.d("파람 확인 $data")
+        return hashMapOf(
+            "date" to data.date,
+            "area" to data.area,
+            "keyword" to data.keyword,
+            "category" to data.category
+        ).filter { it.value?.isNotEmpty() == true }
+    }
+
+    fun dataClear(){
+        setShowParam(ShowParam())
+        getReservationList(setFilter())
+        setDate(null)
+    }
+
+
 
     /** 예매 아이템 전체 조회. */
-    fun getReservationList() {
+    fun getReservationList(filter: Map<String, String?>) {
         viewModelScope.launch {
-            val filters = mutableMapOf<String, String>()
-            _searchDate.value?.let {
-                val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
-                filters["date"] = it.format(dateFormat)
-            }
-            _searchArea.value.takeIf { it.isNotBlank() }?.let { filters["area"] = it }
-            _searchKeyword.value.takeIf { it.isNotBlank() }?.let { filters["keyword"] = it }
-            _searchCategory.value.takeIf { it.isNotBlank() }?.let { filters["category"] = it }
-            Timber.tag("검색").d("${searchDate.value}, ${searchArea.value}, ${searchKeyword.value}, ${searchCategory.value}")
-            getReservationListUseCase(filters = filters).collect { response ->
+            getReservationListUseCase(filters = filter).collectLatest { response ->
                 when (response) {
                     is DomainResult.Success -> {
+                        Timber.d("예매 정보 조회 성공 ${response.data}")
                         _reservationList.value = response.data
                     }
 
                     is DomainResult.Error -> {
-                        Timber.d("예매 정보 조회 실패")
+                        Timber.d("예매 정보 조회 실패 ${response.exception}")
                     }
                 }
             }
         }
     }
 
-    fun setDate(date: LocalDate) {
-        _searchDate.value = date
-    }
-
-    fun setArea(area: String) {
-        _searchArea.value = area
-    }
-
-    fun setKeyword(keyword: String) {
-        _searchKeyword.value = keyword
-    }
-
-    fun setCategory(category: String) {
-        _searchCategory.value = category
-    }
 }

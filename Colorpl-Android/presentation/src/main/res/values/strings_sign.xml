@@ -33,4 +33,6 @@
     <string name="sign_up_category_musical">뮤지컬</string>
     <string name="sign_up_category_concert">콘서트</string>
     <string name="sign_up_category_exhibition">전시회</string>
+    <string name="sign_up_category_etc">기타</string>
+    <string name="sign_up_category_performance">기타</string>
 </resources>

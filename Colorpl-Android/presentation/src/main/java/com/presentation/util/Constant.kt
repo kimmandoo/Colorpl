@@ -115,29 +115,42 @@ enum class Sign {
     LOGIN
 }
 
-enum class Category(val resourceId: Int) {
-    MOVIE(R.string.sign_up_category_movie) {
-        override fun getTitle(): String {
+enum class Category(val value: String) {
+    MOVIE("영화") {
+        override fun getKey(): String {
             return "MOVIE"
         }
-    },
-    PLAY(R.string.sign_up_category_theater) {
-        override fun getTitle(): String = "PLAY"
-    },
-    MUSICAL(R.string.sign_up_category_musical) {
-        override fun getTitle(): String = "MUSICAL"
-    },
-    CONCERT(R.string.sign_up_category_concert) {
-        override fun getTitle(): String = "CONCERT"
-    },
-    EXHIBITION(R.string.sign_up_category_exhibition) {
-        override fun getTitle(): String = "EXHIBITION"
-    };
 
-    abstract fun getTitle(): String
+    },
+    PERFORMANCE("공연"){
+        override fun getKey(): String {
+            return "PERFORMANCE"
+        }
+    },
+    PLAY("연극") {
+        override fun getKey(): String = "PLAY"
+    },
+    MUSICAL("뮤지컬") {
+        override fun getKey(): String = "MUSICAL"
+    },
+    CONCERT("콘서트") {
+        override fun getKey(): String = "CONCERT"
+    },
+    EXHIBITION("전시회") {
+        override fun getKey(): String = "EXHIBITION"
+    },
+    ETC("기타") {
+        override fun getKey(): String = "ETC"
+    }
+    ;
 
-    fun getText(context: Context): String {
-        return context.getString(resourceId)
+    abstract fun getKey(): String
+
+
+    companion object {
+        fun getTitle(value: String): Category? = entries.find { it.value == value }
+
+        fun getKeyResult(value : String) : String = entries.find { it.toString() == value }?.value.toString()
     }
 
 
@@ -153,7 +166,7 @@ enum class PaymentResult(val value: Int) {
 
         fun getMenu(mode: PaymentResult): List<Int> {
             return when (mode) {
-                COMPLETE -> listOf(0,1)
+                COMPLETE -> listOf(0, 1)
                 REFUND -> listOf(1)
                 USE -> listOf(2)
             }
@@ -219,4 +232,11 @@ enum class SeatClass(val value: String) {
     S("S"),
     A("A"),
     B("B");
+}
+
+enum class ShowType {
+    KEYWORD,
+    DATE,
+    LOCATION,
+    CATEGORY
 }

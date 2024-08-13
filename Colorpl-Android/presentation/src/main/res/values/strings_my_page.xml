@@ -28,6 +28,7 @@
     <string name="my_page_payment_sit">좌석</string>
     <string name="my_page_payment_location">장소</string>
     <string name="my_page_payment_date">일시</string>
+    <string name="my_page_payment_empty">결제 내역이 없습니다.</string>
     <string name="my_page_ticket_use">사용한 티켓 : </string>
     <string name="my_page_ticket_un_use">미사용 티켓 : </string>
 
