@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2c81a84-c9ab-4c73-b3e1-d0b39c6dfd4d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/exception/ScheduleNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/ScheduleType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/dto/GetScheduleResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/dto/UpdateCustomScheduleRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/DeleteCustomScheduleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/GetScheduleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/UpdateCustomScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/exception/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/exception/Messages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/FileSystemStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/storage/FileSystemStorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/storage/StorageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/StorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/storage/StorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/common/storage/UploadFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/global/storage/UploadFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/member/service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/review/service/ReviewService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/controller/ScheduleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/controller/ScheduleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/CustomSchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/CustomSchedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/ReservationSchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/ReservationSchedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/domain/Schedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/dto/ScheduleListResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/dto/ScheduleListResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/repository/ReservationScheduleRepositoryCustom.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/repository/ReservationScheduleRepositoryCustom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/repository/ReservationScheduleRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/repository/ReservationScheduleRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/CreateCustomScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/CreateCustomScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/CreateReservationScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/schedule/service/CreateReservationScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/service/GetShowSchedulesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/show/service/GetShowSchedulesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/test/java/com/colorpl/review/service/ReviewServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/test/java/com/colorpl/review/service/ReviewServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +99,7 @@
     "Spring Boot.ColorplApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "Merging be/feat/payment__S11P12D109-372",
+    "git-widget-placeholder": "be/feat/payment__S11P12D109-372",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/new136/S11P12D109/Colorpl-Backend/build.gradle",
     "node.js.detected.package.eslint": "true",
