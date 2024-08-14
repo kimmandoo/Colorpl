@@ -56,6 +56,11 @@ fun String.toLocalDate(): LocalDate {
     return LocalDateTime.parse(this, formatter).toLocalDate()
 }
 
+fun String.toLocalDateTime(): LocalDateTime {
+    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    return LocalDateTime.parse(this, formatter)
+}
+
 fun stringToCalendar(dateString: String): Calendar? {
     val format = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm", Locale.getDefault())
 
