@@ -1,0 +1,35 @@
+/* App.css */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  position: absolute;
+  width: 100%;
+  height: 48px;
+  background-color: #3f51b5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  color: white;
+}
+
+.sidebar {
+  width: 60px;
+}
+
+.sidebar.expanded {
+  width: 240px;
+}
+
+.main-content {
+  margin-top: 48px; /* Same as header height */
+  padding: 16px;
+  margin-left: 60px; /* Adjust according to sidebar width */
+}
+
+.sidebar .MuiListItem-root {
+  height: 48px;
+}
