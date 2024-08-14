@@ -85,11 +85,9 @@ public class ScheduleListResponse {
                     reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
                 .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                     .getName())
-                .latitude(reservationDetail.getShowSchedule().getShowDetail().getHall().getTheater()
-                    .getLatitude())
-                .longitude(
-                    reservationDetail.getShowSchedule().getShowDetail().getHall().getTheater()
-                        .getLongitude())
+                .category(
+                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
+                        .getCategory())
                 .build();
         }
 
