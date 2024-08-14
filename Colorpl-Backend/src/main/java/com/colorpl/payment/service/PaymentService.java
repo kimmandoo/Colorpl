@@ -186,6 +186,17 @@ public class PaymentService {
 
         HashMap<String, Object> response = bootpay.receiptCancel(cancel);
 
+        String receiptId = cancel.receiptId;
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(MemberNotFoundException::new);
+
+        Long reservationId = member.getMemberReceipts().get(receiptId);
+
+        if (reservationId == null) {
+            throw new RuntimeException("해당 영수증 ID에 대한 예약이 없습니다: " + receiptId);
+        }
+        reservationService.cancelReservationById(reservationId);
+
         return response;
     }
 

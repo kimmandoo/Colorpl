@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b2c81a84-c9ab-4c73-b3e1-d0b39c6dfd4d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/domain/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/domain/Reservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/service/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/reservation/service/ReservationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Colorpl-Backend/src/main/java/com/colorpl/payment/service/PaymentService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
