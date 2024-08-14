@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="title"
             type="String" />
@@ -15,9 +16,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_back"
             android:layout_width="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -36,13 +37,15 @@
         <TextView
             android:id="@+id/tv_title"
             style="@style/suite_extra_bold_20"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@{title}"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/cl_back"
-            app:layout_constraintStart_toEndOf="@+id/cl_back"/>
+            app:layout_constraintTop_toBottomOf="@id/cl_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cl_back" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
