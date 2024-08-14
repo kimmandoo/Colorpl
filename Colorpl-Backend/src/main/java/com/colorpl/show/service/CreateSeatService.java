@@ -27,8 +27,7 @@ public class CreateSeatService {
     public void createSeat(ShowDetail showDetail) {
         double[] seatRatio = SEAT_RATIO[showDetail.getPriceBySeatClass().size()];
         for (int i = 0; i < rows; i++) {
-            double key = (double) i / rows;
-            int index = Arrays.binarySearch(seatRatio, key);
+            int index = Arrays.binarySearch(seatRatio, i);
             int seatClass = seatRatio.length - getSeatClass(index, showDetail) - 1;
             for (int j = 0; j < cols; j++) {
                 Seat.builder()
