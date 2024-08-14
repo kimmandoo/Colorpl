@@ -69,10 +69,10 @@ def apply_member_search_filters(query, search: MemberSearch):
 def _get_member_activities(db: Session, members):
     member_activities = []
     for member in members:
-        schedules_count = db.query(func.count(Schedule.schedule_id)).filter(Schedule.member_id == member.member_id).scalar()
-        reviews_count = db.query(func.count(Review.review_id)).join(Schedule).filter(Schedule.member_id == member.member_id).scalar()
-        comments_count = db.query(func.count(Comment.comment_id)).filter(Comment.member_id == member.member_id).scalar()
-        reservations_count = db.query(func.count(Reservation.reserve_id)).filter(Reservation.member_id == member.member_id).scalar()
+        schedules_count = db.query(Schedule).filter(Schedule.member_id == member.member_id).count()
+        reviews_count = db.query(Review).join(Schedule).filter(Schedule.member_id == member.member_id).count()
+        comments_count = db.query(Comment).filter(Comment.member_id == member.member_id).count()
+        reservations_count = db.query(Reservation).filter(Reservation.member_id == member.member_id).count()
 
         member_activities.append({
             "member_id": member.member_id,

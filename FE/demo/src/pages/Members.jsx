@@ -253,7 +253,7 @@ const Members = () => {
                   {member.reviews_count}
                 </TableCell>
                 <TableCell onClick={() => handleCellClick('/comments', member.member_id, member.nickname)} style={{ cursor: 'pointer' }}>{member.comments_count}</TableCell>
-                <TableCell onClick={() => navigate(`/reservations?member_id=${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.reservations_count}</TableCell>
+                <TableCell onClick={() => handleCellClick('/reservations', member.member_id, member.nickname)} style={{ cursor: 'pointer' }}>{member.reservations_count}</TableCell>
               </TableRow>
             ))}
           </TableBody>

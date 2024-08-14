@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
-from app.models import Reservation, Member, ReservationDetail, ShowSchedule, ShowDetail
+from app.models import Reservation, Member, ReservationDetail, ShowSchedule, ShowDetail, Hall
 from app.schemas.reservation import ReservationUpdate, ReservationSearch
 
 def get_reservations_activity(db: Session, skip: int = 0, limit: int = 10):
     query = db.query(
         Reservation.reserve_id,
+        Member.member_id,
         Member.nickname,
         Reservation.create_date,
         Reservation.reserve_amount,
@@ -23,6 +23,7 @@ def get_reservations_activity(db: Session, skip: int = 0, limit: int = 10):
     return [
         {
             "reserve_id": reservation.reserve_id,
+            "member_id": reservation.member_id,
             "nickname": reservation.nickname,
             "create_date": reservation.create_date,
             "reserve_amount": reservation.reserve_amount,
@@ -34,7 +35,48 @@ def get_reservations_activity(db: Session, skip: int = 0, limit: int = 10):
     ]
 
 def get_reservation_by_id(db: Session, reservation_id: int):
-    return db.query(Reservation).filter(Reservation.reserve_id == reservation_id).first()
+    reservation = db.query(
+        Reservation.reserve_id,
+        Member.member_id,
+        Member.nickname,
+        Member.profile,
+        Reservation.create_date,
+        Reservation.update_date,
+        Reservation.reserve_date,
+        Reservation.reserve_amount,
+        Reservation.reserve_comment,
+        Reservation.is_refunded,
+        ReservationDetail.seat_col,
+        ReservationDetail.seat_row,
+        ShowDetail.show_detail_name,
+        Hall.hall_name
+    ).join(Member, Reservation.member_id == Member.member_id)\
+     .join(ReservationDetail, Reservation.reserve_id == ReservationDetail.reserve_id)\
+     .join(ShowSchedule, ReservationDetail.show_schedule_id == ShowSchedule.show_schedule_id)\
+     .join(ShowDetail, ShowSchedule.show_detail_id == ShowDetail.show_detail_id)\
+     .join(Hall, ShowDetail.hall_id == Hall.hall_id)\
+     .filter(Reservation.reserve_id == reservation_id)\
+     .first()
+
+    if not reservation:
+        return None
+
+    return {
+        "reserve_id": reservation.reserve_id,
+        "member_id": reservation.member_id,
+        "nickname": reservation.nickname,
+        "profile": reservation.profile,
+        "create_date": reservation.create_date,
+        "update_date": reservation.update_date,
+        "reserve_date": reservation.reserve_date,
+        "reserve_amount": reservation.reserve_amount,
+        "reserve_comment": reservation.reserve_comment,
+        "is_refunded": reservation.is_refunded,
+        "seat_col": reservation.seat_col,
+        "seat_row": reservation.seat_row,
+        "show_detail_name": reservation.show_detail_name,
+        "hall_name": reservation.hall_name,
+    }
 
 def update_reservation(db: Session, reservation_id: int, reservation_update: ReservationUpdate):
     reservation = db.query(Reservation).filter(Reservation.reserve_id == reservation_id).first()
@@ -51,6 +93,7 @@ def update_reservation(db: Session, reservation_id: int, reservation_update: Res
 def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, limit: int = 10):
     query = db.query(
         Reservation.reserve_id,
+        Member.member_id,
         Member.nickname,
         Reservation.create_date,
         Reservation.reserve_amount,
@@ -62,6 +105,8 @@ def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, l
      .join(ShowSchedule, ReservationDetail.show_schedule_id == ShowSchedule.show_schedule_id)\
      .join(ShowDetail, ShowSchedule.show_detail_id == ShowDetail.show_detail_id)
 
+    if search.member_id:
+        query = query.filter(Member.member_id == search.member_id)
     if search.nickname:
         query = query.filter(Member.nickname.ilike(f'%{search.nickname}%'))
     if search.email:
@@ -78,6 +123,7 @@ def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, l
     return [
         {
             "reserve_id": reservation.reserve_id,
+            "member_id": reservation.member_id,
             "nickname": reservation.nickname,
             "create_date": reservation.create_date,
             "reserve_amount": reservation.reserve_amount,
@@ -87,3 +133,4 @@ def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, l
         }
         for reservation in reservations
     ]
+

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import { People as PeopleIcon, Comment as CommentIcon, Movie as MovieIcon, Dashboard as DashboardIcon, Assignment as AssignmentIcon, Store as StoreIcon, TheaterComedy as TheaterComedyIcon, ManageAccounts as ManageAccountsIcon } from '@mui/icons-material';
+import { People as PeopleIcon, Comment as CommentIcon, Movie as MovieIcon, Dashboard as DashboardIcon, Assignment as AssignmentIcon, Store as StoreIcon, TheaterComedy as TheaterComedyIcon, ManageAccounts as ManageAccountsIcon, ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
@@ -146,6 +146,12 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </ListItemIcon>
               <ListItemText primary="댓글 관리" />
             </ListItem>
+            <ListItem button component={Link} to="/reservations" onClick={handleItemClick}>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary="예매 관리" />
+            </ListItem>
             {user?.role === 1 && (
               <ListItem button component={Link} to="/admin-management" onClick={handleItemClick}>
                 <ListItemIcon>
@@ -186,7 +192,7 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </ListItemIcon>
               <ListItemText primary="공연 관리" />
             </ListItem>
-            <ListItem button onClick={handleItemClick}>
+            <ListItem button component={Link} to="/theaters" onClick={handleItemClick}>
               <ListItemIcon>
                 <StoreIcon />
               </ListItemIcon>

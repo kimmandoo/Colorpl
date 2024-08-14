@@ -11,7 +11,7 @@ router = APIRouter()
 def get_reservations_activity(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return crud_reservation.get_reservations_activity(db, skip=skip, limit=limit)
 
-router.get("/reservations/{reservation_id}", response_model=ReservationDetail)
+@router.get("/reservations/{reservation_id}", response_model=ReservationDetail)
 def get_reservation_by_id(reservation_id: int, db: Session = Depends(get_db)):
     reservation = crud_reservation.get_reservation_by_id(db, reservation_id)
     if not reservation:

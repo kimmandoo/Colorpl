@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import List, Optional
 from app.utils.enum import Category, Region, ShowState
 
 class ShowDetailCreate(BaseModel):
@@ -35,3 +35,5 @@ class ShowDetailResponse(BaseModel):
 
 class ShowDetailSearch(BaseModel):
     show_detail_name: str
+
+
