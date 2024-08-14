@@ -44,6 +44,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
     override fun onResume() {
         super.onResume()
+        myPageViewModel.getAllTicket()
         myPageViewModel.getMemberInfo()
     }
 
