@@ -29,8 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                app:timeHHMMparser="@{timeTable.startTime}"
-                app:flag="@{true}"
+                android:text='@{timeTable.startTime}'
                 android:textColor="@color/white"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="10:30" />
@@ -43,8 +42,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
-                app:timeHHMMparser="@{timeTable.endTime}"
-                app:flag="@{false}"
+                android:text='@{`~` + timeTable.endTime}'
                 android:textColor="@color/timber_wolf"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_time_start"

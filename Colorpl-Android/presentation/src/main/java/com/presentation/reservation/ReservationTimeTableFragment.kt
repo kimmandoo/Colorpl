@@ -1,5 +1,6 @@
 package com.presentation.reservation
 
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -32,6 +33,7 @@ import java.time.format.DateTimeParseException
 class ReservationTimeTableFragment :
     BaseFragment<FragmentReservationTimeTableBinding>(R.layout.fragment_reservation_time_table),
     OnTimeTableClickListener {
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: ReservationViewModel by viewModels({ requireParentFragment() })
     private val reservationPlaceAdapter by lazy {
         ReservationPlaceAdapter(this)
@@ -140,34 +142,40 @@ class ReservationTimeTableFragment :
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
-        val currentDateTime = LocalDateTime.now()
-        Timber.tag("시간 비교").d("지금: $currentDateTime | 예약 시간: ${timeTable.startTime}")
-
-        runCatching {
-            val parsedDateTime = LocalDateTime.parse(timeTable.startTime)
-            parsedDateTime
-        }.onSuccess { startTime ->
-            if (currentDateTime.isAfter(startTime)) {
-                Toast.makeText(context, getString(R.string.reservation_over_time), Toast.LENGTH_SHORT).show()
-            } else {
-                with(viewModel) {
-                    setReservationPlace(data.placeName)
-                    setReservationTheater(data.hallName)
-                    setReservationTimeTable(timeTable)
-                    getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
-                    Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
+        // 예약 날짜와 현재 날짜가 같다면 시간 비교
+        if (viewModel.reservationDate.value == LocalDate.now()) {
+            runCatching {
+                val parsedTime = LocalTime.parse(timeTable.startTime)
+                parsedTime
+            }.onSuccess { startTime ->
+                val currentTime = LocalDateTime.now().toLocalTime()
+                if (currentTime.isAfter(startTime)) {
+                    Toast.makeText(context, getString(R.string.reservation_over_time), Toast.LENGTH_SHORT).show()
+                } else {
+                    proceedWithReservation(data, timeTable)
                 }
-                ViewPagerManager.moveNext()
+            }.onFailure { exception ->
+                if (exception is DateTimeParseException) {
+                    Timber.e("시간 파싱 오류: ${exception.message}")
+                } else {
+                    Timber.e("예상치 못한 오류 발생: ${exception.message}")
+                }
             }
-        }.onFailure { exception ->
-            if (exception is DateTimeParseException) {
-                Toast.makeText(context, "시간 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-                Timber.e("시간 파싱 오류: ${exception.message}")
-            } else {
-                // 다른 종류의 예외 처리
-                Timber.e("예상치 못한 오류 발생: ${exception.message}")
-            }
+        } else {
+            // 날짜가 오늘과 같지 않다면 바로 예약 진행
+            proceedWithReservation(data, timeTable)
         }
+    }
+
+    private fun proceedWithReservation(data: ReservationPairInfo, timeTable: TimeTable) {
+        with(viewModel) {
+            setReservationPlace(data.placeName)
+            setReservationTheater(data.hallName)
+            setReservationTimeTable(timeTable)
+            getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
+            Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
+        }
+        ViewPagerManager.moveNext()
     }
 
 

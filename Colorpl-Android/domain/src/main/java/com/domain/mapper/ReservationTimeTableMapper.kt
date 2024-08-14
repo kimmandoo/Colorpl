@@ -8,8 +8,8 @@ fun List<com.data.model.response.TimeTable>.toEntity(): List<TimeTable> {
     return this.map {
         TimeTable(
             scheduleId = it.showScheduleId?: 1,
-            startTime = it.startTime,
-            endTime = it.endTime,
+            startTime = it.startTime.toHHMMparser(),
+            endTime = it.endTime.toHHMMparser(),
             remainingSeatCount = it.remainingSeats?: 100,
         )
     }
