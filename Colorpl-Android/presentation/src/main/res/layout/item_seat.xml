@@ -16,6 +16,7 @@
         <TextView
             android:id="@+id/tv_seat"
             style="@style/suite_extra_bold_12"
+            android:textSize="12dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"

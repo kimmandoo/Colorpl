@@ -8,6 +8,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
 import com.domain.model.FilterItem
@@ -84,6 +86,7 @@ class ReservationFragment :
     }
 
 
+
 //    private fun observeReservationList() {
 //        reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
 //            .onEach { reservationList ->
@@ -110,6 +113,7 @@ class ReservationFragment :
     }
 
 
+
     private fun initClickListener() {
         binding.apply {
             clSelectDate.setOnClickListener {
@@ -123,6 +127,7 @@ class ReservationFragment :
                 svSearch.clearFocus()
                 svSearch.setQuery("", false)
                 reservationListViewModel.dataClear()
+                reservationListViewModel
                 onFilterClickListener(FilterItem("전체"))
                 mainViewModel.setReservationDate(LocalDate.now())
                 viewLifecycleOwner.lifecycleScope.launch {
@@ -155,6 +160,8 @@ class ReservationFragment :
             ReservationFragmentDirections.actionFragmentReservationToFragmentReservationDetail(data)
         Navigation.findNavController(binding.root).navigate(action)
     }
+
+
 
 
     private fun initSearchWindow() {
@@ -202,6 +209,7 @@ class ReservationFragment :
             }
         dateRangePickerDialog.show()
     }
+
 
 
     /** 지역 선택 리스트 Dialog */

@@ -79,10 +79,11 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cl_content"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginHorizontal="20dp"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_image"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/iv_image"
                         app:layout_constraintTop_toTopOf="@+id/iv_image">
 
@@ -93,6 +94,7 @@
                             android:layout_height="wrap_content"
                             android:text="@{viewModel.reservationTitle}"
                             android:textColor="@color/white"
+                            android:textSize="16dp"
                             app:layout_constraintBottom_toTopOf="@id/tv_date"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -107,6 +109,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:textColor="@color/timber_wolf"
+                            android:textSize="12dp"
                             app:date="@{viewModel.reservationDate}"
                             app:layout_constraintBottom_toTopOf="@id/tv_location"
                             app:layout_constraintStart_toStartOf="parent"
@@ -122,6 +125,7 @@
                             android:layout_marginStart="5dp"
                             android:text="@{viewModel.reservationTimeTable.startTime + ` ~ ` + viewModel.reservationTimeTable.endTime}"
                             android:textColor="@color/timber_wolf"
+                            android:textSize="12dp"
                             app:layout_constraintBottom_toBottomOf="@id/tv_date"
                             app:layout_constraintStart_toEndOf="@id/tv_date"
                             app:layout_constraintTop_toTopOf="@+id/tv_date"
@@ -134,12 +138,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@{viewModel.reservationTheater + ` | ` + viewModel.reservationHall}"
+                            android:text="@{viewModel.reservationTheater}"
                             android:textColor="@color/timber_wolf"
-                            app:layout_constraintBottom_toTopOf="@id/tv_suit"
+                            app:layout_constraintBottom_toTopOf="@id/tv_hall"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tv_date"
-                            tools:text="수원 CGV | 1관" />
+                            tools:text="수원 CGV" />
+
+                        <TextView
+                            android:id="@+id/tv_hall"
+                            style="@style/suite_medium_12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@{viewModel.reservationHall}"
+                            android:textColor="@color/timber_wolf"
+                            android:textSize="12dp"
+                            app:layout_constraintBottom_toTopOf="@id/tv_suit"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_location"
+                            tools:text="특별홀" />
 
                         <TextView
                             android:id="@+id/tv_suit"
@@ -148,9 +166,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:textColor="@color/white"
+                            android:textSize="14dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_location"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_hall"
                             app:setFormattedSeatsText="@{viewModel.reservationSelectedSeat}"
                             tools:text="4매 | F06, F07, F08, F09" />
 

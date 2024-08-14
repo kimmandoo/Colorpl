@@ -1,5 +1,6 @@
 package com.presentation.reservation
 
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -23,7 +24,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 @AndroidEntryPoint
 class ReservationTimeTableFragment :
@@ -94,6 +98,7 @@ class ReservationTimeTableFragment :
 
     private fun observedSelectedDate() {
         var position = 0
+        var check = false
         viewModel.reservationDate.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 val dateList = (0 until 14).map { i ->
@@ -101,6 +106,7 @@ class ReservationTimeTableFragment :
                     val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     if (position == 0) {
                         position = if (it == date) i else 0
+
                     }
                     Timber.tag("viewModel_Schedule")
                         .d(viewModel.reservationSchedule.value.toString())
@@ -112,11 +118,15 @@ class ReservationTimeTableFragment :
                 }
                 reservationDateTableAdapter.submitList(dateList)
 
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(300L)
-                    Timber.d("포지션 확인 $position")
-                    binding.rcReservationDateTable.scrollToPosition(position)
+                if(!check){
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        delay(300L)
+                        Timber.d("포지션 확인 $position")
+                        binding.rcReservationDateTable.scrollToPosition(position)
+                        check = true
+                    }
                 }
+
                 val formattedDate =
                     viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 viewModel.getReservationSchedule(viewModel.reservationDetailId.value, formattedDate)
@@ -138,6 +148,33 @@ class ReservationTimeTableFragment :
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
+        // 예약 날짜와 현재 날짜가 같다면 시간 비교
+        viewModel.setReservationSeat(listOf())
+        if (viewModel.reservationDate.value == LocalDate.now()) {
+            runCatching {
+                val parsedTime = LocalTime.parse(timeTable.startTime)
+                parsedTime
+            }.onSuccess { startTime ->
+                val currentTime = LocalDateTime.now().toLocalTime()
+                if (currentTime.isAfter(startTime)) {
+                    Toast.makeText(context, getString(R.string.reservation_over_time), Toast.LENGTH_SHORT).show()
+                } else {
+                    proceedWithReservation(data, timeTable)
+                }
+            }.onFailure { exception ->
+                if (exception is DateTimeParseException) {
+                    Timber.e("시간 파싱 오류: ${exception.message}")
+                } else {
+                    Timber.e("예상치 못한 오류 발생: ${exception.message}")
+                }
+            }
+        } else {
+            // 날짜가 오늘과 같지 않다면 바로 예약 진행
+            proceedWithReservation(data, timeTable)
+        }
+    }
+
+    private fun proceedWithReservation(data: ReservationPairInfo, timeTable: TimeTable) {
         with(viewModel) {
             setReservationPlace(data.placeName)
             setReservationTheater(data.hallName)
@@ -145,7 +182,7 @@ class ReservationTimeTableFragment :
             getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
             Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
         }
-        ViewPagerManager.moveNext()
+        viewModel.setViewPagerStatus(ViewPagerManager.moveNext())
     }
 
 
