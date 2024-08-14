@@ -25,10 +25,12 @@ class LoginViewModel @Inject constructor(
 
     init {
         autoLogin()
+
     }
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
+            _signInEvent.emit(SignInEventState.Loading)
             signInUseCase.signIn(Member(email, password)).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
@@ -46,6 +48,7 @@ class LoginViewModel @Inject constructor(
 
     fun autoLogin() {
         viewModelScope.launch {
+            _signInEvent.emit(SignInEventState.Loading)
             signInUseCase.getSignToken().collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
@@ -70,6 +73,7 @@ class LoginViewModel @Inject constructor(
 
     fun googleSignIn(idToken: String) {
         viewModelScope.launch {
+            _signInEvent.emit(SignInEventState.Loading)
             signInUseCase.googleSignIn(idToken).collectLatest {
                 when (it) {
                     is DomainResult.Success -> {
