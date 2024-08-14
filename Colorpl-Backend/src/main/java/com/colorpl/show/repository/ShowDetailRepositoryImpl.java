@@ -33,28 +33,28 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         int limit
     ) {
         return queryFactory
-                .select(showDetail).distinct()
-                .from(showDetail)
-                .join(showDetail.showSchedules, showSchedule).fetchJoin()
-                .where(
-                        dateEq(date),
-                        nameContains(keyword),
-                        areaIn(area),
-                        categoryEq(category),
-                        cursorIdGt(cursorId)
-                )
-                .limit(limit)
-                .fetch();
+            .select(showDetail).distinct()
+            .from(showDetail)
+            .join(showDetail.showSchedules, showSchedule).fetchJoin()
+            .where(
+                dateEq(date),
+                nameContains(keyword),
+                areaIn(area),
+                categoryEq(category),
+                cursorIdGt(cursorId)
+            )
+            .limit(limit)
+            .fetch();
 
     }
 
     @Override
     public ShowDetail getShowDetail(Integer showDetailId) {
         return queryFactory
-            .select(showDetail).distinct()
+            .select(showDetail)
             .from(showDetail)
             .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(showDetailIdEq(showDetailId))
+            .where(showDetail.id.eq(showDetailId))
             .fetchOne();
     }
 

@@ -12,13 +12,18 @@ import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
 import com.colorpl.reservation.repository.ReservationRepository;
+import com.colorpl.reservation.status.service.DeleteReservationStatusService;
 import com.colorpl.reservation.status.service.DisableReservationService;
 import com.colorpl.reservation.status.service.EnableReservationService;
+import com.colorpl.schedule.domain.ReservationSchedule;
+import com.colorpl.schedule.repository.ReservationScheduleRepository;
+import com.colorpl.schedule.service.DeleteReservationScheduleService;
 import com.colorpl.show.domain.ShowSchedule;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +40,9 @@ public class ReservationService {
     private final ReservationDetailRepository reservationDetailRepository;
     private final EnableReservationService enableReservationService;
     private final DisableReservationService disableReservationService;
+    private final DeleteReservationStatusService deleteReservationStatusService;
+    private final DeleteReservationScheduleService deleteReservationScheduleService;
+    private final ReservationScheduleRepository reservationScheduleRepository;
 
     @Transactional(readOnly = true)
     public List<ReservationDTO> getReservationsByMemberId(Integer memberId) {
@@ -104,6 +112,12 @@ public class ReservationService {
 
         reservation.updateRefundState(true);  // is_refunded 필드를 true로 설정
         reservationRepository.save(reservation);  // 변경 사항을 저장
+
+        // 연관된 일정 삭제
+        Optional<ReservationSchedule> reservationSchedule = reservationScheduleRepository.findByReservation(
+            reservation);
+        deleteReservationScheduleService.deleteReservationSchedule(reservationSchedule.orElseThrow()
+            .getId());
 
         // 예매상세에 변경사항 반영
         reservation.getReservationDetails()
@@ -256,7 +270,8 @@ public class ReservationService {
                 reservationDetail.getCol());
 
             if (lockedDetail != null) {
-                throw new RuntimeException("이미 예매된 좌석입니다. " + reservationDetail.getRow() + ", " + reservationDetail.getCol());
+                throw new RuntimeException("이미 예매된 좌석입니다. " + reservationDetail.getRow() + ", "
+                    + reservationDetail.getCol());
             }
         });
 

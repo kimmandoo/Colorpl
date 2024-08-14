@@ -20,10 +20,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -72,10 +75,16 @@ public class Member extends BaseEntity {
 
     private static final int MAX_CATEGORIES = 2;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "member_receipts", joinColumns = @JoinColumn(name = "member_id"))
-    private List<String> receiptIds = new ArrayList<>();
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "member_receipts", joinColumns = @JoinColumn(name = "member_id"))
+//    private List<String> receiptIds = new ArrayList<>();
 
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "member_receipts", joinColumns = @JoinColumn(name = "member_id"))
+    @MapKeyColumn(name = "member_receipts_receipts_id")
+    @Column(name = "reservation_id")
+    private Map<String, Long> memberReceipts = new HashMap<>();
 
     @ManyToMany
     @JoinTable(name = "member_following", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "following_id"))
@@ -83,8 +92,6 @@ public class Member extends BaseEntity {
 
     @ManyToMany(mappedBy = "followingList")
     private Set<Member> followerList;
-
-
 
 
     // 연관관계 편의 메서드
@@ -131,19 +138,20 @@ public class Member extends BaseEntity {
     }
 
 
-    public void addReceiptId(String receiptId) {
-        if (receiptIds.contains(receiptId)) {
+    public void addReceiptId(String receiptId, Long reservationId) {
+        if (memberReceipts.containsKey(receiptId)) {
             throw new IllegalArgumentException("이미 추가된 영수증 ID입니다.");
         }
-        receiptIds.add(receiptId);
+        memberReceipts.put(receiptId, reservationId);
     }
 
     public void removeReceiptId(String receiptId) {
-        if (!receiptIds.contains(receiptId)) {
+        if (!memberReceipts.containsKey(receiptId)) {
             throw new IllegalArgumentException("삭제할 영수증 ID가 없습니다.");
         }
-        receiptIds.remove(receiptId);
+        memberReceipts.remove(receiptId);
     }
+
     public void updatePassword(String password) {
         this.password = password;
     }
