@@ -245,6 +245,18 @@ public class ReservationService {
             })
             .toList();
 
+        // 좌석 잠금
+        reservationDetails.forEach(reservationDetail -> {
+            ReservationDetail lockedDetail = reservationDetailRepository.findByShowScheduleIdAndRowAndColForUpdate(
+                reservationDetail.getShowSchedule().getId(),
+                reservationDetail.getRow(),
+                reservationDetail.getCol());
+
+            if (lockedDetail != null) {
+                throw new RuntimeException("이미 예매된 좌석입니다. " + reservationDetail.getRow() + ", " + reservationDetail.getCol());
+            }
+        });
+
         // Reservation과 ReservationDetail을 각각 저장
         Reservation createdReservation = reservationRepository.save(reservation);
         reservationDetailRepository.saveAll(reservationDetails); // ReservationDetail 별도 저장
