@@ -11,7 +11,7 @@ data class TicketResponse(
     val location: String?,
     val latitude: Double=0.0,
     val longitude: Double=0.0,
-    val imgUrl: String,
+    val imgUrl: String?,
     val reviewExists: Boolean,
     val reviewId: Int
 ): Serializable

@@ -121,7 +121,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
                     name = it.name,
                     category = it.category,
                     location = it.location ?: "",
-                    imgUrl = it.imgUrl,
+                    imgUrl = it.imgUrl ?: "",
                     reviewExists = it.reviewExists,
                     reviewId = it.reviewId,
                 )
