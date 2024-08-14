@@ -2,6 +2,7 @@ package com.presentation.feed
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +31,7 @@ import timber.log.Timber
 class FeedDetailFragment :
     BaseDialogFragment<FragmentFeedDetailBinding>(R.layout.fragment_feed_detail) {
 
-    private val feedViewModel: FeedViewModel by viewModels()
+    private val feedViewModel: FeedViewModel by activityViewModels()
     private val args: FeedDetailFragmentArgs by navArgs()
     private val editDialog: ReviewEditDialog by lazy {
         ReviewEditDialog(requireContext(), binding.tvContent.text.toString()) {
@@ -137,6 +138,8 @@ class FeedDetailFragment :
         feedViewModel.reviewDetail.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { data ->
                 Timber.d("리뷰 상세 데이터 $data")
+                feedViewModel.getReviewDetail(args.reviewId)
+                feedViewModel.getFeed()
                 updateReview(data)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -145,6 +148,7 @@ class FeedDetailFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             feedViewModel.refreshTrigger.collectLatest {
                 feedViewModel.getReviewDetail(args.reviewId)
+                feedViewModel.getFeed()
             }
         }
     }
@@ -153,14 +157,14 @@ class FeedDetailFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 feedViewModel.commentDeleteResponse.collectLatest {
-                    feedViewModel.getComment(args.reviewId)
+                    refresh()
                     dismissLoading()
                     commentAdapter.refresh()
                 }
             }
             launch {
                 feedViewModel.commentEditResponse.collectLatest {
-                    feedViewModel.getComment(args.reviewId)
+                    refresh()
                     binding.root.context.hideKeyboard(requireView())
                     commentDialog.dismiss()
                     dismissLoading()
@@ -169,7 +173,7 @@ class FeedDetailFragment :
             }
             launch {
                 feedViewModel.commentCreateResponse.collectLatest {
-                    feedViewModel.getComment(args.reviewId)
+                    refresh()
                     binding.etComment.clearFocus()
                     dismissLoading()
                     commentAdapter.refresh()
@@ -218,6 +222,12 @@ class FeedDetailFragment :
                 showLoading()
             }
         commentDialog.show()
+    }
+
+    private fun refresh(){
+        feedViewModel.getComment(args.reviewId)
+        feedViewModel.getReviewDetail(args.reviewId)
+        feedViewModel.getFeed()
     }
 
     private fun onCommentDeleteClickListener(id: Int) {
