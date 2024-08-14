@@ -149,7 +149,7 @@ class ReservationPaymentFragment :
                 when (it) {
                     is PaymentEventState.PaySuccess -> {
                         reservationViewModel.setPayResult(it.data)
-                        ViewPagerManager.moveNext()
+                        reservationViewModel.setViewPagerStatus(ViewPagerManager.moveNext())
                     }
 
                     is PaymentEventState.PayFail -> {

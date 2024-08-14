@@ -2,7 +2,6 @@
 <resources>
     <string name="reservation_seat_type_price">%s %s원"</string>
     <string name="reservation">예매하기</string>
-    <string name="reservation_front_space">"    예매하기"</string>
     <string name="exit">나가기</string>
     <!-- 예매 시작-->
     <string name="reservation_detail_category">카테고리</string>

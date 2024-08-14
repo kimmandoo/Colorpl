@@ -33,10 +33,20 @@ class ReservationSeatFragment :
     private var peopleCount = 1
     private val selectedSeats = mutableListOf<Seat>()
 
+    override fun onResume() {
+        super.onResume()
+        if (ViewPagerManager.getViewPager()?.currentItem == ReservationProgressFragment.SEAT) {
+            if (viewModel.viewPagerStatus.value == ViewPagerManager.NEXT) {
+                updateUiOfChangedPeopleCount()
+                showPeopleCountBottomSheet()
+            }
+        }
+    }
+
     override fun initView() {
         binding.apply {
             if (ViewPagerManager.getViewPager()?.currentItem == ReservationProgressFragment.SEAT) {
-                showPeopleCountBottomSheet()
+//                showPeopleCountBottomSheet()
             }
             initUi()
         }
@@ -57,7 +67,7 @@ class ReservationSeatFragment :
             tvNext.setOnClickListener {
                 viewModel.setReservationSelectedSeat(selectedSeats.toMutableList())
                 Timber.tag("selectedSeats").d(viewModel.reservationSelectedSeat.value.toString())
-                ViewPagerManager.moveNext()
+                viewModel.setViewPagerStatus(ViewPagerManager.moveNext())
             }
         }
 

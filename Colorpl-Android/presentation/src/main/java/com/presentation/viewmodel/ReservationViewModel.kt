@@ -12,6 +12,7 @@ import com.domain.usecase.ReservationSeatUseCase
 import com.domain.usecase.ReservationUseCase
 import com.domain.util.DomainResult
 import com.presentation.util.Payment
+import com.presentation.util.ViewPagerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,9 @@ class ReservationViewModel @Inject constructor(
     private val getReservationSeatUseCase: ReservationSeatUseCase
 
 ) : ViewModel() {
+    private val _viewPagerStatus = MutableStateFlow(ViewPagerManager.NEXT)
+    val viewPagerStatus: StateFlow<Int> = _viewPagerStatus
+
     private val _reservationDetailId = MutableStateFlow(-1)
     val reservationDetailId: StateFlow<Int> = _reservationDetailId
 
@@ -51,6 +55,9 @@ class ReservationViewModel @Inject constructor(
     private val _reservationTimeTable =
         MutableStateFlow<TimeTable>(TimeTable(1, "10:00", "12:00", 50))
     val reservationTimeTable: StateFlow<TimeTable> = _reservationTimeTable
+
+    private val _reservationPeople = MutableStateFlow(1)
+    val reservationPeople: StateFlow<Int> = _reservationPeople
 
     private val _reservationSeat = MutableStateFlow<List<Seat>>(listOf())
     val reservationSeat: StateFlow<List<Seat>> = _reservationSeat
@@ -87,7 +94,9 @@ class ReservationViewModel @Inject constructor(
         _payResult.value = value
     }
 
-
+    fun setViewPagerStatus(status: Int) {
+        _viewPagerStatus.value = status
+    }
 
     fun setReservationDetailId(id: Int) {
         _reservationDetailId.value = id
@@ -119,6 +128,10 @@ class ReservationViewModel @Inject constructor(
 
     fun setReservationTimeTable(timeTable: TimeTable) {
         _reservationTimeTable.value = timeTable
+    }
+
+    fun setReservationPeople(people: Int) {
+        _reservationPeople.value = people
     }
 
     fun setReservationSeat(seatList: List<Seat>) {
