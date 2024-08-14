@@ -2,13 +2,12 @@ package com.presentation.reservation
 
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationBinding
 import com.domain.model.FilterItem
@@ -23,7 +22,7 @@ import com.presentation.util.Category
 import com.presentation.util.ShowType
 import com.presentation.util.getFilterItems
 import com.presentation.util.hideKeyboard
-import com.presentation.util.overScrollControl
+import com.presentation.viewmodel.MainViewModel
 import com.presentation.viewmodel.ReservationListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -38,7 +37,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class ReservationFragment :
     BaseFragment<FragmentReservationBinding>(R.layout.fragment_reservation) {
-
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val reservationListViewModel: ReservationListViewModel by viewModels()
 
     private val filterAdapter by lazy {
@@ -68,12 +67,13 @@ class ReservationFragment :
             adapter = reservationInfoAdapter
             itemAnimator = null
         }
-        reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
-            pagingData?.let { show ->
-                reservationInfoAdapter.submitData(viewLifecycleOwner.lifecycle, show)
-                dismissLoading()
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        reservationListViewModel.pagedShow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { pagingData ->
+                pagingData?.let { show ->
+                    reservationInfoAdapter.submitData(viewLifecycleOwner.lifecycle, show)
+                    dismissLoading()
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
 
         reservationInfoAdapter.loadStateFlow.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { loadStates ->
@@ -82,7 +82,6 @@ class ReservationFragment :
                 if (!isLoading) dismissLoading() else showLoading()
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
-
 
 
 //    private fun observeReservationList() {
@@ -111,7 +110,6 @@ class ReservationFragment :
     }
 
 
-
     private fun initClickListener() {
         binding.apply {
             clSelectDate.setOnClickListener {
@@ -126,7 +124,7 @@ class ReservationFragment :
                 reservationListViewModel.dataClear()
                 reservationListViewModel
                 onFilterClickListener(FilterItem("전체"))
-
+                mainViewModel.setReservationDate(LocalDate.now())
                 viewLifecycleOwner.lifecycleScope.launch {
                     delay(300L)
                     binding.rvReservationInfo.scrollToPosition(0)
@@ -159,8 +157,6 @@ class ReservationFragment :
     }
 
 
-
-
     private fun initSearchWindow() {
         binding.apply {
             svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -191,11 +187,12 @@ class ReservationFragment :
     /** 날짜 선택 캘린더 Dialog */
     private fun showDateRangePickerDialog() {
         val initialDate = reservationListViewModel.date.value ?: LocalDate.now()
-        Timber.tag("date").d(initialDate.toString())
+        Timber.d("이거 확인여 $initialDate")
         val dateRangePickerDialog =
             DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
                 // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
                 val selectedDate = LocalDate.of(year, month, day)
+                mainViewModel.setReservationDate(selectedDate)
                 reservationListViewModel.setDate(selectedDate)
                 val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
                 val data = selectedDate.format(dateFormat)
@@ -204,7 +201,6 @@ class ReservationFragment :
             }
         dateRangePickerDialog.show()
     }
-
 
 
     /** 지역 선택 리스트 Dialog */
