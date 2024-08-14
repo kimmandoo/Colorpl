@@ -11,6 +11,7 @@ import com.presentation.component.custom.CustomDialog
 import com.presentation.component.custom.showCustomDropDownMenu
 import com.presentation.util.DropDownMenu
 import com.presentation.util.PaymentResult
+import com.presentation.util.setVisibility
 import com.presentation.viewmodel.PayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -56,7 +57,7 @@ class PaymentHistoryFragment :
         payViewModel.paymentReceipts.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 dismissLoading()
-                binding.emptyVisible = it.isEmpty()
+                binding.icEmptyView.clTitle.setVisibility(it.isEmpty())
                 paymentHistoryAdapter.submitList(it)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
