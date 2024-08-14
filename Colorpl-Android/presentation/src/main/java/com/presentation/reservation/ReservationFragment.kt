@@ -119,10 +119,10 @@ class ReservationFragment :
                 showLocationPickerDialog()
             }
             tvClear.setOnClickListener {
+                showLoading()
                 svSearch.clearFocus()
                 svSearch.setQuery("", false)
                 reservationListViewModel.dataClear()
-                reservationListViewModel
                 onFilterClickListener(FilterItem("전체"))
                 mainViewModel.setReservationDate(LocalDate.now())
                 viewLifecycleOwner.lifecycleScope.launch {
@@ -187,11 +187,12 @@ class ReservationFragment :
     /** 날짜 선택 캘린더 Dialog */
     private fun showDateRangePickerDialog() {
         val initialDate = reservationListViewModel.date.value ?: LocalDate.now()
-        Timber.d("이거 확인여 $initialDate")
+
         val dateRangePickerDialog =
             DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
+                Timber.d("이거 확인여 $year - $month - $day")
                 // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-                val selectedDate = LocalDate.of(year, month, day)
+                val selectedDate = LocalDate.of(year, month+1, day)
                 mainViewModel.setReservationDate(selectedDate)
                 reservationListViewModel.setDate(selectedDate)
                 val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
