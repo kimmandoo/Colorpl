@@ -17,6 +17,20 @@ interface TicketUseCase {
         ticket: Int
     ): Flow<DomainResult<Int>>
 
+    fun getSingleTicket(
+        id: Int
+    ): Flow<DomainResult<TicketResponse>>
+
+    fun deleteTicket(
+        id: Int
+    ): Flow<DomainResult<Unit>>
+
+    fun putTicket(
+        id: Int,
+        image: File?,
+        ticket: TicketRequest
+    ): Flow<DomainResult<Int>>
+
     suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>>
 
     suspend fun getMonthlyTicket(

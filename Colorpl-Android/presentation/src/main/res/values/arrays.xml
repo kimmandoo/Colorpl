@@ -19,4 +19,15 @@
         <item>@string/feed_filter_exhibition</item>
         <item>@string/ticket_etc</item>
     </string-array>
+
+    <string-array name="ticket_category_en">
+        <item>@string/feed_filter_play_en</item>
+        <item>@string/feed_filter_movie_en</item>
+        <item>@string/feed_filter_performance_en</item>
+        <item>@string/feed_filter_concert_en</item>
+        <item>@string/feed_filter_musical_en</item>
+        <item>@string/feed_filter_exhibition_en</item>
+        <item>@string/feed_filter_etc_en</item>
+    </string-array>
+
 </resources>

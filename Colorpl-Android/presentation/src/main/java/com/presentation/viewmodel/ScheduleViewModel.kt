@@ -55,6 +55,41 @@ class ScheduleViewModel @Inject constructor(
         updateCalendar(Calendar.CURRENT)
     }
 
+    fun refreshTickets() {
+        viewModelScope.launch {
+            val currentPattern = _selectedDate.value.getPattern("yyyy-MM-dd")
+            ticketUseCase.getMonthlyTicket(currentPattern).collect { result ->
+                when (result) {
+                    is DomainResult.Error -> {
+                        Timber.tag("tickets").d("refresh: ${result.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        _tickets.emit(result.data)
+
+                        // 현재 캘린더 모드에 따라 적절히 처리
+                        when (_calendarMode.value) {
+                            CalendarMode.MONTH -> {
+                                _calendarItems.value =
+                                    matchTicketsToCalendar(_calendarItems.value, result.data)
+                            }
+
+                            CalendarMode.WEEK -> {
+                                val updatedWeekItems =
+                                    getOnlySelectedWeek(_selectedDate.value, _calendarItems.value)
+                                _calendarItems.value =
+                                    matchTicketsToCalendar(updatedWeekItems, result.data)
+                                filterTicketsForSelectedWeek()
+                            }
+                        }
+
+                        Timber.tag("tickets").d("새로고침됨")
+                    }
+                }
+            }
+        }
+    }
+
     fun matchTicketsToCalendar(
         calendarItems: List<CalendarItem>,
         tickets: List<TicketResponse>
@@ -64,7 +99,7 @@ class ScheduleViewModel @Inject constructor(
         return calendarItems.map { calendarItem ->
             val matchingTicket = ticketMap[calendarItem.date]
             if (matchingTicket != null) {
-                calendarItem.copy(imgUrl = matchingTicket.imgUrl?: "")
+                calendarItem.copy(imgUrl = matchingTicket.imgUrl ?: "")
             } else {
                 calendarItem
             }
@@ -149,7 +184,6 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-
     fun updateCalendar(
         state: Calendar,
         month: Long = 0,
@@ -202,33 +236,24 @@ class ScheduleViewModel @Inject constructor(
     fun updateCalendarWeekMode(
         state: Calendar
     ) {
-        _selectedDate.value = when (state) {
-            Calendar.CURRENT -> {
-                LocalDate.now()
-            }
+        val newSelectedDate = when (state) {
+            Calendar.CURRENT -> LocalDate.now()
+            Calendar.NEXT -> _selectedDate.value.plusWeeks(1)
+            Calendar.PREVIOUS -> _selectedDate.value.minusWeeks(1)
+            else -> _selectedDate.value
+        } ?: _selectedDate.value
 
-            Calendar.NEXT -> {
-                _selectedDate.value.plusWeeks(1)
-            }
+        _selectedDate.value = newSelectedDate
+        val fullMonthCalendar = createCalendar(newSelectedDate)
+        val weekCalendar = getOnlySelectedWeek(newSelectedDate, fullMonthCalendar)
 
-            Calendar.PREVIOUS -> {
-                _selectedDate.value.plusWeeks(-1)
-            }
-
-            else -> {
-                null
-            }
-        }
-
-        _calendarItems.value = getOnlySelectedWeek(
-            _selectedDate.value,
-            createCalendar(_selectedDate.value)
-        ).map { item ->
+        _calendarItems.value = weekCalendar.map { item ->
             item.copy(
-                isSelected = item.date == _clickedDate.value?.date,
-                isWeek = true  // 주간 모드에서는 모든 아이템의 isWeek를 true로 설정
+                isSelected = item.date == newSelectedDate,
+                isWeek = true
             )
         }
+        _clickedDate.value = _calendarItems.value.find { it.isSelected }
         updateDisplayDate()
         filterTicketsForSelectedWeek()
     }

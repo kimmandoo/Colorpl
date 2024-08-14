@@ -15,9 +15,9 @@ class DateRangePickerDialog(
     private val initialDate: LocalDate,
     private val onConfirmClicked: (Int, Int, Int) -> Unit
 ) : BaseDialog<DialogDateRangePickerBinding>(context, R.layout.dialog_date_range_picker) {
-    private var year: Int = 0
-    private var month: Int = 0
-    private var day: Int = 0
+    private var year: Int = initialDate.year
+    private var month: Int = initialDate.monthValue
+    private var day: Int = initialDate.dayOfMonth
 
     override fun onCreateDialog() {
         val today = Calendar.getInstance()
@@ -26,9 +26,10 @@ class DateRangePickerDialog(
         binding.apply {
             dpCalendar.minDate = today.timeInMillis
             dpCalendar.maxDate = twoWeeksLater.timeInMillis
+            dpCalendar.init(year,month-1,day, null)
 
             tvConfirm.setOnClickListener {
-                onConfirmClicked(year, month+1, day)
+                onConfirmClicked(year, month, day)
                 dismiss()
             }
 

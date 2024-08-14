@@ -1,6 +1,6 @@
 package com.presentation.reservation
 
-import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,10 +14,13 @@ import com.presentation.component.adapter.reservation.process.OnTimeTableClickLi
 import com.presentation.component.adapter.reservation.process.ReservationDateTableAdapter
 import com.presentation.component.adapter.reservation.process.ReservationPlaceAdapter
 import com.presentation.util.ViewPagerManager
+import com.presentation.viewmodel.MainViewModel
 import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,6 +43,7 @@ class ReservationTimeTableFragment :
     }
 
     override fun initView() {
+        initDate()
         initTimeTableAdapter()
         initDateAdapter()
         initViewModel()
@@ -61,30 +65,62 @@ class ReservationTimeTableFragment :
         }
     }
 
+    private fun initDate() {
+        val mainDate = mainViewModel.reservationDate.value
+        val scheduleData = viewModel.reservationSchedule.value
+        val initData = if (mainDate == LocalDate.now()) {
+            var tmp: LocalDate? = null
+            for (i in 0 until 14) {
+                val date = LocalDate.now().plusDays(i.toLong())
+                val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                if (scheduleData[formattedDate] == true) {
+                    tmp = date
+                    break;
+                }
+            }
+            tmp
+        } else {
+            mainDate
+        }
+        initData?.let {
+            viewModel.setReservationDate(it)
+        }
+    }
+
+
     private fun initViewModel() {
-        viewModel.setReservationDate(LocalDate.now())
         binding.apply {
             this@apply.viewModel = this@ReservationTimeTableFragment.viewModel
         }
     }
 
     private fun observedSelectedDate() {
+        var position = 0
         viewModel.reservationDate.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 val dateList = (0 until 14).map { i ->
                     val date = LocalDate.now().plusDays(i.toLong())
                     val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-                    Timber.tag("viewModel_Schedule").d(viewModel.reservationSchedule.value.toString())
+                    if (position == 0) {
+                        position = if (it == date) i else 0
+                    }
+                    Timber.tag("viewModel_Schedule")
+                        .d(viewModel.reservationSchedule.value.toString())
                     DateTableItem(
                         date = date,
                         isSelected = viewModel.reservationDate.value == date,
-                        isEvent = viewModel.reservationSchedule.value[formattedDate]?: false
+                        isEvent = viewModel.reservationSchedule.value[formattedDate] ?: false
                     )
                 }
                 reservationDateTableAdapter.submitList(dateList)
 
-                val formattedDate = viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                viewLifecycleOwner.lifecycleScope.launch {
+                    delay(300L)
+                    Timber.d("포지션 확인 $position")
+                    binding.rcReservationDateTable.scrollToPosition(position)
+                }
+                val formattedDate =
+                    viewModel.reservationDate.value.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 viewModel.getReservationSchedule(viewModel.reservationDetailId.value, formattedDate)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }

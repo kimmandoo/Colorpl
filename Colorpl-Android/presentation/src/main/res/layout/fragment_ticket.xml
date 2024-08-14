@@ -20,7 +20,8 @@
     <ScrollView
         android:id="@+id/sv_ticket"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#000000">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,6 +35,31 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:title="@{titleText}" />
+
+            <TextView
+                android:id="@+id/tv_edit"
+                style="@style/suite_bold_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/feed_edit"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tv_delete"
+                app:layout_constraintEnd_toStartOf="@id/tv_delete"
+                app:layout_constraintTop_toTopOf="@id/tv_delete" />
+
+            <TextView
+                android:id="@+id/tv_delete"
+                style="@style/suite_bold_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/feed_delete"
+                android:textColor="@color/imperial_red"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/include_top"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_poster"
@@ -86,20 +112,20 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_my_review"
-                android:layout_marginHorizontal="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
                 app:layout_constraintTop_toBottomOf="@id/ll_info">
 
                 <TextView
                     android:id="@+id/tv_my_review"
                     style="@style/suite_bold_20"
-                    android:textSize="24sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="내가 남긴 리뷰"
                     android:textColor="@color/white"
+                    android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

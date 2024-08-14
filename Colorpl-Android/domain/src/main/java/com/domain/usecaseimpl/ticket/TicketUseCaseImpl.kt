@@ -57,6 +57,65 @@ class TicketUseCaseImpl @Inject constructor(
             }
     }
 
+    override fun getSingleTicket(id: Int): Flow<DomainResult<TicketResponse>> {
+        return flow {
+            ticketRepository.getSingleTicket(id).collect { result ->
+                when (result) {
+                    is ApiResult.Error -> {
+                        emit(DomainResult.error(result.exception))
+                    }
+
+                    is ApiResult.Success -> {
+                        val response = result.data.toEntity(id)
+                        Timber.d("$response")
+                        emit(DomainResult.success(response))
+                    }
+                }
+            }
+        }
+    }
+
+    override fun deleteTicket(id: Int): Flow<DomainResult<Unit>> {
+        return flow {
+            ticketRepository.deleteTicket(id).collect { result ->
+                when (result) {
+                    is ApiResult.Error -> {
+                        emit(DomainResult.error(result.exception))
+                    }
+
+                    is ApiResult.Success -> {
+                        val response = result.data
+                        Timber.d("$response")
+                        emit(DomainResult.success(response))
+                    }
+                }
+            }
+        }
+    }
+
+    override fun putTicket(
+        id: Int,
+        image: File?,
+        ticket: TicketRequest
+    ): Flow<DomainResult<Int>> = flow {
+        Timber.tag("put").d("$ticket $id")
+        ticketRepository.putTicket(id, image, ticket.toEntity()).collect { result ->
+            when (result) {
+                is ApiResult.Error -> {
+                    Timber.tag("put").d("${result.exception}")
+                    emit(DomainResult.error(result.exception))
+                }
+
+                is ApiResult.Success -> {
+                    Timber.tag("put").d("${result.data}")
+                    val response = result.data
+                    Timber.d("$response")
+                    emit(DomainResult.success(response))
+                }
+            }
+        }
+    }
+
     override suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>> = flow {
         ticketRepository.getAllTicket().collect { result ->
             when (result) {

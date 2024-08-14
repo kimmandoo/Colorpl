@@ -32,13 +32,13 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_map">
         <action
             android:id="@+id/action_fragment_map_to_fragment_ticket"
             app:destination="@id/fragment_ticket">
             <argument
                 android:name="ticket"
-                app:argType="com.domain.model.TicketResponse" />
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -63,7 +63,7 @@
             app:destination="@id/fragment_ticket">
             <argument
                 android:name="ticket"
-                app:argType="com.domain.model.TicketResponse" />
+                app:argType="integer" />
         </action>
 
     </fragment>
@@ -126,6 +126,16 @@
         <argument
             android:name="reservationDetail"
             app:argType="com.domain.model.ReservationInfo" />
+        <action
+            android:id="@+id/action_fragment_reservation_progress_to_fragment_ticket"
+            app:destination="@id/fragment_ticket"
+            app:exitAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down"
+            app:popUpTo="@id/fragment_reservation">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
 
     </fragment>
 
@@ -138,7 +148,7 @@
         tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" >
+            app:destination="@id/fragment_feed_detail">
             <argument
                 android:name="reviewId"
                 android:defaultValue="0"
@@ -146,7 +156,22 @@
         </action>
         <argument
             android:name="ticket"
-            app:argType="com.domain.model.TicketResponse" />
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_fragment_ticket_to_nav_ticket_update_graph"
+            app:destination="@id/nav_ticket_update_graph">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_fragment_ticket_to_ticketEditFragment"
+            app:destination="@id/ticketEditFragment">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
     </dialog>
 
 
@@ -273,5 +298,8 @@
     <include app:graph="@navigation/nav_ticket_graph" />
 
     <include app:graph="@navigation/nav_sign_graph" />
+
+    <include app:graph="@navigation/nav_ticket_update_graph" />
+
 
 </navigation>
