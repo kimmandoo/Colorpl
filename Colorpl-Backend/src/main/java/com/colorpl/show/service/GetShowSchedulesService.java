@@ -1,6 +1,5 @@
 package com.colorpl.show.service;
 
-import com.colorpl.global.common.exception.InvalidRuntimeException;
 import com.colorpl.reservation.status.service.GetReservationStatusService;
 import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetShowSchedulesRequest;
@@ -55,7 +54,8 @@ public class GetShowSchedulesService {
         Pattern pattern = Pattern.compile("(?:(\\d+)시간)?\\s*(?:(\\d+)분)?");
         Matcher matcher = pattern.matcher(source);
         if (!matcher.find()) {
-            throw new InvalidRuntimeException(source);
+            // 런타임 값이 없거나, 올바르지 않은 값일 때
+            return Duration.ofHours(1);
         }
         String hours = matcher.group(1);
         String minutes = matcher.group(2);
