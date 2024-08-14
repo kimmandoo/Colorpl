@@ -12,11 +12,13 @@ import com.presentation.component.custom.showCustomDropDownMenu
 import com.presentation.util.DropDownMenu
 import com.presentation.util.PaymentResult
 import com.presentation.util.setVisibility
+import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.PayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class PaymentHistoryFragment :
@@ -55,10 +57,20 @@ class PaymentHistoryFragment :
 
     private fun observePaymentReceipt() {
         payViewModel.paymentReceipts.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach {
+            .onEach { list ->
                 dismissLoading()
-                binding.icEmptyView.clTitle.setVisibility(it.isEmpty())
-                paymentHistoryAdapter.submitList(it)
+                binding.icEmptyView.clTitle.setVisibility(list.isEmpty())
+
+                val beforeList =
+                    list.filter { it.showDateTime.toLocalDate() > LocalDate.now() }.map {
+                        it.copy(
+                            statusLocale = "티켓완료"
+                        )
+                    }
+                Timber.d("이전 리스트 $beforeList")
+                val afterList = list.filter { !beforeList.contains(it) }
+                val resultList = beforeList + afterList
+                paymentHistoryAdapter.submitList(resultList.sortedByDescending { it.purchasedAt })
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
