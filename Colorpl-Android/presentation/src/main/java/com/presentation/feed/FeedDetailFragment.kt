@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.colorpl.presentation.R
@@ -110,6 +111,10 @@ class FeedDetailFragment :
             }
             tvDelete.setOnClickListener {
                 feedViewModel.deleteReview(feedViewModel.reviewDetail.value.id)
+            }
+            tvProfile.setOnClickListener {
+                val action = FeedDetailFragmentDirections.actionFragmentFeedDetailToFragmentUserSearch(feedViewModel.reviewDetail.value.writer)
+                findNavController().navigate(action)
             }
         }
     }

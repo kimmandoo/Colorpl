@@ -19,7 +19,7 @@ class FeedViewHolder(
     fun bind(data: Feed) {
         binding.apply {
             Timber.d("데이터 확인여 ${data.myempathy}")
-            val clickScope = listOf(tvContent, tvTitle, ivContent, ivComment, tvCommentCnt)
+            val clickScope = listOf(tvContent,tvProfile, tvTitle, ivContent, ivComment, tvCommentCnt)
             tvTitle.text = data.title
             tvContent.text = data.content
             tvEmotion.text = data.empathy.toString()
