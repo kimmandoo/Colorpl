@@ -13,10 +13,12 @@ import com.colorpl.show.domain.Category;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UpdateCustomScheduleService {
@@ -28,6 +30,7 @@ public class UpdateCustomScheduleService {
     @Transactional
     public void updateCustomSchedule(Long scheduleId, UpdateCustomScheduleRequest request,
         MultipartFile file) {
+        log.info("updateCustomSchedule. scheduleId=%d".formatted(scheduleId));
         Integer memberId = memberService.getCurrentMemberId();
         CustomSchedule customSchedule = customScheduleRepository.findById(scheduleId)
             .orElseThrow(() -> new ScheduleNotFoundException(scheduleId));
