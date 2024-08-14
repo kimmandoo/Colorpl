@@ -7,4 +7,6 @@ import java.util.List;
 public interface ReservationScheduleRepositoryCustom {
 
     List<ReservationSchedule> search(SearchScheduleCondition condition);
+
+    ReservationSchedule getSchedule(Long id);
 }

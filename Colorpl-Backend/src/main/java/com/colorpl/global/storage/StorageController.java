@@ -1,4 +1,4 @@
-package com.colorpl.global.common.storage;
+package com.colorpl.global.storage;
 
 import java.io.IOException;
 import java.nio.file.Files;
