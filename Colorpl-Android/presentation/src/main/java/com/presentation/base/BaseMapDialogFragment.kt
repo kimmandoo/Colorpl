@@ -13,6 +13,7 @@ import com.colorpl.presentation.R
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.presentation.component.dialog.LoadingDialog
 
 abstract class BaseMapDialogFragment<B : ViewDataBinding>(private val layoutResId: Int) :
     DialogFragment(), OnMapReadyCallback {
@@ -20,6 +21,18 @@ abstract class BaseMapDialogFragment<B : ViewDataBinding>(private val layoutResI
     private var _binding: B? = null
     protected val binding get() = _binding!!
     abstract var mapView: MapView?
+
+    val loading by lazy {
+        LoadingDialog(requireActivity())
+    }
+
+    fun dismissLoading() {
+        loading.dismiss()
+    }
+
+    fun showLoading() {
+        loading.show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

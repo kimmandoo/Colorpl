@@ -142,7 +142,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
                 viewLifecycleOwner.lifecycleScope,
             ) { markerData ->
                 val action =
-                    MapFragmentDirections.actionFragmentMapToFragmentTicket(markerData.toTicketResponse())
+                    MapFragmentDirections.actionFragmentMapToFragmentTicket(markerData.id)
                 navigateDestination(action)
                 Timber.d("markerData : $markerData")
             }

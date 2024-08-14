@@ -8,18 +8,21 @@ import android.webkit.WebViewClient
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.DialogAddressBinding
 import com.presentation.base.BaseDialogFragment
 import com.presentation.viewmodel.TicketCreateViewModel
+import com.presentation.viewmodel.TicketViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class TicketAddressDialog :
     BaseDialogFragment<DialogAddressBinding>(R.layout.dialog_address) {
     private lateinit var webView: WebView
-
+    private val args: TicketAddressDialogArgs by navArgs()
     private val viewModel: TicketCreateViewModel by hiltNavGraphViewModels(R.id.nav_ticket_graph)
+    private val ticketViewModel: TicketViewModel by hiltNavGraphViewModels(R.id.nav_ticket_update_graph)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,11 @@ class TicketAddressDialog :
     private fun initWebView() {
         binding.locationIvBack.setOnClickListener {
             findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
-            viewModel.cancelGetAddress()
+            if (args.type == 1) {
+                ticketViewModel.cancelGetAddress()
+            } else {
+                viewModel.cancelGetAddress()
+            }
             navigatePopBackStack()
         }
         webView = binding.locationSearchWebView
@@ -54,7 +61,11 @@ class TicketAddressDialog :
         fun processDATA(fullRoadAddr: String) {
             lifecycleScope.launch {
                 Timber.tag("address").d("Full Road Address: $fullRoadAddr")
-                viewModel.getAddress(fullRoadAddr)
+                if (args.type == 1) {
+                    ticketViewModel.getAddress(fullRoadAddr)
+                } else {
+                    viewModel.getAddress(fullRoadAddr)
+                }
                 findNavController().popBackStack()
             }
         }

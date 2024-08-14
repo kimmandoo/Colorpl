@@ -33,9 +33,12 @@ class CalendarViewHolder(
                     else -> R.drawable.rectangle_calendar_temp_8
                 }
             )
-            tvDate.setOnClickListener {
-                if (data.isCurrentMonth) onItemClick(data)
+            listOf(ivTicket, tvDate).forEach {
+                it.setOnClickListener {
+                    if (data.isCurrentMonth) onItemClick(data)
+                }
             }
+
             tvDate.apply {
                 text = data.date.dayOfMonth.toString()
                 setTextColor(

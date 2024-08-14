@@ -159,7 +159,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     private fun onTicketClickListener(ticket: TicketResponse) {
         navigateDestinationBundle(
             R.id.action_fragment_my_page_to_fragment_ticket,
-            bundleOf("ticket" to ticket)
+            bundleOf("ticket" to ticket.id)
         )
     }
 
