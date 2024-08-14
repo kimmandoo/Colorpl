@@ -85,6 +85,7 @@ public class ScheduleListResponse {
 
             response = builder
                 .seat(seatInfo) // 모든 좌석 정보를 문자열로 설정
+                .imgUrl(showDetail.getPosterImagePath())
                 .dateTime(
                     reservationSchedule.getReservation().getReservationDetails().get(0)
                         .getShowSchedule().getDateTime())
