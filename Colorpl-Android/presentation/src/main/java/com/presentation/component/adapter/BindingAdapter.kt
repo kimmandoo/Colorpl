@@ -20,6 +20,7 @@ import com.presentation.util.formatWithCommas
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -356,19 +357,23 @@ fun getReservationPriceBySeatClass(
         textView.text = text
         textView.visibility = View.VISIBLE
     }
-
-//    val value = priceBySeatClass[key]?.formatWithCommas()
-//    val priceTitle = when(flag) {
-//        true, false -> "${key}석 : "
-//        else -> ""
-//    }
-//    val priceText = when (flag) {
-//        true -> if(value == "0") "무료" else "${value}원~"
-//        else -> if(value == "0") "무료" else "${value}원"
-//    }
 }
 
 @BindingAdapter("price", "value", requireAll = false)
 fun setPriceToString(textView: TextView, price: Int, value: String?) {
     textView.text = "${price.formatWithCommas()}$value"
+}
+
+
+@BindingAdapter("timeHHMMparser", "flag")
+fun setTimeHHMMparser(textView: TextView, time: String?, flag: Boolean) {
+    val dateTime = LocalDateTime.parse(time)
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val formattedTime = dateTime.format(timeFormatter)
+    if (flag) {
+        textView.text = formattedTime
+    } else {
+        textView.text = "~$formattedTime"
+    }
+
 }

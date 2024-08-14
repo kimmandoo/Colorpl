@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -103,12 +104,14 @@ class ReservationTimeTableFragment :
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
-        val currentTime = LocalTime.now()
+        val currentDateTime = LocalDateTime.now()
+        Timber.tag("시간 비교").d("지금: $currentDateTime | 예약 시간: ${timeTable.startTime}")
 
         runCatching {
-            LocalTime.parse(timeTable.startTime)
+            val parsedDateTime = LocalDateTime.parse(timeTable.startTime)
+            parsedDateTime
         }.onSuccess { startTime ->
-            if (currentTime.isAfter(startTime)) {
+            if (currentDateTime.isAfter(startTime)) {
                 Toast.makeText(context, getString(R.string.reservation_over_time), Toast.LENGTH_SHORT).show()
             } else {
                 with(viewModel) {

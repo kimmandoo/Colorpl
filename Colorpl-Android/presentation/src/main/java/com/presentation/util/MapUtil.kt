@@ -134,8 +134,8 @@ fun clickMarker(
         override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
             super.updateLeafMarker(info, marker)
             marker.apply {
-                width = 200
-                height = 200
+                width = 210
+                height = 280
                 icon = OverlayImage.fromResource(R.drawable.ic_default_back)
                 val markerData = info.key as MapMarker
                 Timber.d("데이터 확인 $markerData")
