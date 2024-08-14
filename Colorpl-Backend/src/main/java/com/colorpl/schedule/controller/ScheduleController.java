@@ -61,13 +61,13 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> updateCustomSchedule(
+    public ResponseEntity<Void> updateCustomSchedule(
         @PathVariable Long id,
         @RequestPart UpdateCustomScheduleRequest request,
         @RequestPart(required = false) MultipartFile file
     ) {
         updateCustomScheduleService.updateCustomSchedule(id, request, file);
-        return ResponseEntity.ok(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
