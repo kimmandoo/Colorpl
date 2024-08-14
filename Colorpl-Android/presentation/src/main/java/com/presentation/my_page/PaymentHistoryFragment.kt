@@ -12,13 +12,13 @@ import com.presentation.component.custom.showCustomDropDownMenu
 import com.presentation.util.DropDownMenu
 import com.presentation.util.PaymentResult
 import com.presentation.util.setVisibility
-import com.presentation.util.toLocalDate
+import com.presentation.util.toLocalDateTime
 import com.presentation.viewmodel.PayViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class PaymentHistoryFragment :
@@ -61,16 +61,18 @@ class PaymentHistoryFragment :
                 dismissLoading()
                 binding.icEmptyView.clTitle.setVisibility(list.isEmpty())
 
-                val beforeList =
-                    list.filter { it.showDateTime.toLocalDate() > LocalDate.now() }.map {
-                        it.copy(
-                            statusLocale = "티켓완료"
+                val changeList = list.map { ticket ->
+                    if (ticket.showDateTime.toLocalDateTime() < LocalDateTime.now() && ticket.statusLocale == requireActivity().getString(
+                            R.string.my_page_payment_complete
                         )
+                    ) {
+                        ticket.copy(statusLocale = requireActivity().getString(R.string.my_page_payment_use_complete))
+                    } else {
+                        ticket
                     }
-                Timber.d("이전 리스트 $beforeList")
-                val afterList = list.filter { !beforeList.contains(it) }
-                val resultList = beforeList + afterList
-                paymentHistoryAdapter.submitList(resultList.sortedByDescending { it.purchasedAt })
+                }
+
+                paymentHistoryAdapter.submitList(changeList.sortedByDescending { it.purchasedAt })
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }

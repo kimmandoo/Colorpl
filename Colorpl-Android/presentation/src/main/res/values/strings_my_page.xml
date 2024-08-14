@@ -51,6 +51,7 @@
 
     <string name="my_page_payment_complete">결제완료</string>
     <string name="my_page_payment_refund_complete">결제취소완료</string>
+    <string name="my_page_payment_use_complete">사용완료</string>
     <string name="my_page_cancel_dialog_title">환불을 진행하시겠습니까?</string>
     <string name="my_page_pay_history_delete_dialog_title">결제 내역을 삭제하시겠습니까?</string>
 </resources>
