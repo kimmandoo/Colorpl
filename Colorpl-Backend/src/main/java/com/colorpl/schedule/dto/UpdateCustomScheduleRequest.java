@@ -8,7 +8,7 @@ import lombok.Getter;
 public class UpdateCustomScheduleRequest {
 
     private String seat;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private String name;
     private Category category;
     private String location;

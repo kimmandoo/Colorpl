@@ -8,6 +8,8 @@ import com.colorpl.member.service.MemberService;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.dto.UpdateCustomScheduleRequest;
 import com.colorpl.schedule.repository.CustomScheduleRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +39,11 @@ public class UpdateCustomScheduleService {
             customSchedule.updateImage(uploadFile.getStoreFilename());
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+
         customSchedule.updateCustomSchedule(
             request.getSeat(),
-            request.getDateTime(),
+            LocalDateTime.parse(request.getDateTime(), formatter),
             request.getName(),
             request.getCategory(),
             request.getLocation(),
