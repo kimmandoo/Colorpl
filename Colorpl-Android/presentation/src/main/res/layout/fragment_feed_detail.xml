@@ -121,6 +121,7 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="4dp"
                     android:src="@drawable/ic_report"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_emotion" />

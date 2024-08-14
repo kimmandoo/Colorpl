@@ -1,11 +1,14 @@
 package com.presentation.my_page
 
+import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentUserSearchBinding
+import com.presentation.base.BaseDialogFragment
 import com.presentation.base.BaseFragment
 import com.presentation.component.adapter.mypage.UserSearchAdapter
 import com.presentation.my_page.model.MyPageEventState
@@ -15,15 +18,14 @@ import com.presentation.viewmodel.MemberSearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 @AndroidEntryPoint
 class MemberSearchFragment :
-    BaseFragment<FragmentUserSearchBinding>(R.layout.fragment_user_search) {
+    BaseDialogFragment<FragmentUserSearchBinding>(R.layout.fragment_user_search) {
     private val memberSearchViewModel: MemberSearchViewModel by viewModels()
     private lateinit var userSearchAdapter: UserSearchAdapter
-
-    override fun initView() {
+    private val args: MemberSearchFragmentArgs? by navArgs()
+    override fun initView(savedStateInstance: Bundle?) {
         initAdapter()
         initClickEvent()
         observeMemberSearchEvent()
@@ -32,7 +34,7 @@ class MemberSearchFragment :
 
     override fun onResume() {
         super.onResume()
-        val text = binding.etSearch.text
+        val text = args?.member ?: binding.etSearch.text
         if (text.isNotEmpty()) {
             memberSearchViewModel.getMemberSearchInfo(text.toString())
         }
@@ -47,7 +49,6 @@ class MemberSearchFragment :
     }
 
 
-
     private fun initAdapter() {
         userSearchAdapter = UserSearchAdapter()
         binding.rcSearch.apply {
@@ -56,15 +57,16 @@ class MemberSearchFragment :
         }
     }
 
-    private fun observeMemberSearchEvent(){
+    private fun observeMemberSearchEvent() {
         binding.icEmptyView.clTitle.setVisibility(false)
         memberSearchViewModel.memberSearchEvent.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
-                when(it){
+                when (it) {
                     is MyPageEventState.MemberSearchError -> {
                         binding.icEmptyView.clTitle.setVisibility(true)
                         binding.rcSearch.setVisibility(false)
                     }
+
                     is MyPageEventState.MemberSearchSuccess -> {
                         binding.icEmptyView.clTitle.setVisibility(it.data.isEmpty())
                         binding.rcSearch.setVisibility(it.data.isNotEmpty())

@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@{dayText}"
+        android:textSize="16dp"
         android:textAlignment="center"
         android:textColor="@color/white" />
 </layout>
