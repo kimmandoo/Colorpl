@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -170,7 +169,8 @@ class TicketEditFragment :
 
         binding.cbFindRoute.setOnClickListener {
             showLoading()
-            val action = TicketEditFragmentDirections.actionTicketEditFragmentToDialogTicketAddress(1)
+            val action =
+                TicketEditFragmentDirections.actionTicketEditFragmentToDialogTicketAddress(1)
             findNavController().navigate(action)
         }
 
