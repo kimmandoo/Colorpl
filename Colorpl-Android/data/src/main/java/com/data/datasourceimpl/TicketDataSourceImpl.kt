@@ -2,8 +2,8 @@ package com.data.datasourceimpl
 
 import com.data.api.TicketApi
 import com.data.datasource.remote.TicketDataSource
+import com.data.model.response.ResponseSingleTicket
 import com.data.model.response.ResponseTicket
-import com.data.model.response.ResponseTicketCreate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -19,6 +19,18 @@ class TicketDataSourceImpl @Inject constructor(
             request = request,
             file = ticket
         )
+    }
+
+    override suspend fun getSingleTicket(id: Int): ResponseSingleTicket {
+        return api.getTicket(id)
+    }
+
+    override suspend fun deleteTicket(id: Int) {
+        return api.deleteTicket(id)
+    }
+
+    override suspend fun putTicket(id: Int, ticket: MultipartBody.Part, request: RequestBody) {
+        return api.putTicket(id, request, ticket)
     }
 
     override suspend fun getAllTicket(): List<ResponseTicket> {
