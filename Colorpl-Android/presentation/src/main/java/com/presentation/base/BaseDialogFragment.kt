@@ -76,6 +76,10 @@ abstract class BaseDialogFragment<B : ViewDataBinding>(private val layoutResId: 
         loading.dismiss()
     }
 
+    fun navigateDestinationBundle(@IdRes action: Int, bundle: Bundle) {
+        findNavController().navigate(action, bundle)
+    }
+
     fun showLoading() {
         loading.show()
     }

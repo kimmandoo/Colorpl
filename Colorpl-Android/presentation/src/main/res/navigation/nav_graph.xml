@@ -78,6 +78,14 @@
             android:name="reviewId"
             android:defaultValue="0"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_fragment_feed_detail_to_fragment_user_search"
+            app:destination="@id/fragment_user_search">
+            <argument
+                android:name="member"
+                app:nullable="true"
+                app:argType="string" />
+        </action>
     </dialog>
 
     <dialog
@@ -233,14 +241,17 @@
             app:argType="com.domain.model.Member" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/fragment_user_search"
         android:name="com.presentation.my_page.MemberSearchFragment"
         tools:layout="@layout/fragment_user_search">
+        <argument
+            android:name="member"
+            app:argType="string" />
         <action
             android:id="@+id/action_fragment_user_search_to_fragment_other_my_page"
             app:destination="@id/fragment_other_my_page" />
-    </fragment>
+    </dialog>
 
     <fragment
         android:id="@+id/fragment_my_review"

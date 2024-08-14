@@ -9,10 +9,12 @@ import com.colorpl.presentation.databinding.FragmentFeedTicketSelectBinding
 import com.presentation.base.BaseDialogFragment
 import com.presentation.component.adapter.feed.FeedTicketSelectAdapter
 import com.presentation.util.addCustomItemDecoration
+import com.presentation.util.toLocalDate
 import com.presentation.viewmodel.TicketSelectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 @AndroidEntryPoint
@@ -35,7 +37,7 @@ class FeedTicketSelectFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.tickets.collectLatest { unreviewedList ->
-                    feedTicketSelectAdapter.submitList(unreviewedList)
+                    feedTicketSelectAdapter.submitList(unreviewedList.filter { it.dateTime.toLocalDate() < LocalDate.now() })
                     if (feedTicketSelectAdapter.currentList.isEmpty()) {
                         binding.tvTitle.text = "리뷰를 남길 티켓이 없습니다"
                         binding.tvSelect.text = "뒤로 돌아가기"
