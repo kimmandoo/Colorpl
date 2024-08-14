@@ -55,6 +55,7 @@ public class Reservation extends BaseEntity {
     @Column(name = "IS_REFUNDED")
     private boolean isRefunded;
 
+
     public void updateMember(Member member) {
         this.member = member;
     }

@@ -112,6 +112,9 @@ public class ReservationService {
                 Integer.valueOf(reservationDetail.getRow()),
                 Integer.valueOf(reservationDetail.getCol())
             ));
+        reservationDetailRepository.deleteAll(reservation.getReservationDetails());
+        reservationRepository.delete(reservation);
+
     }
 
     //특정 멤버의 특정 예약을 취소
