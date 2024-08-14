@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,30 +15,33 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
-import com.colorpl.presentation.databinding.FragmentTicketCreateBinding
-import com.presentation.base.BaseFragment
+import com.colorpl.presentation.databinding.FragmentTicketEditBinding
+import com.domain.model.TicketRequest
+import com.naver.maps.geometry.LatLng
+import com.presentation.base.BaseDialogFragment
+import com.presentation.component.dialog.TicketCreateDialog
 import com.presentation.notification.FcmWorker
 import com.presentation.util.ImageProcessingUtil
+import com.presentation.util.TicketState
 import com.presentation.util.TicketType
+import com.presentation.util.formatIsoToPattern
 import com.presentation.util.getPhotoGallery
 import com.presentation.util.hourToMills
 import com.presentation.util.requestCameraPermission
 import com.presentation.util.setCameraLauncher
+import com.presentation.util.setImageCenterCrop
 import com.presentation.util.setImageLauncher
 import com.presentation.util.stringToCalendar
-import com.presentation.viewmodel.TicketCreateViewModel
+import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -52,14 +56,14 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
-class TicketCreateFragment :
-    BaseFragment<FragmentTicketCreateBinding>(R.layout.fragment_ticket_create) {
+class TicketEditFragment :
+    BaseDialogFragment<FragmentTicketEditBinding>(R.layout.fragment_ticket_edit) {
 
-    private val viewModel: TicketCreateViewModel by hiltNavGraphViewModels(R.id.nav_ticket_graph)
-    private val args: TicketCreateFragmentArgs by navArgs()
+    private val ticketViewModel: TicketViewModel by hiltNavGraphViewModels(R.id.nav_ticket_update_graph)
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
+    private val args: TicketEditFragmentArgs by navArgs()
 
     private val cameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -71,37 +75,104 @@ class TicketCreateFragment :
             }
         }
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
+        initUi()
         observeDescription()
-        observeTicketResponse()
+        observeSingleTicket()
+        observeTicketEditResponse()
         observeJuso()
         observeDialog()
         initGalleryPhoto()
         initCamera()
-        initUi()
+    }
+
+    private fun observeSingleTicket() {
+        ticketViewModel.ticketData.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            dismissLoading()
+            val ticket = it
+            binding.apply {
+                etTitle.setText(ticket.name)
+                ivPoster.setImageCenterCrop(ticket.imgUrl)
+                tvConfirm.text = "수정하기"
+                tvConfirm.isSelected = true
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeDescription() {
+        ticketViewModel.ticketData.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { ticket ->
+                dismissLoading()
+                ticketViewModel.setLatLng(LatLng(ticket.latitude, ticket.longitude))
+                ticketViewModel.setCategory(ticket.category)
+                binding.apply {
+                    etSeat.setText(ticket.name)
+                    ivPoster.setImageCenterCrop(ticket.imgUrl)
+                    etDetail.setText(ticket.location)
+                    etSeat.setText(ticket.seat)
+                    val items = resources.getStringArray(R.array.ticket_category_en)
+                    spinner.setSelection(items.indexOf(ticket.category) + 1)
+                    tvSchedule.text = ticket.dateTime.formatIsoToPattern()
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initUi() {
-        when (args.photoType) {
-            TicketType.CAMERA_UNISSUED -> {
-                requireContext().requestCameraPermission(
-                    onGrant = {
-                        openCamera()
-                    },
-                    onDenied = {
-                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                    }
+        ticketViewModel.getSingleTicket(args.ticket)
+        binding.tvConfirm.setOnClickListener {
+            Timber.d("confirm clicked")
+            val file = if (::photoUri.isInitialized) {
+                ImageProcessingUtil(binding.root.context).uriToCompressedFile(photoUri)!!
+            } else {
+                null
+            }
+            ticketViewModel.editSingleTicket(
+                args.ticket,
+                file,
+                TicketRequest(
+                    seat = binding.etSeat.text.toString(),
+                    dateTime = binding.tvSchedule.text.toString(),
+                    name = binding.etTitle.text.toString(),
+                    category = ticketViewModel.category.value,
+                    location = binding.etDetail.text.toString(),
+                    latitude = ticketViewModel.geocodingLatLng.value.latitude,
+                    longitude = ticketViewModel.geocodingLatLng.value.longitude
                 )
-            }
-
-            TicketType.GALLERY_UNISSUED -> {
-                getPhotoGallery(pickImageLauncher)
-            }
+            )
+            showLoading()
         }
+
+        binding.ivPoster.setOnClickListener {
+            val dialog = TicketCreateDialog(
+                requireContext(),
+                type = TicketState.UNISSUED,
+                action = { ticketType ->
+                    when (ticketType) {
+                        TicketType.CAMERA_UNISSUED -> {
+                            requireContext().requestCameraPermission(
+                                onGrant = {
+                                    openCamera()
+                                },
+                                onDenied = {
+                                    cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                                }
+                            )
+                        }
+
+                        TicketType.GALLERY_UNISSUED -> {
+                            getPhotoGallery(pickImageLauncher)
+                        }
+                    }
+                }
+            )
+            dialog.show()
+        }
+
 
         binding.cbFindRoute.setOnClickListener {
             showLoading()
-            val action = TicketCreateFragmentDirections.actionFragmentTicketCreateToDialogTicketAddress(0)
+            val action =
+                TicketEditFragmentDirections.actionTicketEditFragmentToDialogTicketAddress(1)
             findNavController().navigate(action)
         }
 
@@ -109,21 +180,6 @@ class TicketCreateFragment :
             showDatePicker()
         }
 
-        binding.tvConfirm.setOnClickListener {
-            if (viewModel.ticketInfo.value) {
-                viewModel.updateSchedule(binding.tvSchedule.text.toString())
-                viewModel.setSeat(binding.etSeat.text.toString())
-                viewModel.setTitle(binding.etTitle.text.toString())
-                viewModel.setLocation(binding.etDetail.text.toString())
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.createTicket(
-                        ImageProcessingUtil(binding.root.context).uriToCompressedFile(photoUri)!!,
-                    )
-                    binding.tvConfirm.isEnabled = false
-                    showLoading()
-                }
-            }
-        }
         val hint = "카테고리를 선택하세요"
         val items = resources.getStringArray(R.array.ticket_category)
         val adapter =
@@ -131,7 +187,8 @@ class TicketCreateFragment :
 
         binding.spinner.apply {
             this.adapter = adapter
-            setSelection(0)
+            Timber.tag("spinner").d("${ticketViewModel.category.value}")
+            setSelection(items.indexOf(ticketViewModel.category.value) + 1) // +1은 힌트 항목 때문
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -141,96 +198,54 @@ class TicketCreateFragment :
                     id: Long,
                 ) {
                     if (position > 0) {
-                        // 실제 카테고리가 선택된 경우
                         val selectedCategory = items[position - 1]
-                        viewModel.setCategory(selectedCategory)
-                    } else {
-                        viewModel.clearCategory()
+                        ticketViewModel.setCategory(selectedCategory)
                     }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    val defaultCategory = items.last()
-                    viewModel.setCategory(defaultCategory)
+                    ticketViewModel.setCategory(ticketViewModel.category.value)
                 }
             }
         }
+
+        ticketViewModel.geocodingLatLng.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { latlng ->
+                Timber.d("$latlng")
+                if (latlng.latitude != 0.0 && latlng.longitude != 0.0) {
+                    dismissLoading()
+                    binding.cbFindRoute.text = "길찾기를 제공합니다"
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun observeDescription() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            showLoading()
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.description.collectLatest { data ->
-                    data?.let {
-                        dismissLoading()
-                        Timber.tag("description").d(data.toString())
-                        binding.apply {
-                            etTitle.setText(data.title)
-                            etDetail.setText(data.detail)
-                            etSeat.setText(data.seat)
-                            if (viewModel.scheduleInfo.value) {
-                                tvSchedule.text = data.schedule
-                            } else {
-                                tvSchedule.text = "일정을 선택해주세요"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        viewModel.ticketInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
-            binding.tvConfirm.isSelected = state
-            binding.tvConfirm.isEnabled = state
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        viewModel.category.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { state ->
-            binding.tvConfirm.isSelected = state != ""
-            binding.tvConfirm.isEnabled = state != ""
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-
-        viewModel.geocodingLatLng.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { latlng ->
-            Timber.d("$latlng")
-            if (latlng.latitude != 0.0 && latlng.longitude != 0.0) {
+    private fun observeTicketEditResponse() {
+        ticketViewModel.ticketUpdateResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { success ->
                 dismissLoading()
-                binding.cbFindRoute.text = "길찾기를 제공합니다"
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun observeTicketResponse() {
-        viewModel.createResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { ticketId ->
-                when {
-                    ticketId >= 0 -> {
-                        if (viewModel.geocodingLatLng.value.latitude != 0.0 || viewModel.geocodingLatLng.value.longitude != 0.0) {
-                            initWorkerManager()
-                        }
-                        dismissLoading()
-                        Toast.makeText(requireContext(), "티켓을 생성했습니다", Toast.LENGTH_SHORT).show()
-                        navigatePopBackStack()
+                if (success > 0) {
+                    Timber.tag("result").d("$success")
+                    if (ticketViewModel.geocodingLatLng.value.latitude != 0.0 || ticketViewModel.geocodingLatLng.value.longitude != 0.0) {
+                        initWorkerManager()
                     }
-
-                    ticketId < 0 -> {
-                        dismissLoading()
-                        Toast.makeText(requireContext(), "티켓 생성에 실패했습니다", Toast.LENGTH_SHORT).show()
-                        binding.tvConfirm.isEnabled = true
-                    }
+                    Toast.makeText(requireContext(), "티켓을 수정했습니다", Toast.LENGTH_SHORT).show()
+                    navigatePopBackStack()
+                } else {
+                    Toast.makeText(requireContext(), "티켓 수정에 실패했습니다", Toast.LENGTH_SHORT).show()
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initWorkerManager() {
-        val description = viewModel.description.value
-        val ticketDate = stringToCalendar(description?.schedule ?: "")?.timeInMillis ?: 0
+        val ticketDate =
+            stringToCalendar(binding.tvSchedule.text.toString() ?: "")?.timeInMillis ?: 0
         val currentTime = System.currentTimeMillis()
         val delay = ticketDate - hourToMills(4) - currentTime
-        val latLng = viewModel.geocodingLatLng.value
+        val latLng = ticketViewModel.geocodingLatLng.value
         val data = Data.Builder()
             .putString("latLng", "${latLng.latitude},${latLng.longitude}")
             .build()
-        Timber.d("지도 데이터 확인 ${viewModel.geocodingLatLng.value}")
+        Timber.d("지도 데이터 확인 ${ticketViewModel.geocodingLatLng.value}")
         val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>()
             .setInputData(data)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -240,17 +255,10 @@ class TicketCreateFragment :
         workManager.enqueue(fcmWorkRequest)
     }
 
-    private fun describeImage(uri: Uri) {
-        ImageProcessingUtil(requireContext()).uriToBase64(uri)?.let { base64String ->
-            viewModel.getDescription(base64String)
-        }
-        Glide.with(binding.root.context).load(uri.toString()).centerCrop().into(binding.ivPoster)
-    }
-
     private fun initGalleryPhoto() {
         pickImageLauncher = setImageLauncher { uri ->
             photoUri = uri
-            describeImage(uri)
+            binding.ivPoster.setImageCenterCrop(photoUri.toString())
         }
     }
 
@@ -258,7 +266,7 @@ class TicketCreateFragment :
         takePicture = setCameraLauncher(
             onSuccess = {
                 if (::photoUri.isInitialized) {
-                    describeImage(photoUri)
+                    binding.ivPoster.setImageCenterCrop(photoUri.toString())
                 }
             },
             onFailure = {
@@ -280,11 +288,16 @@ class TicketCreateFragment :
 
     private fun observeJuso() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.juso.collectLatest { juso ->
+            ticketViewModel.juso.collectLatest { juso ->
                 binding.tvHintJuso.text = juso
                 binding.tvHintJuso.visibility = if (juso.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
+        super.onDismiss(dialog)
     }
 
     private fun showDatePicker() {
@@ -339,6 +352,7 @@ class TicketCreateFragment :
             dateCalendar.set(Calendar.MINUTE, selectedMinute)
             val selectedDateTime = SimpleDateFormat("yyyy년 MM월 dd일 HH:mm", Locale.getDefault())
                 .format(dateCalendar.time)
+            ticketViewModel.setSchedule(selectedDateTime)
             binding.tvSchedule.text = selectedDateTime
         }, hour, minute, false).show()
     }
@@ -351,7 +365,7 @@ class TicketCreateFragment :
                 ?.getStateFlow<Boolean>("closed", false)
                 ?.collectLatest { closed ->
                     if (closed) {
-                        dismissLoading()
+                        ticketViewModel.getSingleTicket(args.ticket)
                         findNavController().currentBackStackEntry?.savedStateHandle?.set(
                             "closed",
                             false
@@ -361,13 +375,9 @@ class TicketCreateFragment :
         }
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         dismissLoading()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
     }
 }

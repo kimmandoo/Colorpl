@@ -1,5 +1,6 @@
 package com.presentation.feed
 
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
-    private val viewModel: FeedViewModel by viewModels()
+    private val viewModel: FeedViewModel by activityViewModels()
     private val filterAdapter by lazy {
         FilterAdapter(onItemClickListener = { filterItem ->
             onFilterClickListener(filterItem)

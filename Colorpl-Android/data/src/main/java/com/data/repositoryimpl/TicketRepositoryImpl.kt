@@ -4,8 +4,8 @@ import com.data.api.safeApiCall
 import com.data.datasource.remote.TicketDataSource
 import com.data.model.request.RequestReservationTicketCreate
 import com.data.model.request.RequestTicketCreate
+import com.data.model.response.ResponseSingleTicket
 import com.data.model.response.ResponseTicket
-import com.data.model.response.ResponseTicketCreate
 import com.data.repository.TicketRepository
 import com.data.util.ApiResult
 import com.data.util.FormDataConverterUtil
@@ -19,6 +19,7 @@ import javax.inject.Inject
 class TicketRepositoryImpl @Inject constructor(
     private val ticketDataSource: TicketDataSource
 ) : TicketRepository {
+
     override suspend fun createTicket(
         ticket: File,
         request: RequestTicketCreate
@@ -53,4 +54,31 @@ class TicketRepositoryImpl @Inject constructor(
         flow {
             emit(safeApiCall { ticketDataSource.getMonthlyTicket(date) })
         }
+
+    override suspend fun getSingleTicket(id: Int): Flow<ApiResult<ResponseSingleTicket>> {
+        return flow {
+            emit(safeApiCall { ticketDataSource.getSingleTicket(id) })
+        }
+    }
+
+    override suspend fun deleteTicket(id: Int): Flow<ApiResult<Unit>> {
+        return flow {
+            emit(safeApiCall { ticketDataSource.deleteTicket(id) })
+        }
+    }
+
+    override suspend fun putTicket(
+        id: Int,
+        ticket: File?,
+        request: RequestTicketCreate
+    ): Flow<ApiResult<Int>> = flow {
+        emit(safeApiCall {
+            Timber.tag("repo ticket").d("ticket: ${ticket}\n request:$request")
+            val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
+            val filePart: MultipartBody.Part? =
+                FormDataConverterUtil.getNullableMultiPartBody("file", ticket)
+            ticketDataSource.putTicket(id = id, ticket = filePart, request = requestPart)
+        })
+    }
+
 }

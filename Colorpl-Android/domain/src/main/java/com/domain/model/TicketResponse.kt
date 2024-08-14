@@ -13,5 +13,6 @@ data class TicketResponse(
     val longitude: Double=0.0,
     val imgUrl: String?,
     val reviewExists: Boolean,
-    val reviewId: Int
-): Serializable
+    val reviewId: Int,
+    val type: String = "CUSTOM"
+) : Serializable
