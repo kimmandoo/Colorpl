@@ -4,11 +4,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
-        <variable
-            name="emptyVisible"
-            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +23,7 @@
 
 
         <include
+            android:id="@+id/ic_empty_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/include_empty_view"

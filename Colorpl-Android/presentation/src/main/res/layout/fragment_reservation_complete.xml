@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="payResult"
+            type="com.domain.model.PayResult" />
 
     </data>
 
@@ -85,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="26dp"
                 android:layout_marginEnd="14dp"
-                android:text="A0123456789"
+                android:text="@{payResult.receiptId}"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_pay_info" />
@@ -107,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="14dp"
-                android:text="2024년 07월 25일 00:14"
+                app:changeDateText="@{payResult.purchaseAt}"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_pay_date" />
@@ -131,7 +134,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="14dp"
-                android:text="48,000원"
+                app:price="@{payResult.price}"
+                value="@{`원`}"
                 android:textColor="@color/imperial_red"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_pay_money" />

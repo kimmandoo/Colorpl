@@ -170,7 +170,6 @@ class ReservationSeatFragment :
     }
 
 
-
     private fun updateConfirmState() {
         binding.tvNext.isSelected = if (selectedSeats.size == peopleCount) {
             binding.tvNext.text = "선택완료"
@@ -196,19 +195,25 @@ class ReservationSeatFragment :
     }
 
     private fun observeReservationSeat() {
-        viewModel.reservationSeat.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationSeat ->
-            seatAdapter.submitList(reservationSeat)
-            Timber.tag("observeReservationSeat").d("$reservationSeat")
-            viewModel.calculateTotalPrice()
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.reservationSeat.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { reservationSeat ->
+                seatAdapter.submitList(reservationSeat)
+                Timber.tag("observeReservationSeat").d("$reservationSeat")
+                viewModel.calculateTotalPrice()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun observeReservationTotalPrice() {
-        viewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { totalPrice ->
-            Timber.tag("totalPrice").d("$totalPrice")
-            binding.tvPrice.text = getString(R.string.reservation_price, totalPrice.amountOfAfter.formatWithCommas())
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { totalPrice ->
+                Timber.tag("totalPrice").d("$totalPrice")
+                binding.tvPrice.text = getString(
+                    R.string.reservation_price,
+                    totalPrice.amountOfAfter.formatWithCommas()
+                )
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
 
     companion object {
         const val COL_SIZE = 16
