@@ -103,6 +103,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="4dp"
             android:src="@drawable/ic_report"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/iv_emotion"
             app:layout_constraintStart_toEndOf="@id/tv_comment_cnt"
             app:layout_constraintTop_toTopOf="@id/iv_emotion" />
