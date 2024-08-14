@@ -1,10 +1,10 @@
 package com.colorpl.schedule.dto;
 
+import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.domain.ReservationSchedule;
 import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.Category;
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Builder
 @Getter
+@Builder
 public class ScheduleListResponse {
 
     private Long id;
@@ -32,14 +32,8 @@ public class ScheduleListResponse {
 
         ScheduleListResponse response = null;
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/images/{image}")
-            .buildAndExpand(schedule.getImage())
-            .toUri();
-
         ScheduleListResponseBuilder builder = ScheduleListResponse.builder()
-            .id(schedule.getId())
-            .imgUrl(uri.toString());
+            .id(schedule.getId());
 
         if (schedule.getReview().isPresent()) {
             builder.reviewExists(true);
@@ -50,6 +44,11 @@ public class ScheduleListResponse {
 
         if (schedule instanceof CustomSchedule customSchedule) {
             response = builder
+                .imgUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/images/{image}")
+                    .buildAndExpand(customSchedule.getImage())
+                    .toUri()
+                    .toString())
                 .seat(customSchedule.getSeat())
                 .dateTime(customSchedule.getDateTime())
                 .name(customSchedule.getName())
@@ -86,9 +85,11 @@ public class ScheduleListResponse {
                     reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
                 .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
                     .getName())
-                .category(
-                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
-                        .getCategory())
+                .latitude(reservationDetail.getShowSchedule().getShowDetail().getHall().getTheater()
+                    .getLatitude())
+                .longitude(
+                    reservationDetail.getShowSchedule().getShowDetail().getHall().getTheater()
+                        .getLongitude())
                 .build();
         }
 

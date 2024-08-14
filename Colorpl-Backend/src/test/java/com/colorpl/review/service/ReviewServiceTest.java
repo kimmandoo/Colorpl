@@ -10,8 +10,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.colorpl.global.common.storage.StorageService;
-import com.colorpl.global.common.storage.UploadFile;
+import com.colorpl.global.storage.StorageService;
+import com.colorpl.global.storage.UploadFile;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.review.domain.Empathy;

@@ -27,11 +27,10 @@ public class ReservationSchedule extends Schedule {
     public ReservationSchedule(
         Long id,
         Member member,
-        String image,
         Review review,
         Reservation reservation
     ) {
-        super(null, member, image, review);
+        super(id, member, review);
         this.reservation = reservation;
 
         member.getSchedules().add(this);

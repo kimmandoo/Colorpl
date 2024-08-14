@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class CustomSchedule extends Schedule {
 
+    @Column(name = "SCHEDULE_IMAGE")
+    private String image;
+
     @Column(name = "SCHEDULE_SEAT")
     private String seat;
 
@@ -56,7 +59,8 @@ public class CustomSchedule extends Schedule {
         Double latitude,
         Double longitude
     ) {
-        super(id, member, image, review);
+        super(id, member, review);
+        this.image = image;
         this.seat = seat;
         this.dateTime = dateTime;
         this.name = name;
@@ -66,5 +70,27 @@ public class CustomSchedule extends Schedule {
         this.longitude = longitude;
 
         member.getSchedules().add(this);
+    }
+
+    public void updateCustomSchedule(
+        String seat,
+        LocalDateTime dateTime,
+        String name,
+        Category category,
+        String location,
+        Double latitude,
+        Double longitude
+    ) {
+        this.seat = seat;
+        this.dateTime = dateTime;
+        this.name = name;
+        this.category = category;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void updateImage(String image) {
+        this.image = image;
     }
 }

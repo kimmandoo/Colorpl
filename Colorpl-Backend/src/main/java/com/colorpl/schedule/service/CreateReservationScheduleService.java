@@ -2,7 +2,7 @@ package com.colorpl.schedule.service;
 
 import com.colorpl.global.common.exception.MemberNotFoundException;
 import com.colorpl.global.common.exception.ReservationNotFoundException;
-import com.colorpl.global.common.storage.StorageService;
+import com.colorpl.global.storage.StorageService;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.member.service.MemberService;
@@ -37,8 +37,6 @@ public class CreateReservationScheduleService {
 
         ReservationSchedule reservationSchedule = ReservationSchedule.builder()
             .member(member)
-            .image(reservation.getReservationDetails().get(0).getShowSchedule().getShowDetail()
-                .getPosterImagePath())
             .reservation(reservation)
             .build();
         scheduleRepository.save(reservationSchedule);

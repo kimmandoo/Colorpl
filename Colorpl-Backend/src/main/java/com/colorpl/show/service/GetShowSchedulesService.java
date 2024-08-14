@@ -65,6 +65,10 @@ public class GetShowSchedulesService {
             }
             return Duration.parse("PT%sH".formatted(hours));
         }
-        return Duration.parse("PT%sM".formatted(minutes));
+        if (StringUtils.hasText(minutes)) {
+            return Duration.parse("PT%sM".formatted(minutes));
+        }
+        // 상영시간 입력 값 올바르지 않을 때 기본값 1시간 반환
+        return Duration.ofHours(1);
     }
 }

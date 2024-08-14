@@ -29,6 +29,7 @@ public enum Category {
     static {
         for (Category e : values()) {
             stringToEnum.put(e.toString(), e);
+            stringToEnum.put(e.name(), e);
         }
         stringToEnum.put("무용", PERFORMANCE);
         stringToEnum.put("대중무용", PERFORMANCE);
