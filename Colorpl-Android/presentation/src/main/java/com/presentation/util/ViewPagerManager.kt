@@ -9,6 +9,10 @@ object ViewPagerManager {
         this.viewPager = viewPager
     }
 
+    fun getViewPager(): ViewPager2? {
+        return viewPager
+    }
+
     fun moveNext() {
         viewPager?.let {
             val currentItem = it.currentItem

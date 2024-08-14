@@ -90,7 +90,7 @@ class ReservationPaymentFragment :
                 val metaDataMap: MutableMap<String, Any> = makeMetaData(
                     showName = reservationViewModel.reservationTitle.value,
                     showTheaterName = reservationViewModel.reservationTheater.value,
-                    showHallName = reservationViewModel.reservationTheater.value,
+                    showHallName = reservationViewModel.reservationHall.value,
                     showDetailId = reservationViewModel.reservationDetailId.value,
                     showScheduleId = reservationViewModel.reservationTimeTable.value.scheduleId,
                     selectedSeatList = selectedSeatList,
@@ -107,7 +107,7 @@ class ReservationPaymentFragment :
                     orderId = "123",
                     context = requireActivity(),
                     manager = requireActivity().supportFragmentManager,
-                    metaDataMap = metaDataMap,
+                    metaDataMap = metaDataMap
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
                     val responseData = Gson().fromJson(data, PayRequest::class.java)

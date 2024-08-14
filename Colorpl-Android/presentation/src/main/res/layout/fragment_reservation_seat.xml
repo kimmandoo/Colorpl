@@ -130,6 +130,7 @@
         <TextView
             android:id="@+id/tv_next"
             style="@style/suite_semibold_20"
+            android:textSize="20dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/selector_timber_wolf_to_imperial_red"

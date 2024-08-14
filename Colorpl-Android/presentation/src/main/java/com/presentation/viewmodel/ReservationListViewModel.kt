@@ -41,10 +41,10 @@ class ReservationListViewModel @Inject constructor(
         _date.value = value
     }
 
-    private val _area = MutableStateFlow<List<Area>?>(null)
-    val area: StateFlow<List<Area>?> get() = _area
+    private val _area = MutableStateFlow<Pair<String, List<Area>>?>(null)
+    val area: StateFlow<Pair<String, List<Area>>?> get() = _area
 
-    fun setArea(area: List<Area>?) {
+    fun setArea(area: Pair<String, List<Area>>?) {
         _area.value = area
     }
 

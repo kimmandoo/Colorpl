@@ -124,6 +124,7 @@ class ReservationFragment :
                 svSearch.clearFocus()
                 svSearch.setQuery("", false)
                 reservationListViewModel.dataClear()
+                reservationListViewModel
                 onFilterClickListener(FilterItem("전체"))
 
                 viewLifecycleOwner.lifecycleScope.launch {
@@ -220,9 +221,9 @@ class ReservationFragment :
 
                 // 선택된 지역에 대한 후속 처리
                 binding.tvSelectLocation.text = selectedCity
-                selectedAreaPair?.second?.let { areas ->
-                    val areaCodes = areas.joinToString(",") { it.name }
-                    Timber.tag("area").d(areaCodes)
+                selectedAreaPair?.let { areas ->
+                    reservationListViewModel.setArea(areas)
+                    val areaCodes = areas.second.joinToString(",") { it.name }
                     reservationListViewModel.setParam(ShowType.LOCATION, areaCodes)
                 }
             }

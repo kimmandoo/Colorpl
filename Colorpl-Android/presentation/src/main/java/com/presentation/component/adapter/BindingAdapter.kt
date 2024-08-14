@@ -303,9 +303,9 @@ fun setSearchDate(view: TextView, date: LocalDate?) {
 }
 
 @BindingAdapter("searchArea")
-fun setSearchArea(view: TextView, area: List<Area>?) {
+fun setSearchArea(view: TextView, area: Pair<String, List<Area>>?) {
     area?.let {
-        view.text = it.joinToString(separator = ", ") { it.name }
+        view.text = it.first
     } ?: run {
         view.text = "지역"
     }
@@ -344,14 +344,28 @@ fun getReservationPriceBySeatClass(
         textView.visibility = View.GONE
     } else {
         val value = priceBySeatClass[key]?.formatWithCommas()
-        val text = when (flag) {
-            true -> "${value}원~"
-            false -> "${value}원"
-            else -> "${key}석 : ${value}원"
+        val priceTitle = when(flag) {
+            true, false -> ""
+            else -> "${key}석 : "
         }
+        val priceText = when (flag) {
+            true -> if(value == "0") "무료" else "${value}원~"
+            else -> if(value == "0") "무료" else "${value}원"
+        }
+        val text = priceTitle + priceText
         textView.text = text
         textView.visibility = View.VISIBLE
     }
+
+//    val value = priceBySeatClass[key]?.formatWithCommas()
+//    val priceTitle = when(flag) {
+//        true, false -> "${key}석 : "
+//        else -> ""
+//    }
+//    val priceText = when (flag) {
+//        true -> if(value == "0") "무료" else "${value}원~"
+//        else -> if(value == "0") "무료" else "${value}원"
+//    }
 }
 
 @BindingAdapter("price", "value", requireAll = false)
