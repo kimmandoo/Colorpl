@@ -10,6 +10,7 @@ import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -18,6 +19,7 @@ class ReservationCompleteFragment :
     private val reservationViewModel: ReservationViewModel by viewModels({ requireParentFragment() })
 
     override fun initView() {
+        showLoading()
         initClickEvent()
         initData()
     }
@@ -27,13 +29,22 @@ class ReservationCompleteFragment :
             .onEach {
                 binding.payResult = reservationViewModel.payResult.value
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+        reservationViewModel.reservationDetailId.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                dismissLoading()
+                Timber.tag("reservationId").d("$it")
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 
     private fun initClickEvent() {
         binding.apply {
             tvComplete.setOnClickListener {
-                navigatePopBackStack()
+                val action =
+                    ReservationProgressFragmentDirections.actionFragmentReservationProgressToFragmentTicket(
+                        reservationViewModel.payResult.value.scheduleId
+                    )
+                navigateDestination(action)
             }
         }
     }

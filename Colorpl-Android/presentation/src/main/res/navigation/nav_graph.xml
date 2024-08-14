@@ -126,6 +126,16 @@
         <argument
             android:name="reservationDetail"
             app:argType="com.domain.model.ReservationInfo" />
+        <action
+            android:id="@+id/action_fragment_reservation_progress_to_fragment_ticket"
+            app:destination="@id/fragment_ticket"
+            app:exitAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down"
+            app:popUpTo="@id/fragment_reservation">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
 
     </fragment>
 
