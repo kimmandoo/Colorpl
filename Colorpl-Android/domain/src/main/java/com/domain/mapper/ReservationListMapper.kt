@@ -1,9 +1,10 @@
 package com.domain.mapper
 
 
+import com.data.model.paging.reservation.Show
 import com.domain.model.ReservationInfo
 
-fun List<com.data.model.response.ResponseReservationInfo>.toEntity(): List<ReservationInfo> {
+fun List<Show>.toEntity(): List<ReservationInfo> {
     return this.map {
         ReservationInfo(
             reservationInfoId = it.id,

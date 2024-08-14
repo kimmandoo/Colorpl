@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationDetailBinding
 import com.presentation.base.BaseFragment
+import com.presentation.util.Category
 import com.presentation.util.TopButtonsStatus
 import com.presentation.viewmodel.ReservationDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,7 @@ class ReservationDetailFragment : BaseFragment<FragmentReservationDetailBinding>
         binding.apply {
             type = TopButtonsStatus.BACK
             viewModel = this@ReservationDetailFragment.reservationDetailViewModel
+            tvCategoryInfo.text = Category.getKeyResult(args.reservationDetail.category.toString())
         }
     }
 

@@ -240,3 +240,50 @@ enum class ShowType {
     LOCATION,
     CATEGORY
 }
+
+enum class Area(val value: String, val abbreviation: String){
+    SEOUL("서울특별시", "서울"),
+    BUSAN("부산광역시", "부산"),
+    DAEGU("대구광역시", "대구"),
+    INCHEON("인천광역시", "인천"),
+    GWANGJU("광주광역시", "광주"),
+    DAEJEON("대전광역시", "대전"),
+    ULSAN("울산광역시", "울산"),
+    SEJON("세종특별자치시", "세종"),
+    GYEONGGI("경기도", "경기"),
+    GANGWON("강원특별자치도", "강원"),
+    CHUNGCHEONGBUKDO("충청북도", "충북"),
+    CHUNGCHEONGNAMDO("충청남도", "충남"),
+    JEOLLABUKDO("전라북도", "전북"),
+    JEOLLANAMDO("전라남도", "전남"),
+    GYEONGSANGBUKDO("경상북도", "경북"),
+    GYEONGSANGNAMDO("경상남도", "경남"),
+    JEJU("제주특별자치도", "제주"),
+    ETC("기타", "기타");
+
+    override fun toString(): String {
+        return this.name
+    }
+    companion object {
+        val AREA_CODE_00 : List<Area> = listOf()
+        val AREA_CODE_10 : List<Area> = listOf(SEOUL)
+        val AREA_CODE_20 : List<Area> = listOf(GYEONGGI, INCHEON)
+        val AREA_CODE_30 : List<Area> = listOf(GANGWON)
+        val AREA_CODE_40 : List<Area> = listOf(CHUNGCHEONGBUKDO, CHUNGCHEONGNAMDO, DAEJEON, SEJON)
+        val AREA_CODE_50 : List<Area> = listOf(GYEONGSANGBUKDO, GYEONGSANGNAMDO, DAEGU, ULSAN, BUSAN)
+        val AREA_CODE_60 : List<Area> = listOf(JEOLLABUKDO, JEOLLANAMDO, GWANGJU, JEJU)
+        val AREA_CODE_70 : List<Area> = listOf(ETC)
+
+        val AREA_PAIR_LIST = listOf(
+            Pair("전국", AREA_CODE_00),
+            Pair("서울", AREA_CODE_10),
+            Pair("경기·인천", AREA_CODE_20),
+            Pair("강원", AREA_CODE_30),
+            Pair("충청·대전·세종", AREA_CODE_40),
+            Pair("경상·대구·울산·부산", AREA_CODE_50),
+            Pair("전라·광주·제주", AREA_CODE_60),
+            Pair("기타", AREA_CODE_70)
+        )
+
+    }
+}
