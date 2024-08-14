@@ -6,6 +6,8 @@ import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.Category;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -56,10 +58,30 @@ public class ScheduleListResponse {
                 .latitude(customSchedule.getLatitude())
                 .longitude(customSchedule.getLongitude())
                 .build();
+//        } else if (schedule instanceof ReservationSchedule reservationSchedule) {
+//            response = builder
+//                .seat(reservationSchedule.getReservation().getReservationDetails().get(0).getRow() + " "
+//                    + reservationSchedule.getReservation().getReservationDetails().get(0).getCol())
+//                .dateTime(
+//                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
+//                .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
+//                    .getName())
+//                .category(
+//                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
+//                        .getCategory())
+//                .build();
+//        }
         } else if (schedule instanceof ReservationSchedule reservationSchedule) {
+
+            List<String> seats = reservationSchedule.getReservation().getReservationDetails().stream()
+                .map(detail -> convertToSeatFormat(detail.getRow(), detail.getCol()))
+                .collect(Collectors.toList());
+
+            // 좌석 정보를 문자열로 변환
+            String seatInfo = String.join(", ", seats);
+
             response = builder
-                .seat(reservationSchedule.getReservation().getReservationDetails().get(0).getRow() + " "
-                    + reservationSchedule.getReservation().getReservationDetails().get(0).getCol())
+                .seat(seatInfo) // 모든 좌석 정보를 문자열로 설정
                 .dateTime(
                     reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
                 .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
@@ -70,6 +92,16 @@ public class ScheduleListResponse {
                 .build();
         }
 
+
+
         return response;
+    }
+
+    // 좌석 변환 메서드
+    private static String convertToSeatFormat(int row, int col) {
+        // row를 알파벳으로 변환 (0 -> A, 1 -> B, ...)
+        char rowChar = (char) ('A' + row);
+        // col을 숫자로 변환 (1부터 시작)
+        return rowChar + String.valueOf(col + 1);
     }
 }
