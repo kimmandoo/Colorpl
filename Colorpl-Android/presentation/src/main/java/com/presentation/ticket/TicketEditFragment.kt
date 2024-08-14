@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -57,7 +58,7 @@ import java.util.concurrent.TimeUnit
 class TicketEditFragment :
     BaseFragment<FragmentTicketEditBinding>(R.layout.fragment_ticket_edit) {
 
-    private val ticketViewModel: TicketViewModel by viewModels()
+    private val ticketViewModel: TicketViewModel by hiltNavGraphViewModels(R.id.nav_ticket_update_graph)
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var takePicture: ActivityResultLauncher<Uri>
     private lateinit var photoUri: Uri
@@ -108,6 +109,8 @@ class TicketEditFragment :
                     ivPoster.setImageCenterCrop(ticket.imgUrl)
                     etDetail.setText(ticket.location)
                     etSeat.setText(ticket.seat)
+                    val items = resources.getStringArray(R.array.ticket_category_en)
+                    spinner.setSelection(items.indexOf(ticket.category) + 1)
                     tvSchedule.text = ticket.dateTime.formatIsoToPattern()
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -135,6 +138,7 @@ class TicketEditFragment :
                     longitude = ticketViewModel.geocodingLatLng.value.longitude
                 )
             )
+            showLoading()
         }
 
         binding.ivPoster.setOnClickListener {
@@ -166,7 +170,8 @@ class TicketEditFragment :
 
         binding.cbFindRoute.setOnClickListener {
             showLoading()
-            findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
+            val action = TicketEditFragmentDirections.actionTicketEditFragmentToDialogTicketAddress(1)
+            findNavController().navigate(action)
         }
 
         binding.tvSchedule.setOnClickListener {
@@ -179,15 +184,9 @@ class TicketEditFragment :
             ArrayAdapter(requireContext(), R.layout.item_category_spinner, listOf(hint) + items)
 
         binding.spinner.apply {
-
-            val categoryIndex = items.indexOf(ticketViewModel.category.value)
-            if (categoryIndex != -1) {
-                setSelection(categoryIndex + 1) // +1은 힌트 항목 때문
-            } else {
-                setSelection(0) // 카테고리가 리스트에 없으면 힌트 선택
-            }
             this.adapter = adapter
-            setSelection(items.indexOf(ticketViewModel.category.value) - 1)
+            Timber.tag("spinner").d("${ticketViewModel.category.value}")
+            setSelection(items.indexOf(ticketViewModel.category.value) + 1) // +1은 힌트 항목 때문
             adapter.setDropDownViewResource(R.layout.item_category_spinner)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(

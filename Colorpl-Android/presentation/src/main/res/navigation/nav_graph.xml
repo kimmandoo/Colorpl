@@ -147,6 +147,14 @@
         <argument
             android:name="ticket"
             app:argType="integer" />
+
+        <action
+            android:id="@+id/action_fragment_ticket_to_nav_ticket_update_graph"
+            app:destination="@id/nav_ticket_update_graph">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
         <action
             android:id="@+id/action_fragment_ticket_to_ticketEditFragment"
             app:destination="@id/ticketEditFragment">
@@ -280,13 +288,8 @@
     <include app:graph="@navigation/nav_ticket_graph" />
 
     <include app:graph="@navigation/nav_sign_graph" />
-    <fragment
-        android:id="@+id/ticketEditFragment"
-        android:name="com.presentation.ticket.TicketEditFragment"
-        android:label="TicketEditFragment">
-        <argument
-            android:name="ticket"
-            app:argType="integer" />
-    </fragment>
+
+    <include app:graph="@navigation/nav_ticket_update_graph"/>
+
 
 </navigation>

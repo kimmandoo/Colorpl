@@ -100,7 +100,8 @@ class TicketCreateFragment :
 
         binding.cbFindRoute.setOnClickListener {
             showLoading()
-            findNavController().navigate(R.id.action_fragment_ticket_create_to_dialog_ticket_address)
+            val action = TicketCreateFragmentDirections.actionFragmentTicketCreateToDialogTicketAddress(0)
+            findNavController().navigate(action)
         }
 
         binding.tvSchedule.setOnClickListener {

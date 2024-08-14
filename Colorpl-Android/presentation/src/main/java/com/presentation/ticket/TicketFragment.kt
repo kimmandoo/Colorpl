@@ -92,7 +92,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 }
                 binding.tvEdit.setOnClickListener {
                     val action =
-                        TicketFragmentDirections.actionFragmentTicketToTicketEditFragment(ticketId)
+                        TicketFragmentDirections.actionFragmentTicketToNavTicketUpdateGraph(ticketId)
                     findNavController().navigate(action)
                 }
                 binding.tvDelete.setOnClickListener {

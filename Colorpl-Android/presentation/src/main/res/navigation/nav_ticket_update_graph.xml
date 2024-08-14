@@ -2,36 +2,36 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_ticket_graph"
-    app:startDestination="@id/fragment_ticket_create">
+    android:id="@+id/nav_ticket_update_graph"
+    app:startDestination="@id/ticketEditFragment">
 
     <dialog
         android:id="@+id/dialog_ticket_address"
         android:name="com.presentation.ticket.TicketAddressDialog"
         android:label="TicketAddressDialog"
-        tools:layout="@layout/dialog_address">
+        tools:layout="@layout/dialog_address" >
         <argument
             android:name="type"
             app:argType="integer" />
     </dialog>
     <argument
-        android:name="photoType"
-        app:argType="com.presentation.util.TicketType" />
+        android:name="ticket"
+        app:argType="integer" />
+
     <fragment
-        android:id="@+id/fragment_ticket_create"
-        android:name="com.presentation.ticket.TicketCreateFragment"
-        android:label="TicketCreateFragment"
-        tools:layout="@layout/fragment_ticket_create">
+        android:id="@+id/ticketEditFragment"
+        android:name="com.presentation.ticket.TicketEditFragment"
+        android:label="TicketEditFragment"
+        tools:layout="@layout/fragment_ticket_edit">
         <argument
-            android:name="photoType"
-            app:argType="com.presentation.util.TicketType" />
+            android:name="ticket"
+            app:argType="integer" />
         <action
-            android:id="@+id/action_fragment_ticket_create_to_dialog_ticket_address"
-            app:destination="@id/dialog_ticket_address">
+            android:id="@+id/action_ticketEditFragment_to_dialog_ticket_address"
+            app:destination="@id/dialog_ticket_address" >
             <argument
                 android:name="type"
                 app:argType="integer" />
         </action>
-
     </fragment>
 </navigation>
