@@ -1,21 +1,17 @@
 package com.colorpl.payment.service;
 
 import com.colorpl.global.common.exception.MemberNotFoundException;
-import com.colorpl.global.common.exception.ReservationDetailNotFoundException;
 import com.colorpl.member.Member;
 import com.colorpl.member.repository.MemberRepository;
 import com.colorpl.member.service.MemberService;
 import com.colorpl.payment.controller.PaymentController;
 import com.colorpl.payment.dto.ReceiptDTO;
 import com.colorpl.payment.dto.SeatInfoDTO;
-import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.reservation.dto.ReservationDTO;
 import com.colorpl.reservation.dto.ReservationDetailDTO;
 import com.colorpl.reservation.repository.ReservationDetailRepository;
 import com.colorpl.reservation.repository.ReservationRepository;
 import com.colorpl.reservation.service.ReservationService;
-import com.colorpl.schedule.domain.ReservationSchedule;
-import com.colorpl.schedule.dto.CreateReservationScheduleRequest;
 import com.colorpl.schedule.repository.ReservationScheduleRepository;
 import com.colorpl.schedule.service.CreateReservationScheduleService;
 import com.colorpl.show.domain.ShowDetail;
@@ -24,6 +20,12 @@ import com.colorpl.show.repository.ShowDetailRepository;
 import com.colorpl.show.repository.ShowScheduleRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import kr.co.bootpay.Bootpay;
 import kr.co.bootpay.model.request.Cancel;
 import kr.co.bootpay.model.request.UserToken;
@@ -32,15 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,27 +76,29 @@ public class PaymentService {
         }
     }
 
-    public HashMap<String, Object> getReceipt(String receiptId, String authorizationHeader) throws Exception {
+    public HashMap<String, Object> getReceipt(String receiptId, String authorizationHeader)
+        throws Exception {
         String token = authorizationHeader.replace("Bearer ", "");
         return bootpay.getReceipt(receiptId);
     }
 
-    public HashMap<String, Object> confirmPayment(String receiptId, String authorizationHeader) throws Exception {
-        String paymentToken = authorizationHeader.replace("Bearer ", "");
-
-        HashMap<String, Object> response = bootpay.confirm(receiptId);
-
-        Integer memberId = memberService.getCurrentMemberId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
-        member.addReceiptId(receiptId);
-        memberRepository.save(member);
-
-        return response;
-    }
+//    public HashMap<String, Object> confirmPayment(String receiptId, String authorizationHeader) throws Exception {
+//        String paymentToken = authorizationHeader.replace("Bearer ", "");
+//
+//        HashMap<String, Object> response = bootpay.confirm(receiptId);
+//
+//        Integer memberId = memberService.getCurrentMemberId();
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(MemberNotFoundException::new);
+//        member.addReceiptId(receiptId);
+//        memberRepository.save(member);
+//
+//        return response;
+//    }
 
     @Transactional
-    public HashMap<String, Object> confirmPaymentFromReceipt(String receiptId, String authorizationHeader) {
+    public HashMap<String, Object> confirmPaymentFromReceipt(String receiptId,
+        String authorizationHeader) {
         try {
             // 영수증 조회
             HashMap<String, Object> receiptDetails = bootpay.getReceipt(receiptId);
@@ -129,39 +125,40 @@ public class PaymentService {
 
             // ReservationDTO 생성
             List<ReservationDetailDTO> reservationDetails = selectedSeatList.stream()
-                    .map(seat -> {
-                        Byte row = (byte) ((Number) seat.get("row")).intValue();
-                        Byte col = (byte) ((Number) seat.get("col")).intValue();
+                .map(seat -> {
+                    Byte row = (byte) ((Number) seat.get("row")).intValue();
+                    Byte col = (byte) ((Number) seat.get("col")).intValue();
 
-                        return ReservationDetailDTO.builder()
-                                .row(row)
-                                .col(col)
-                                .showScheduleId(showScheduleId)
-                                .build();
-                    })
-                    .collect(Collectors.toList());
+                    return ReservationDetailDTO.builder()
+                        .row(row)
+                        .col(col)
+                        .showScheduleId(showScheduleId)
+                        .build();
+                })
+                .collect(Collectors.toList());
 
             // Convert price to string and handle potential null value
             String amount = String.valueOf(receiptDetails.get("price"));
             String comment = (String) receiptDetails.get("order_name");
 
             ReservationDTO reservationDTO = ReservationDTO.builder()
-                    .date(LocalDateTime.now()) // 예제일 경우 현재 시간으로 설정
-                    .amount(amount) // 가격 설정
-                    .comment(comment) // 주석 설정
-                    .isRefunded(false) // 기본값 설정
-                    .reservationDetails(reservationDetails)
-                    .build();
+                .date(LocalDateTime.now()) // 예제일 경우 현재 시간으로 설정
+                .amount(amount) // 가격 설정
+                .comment(comment) // 주석 설정
+                .isRefunded(false) // 기본값 설정
+                .reservationDetails(reservationDetails)
+                .build();
 
             Integer memberId = memberService.getCurrentMemberId();
 
-            Member member = memberRepository.findById(memberId)
-                    .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
-            member.addReceiptId(receiptId);
-            memberRepository.save(member);
-
-            ReservationDTO reservation = reservationService.createReservation(memberId, reservationDTO);
+            ReservationDTO reservation = reservationService.createReservation(memberId,
+                reservationDTO);
             Long reservationId = reservation.getId();
+
+            Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + memberId));
+            member.addReceiptId(receiptId, reservationId);
+            memberRepository.save(member);
 
             Long scheduleId = createReservationScheduleService.create(reservationId);
 
@@ -182,7 +179,8 @@ public class PaymentService {
         }
     }
 
-    public HashMap<String, Object> cancelPayment(Cancel cancel, String authorizationHeader) throws Exception {
+    public HashMap<String, Object> cancelPayment(Cancel cancel, String authorizationHeader)
+        throws Exception {
         String paymentToken = authorizationHeader.replace("Bearer ", "");
         Integer memberId = memberService.getCurrentMemberId();
 
@@ -192,10 +190,11 @@ public class PaymentService {
     }
 
     @Transactional
-    public ResponseEntity<String> removeReceiptIdFromMember(String receiptId) throws MemberNotFoundException {
+    public ResponseEntity<String> removeReceiptIdFromMember(String receiptId)
+        throws MemberNotFoundException {
         Integer memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
         member.removeReceiptId(receiptId);
         memberRepository.save(member);
@@ -204,7 +203,8 @@ public class PaymentService {
     }
 
 
-    public HashMap<String, Object> getUserToken(UserToken userToken, String authorizationHeader) throws Exception {
+    public HashMap<String, Object> getUserToken(UserToken userToken, String authorizationHeader)
+        throws Exception {
         String token = authorizationHeader.replace("Bearer ", "");
         return bootpay.getUserToken(userToken);
     }
@@ -215,22 +215,23 @@ public class PaymentService {
         // 현재 로그인된 회원의 ID를 가져옵니다.
         Integer memberId = memberService.getCurrentMemberId();
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+            .orElseThrow(MemberNotFoundException::new);
 
         // 회원의 영수증 ID 목록을 가져옵니다.
-        List<String> receiptIds = member.getReceiptIds();
+        List<String> receiptIds = member.getMemberReceipts().keySet().stream().toList();
 
         System.out.println("Receipt IDs: " + receiptIds);
 
         return receiptIds.stream()
-                .map(receiptId -> {
-                    try {
-                        return getReceiptDetail(receiptId);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to retrieve receipt details for ID: " + receiptId, e);
-                    }
-                })
-                .collect(Collectors.toList());
+            .map(receiptId -> {
+                try {
+                    return getReceiptDetail(receiptId);
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                        "Failed to retrieve receipt details for ID: " + receiptId, e);
+                }
+            })
+            .collect(Collectors.toList());
     }
 
     public ReceiptDTO getReceiptDetail(String receiptId) throws Exception {
@@ -248,7 +249,8 @@ public class PaymentService {
         }
 
         // selectedSeatList 추출 및 변환
-        List<Map<String, Object>> selectedSeatList = (List<Map<String, Object>>) metadata.get("selectedSeatList");
+        List<Map<String, Object>> selectedSeatList = (List<Map<String, Object>>) metadata.get(
+            "selectedSeatList");
         List<SeatInfoDTO> seats = selectedSeatList.stream()
             .map(seat -> SeatInfoDTO.builder()
                 .row((byte) ((Number) seat.get("row")).intValue())
@@ -261,14 +263,16 @@ public class PaymentService {
 
         Long showScheduleId = ((Number) metadata.get("showScheduleId")).longValue();
         ShowSchedule showSchedule = showScheduleRepository.findById(showScheduleId)
-            .orElseThrow(() -> new RuntimeException("ShowSchedule not found for id: " + showScheduleId));
+            .orElseThrow(
+                () -> new RuntimeException("ShowSchedule not found for id: " + showScheduleId));
         LocalDateTime showDateTime = showSchedule.getDateTime();
         // theaterName 설정
         String theaterName = (String) metadata.get("showTheaterName");
 
         // showDetail을 찾는 메서드를 통해 포스터 이미지 경로 설정
         ShowDetail showDetail = findShowDetailByOrderName(orderName).orElse(null);
-        String showDetailPosterImagePath = showDetail != null ? showDetail.getPosterImagePath() : null;
+        String showDetailPosterImagePath =
+            showDetail != null ? showDetail.getPosterImagePath() : null;
 
         // ReceiptDTO 생성
         return ReceiptDTO.builder()
@@ -287,8 +291,8 @@ public class PaymentService {
     private Optional<ShowDetail> findShowDetailByOrderName(String orderName) {
 
         return showDetailRepository.findAll().stream()
-                .filter(showDetail -> showDetail.getName().equals(orderName))
-                .findFirst();
+            .filter(showDetail -> showDetail.getName().equals(orderName))
+            .findFirst();
     }
 
 }
