@@ -114,13 +114,13 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
             mapViewModel.ticketList.value.map {
                 MapMarker(
                     id = it.id,
-                    latitude = it.latitude,
-                    longitude = it.longitude,
+                    latitude = it.latitude ?: 0.0,
+                    longitude = it.longitude ?: 0.0,
                     seat = it.seat,
                     dateTime = it.dateTime,
                     name = it.name,
                     category = it.category,
-                    location = it.location,
+                    location = it.location ?: "",
                     imgUrl = it.imgUrl,
                     reviewExists = it.reviewExists,
                     reviewId = it.reviewId,

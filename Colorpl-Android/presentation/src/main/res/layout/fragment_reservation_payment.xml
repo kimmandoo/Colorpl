@@ -402,7 +402,6 @@
             <TextView
                 android:id="@+id/tv_pay_next"
                 style="@style/suite_medium_16"
-                android:textSize="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@color/selector_timber_wolf_to_imperial_red"
@@ -410,6 +409,7 @@
                 android:paddingHorizontal="12dp"
                 android:text="@string/reservation_pay"
                 android:textColor="@color/white"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

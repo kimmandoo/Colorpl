@@ -59,7 +59,7 @@ class PayViewModel @Inject constructor(
             payFlowUseCase.startPayment(payToken.value, receiptId).collectLatest { result ->
                 when (result) {
                     is DomainResult.Success -> {
-                        _paymentEventState.emit(PaymentEventState.PaySuccess)
+                        _paymentEventState.emit(PaymentEventState.PaySuccess(result.data))
                     }
 
                     is DomainResult.Error -> {
