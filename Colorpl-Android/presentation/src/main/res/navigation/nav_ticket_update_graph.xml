@@ -18,7 +18,7 @@
         android:name="ticket"
         app:argType="integer" />
 
-    <fragment
+    <dialog
         android:id="@+id/ticketEditFragment"
         android:name="com.presentation.ticket.TicketEditFragment"
         android:label="TicketEditFragment"
@@ -33,5 +33,5 @@
                 android:name="type"
                 app:argType="integer" />
         </action>
-    </fragment>
+    </dialog>
 </navigation>

@@ -64,6 +64,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
     override fun initView() {
         observeViewModel()
+        observeDialog()
         navigateNotification()
         initCalendar()
         initFAB()
@@ -100,6 +101,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
 
             launch {
                 viewModel.filteredTickets.collectLatest { filteredTickets ->
+                    dismissLoading()
                     ticketAdapter.submitList(filteredTickets.filter { it.dateTime.toLocalDate() == viewModel.clickedDate.value?.date }
                         .sortedByDescending { it.dateTime })
                 }
@@ -298,5 +300,23 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
             }
         )
         dialog.show()
+    }
+
+    private fun observeDialog() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("closed", false)
+                ?.collectLatest { closed ->
+                    if (closed) {
+                        viewModel.refreshTickets()
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                            "closed",
+                            false
+                        )
+                    }
+                }
+        }
     }
 }

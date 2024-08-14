@@ -1,6 +1,7 @@
 package com.presentation.ticket
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -31,8 +32,10 @@ import com.presentation.util.setImageCenterCrop
 import com.presentation.util.setup
 import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fragment_ticket) {
@@ -52,6 +55,12 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         initClickEvent()
         observeSingleTicket()
         observeReview()
+        observeDialog()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
+        super.onDismiss(dialog)
     }
 
     private fun initNaverMap() {
@@ -206,6 +215,24 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 val firstData = routeData.second.first()
                 naverMap.cameraPosition = CameraPosition(firstData, 16.0)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun observeDialog() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            findNavController()
+                .currentBackStackEntry
+                ?.savedStateHandle
+                ?.getStateFlow<Boolean>("closed", false)
+                ?.collectLatest { closed ->
+                    if (closed) {
+                        ticketViewModel.getSingleTicket(args.ticket)
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                            "closed",
+                            false
+                        )
+                    }
+                }
+        }
     }
 
     companion object {

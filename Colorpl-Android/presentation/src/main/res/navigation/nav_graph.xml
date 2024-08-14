@@ -289,7 +289,7 @@
 
     <include app:graph="@navigation/nav_sign_graph" />
 
-    <include app:graph="@navigation/nav_ticket_update_graph"/>
+    <include app:graph="@navigation/nav_ticket_update_graph" />
 
 
 </navigation>

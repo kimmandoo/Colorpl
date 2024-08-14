@@ -3,8 +3,10 @@ package com.presentation.ticket
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -25,7 +27,7 @@ import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentTicketEditBinding
 import com.domain.model.TicketRequest
 import com.naver.maps.geometry.LatLng
-import com.presentation.base.BaseFragment
+import com.presentation.base.BaseDialogFragment
 import com.presentation.component.dialog.TicketCreateDialog
 import com.presentation.notification.FcmWorker
 import com.presentation.util.ImageProcessingUtil
@@ -55,7 +57,7 @@ import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class TicketEditFragment :
-    BaseFragment<FragmentTicketEditBinding>(R.layout.fragment_ticket_edit) {
+    BaseDialogFragment<FragmentTicketEditBinding>(R.layout.fragment_ticket_edit) {
 
     private val ticketViewModel: TicketViewModel by hiltNavGraphViewModels(R.id.nav_ticket_update_graph)
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
@@ -73,7 +75,7 @@ class TicketEditFragment :
             }
         }
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
         initUi()
         observeDescription()
         observeSingleTicket()
@@ -293,6 +295,11 @@ class TicketEditFragment :
         }
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
+        super.onDismiss(dialog)
+    }
+
     private fun showDatePicker() {
         val currentDateTime = Calendar.getInstance()
         val selectedDateString = binding.tvSchedule.text.toString()
@@ -358,7 +365,7 @@ class TicketEditFragment :
                 ?.getStateFlow<Boolean>("closed", false)
                 ?.collectLatest { closed ->
                     if (closed) {
-                        dismissLoading()
+                        ticketViewModel.getSingleTicket(args.ticket)
                         findNavController().currentBackStackEntry?.savedStateHandle?.set(
                             "closed",
                             false
@@ -367,6 +374,7 @@ class TicketEditFragment :
                 }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

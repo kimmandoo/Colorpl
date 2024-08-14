@@ -3,6 +3,7 @@ package com.presentation.ticket
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.view.View
@@ -363,5 +364,10 @@ class TicketCreateFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         dismissLoading()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
     }
 }
