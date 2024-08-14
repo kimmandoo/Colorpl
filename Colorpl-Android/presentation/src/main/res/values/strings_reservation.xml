@@ -2,6 +2,7 @@
 <resources>
     <string name="reservation_seat_type_price">%s %s원"</string>
     <string name="reservation">예매하기</string>
+    <string name="reservation_front_space">"    예매하기"</string>
     <string name="exit">나가기</string>
     <!-- 예매 시작-->
     <string name="reservation_detail_category">카테고리</string>
@@ -44,5 +45,7 @@
     <string name="reservation_date_tomorrow">내일</string>
     <string name="reservation_selected_title">선택한 날짜</string>
 
+    <!-- 안내 메시지 -->
+    <string name="reservation_over_time">이미 지난 일정 입니다.\n다른 일정을 선택해주십시오.</string>
 
 </resources>

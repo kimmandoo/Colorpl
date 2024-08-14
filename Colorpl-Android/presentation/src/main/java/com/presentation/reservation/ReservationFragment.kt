@@ -194,12 +194,16 @@ class ReservationFragment :
         Timber.tag("date").d(initialDate.toString())
         val dateRangePickerDialog =
             DateRangePickerDialog(requireContext(), initialDate) { year, month, day ->
-                // 날짜 범위를 선택한 후 수행할 작업을 여기에 추가합니다.
-                val selectedDate = LocalDate.of(year, month, day)
+                // 날짜 값이 유효한지 검증
+                val selectedDate = if (day > 0) {
+                    LocalDate.of(year, month, day)
+                } else {
+                    Timber.tag("date").e("Invalid day value: $day, using LocalDate.now() instead.")
+                    LocalDate.now()  // day 값이 0일 경우 현재 날짜 사용
+                }
                 reservationListViewModel.setDate(selectedDate)
                 val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
                 val data = selectedDate.format(dateFormat)
-                binding.tvSelectDate.text = data
                 reservationListViewModel.setParam(ShowType.DATE, data)
             }
         dateRangePickerDialog.show()

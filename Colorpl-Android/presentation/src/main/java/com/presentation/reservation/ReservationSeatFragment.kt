@@ -90,7 +90,12 @@ class ReservationSeatFragment :
                 this.tvGradePrice.text = getString(R.string.reservation_price, 0.formatWithCommas())
             }
         }
+    }
 
+    private fun initViewModel() {
+        if (ViewPagerManager.getViewPager()?.currentItem == ReservationProgressFragment.TIME_TABLE) {
+            showPeopleCountBottomSheet()
+        }
     }
 
     private fun showPeopleCountBottomSheet() {

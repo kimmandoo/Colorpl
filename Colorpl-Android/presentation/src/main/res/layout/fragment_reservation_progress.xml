@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:subTitle="@{@string/exit}"
             app:type="@{type}"
-            app:title="@{@string/reservation}" />
+            app:title="@{@string/reservation_front_space}" />
 
         <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
             android:id="@+id/wdi_progress"

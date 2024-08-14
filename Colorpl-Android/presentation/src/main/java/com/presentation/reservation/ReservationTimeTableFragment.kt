@@ -1,5 +1,6 @@
 package com.presentation.reservation
 
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +20,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 @AndroidEntryPoint
 class ReservationTimeTableFragment :
@@ -100,14 +103,32 @@ class ReservationTimeTableFragment :
     }
 
     override fun onTimeTableClick(data: ReservationPairInfo, timeTable: TimeTable) {
-        with(viewModel) {
-            setReservationPlace(data.placeName)
-            setReservationTheater(data.hallName)
-            setReservationTimeTable(timeTable)
-            getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
-            Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
+        val currentTime = LocalTime.now()
+
+        runCatching {
+            LocalTime.parse(timeTable.startTime)
+        }.onSuccess { startTime ->
+            if (currentTime.isAfter(startTime)) {
+                Toast.makeText(context, getString(R.string.reservation_over_time), Toast.LENGTH_SHORT).show()
+            } else {
+                with(viewModel) {
+                    setReservationPlace(data.placeName)
+                    setReservationTheater(data.hallName)
+                    setReservationTimeTable(timeTable)
+                    getReservationSeat(reservationDetailId.value, timeTable.scheduleId)
+                    Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
+                }
+                ViewPagerManager.moveNext()
+            }
+        }.onFailure { exception ->
+            if (exception is DateTimeParseException) {
+                Toast.makeText(context, "시간 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
+                Timber.e("시간 파싱 오류: ${exception.message}")
+            } else {
+                // 다른 종류의 예외 처리
+                Timber.e("예상치 못한 오류 발생: ${exception.message}")
+            }
         }
-        ViewPagerManager.moveNext()
     }
 
 
