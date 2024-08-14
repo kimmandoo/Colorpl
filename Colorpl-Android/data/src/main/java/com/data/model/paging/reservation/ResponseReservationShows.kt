@@ -1,11 +1,8 @@
-package com.data.model.response
-
-data class ResponseReservationShows(
-    val items: List<ResponseReservationInfo>
-)
+package com.data.model.paging.reservation
 
 
-data class ResponseReservationInfo(
+
+data class Show(
     val id: Int,
     val apiId: String?,
     val name: String,
@@ -19,14 +16,6 @@ data class ResponseReservationInfo(
     val seats: List<Seat>?,
     val hall: String?,
     val schedule: Map<String, Boolean>?,
-)
-
-
-data class PriceBySeatClass(
-    val gradeR: Int?,
-    val gradeS: Int?,
-    val gradeA: Int?,
-    val gradeB: Int?,
 )
 
 data class Seat(

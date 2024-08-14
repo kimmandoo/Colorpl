@@ -8,7 +8,7 @@
     <string name="feed_filter_musical">뮤지컬</string>
     <string name="feed_filter_exhibition">전시회</string>
     <string name="feed_search_hint">검색어를 입력하세요</string>
-    <string name="feed_empty_view">공연 정보가 없습니다.</string>
+    <string name="feed_empty_view">이벤트 정보가 없습니다.</string>
     <string name="feed_et_hint">댓글을 입력하세요</string>
     <string name="feed_ticket_select">리뷰를 등록할 티켓을 선택해주세요.</string>
     <string name="feed_ticket_select_complete">이 티켓으로 선택</string>

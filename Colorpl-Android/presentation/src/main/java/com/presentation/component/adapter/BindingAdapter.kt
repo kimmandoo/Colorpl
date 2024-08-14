@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.colorpl.presentation.R
 import com.domain.model.Seat
+import com.presentation.util.Area
 import com.presentation.util.Category
 import com.presentation.util.PaymentResult
 import com.presentation.util.Sign
@@ -152,9 +153,11 @@ fun setCategoryTitle(textView: TextView, category: Category?) {
             Category.EXHIBITION -> {
                 context.getString(R.string.sign_up_category_exhibition)
             }
+
             Category.ETC -> {
                 context.getString(R.string.sign_up_category_etc)
             }
+
             Category.PERFORMANCE -> {
                 context.getString(R.string.sign_up_category_performance)
             }
@@ -187,9 +190,11 @@ fun setCategoryIcon(imageView: ImageView, category: Category?) {
             Category.EXHIBITION -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
             }
+
             Category.ETC -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
             }
+
             Category.PERFORMANCE -> {
                 ContextCompat.getDrawable(context, R.drawable.selector_ic_exhibition)
             }
@@ -236,6 +241,16 @@ fun setFormattedSeatsText(textView: TextView, seats: List<Seat>?) {
     Timber.tag("selectedSeats").d("seats: $seats")
     seats?.let {
         val seatText = "${seats.size}매 | ${seats.joinToString(separator = ", ") { it.toString() }}"
+        textView.text = seatText
+    }
+}
+
+@BindingAdapter("setFormattedGrade")
+fun setFormattedSeatsGrade(textView: TextView, seats: List<Seat>?) {
+    Timber.tag("selectedSeats").d("seats: $seats")
+    seats?.let {
+        val seatText =
+            "${seats.size}매 | ${seats.joinToString(separator = ", ") { it.grade.toString() }}"
         textView.text = seatText
     }
 }
@@ -287,6 +302,15 @@ fun setSearchDate(view: TextView, date: LocalDate?) {
     }
 }
 
+@BindingAdapter("searchArea")
+fun setSearchArea(view: TextView, area: Pair<String, List<Area>>?) {
+    area?.let {
+        view.text = it.first
+    } ?: run {
+        view.text = "지역"
+    }
+}
+
 @BindingAdapter("loadImageToReservationDetail")
 fun loadImageToReservationDetail(view: ImageView, url: String?) {
     url?.let {
@@ -298,28 +322,53 @@ fun loadImageToReservationDetail(view: ImageView, url: String?) {
 }
 
 @BindingAdapter("changeDateText")
-fun changeDateText(textView: TextView, date: String) {
+fun changeDateText(textView: TextView, date: String?) {
+    if (date?.isNotEmpty() == true) {
+        val zonedDateTime = ZonedDateTime.parse(date)
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm")
+        val formattedDate = zonedDateTime.format(formatter)
 
-    val zonedDateTime = ZonedDateTime.parse(date)
+        textView.text = formattedDate
+    }
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm")
-    val formattedDate = zonedDateTime.format(formatter)
-
-    textView.text = formattedDate
 }
 
 @BindingAdapter("priceBySeatClass", "seatClassKey", "flag")
-fun getReservationPriceBySeatClass(textView: TextView, priceBySeatClass: Map<String, Int>?, key: String?, flag: Boolean?) {
+fun getReservationPriceBySeatClass(
+    textView: TextView,
+    priceBySeatClass: Map<String, Int>?,
+    key: String?,
+    flag: Boolean?
+) {
     if (priceBySeatClass == null || key == null || !priceBySeatClass.containsKey(key)) {
         textView.visibility = View.GONE
     } else {
         val value = priceBySeatClass[key]?.formatWithCommas()
-        val text = when (flag) {
-            true -> "${value}원~"
-            false -> "${value}원"
-            else -> "${key}석 : ${value}원"
+        val priceTitle = when(flag) {
+            true, false -> ""
+            else -> "${key}석 : "
         }
+        val priceText = when (flag) {
+            true -> if(value == "0") "무료" else "${value}원~"
+            else -> if(value == "0") "무료" else "${value}원"
+        }
+        val text = priceTitle + priceText
         textView.text = text
         textView.visibility = View.VISIBLE
     }
+
+//    val value = priceBySeatClass[key]?.formatWithCommas()
+//    val priceTitle = when(flag) {
+//        true, false -> "${key}석 : "
+//        else -> ""
+//    }
+//    val priceText = when (flag) {
+//        true -> if(value == "0") "무료" else "${value}원~"
+//        else -> if(value == "0") "무료" else "${value}원"
+//    }
+}
+
+@BindingAdapter("price", "value", requireAll = false)
+fun setPriceToString(textView: TextView, price: Int, value: String?) {
+    textView.text = "${price.formatWithCommas()}$value"
 }

@@ -109,6 +109,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                     is SignInEventState.NoSign -> {
                         Timber.d("로그인 막기")
                     }
+                    is SignInEventState.Loading -> {
+                        showLoading()
+                    }
                 }
 
             }
@@ -135,7 +138,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
 
     fun handleSignIn(result: GetCredentialResponse) {
-        showLoading()
         val auth = Firebase.auth
         val credential = result.credential
         when (credential) {

@@ -8,12 +8,15 @@ data class ResponsePayReceipt(
     val price: Int,
     val purchasedAt: String,
     val statusLocale: String,
-    val showDateTime : Date,
+    val showDateTime : String,
     val showDetailPosterImagePath : String,
-    val seatInfoDto : List<SeatInfoDto>
+    val theaterName : String,
+    val seats : List<Seats>
 ){
-    data class SeatInfoDto(
+    data class Seats(
         val row : Int,
-        val col : Int
+        val col : Int,
+        val name : String,
+        val grade : String
     )
 }

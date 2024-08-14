@@ -71,7 +71,7 @@
                         android:layout_height="160dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
-                        android:background="@drawable/test_feed"
+                        android:background="@drawable/rectangle_night"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_reservation_info"
                         app:layout_constraintTop_toBottomOf="@+id/tv_reservation_info"
@@ -134,7 +134,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@{viewModel.reservationPlace + ` | ` + viewModel.reservationTheater}"
+                            android:text="@{viewModel.reservationTheater + ` | ` + viewModel.reservationHall}"
                             android:textColor="@color/timber_wolf"
                             app:layout_constraintBottom_toTopOf="@id/tv_suit"
                             app:layout_constraintStart_toStartOf="parent"
@@ -402,7 +402,6 @@
             <TextView
                 android:id="@+id/tv_pay_next"
                 style="@style/suite_medium_16"
-                android:textSize="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@color/selector_timber_wolf_to_imperial_red"
@@ -410,6 +409,7 @@
                 android:paddingHorizontal="12dp"
                 android:text="@string/reservation_pay"
                 android:textColor="@color/white"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

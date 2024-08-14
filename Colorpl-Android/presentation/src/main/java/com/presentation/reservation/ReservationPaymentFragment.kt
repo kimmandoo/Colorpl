@@ -22,6 +22,7 @@ import com.presentation.viewmodel.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kr.co.bootpay.android.Bootpay
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -88,8 +89,8 @@ class ReservationPaymentFragment :
 
                 val metaDataMap: MutableMap<String, Any> = makeMetaData(
                     showName = reservationViewModel.reservationTitle.value,
-                    showHallName = reservationViewModel.reservationPlace.value,
                     showTheaterName = reservationViewModel.reservationTheater.value,
+                    showHallName = reservationViewModel.reservationHall.value,
                     showDetailId = reservationViewModel.reservationDetailId.value,
                     showScheduleId = reservationViewModel.reservationTimeTable.value.scheduleId,
                     selectedSeatList = selectedSeatList,
@@ -110,7 +111,7 @@ class ReservationPaymentFragment :
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
                     val responseData = Gson().fromJson(data, PayRequest::class.java)
-//                    payViewModel.startPayment(responseData.receipt_id)
+                    payViewModel.startPayment(responseData.receipt_id)
                     false
                 }
             }
@@ -144,8 +145,10 @@ class ReservationPaymentFragment :
     private fun observePaymentResult() {
         payViewModel.paymentEventState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
+                Bootpay.dismissWindow()
                 when (it) {
                     is PaymentEventState.PaySuccess -> {
+                        reservationViewModel.setPayResult(it.data)
                         ViewPagerManager.moveNext()
                     }
 

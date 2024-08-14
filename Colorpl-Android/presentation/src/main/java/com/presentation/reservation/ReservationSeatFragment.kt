@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationSeatBinding
 import com.domain.model.Seat
@@ -34,10 +35,13 @@ class ReservationSeatFragment :
 
     override fun initView() {
         binding.apply {
-            showPeopleCountBottomSheet()
+            if (ViewPagerManager.getViewPager()?.currentItem == ReservationProgressFragment.SEAT) {
+                showPeopleCountBottomSheet()
+            }
             initUi()
         }
     }
+
 
     private fun initUi() {
         binding.apply {
@@ -170,7 +174,6 @@ class ReservationSeatFragment :
     }
 
 
-
     private fun updateConfirmState() {
         binding.tvNext.isSelected = if (selectedSeats.size == peopleCount) {
             binding.tvNext.text = "선택완료"
@@ -196,19 +199,25 @@ class ReservationSeatFragment :
     }
 
     private fun observeReservationSeat() {
-        viewModel.reservationSeat.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { reservationSeat ->
-            seatAdapter.submitList(reservationSeat)
-            Timber.tag("observeReservationSeat").d("$reservationSeat")
-            viewModel.calculateTotalPrice()
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.reservationSeat.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { reservationSeat ->
+                seatAdapter.submitList(reservationSeat)
+                Timber.tag("observeReservationSeat").d("$reservationSeat")
+                viewModel.calculateTotalPrice()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun observeReservationTotalPrice() {
-        viewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { totalPrice ->
-            Timber.tag("totalPrice").d("$totalPrice")
-            binding.tvPrice.text = getString(R.string.reservation_price, totalPrice.amountOfAfter.formatWithCommas())
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { totalPrice ->
+                Timber.tag("totalPrice").d("$totalPrice")
+                binding.tvPrice.text = getString(
+                    R.string.reservation_price,
+                    totalPrice.amountOfAfter.formatWithCommas()
+                )
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
 
     companion object {
         const val COL_SIZE = 16

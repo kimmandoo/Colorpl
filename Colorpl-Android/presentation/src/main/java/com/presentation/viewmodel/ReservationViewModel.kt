@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.PayResult
 import com.domain.model.ReservationPairInfo
 import com.domain.model.ReservationPayInfo
 import com.domain.model.Seat
@@ -38,11 +39,11 @@ class ReservationViewModel @Inject constructor(
     private val _reservationDate = MutableStateFlow<LocalDate>(LocalDate.now())
     val reservationDate: StateFlow<LocalDate> = _reservationDate
 
-    private val _reservationPlace = MutableStateFlow("")
-    val reservationPlace: StateFlow<String> = _reservationPlace
-
     private val _reservationTheater = MutableStateFlow("")
     val reservationTheater: StateFlow<String> = _reservationTheater
+
+    private val _reservationHall = MutableStateFlow("")
+    val reservationHall: StateFlow<String> = _reservationHall
 
     private val _reservationSchedule = MutableStateFlow<Map<String, Boolean>>(mapOf())
     val reservationSchedule: StateFlow<Map<String, Boolean>> = _reservationSchedule
@@ -79,6 +80,15 @@ class ReservationViewModel @Inject constructor(
     val showPlace: StateFlow<String> = _showPlace
 
 
+    private val _payResult = MutableStateFlow(PayResult())
+    val payResult : StateFlow<PayResult> get() = _payResult
+
+    fun setPayResult(value : PayResult){
+        _payResult.value = value
+    }
+
+
+
     fun setReservationDetailId(id: Int) {
         _reservationDetailId.value = id
     }
@@ -96,11 +106,11 @@ class ReservationViewModel @Inject constructor(
     }
 
     fun setReservationPlace(place: String) {
-        _reservationPlace.value = place
+        _reservationTheater.value = place
     }
 
     fun setReservationTheater(theater: String) {
-        _reservationTheater.value = theater
+        _reservationHall.value = theater
     }
 
     fun setReservationSchedule(schedule: Map<String, Boolean>) {

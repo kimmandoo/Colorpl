@@ -1,5 +1,7 @@
 package com.domain.usecaseimpl.reservation
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.data.repository.ReservationRepository
 import com.data.util.ApiResult
 import com.domain.mapper.toEntity
@@ -8,6 +10,7 @@ import com.domain.usecase.ReservationListUseCase
 import com.domain.util.DomainResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -16,22 +19,13 @@ class ReservationListUseCaseImpl @Inject constructor(
 ) : ReservationListUseCase {
     override suspend fun invoke(
         filters: Map<String, String?>
-    ): Flow<DomainResult<List<ReservationInfo>>> = flow {
-        reservationRepository.getReservationAllShows(
-            filters = filters
-        ).collect { result ->
-            when (result) {
-                is ApiResult.Success -> {
-                    val reservationListInfo = result.data.toEntity()
-                    emit(DomainResult.success(reservationListInfo))
+    ): Flow<PagingData<ReservationInfo>> {
+        return reservationRepository.getReservationAllShows(filters)
+            .map { pagingData ->
+                Timber.tag("pagerUseCase").d("$pagingData")
+                pagingData.map { show ->
+                    show.toEntity()
                 }
-
-                is ApiResult.Error -> {
-                    Timber.d("예약 에러 확인 ${result.exception}")
-                    emit(DomainResult.error(result.exception))
-                }
-
             }
-        }
     }
 }

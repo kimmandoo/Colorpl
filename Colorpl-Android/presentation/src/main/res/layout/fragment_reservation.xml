@@ -33,8 +33,8 @@
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/sv_search"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="0dp"
                     android:background="@color/night"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
@@ -54,8 +54,8 @@
                     style="@style/suite_extra_bold_16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="12dp"
+                    android:padding="2dp"
                     android:text="@string/clear"
                     android:textColor="@color/imperial_red"
                     app:layout_constraintBottom_toBottomOf="@+id/sv_search"
@@ -133,11 +133,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="2dp"
-                            android:text="@string/location"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="@id/iv_icon_location"
                             app:layout_constraintStart_toEndOf="@id/iv_icon_location"
-                            app:layout_constraintTop_toTopOf="@id/iv_icon_location" />
+                            app:layout_constraintTop_toTopOf="@id/iv_icon_location"
+                            app:searchArea="@{viewModel.area}"
+                            tools:text="장소" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

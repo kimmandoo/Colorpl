@@ -64,7 +64,7 @@ class ScheduleViewModel @Inject constructor(
         return calendarItems.map { calendarItem ->
             val matchingTicket = ticketMap[calendarItem.date]
             if (matchingTicket != null) {
-                calendarItem.copy(imgUrl = matchingTicket.imgUrl)
+                calendarItem.copy(imgUrl = matchingTicket.imgUrl?: "")
             } else {
                 calendarItem
             }

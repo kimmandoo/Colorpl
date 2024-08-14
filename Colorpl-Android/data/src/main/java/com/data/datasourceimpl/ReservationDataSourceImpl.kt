@@ -2,20 +2,22 @@ package com.data.datasourceimpl
 
 import com.data.api.ReservationApi
 import com.data.datasource.remote.ReservationDataSource
-import com.data.model.response.ResponseReservationInfo
+import com.data.model.paging.reservation.ResponsePagedShow
+import com.data.model.paging.reservation.Show
 import com.data.model.response.ResponseShowSchedules
 import com.data.model.response.ResponseShowSeat
+import timber.log.Timber
 import javax.inject.Inject
 
 class ReservationDataSourceImpl @Inject constructor(
     private val reservationApi: ReservationApi
 ) : ReservationDataSource {
 
-    override suspend fun getReservationListShows(filters: Map<String, String?>): List<ResponseReservationInfo> {
+    override suspend fun getReservationListShows(filters: Map<String, String?>): List<Show> {
         return reservationApi.getReservationListShows(filters)
     }
 
-    override suspend fun getReservationShow(showDetailId: Int): ResponseReservationInfo {
+    override suspend fun getReservationShow(showDetailId: Int): Show {
         return reservationApi.getReservationShow(showDetailId)
     }
 
