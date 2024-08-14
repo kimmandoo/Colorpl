@@ -93,6 +93,16 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
     /** Naver map 연결. */
     private fun connectNaverMap(naverMap: NaverMap) {
         this@MapFragment.naverMap = naverMap
+        clickMarker(
+            markerBuilder,
+            requireActivity(),
+            viewLifecycleOwner.lifecycleScope,
+        ) { markerData ->
+//            val action =
+//                MapFragmentDirections.actionFragmentMapToFragmentTicket(markerData.toTicketResponse())
+//            navigateDestination(action)
+            Timber.d("markerData : $markerData")
+        }
         observeTicketList()
 
         naverMap.setup(locationSource)
@@ -136,16 +146,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map) {
         mapViewModel.ticketList.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
             Timber.d("이미지 확인 $it")
             setMarker()
-            clickMarker(
-                markerBuilder,
-                requireActivity(),
-                viewLifecycleOwner.lifecycleScope,
-            ) { markerData ->
-                val action =
-                    MapFragmentDirections.actionFragmentMapToFragmentTicket(markerData.id)
-                navigateDestination(action)
-                Timber.d("markerData : $markerData")
-            }
             dismissLoading()
         }.launchIn(viewLifecycleOwner.lifecycleScope)
 

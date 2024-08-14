@@ -70,7 +70,7 @@ fun combineImages(context: Context, markerResId: Int, innerImageBitmap: Bitmap):
     val combinedBitmap = Bitmap.createScaledBitmap(markerBitmap, 70.dpToPx, 80.dpToPx, true)
     val canvas = Canvas(combinedBitmap)
     //내부 그림 크기 조정
-    val scaledInnerBitmap = Bitmap.createScaledBitmap(innerImageBitmap, 45.dpToPx, 45.dpToPx, true)
+    val scaledInnerBitmap = Bitmap.createScaledBitmap(innerImageBitmap, 50.dpToPx, 50.dpToPx, true)
 
     // 내부 그림 그리기 (말풍선 중앙에 위치)
     val left = (combinedBitmap.width - scaledInnerBitmap.width) / 2

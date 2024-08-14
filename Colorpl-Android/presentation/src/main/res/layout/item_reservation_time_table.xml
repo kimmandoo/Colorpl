@@ -25,6 +25,7 @@
             <TextView
                 android:id="@+id/tv_time_start"
                 style="@style/suite_regular_18"
+                android:textSize="18dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -37,6 +38,7 @@
             <TextView
                 android:id="@+id/tv_time_end"
                 style="@style/suite_regular_12"
+                android:textSize="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -53,9 +55,10 @@
         <TextView
             android:id="@+id/tv_remaining_seats"
             style="@style/suite_regular_12"
+            android:textSize="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
+            android:paddingTop="10dp"
             android:paddingBottom="15dp"
             android:gravity="center"
             android:text="@{String.valueOf(timeTable.remainingSeatCount) + `석`}"

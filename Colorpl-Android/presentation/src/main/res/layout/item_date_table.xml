@@ -16,7 +16,8 @@
 
         <TextView
             android:id="@+id/tv_date"
-            style="@style/suite_semibold_16"
+            style="@style/suite_bold_16"
+            android:textSize="16dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
@@ -28,6 +29,7 @@
         <TextView
             android:id="@+id/tv_days_of_week"
             style="@style/suite_semibold_12"
+            android:textSize="12dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"

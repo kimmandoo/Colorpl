@@ -106,7 +106,7 @@ class ReservationProgressFragment :
     private fun initTopButtonsClickEvent() {
         binding.includeTopCenter.apply {
             ivBack.setOnClickListener {
-                ViewPagerManager.movePrevious()
+                reservationViewModel.setViewPagerStatus(ViewPagerManager.movePrevious())
             }
             tvExit.setOnClickListener {
                 navigatePopBackStack()
