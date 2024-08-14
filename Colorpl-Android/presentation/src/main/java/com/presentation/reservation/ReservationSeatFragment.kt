@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReservationSeatBinding
 import com.domain.model.Seat
@@ -34,10 +35,13 @@ class ReservationSeatFragment :
 
     override fun initView() {
         binding.apply {
-            showPeopleCountBottomSheet()
+            if (ViewPagerManager.getViewPager()?.currentItem == ReservationProgressFragment.SEAT) {
+                showPeopleCountBottomSheet()
+            }
             initUi()
         }
     }
+
 
     private fun initUi() {
         binding.apply {

@@ -97,8 +97,8 @@ class ReservationProgressFragment :
     /** WormDotsIndicator 설정 */
     private fun initWormDotsIndicator() {
         binding.wdiProgress.apply {
-            this@apply.setViewPager2(binding.vpScreen)
-            this@apply.dotsClickable = true // 추후 false 처리.
+            attachTo(binding.vpScreen)
+            this@apply.dotsClickable = false // 추후 false 처리.
         }
     }
 
@@ -132,10 +132,10 @@ class ReservationProgressFragment :
     }
 
     companion object {
-        private const val TIME_TABLE = 0
-        private const val SEAT = 1
-        private const val PAYMENT = 2
-        private const val COMPLETE = 3
+        const val TIME_TABLE = 0
+        const val SEAT = 1
+        const val PAYMENT = 2
+        const val COMPLETE = 3
 
     }
 

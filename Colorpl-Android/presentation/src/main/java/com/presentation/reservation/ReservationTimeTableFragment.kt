@@ -108,9 +108,6 @@ class ReservationTimeTableFragment :
             Timber.tag("Seat API 요청").d("${reservationDetailId.value}, ${timeTable.scheduleId}")
         }
         ViewPagerManager.moveNext()
-        Timber.d("선택된 장소 : ${data.placeName}")
-        Timber.d("선택된 상영관 : ${data.hallName}")
-        Timber.d("선택된 시간표 : ${timeTable.startTime}")
     }
 
 
