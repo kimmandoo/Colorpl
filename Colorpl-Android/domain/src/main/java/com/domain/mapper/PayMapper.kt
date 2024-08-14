@@ -5,12 +5,16 @@ import com.data.model.response.ResponsePayReceipt
 import com.data.model.response.ResponsePayResult
 import com.domain.model.PayCancelParam
 import com.domain.model.PayReceipt
-import com.domain.model.PayStatus
+import com.domain.model.PayResult
 import com.domain.model.Seat
 
-fun ResponsePayResult.toPayStatus(): PayStatus {
-    return PayStatus(
-        status = this.httpStatus == 200
+fun ResponsePayResult.toPayResult(): PayResult {
+    return PayResult(
+        purchaseAt = this.purchased_at ,
+        scheduleId = this.scheduleId,
+        receiptId = this.receipt_id,
+        httpStatus = this.http_status,
+        price = this.price
     )
 }
 

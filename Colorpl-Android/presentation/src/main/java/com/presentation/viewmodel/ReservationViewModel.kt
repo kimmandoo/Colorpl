@@ -2,6 +2,7 @@ package com.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.domain.model.PayResult
 import com.domain.model.ReservationPairInfo
 import com.domain.model.ReservationPayInfo
 import com.domain.model.Seat
@@ -77,6 +78,15 @@ class ReservationViewModel @Inject constructor(
 
     private val _showPlace = MutableStateFlow("")
     val showPlace: StateFlow<String> = _showPlace
+
+
+    private val _payResult = MutableStateFlow(PayResult())
+    val payResult : StateFlow<PayResult> get() = _payResult
+
+    fun setPayResult(value : PayResult){
+        _payResult.value = value
+    }
+
 
 
     fun setReservationDetailId(id: Int) {

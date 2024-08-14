@@ -18,8 +18,7 @@ data class ResponsePayResult(
     val currency: String,
     @SerialName("gateway_url")
     val gatewayUrl: String,
-    @SerialName("http_status")
-    val httpStatus: Int,
+    val http_status: Int,
     @SerialName("metadata")
     val metadata: Metadata,
     @SerialName("method")
@@ -36,18 +35,16 @@ data class ResponsePayResult(
     val orderName: String,
     @SerialName("pg")
     val pg: String,
-    @SerialName("price")
     val price: Int,
-    @SerialName("purchased_at")
-    val purchasedAt: String,
-    @SerialName("receipt_id")
-    val receiptId: String,
+    val purchased_at: String?,
+    val receipt_id: String?,
     @SerialName("receipt_url")
     val receiptUrl: String,
     @SerialName("requested_at")
     val requestedAt: String,
     @SerialName("sandbox")
     val sandbox: Boolean,
+    val scheduleId: Int,
     @SerialName("status")
     val status: Int,
     @SerialName("status_locale")
@@ -85,11 +82,29 @@ data class ResponsePayResult(
 
     @Serializable
     data class Metadata(
-        @SerialName("1")
-        val x: String,
-        @SerialName("2")
-        val y: String,
-        @SerialName("3")
-        val z: Int
-    )
+        @SerialName("selectedSeatList")
+        val selectedSeatList: List<SelectedSeat>,
+        @SerialName("showDetailId")
+        val showDetailId: Int,
+        @SerialName("showHallName")
+        val showHallName: String,
+        @SerialName("showName")
+        val showName: String,
+        @SerialName("showScheduleId")
+        val showScheduleId: Int,
+        @SerialName("showTheaterName")
+        val showTheaterName: String
+    ) {
+        @Serializable
+        data class SelectedSeat(
+            @SerialName("col")
+            val col: Int,
+            @SerialName("grade")
+            val grade: String,
+            @SerialName("name")
+            val name: String,
+            @SerialName("row")
+            val row: Int
+        )
+    }
 }

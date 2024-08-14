@@ -1,7 +1,9 @@
 package com.presentation.reservation.model
 
+import com.domain.model.PayResult
+
 sealed interface PaymentEventState {
 
-    data object PaySuccess : PaymentEventState
+    data class PaySuccess(val data : PayResult) : PaymentEventState
     data object PayFail : PaymentEventState
 }
