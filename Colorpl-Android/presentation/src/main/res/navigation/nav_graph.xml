@@ -38,7 +38,7 @@
             app:destination="@id/fragment_ticket">
             <argument
                 android:name="ticket"
-                app:argType="com.domain.model.TicketResponse" />
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -63,7 +63,7 @@
             app:destination="@id/fragment_ticket">
             <argument
                 android:name="ticket"
-                app:argType="com.domain.model.TicketResponse" />
+                app:argType="integer" />
         </action>
 
     </fragment>
@@ -146,7 +146,7 @@
         </action>
         <argument
             android:name="ticket"
-            app:argType="com.domain.model.TicketResponse" />
+            app:argType="integer" />
     </dialog>
 
 

@@ -71,7 +71,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
     }
 
     private fun onTicketClickListener(ticket: TicketResponse) {
-        val action = ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicket(ticket)
+        val action = ScheduleFragmentDirections.actionFragmentScheduleToFragmentTicket(ticket.id)
         findNavController().navigate(action)
     }
 

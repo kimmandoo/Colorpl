@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.domain.model.ReviewDetail
 import com.domain.model.Route
-import com.domain.usecase.ReviewDeleteUseCase
+import com.domain.model.TicketRequest
+import com.domain.model.TicketResponse
+import com.domain.usecase.TicketUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.review.GetReviewDetailUseCase
 import com.domain.util.DomainResult
@@ -19,14 +21,17 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
     private val getDetailReviewDetailUseCase: GetReviewDetailUseCase,
+    private val ticketUseCase: TicketUseCase
 ) : ViewModel() {
 
     private val _routeData = MutableSharedFlow<Pair<Route, List<LatLng>>>()
@@ -37,9 +42,60 @@ class TicketViewModel @Inject constructor(
     val isRouteNull: SharedFlow<Boolean> get() = _isRouteNull
     private val _reviewDetail = MutableStateFlow(ReviewDetail())
     val reviewDetail: StateFlow<ReviewDetail> get() = _reviewDetail
+    private val _ticketData = MutableSharedFlow<TicketResponse>()
+    val ticketData: SharedFlow<TicketResponse> get() = _ticketData
 
     fun setLatLng(value: LatLng) {
         _latLng.value = value
+    }
+
+    fun getSingleTicket(id: Int) {
+        viewModelScope.launch {
+            ticketUseCase.getSingleTicket(id).collectLatest {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.d("티켓 상세 데이터 에러 ${it.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        _ticketData.emit(it.data)
+                        Timber.d("티켓 상세 데이터 ${it.data}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun putSingleTicket(file: File, ticket: TicketRequest) {
+        viewModelScope.launch {
+            ticketUseCase.putTicket(ticketData.last().id, file, ticket).collectLatest {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.d("티켓 수정 데이터 에러 ${it.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        Timber.d("티켓 수정 데이터 성공 ${it.data}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteTicket(id: Int) {
+        viewModelScope.launch {
+            ticketUseCase.deleteTicket(id).collectLatest {
+                when (it) {
+                    is DomainResult.Error -> {
+                        Timber.d("티켓 삭제 데이터 에러 ${it.exception}")
+                    }
+
+                    is DomainResult.Success -> {
+                        Timber.d("티켓 삭제 데이터 성공 ${it.data}")
+                    }
+                }
+            }
+        }
     }
 
     fun getDetailReviewDetail(reviewId: Int) {
@@ -69,7 +125,7 @@ class TicketViewModel @Inject constructor(
                 endY = destination.latitude.toString(),
             ).collectLatest { response ->
                 response.onSuccess { data ->
-                    if(data == null){
+                    if (data == null) {
                         _isRouteNull.emit(true)
                     }
                     data?.let {
