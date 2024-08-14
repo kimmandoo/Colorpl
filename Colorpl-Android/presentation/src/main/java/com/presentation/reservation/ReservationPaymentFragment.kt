@@ -84,7 +84,8 @@ class ReservationPaymentFragment :
             tvPayNext.setOnClickListener {
                 val bootUser = getBootUser("", "", "", "")
                 val bootItem = mutableListOf(selectItemToPay("", "", 1, 100.0))
-                val selectedSeatList: List<Map<String, Any>> = reservationViewModel.reservationSelectedSeat.value.map { it.convertToHashMap() }
+                val selectedSeatList: List<Map<String, Any>> =
+                    reservationViewModel.reservationSelectedSeat.value.map { it.convertToHashMap() }
 
                 val metaDataMap: MutableMap<String, Any> = makeMetaData(
                     showName = reservationViewModel.reservationTitle.value,
@@ -110,7 +111,7 @@ class ReservationPaymentFragment :
                 ) { data ->
                     Timber.d("영수증 id 받아오기 $data")
                     val responseData = Gson().fromJson(data, PayRequest::class.java)
-//                    payViewModel.startPayment(responseData.receipt_id)
+                    payViewModel.startPayment(responseData.receipt_id)
                     false
                 }
             }
@@ -158,29 +159,41 @@ class ReservationPaymentFragment :
 
     /** 가격 정보 observe */
     private fun observeReservationPayInfo() {
-        reservationViewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { payInfo ->
-            updateUiReservationPayInfo()
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        reservationViewModel.reservationPayInfo.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { payInfo ->
+                updateUiReservationPayInfo()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     /** 할인 정책 observe.*/
     private fun observeReservationDiscount() {
-        reservationViewModel.reservationPayDiscount.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { discount ->
-            reservationViewModel.updatePayInfo()
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        reservationViewModel.reservationPayDiscount.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { discount ->
+                reservationViewModel.updatePayInfo()
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     /** 다음 버튼 update. */
     private fun updateConfirmState() {
-        binding.tvPayNext.isSelected = reservationViewModel.reservationPayMethod.value != Payment.Method.NONE
+        binding.tvPayNext.isSelected =
+            reservationViewModel.reservationPayMethod.value != Payment.Method.NONE
     }
 
     /** 가격 정보 UI update.*/
     private fun updateUiReservationPayInfo() {
         binding.apply {
-            tvPayValue.text = getString(R.string.reservation_price,reservationViewModel.reservationPayInfo.value.amountOfBefore.formatWithCommas())
-            tvDiscountPayValue.text = getString(R.string.reservation_price,reservationViewModel.reservationPayInfo.value.amountOfDiscount.formatWithCommas())
-            tvResultPayValue.text = getString(R.string.reservation_price,reservationViewModel.reservationPayInfo.value.amountOfAfter.formatWithCommas())
+            tvPayValue.text = getString(
+                R.string.reservation_price,
+                reservationViewModel.reservationPayInfo.value.amountOfBefore.formatWithCommas()
+            )
+            tvDiscountPayValue.text = getString(
+                R.string.reservation_price,
+                reservationViewModel.reservationPayInfo.value.amountOfDiscount.formatWithCommas()
+            )
+            tvResultPayValue.text = getString(
+                R.string.reservation_price,
+                reservationViewModel.reservationPayInfo.value.amountOfAfter.formatWithCommas()
+            )
         }
     }
 }

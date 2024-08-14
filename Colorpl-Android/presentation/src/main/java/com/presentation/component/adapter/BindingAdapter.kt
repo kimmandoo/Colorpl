@@ -241,6 +241,15 @@ fun setFormattedSeatsText(textView: TextView, seats: List<Seat>?) {
     }
 }
 
+@BindingAdapter("setFormattedGrade")
+fun setFormattedSeatsGrade(textView: TextView, seats: List<Seat>?) {
+    Timber.tag("selectedSeats").d("seats: $seats")
+    seats?.let {
+        val seatText = "${seats.size}매 | ${seats.joinToString(separator = ", ") { it.grade.toString() }}"
+        textView.text = seatText
+    }
+}
+
 @BindingAdapter("dayOfWeekColor", "isSelected")
 fun setDayOfWeekColor(view: TextView, date: LocalDate, isSelected: Boolean) {
     val context = view.context
