@@ -38,6 +38,14 @@ fun String.formatIsoToKorean(): String {
     return dateTime.format(outputFormatter)
 }
 
+fun String.formatIsoToPattern(): String {
+    val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm", Locale.KOREAN)
+
+    val dateTime = LocalDateTime.parse(this, isoFormatter)
+    return dateTime.format(outputFormatter)
+}
+
 fun LocalDate.getPattern(pattern: String): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return this.format(formatter)

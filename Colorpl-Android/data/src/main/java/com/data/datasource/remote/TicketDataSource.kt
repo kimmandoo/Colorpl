@@ -15,9 +15,9 @@ interface TicketDataSource {
     suspend fun deleteTicket(id: Int): Unit
     suspend fun putTicket(
         id: Int,
-        ticket: MultipartBody.Part,
+        ticket: MultipartBody.Part?,
         request: RequestBody
-    ): Unit
+    ): Int
 
     suspend fun getAllTicket(): List<ResponseTicket>
     suspend fun getMonthlyTicket(date: String): List<ResponseTicket>

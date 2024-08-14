@@ -30,8 +30,8 @@ interface TicketApi {
     suspend fun putTicket(
         @Path("id") id: Int,
         @Part("request") request: RequestBody,
-        @Part file: MultipartBody.Part,
-    ): Unit
+        @Part file: MultipartBody.Part?,
+    ): Int
 
     @Multipart
     @POST("schedules/custom")

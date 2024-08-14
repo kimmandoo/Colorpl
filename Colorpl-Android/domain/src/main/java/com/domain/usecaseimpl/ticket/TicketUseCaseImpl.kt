@@ -93,19 +93,24 @@ class TicketUseCaseImpl @Inject constructor(
         }
     }
 
-    override fun putTicket(id: Int, image: File, ticket: TicketRequest): Flow<DomainResult<Unit>> {
-        return flow {
-            ticketRepository.putTicket(id, image, ticket.toEntity()).collect { result ->
-                when (result) {
-                    is ApiResult.Error -> {
-                        emit(DomainResult.error(result.exception))
-                    }
+    override fun putTicket(
+        id: Int,
+        image: File?,
+        ticket: TicketRequest
+    ): Flow<DomainResult<Int>> = flow {
+        Timber.tag("put").d("$ticket $id")
+        ticketRepository.putTicket(id, image, ticket.toEntity()).collect { result ->
+            when (result) {
+                is ApiResult.Error -> {
+                    Timber.tag("put").d("${result.exception}")
+                    emit(DomainResult.error(result.exception))
+                }
 
-                    is ApiResult.Success -> {
-                        val response = result.data
-                        Timber.d("$response")
-                        emit(DomainResult.success(response))
-                    }
+                is ApiResult.Success -> {
+                    Timber.tag("put").d("${result.data}")
+                    val response = result.data
+                    Timber.d("$response")
+                    emit(DomainResult.success(response))
                 }
             }
         }

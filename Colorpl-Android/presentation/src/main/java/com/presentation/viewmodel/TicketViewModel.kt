@@ -6,6 +6,7 @@ import com.domain.model.ReviewDetail
 import com.domain.model.Route
 import com.domain.model.TicketRequest
 import com.domain.model.TicketResponse
+import com.domain.usecase.GeocodingUseCase
 import com.domain.usecase.TicketUseCase
 import com.domain.usecase.TmapRouteUseCase
 import com.domain.usecaseimpl.review.GetReviewDetailUseCase
@@ -31,7 +32,8 @@ import javax.inject.Inject
 class TicketViewModel @Inject constructor(
     private val tmapRouteUseCase: TmapRouteUseCase,
     private val getDetailReviewDetailUseCase: GetReviewDetailUseCase,
-    private val ticketUseCase: TicketUseCase
+    private val ticketUseCase: TicketUseCase,
+    private val geocodingUseCase: GeocodingUseCase
 ) : ViewModel() {
 
     private val _routeData = MutableSharedFlow<Pair<Route, List<LatLng>>>()
@@ -44,9 +46,58 @@ class TicketViewModel @Inject constructor(
     val reviewDetail: StateFlow<ReviewDetail> get() = _reviewDetail
     private val _ticketData = MutableSharedFlow<TicketResponse>()
     val ticketData: SharedFlow<TicketResponse> get() = _ticketData
+    private val _ticketDeleteRespones = MutableSharedFlow<Boolean>()
+    val ticketDeleteResponse: SharedFlow<Boolean> get() = _ticketDeleteRespones
+    private val _ticketUpdateResponse = MutableSharedFlow<Int>()
+    val ticketUpdateResponse: SharedFlow<Int> get() = _ticketUpdateResponse
+    private val _geocodingLatLng = MutableStateFlow<LatLng>(LatLng(0.0, 0.0))
+    val geocodingLatLng: StateFlow<LatLng> = _geocodingLatLng
+    private val _juso = MutableStateFlow("")
+    val juso: StateFlow<String> = _juso
+    private val _category = MutableStateFlow("")
+    val category: StateFlow<String> = _category
+    private val _schedule = MutableStateFlow("")
+    val schedule: StateFlow<String> = _schedule
+
+    fun setCategory(text: String) {
+        _category.value = text
+    }
+
+    fun setJuso(text: String) {
+        _juso.value = text
+    }
+
+    fun getAddress(address: String) {
+        viewModelScope.launch {
+            setJuso(address)
+            geocodingUseCase(address).collectLatest { response ->
+                when (response) {
+                    is DomainResult.Error -> {
+                        _geocodingLatLng.emit(LatLng(0.0, 0.0))
+                    }
+
+                    is DomainResult.Success -> {
+                        Timber.tag("test").d("${LatLng(response.data.y, response.data.x)}")
+                        _geocodingLatLng.emit(LatLng(response.data.y, response.data.x))
+                    }
+                }
+            }
+        }
+    }
+
+    fun setSchedule(text: String) {
+        _schedule.value = text
+    }
+
+    fun cancelGetAddress() {
+        viewModelScope.launch {
+            _geocodingLatLng.value = LatLng(0.0, 0.0)
+        }
+    }
 
     fun setLatLng(value: LatLng) {
         _latLng.value = value
+        _geocodingLatLng.value = value
     }
 
     fun getSingleTicket(id: Int) {
@@ -59,6 +110,8 @@ class TicketViewModel @Inject constructor(
 
                     is DomainResult.Success -> {
                         _ticketData.emit(it.data)
+                        setCategory(it.data.category)
+                        setSchedule(it.data.dateTime)
                         Timber.d("티켓 상세 데이터 ${it.data}")
                     }
                 }
@@ -66,16 +119,20 @@ class TicketViewModel @Inject constructor(
         }
     }
 
-    fun putSingleTicket(file: File, ticket: TicketRequest) {
+    fun editSingleTicket(id: Int, file: File?, ticket: TicketRequest) {
+        Timber.tag("edit").d("editSingleTicket called with file: $file, ticket: $ticket")
         viewModelScope.launch {
-            ticketUseCase.putTicket(ticketData.last().id, file, ticket).collectLatest {
+            Timber.tag("edit").d("${id} \n${file} \n $ticket")
+            ticketUseCase.putTicket(id, file, ticket).collectLatest {
                 when (it) {
                     is DomainResult.Error -> {
-                        Timber.d("티켓 수정 데이터 에러 ${it.exception}")
+                        _ticketUpdateResponse.emit(-1)
+                        Timber.tag("edit").d("티켓 수정 데이터 에러 ${it.exception}")
                     }
 
                     is DomainResult.Success -> {
-                        Timber.d("티켓 수정 데이터 성공 ${it.data}")
+                        Timber.tag("edit ddd").d("티켓 수정 데이터 성공 ${it.data}")
+                        _ticketUpdateResponse.emit(it.data)
                     }
                 }
             }
@@ -91,6 +148,7 @@ class TicketViewModel @Inject constructor(
                     }
 
                     is DomainResult.Success -> {
+                        _ticketDeleteRespones.emit(true)
                         Timber.d("티켓 삭제 데이터 성공 ${it.data}")
                     }
                 }

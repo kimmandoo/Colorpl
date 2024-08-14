@@ -29,7 +29,11 @@ class TicketDataSourceImpl @Inject constructor(
         return api.deleteTicket(id)
     }
 
-    override suspend fun putTicket(id: Int, ticket: MultipartBody.Part, request: RequestBody) {
+    override suspend fun putTicket(
+        id: Int,
+        ticket: MultipartBody.Part?,
+        request: RequestBody
+    ): Int {
         return api.putTicket(id, request, ticket)
     }
 

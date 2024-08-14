@@ -26,7 +26,7 @@ interface TicketRepository {
     suspend fun deleteTicket(id: Int): Flow<ApiResult<Unit>>
     suspend fun putTicket(
         id: Int,
-        ticket: File,
+        ticket: File?,
         request: RequestTicketCreate
-    ): Flow<ApiResult<Unit>>
+    ): Flow<ApiResult<Int>>
 }

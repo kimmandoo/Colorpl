@@ -27,9 +27,9 @@ interface TicketUseCase {
 
     fun putTicket(
         id: Int,
-        image: File,
+        image: File?,
         ticket: TicketRequest
-    ): Flow<DomainResult<Unit>>
+    ): Flow<DomainResult<Int>>
 
     suspend fun getAllTicket(): Flow<DomainResult<List<TicketResponse>>>
 

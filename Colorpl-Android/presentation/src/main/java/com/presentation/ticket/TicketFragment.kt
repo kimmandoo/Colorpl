@@ -86,6 +86,20 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             if (it.reviewId > 0) {
                 ticketViewModel.getDetailReviewDetail(it.reviewId)
             }
+            if (it.type == "CUSTOM") {
+                listOf(binding.tvEdit, binding.tvDelete).forEach { view ->
+                    view.visibility = View.VISIBLE
+                }
+                binding.tvEdit.setOnClickListener {
+                    val action =
+                        TicketFragmentDirections.actionFragmentTicketToTicketEditFragment(ticketId)
+                    findNavController().navigate(action)
+                }
+                binding.tvDelete.setOnClickListener {
+                    showLoading()
+                    ticketViewModel.deleteTicket(ticket.id)
+                }
+            }
             binding.apply {
                 binding.titleText = ticket.name
                 ivPoster.setImageCenterCrop(ticket.imgUrl)
@@ -119,6 +133,14 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
+        ticketViewModel.ticketDeleteResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                if (it) {
+                    Toast.makeText(requireContext(), "티켓이 삭제되었습니다", Toast.LENGTH_SHORT).show()
+                    dismissLoading()
+                    findNavController().popBackStack()
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun initUi() {

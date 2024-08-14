@@ -32,7 +32,7 @@
         android:id="@+id/fragment_map"
         android:name="com.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_map">
         <action
             android:id="@+id/action_fragment_map_to_fragment_ticket"
             app:destination="@id/fragment_ticket">
@@ -138,7 +138,7 @@
         tools:layout="@layout/fragment_ticket">
         <action
             android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" >
+            app:destination="@id/fragment_feed_detail">
             <argument
                 android:name="reviewId"
                 android:defaultValue="0"
@@ -147,6 +147,13 @@
         <argument
             android:name="ticket"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_fragment_ticket_to_ticketEditFragment"
+            app:destination="@id/ticketEditFragment">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
     </dialog>
 
 
@@ -273,5 +280,13 @@
     <include app:graph="@navigation/nav_ticket_graph" />
 
     <include app:graph="@navigation/nav_sign_graph" />
+    <fragment
+        android:id="@+id/ticketEditFragment"
+        android:name="com.presentation.ticket.TicketEditFragment"
+        android:label="TicketEditFragment">
+        <argument
+            android:name="ticket"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

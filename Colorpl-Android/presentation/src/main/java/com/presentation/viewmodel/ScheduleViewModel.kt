@@ -149,7 +149,6 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-
     fun updateCalendar(
         state: Calendar,
         month: Long = 0,
@@ -202,33 +201,24 @@ class ScheduleViewModel @Inject constructor(
     fun updateCalendarWeekMode(
         state: Calendar
     ) {
-        _selectedDate.value = when (state) {
-            Calendar.CURRENT -> {
-                LocalDate.now()
-            }
+        val newSelectedDate = when (state) {
+            Calendar.CURRENT -> LocalDate.now()
+            Calendar.NEXT -> _selectedDate.value.plusWeeks(1)
+            Calendar.PREVIOUS -> _selectedDate.value.minusWeeks(1)
+            else -> _selectedDate.value
+        } ?: _selectedDate.value
 
-            Calendar.NEXT -> {
-                _selectedDate.value.plusWeeks(1)
-            }
+        _selectedDate.value = newSelectedDate
+        val fullMonthCalendar = createCalendar(newSelectedDate)
+        val weekCalendar = getOnlySelectedWeek(newSelectedDate, fullMonthCalendar)
 
-            Calendar.PREVIOUS -> {
-                _selectedDate.value.plusWeeks(-1)
-            }
-
-            else -> {
-                null
-            }
-        }
-
-        _calendarItems.value = getOnlySelectedWeek(
-            _selectedDate.value,
-            createCalendar(_selectedDate.value)
-        ).map { item ->
+        _calendarItems.value = weekCalendar.map { item ->
             item.copy(
-                isSelected = item.date == _clickedDate.value?.date,
-                isWeek = true  // 주간 모드에서는 모든 아이템의 isWeek를 true로 설정
+                isSelected = item.date == newSelectedDate,
+                isWeek = true
             )
         }
+        _clickedDate.value = _calendarItems.value.find { it.isSelected }
         updateDisplayDate()
         filterTicketsForSelectedWeek()
     }

@@ -70,14 +70,14 @@ class TicketRepositoryImpl @Inject constructor(
 
     override suspend fun putTicket(
         id: Int,
-        ticket: File,
+        ticket: File?,
         request: RequestTicketCreate
-    ): Flow<ApiResult<Unit>> {
+    ): Flow<ApiResult<Int>> {
         return flow {
-            Timber.d("ticket: ${ticket}\n request:$request")
+            Timber.tag("repo ticket").d("ticket: ${ticket}\n request:$request")
             val requestPart = FormDataConverterUtil.getJsonRequestBody(request)
-            val filePart: MultipartBody.Part =
-                FormDataConverterUtil.getMultiPartBody("file", ticket)
+            val filePart: MultipartBody.Part? =
+                FormDataConverterUtil.getNullableMultiPartBody("file", ticket)
             ticketDataSource.putTicket(id = id, ticket = filePart, request = requestPart)
         }
     }

@@ -55,6 +55,7 @@ enum class Page(val hideBottomNav: Boolean) {
     MAP(false),
     FEED(false),
     LOGIN(false),
+    EDIT(true),
     RESERVATION(false),
     SETTING(true),
     TICKET(false),
@@ -69,6 +70,7 @@ enum class Page(val hideBottomNav: Boolean) {
 
     val id: Int
         get() = when (this) {
+            EDIT -> R.id.ticketEditFragment
             NOTIFICATION -> R.id.fragment_notification
             FEED_DETAIL -> R.id.fragment_feed_detail
             PROFILE_UPDATE -> R.id.fragment_profile_update
@@ -122,7 +124,7 @@ enum class Category(val value: String) {
         }
 
     },
-    PERFORMANCE("공연"){
+    PERFORMANCE("공연") {
         override fun getKey(): String {
             return "PERFORMANCE"
         }
@@ -150,7 +152,8 @@ enum class Category(val value: String) {
     companion object {
         fun getTitle(value: String): Category? = entries.find { it.value == value }
 
-        fun getKeyResult(value : String) : String = entries.find { it.toString() == value }?.value.toString()
+        fun getKeyResult(value: String): String =
+            entries.find { it.toString() == value }?.value.toString()
     }
 
 
