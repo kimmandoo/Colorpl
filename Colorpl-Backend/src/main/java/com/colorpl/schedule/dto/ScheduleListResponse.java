@@ -1,10 +1,10 @@
 package com.colorpl.schedule.dto;
 
-import com.colorpl.reservation.domain.ReservationDetail;
 import com.colorpl.schedule.domain.CustomSchedule;
 import com.colorpl.schedule.domain.ReservationSchedule;
 import com.colorpl.schedule.domain.Schedule;
 import com.colorpl.show.domain.Category;
+import com.colorpl.show.domain.ShowDetail;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,8 +71,12 @@ public class ScheduleListResponse {
 //                .build();
 //        }
         } else if (schedule instanceof ReservationSchedule reservationSchedule) {
+            ShowDetail showDetail = reservationSchedule.getReservation().getReservationDetails()
+                .get(0)
+                .getShowSchedule().getShowDetail();
 
-            List<String> seats = reservationSchedule.getReservation().getReservationDetails().stream()
+            List<String> seats = reservationSchedule.getReservation().getReservationDetails()
+                .stream()
                 .map(detail -> convertToSeatFormat(detail.getRow(), detail.getCol()))
                 .collect(Collectors.toList());
 
@@ -82,16 +86,21 @@ public class ScheduleListResponse {
             response = builder
                 .seat(seatInfo) // 모든 좌석 정보를 문자열로 설정
                 .dateTime(
-                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getDateTime())
-                .name(reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
+                    reservationSchedule.getReservation().getReservationDetails().get(0)
+                        .getShowSchedule().getDateTime())
+                .name(reservationSchedule.getReservation().getReservationDetails().get(0)
+                    .getShowSchedule().getShowDetail()
                     .getName())
                 .category(
-                    reservationSchedule.getReservation().getReservationDetails().get(0).getShowSchedule().getShowDetail()
+                    reservationSchedule.getReservation().getReservationDetails().get(0)
+                        .getShowSchedule().getShowDetail()
                         .getCategory())
+                .location(String.join(" ", showDetail.getHall().getTheater().getName(),
+                    showDetail.getHall().getName()))
+                .latitude(showDetail.getHall().getTheater().getLatitude())
+                .longitude(showDetail.getHall().getTheater().getLongitude())
                 .build();
         }
-
-
 
         return response;
     }
