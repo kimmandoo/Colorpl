@@ -44,26 +44,4 @@ public class CreateReservationScheduleService {
         return reservationSchedule.getId();
     }
 
-//    public Long createByImageUrl(CreateReservationScheduleRequest request,
-//        String url) {
-//
-//        Integer memberId = memberService.getCurrentMemberId();
-//
-//        Member member = memberRepository.findById(memberId)
-//            .orElseThrow(MemberNotFoundException::new);
-//
-//        ReservationDetail reservationDetail = reservationRepository.findDetailByIdAndMemberId(
-//            request.getReservationDetailId(), memberId).orElseThrow(
-//            ReservationDetailNotFoundException::new);
-//
-//        ReservationSchedule reservationSchedule = ReservationSchedule.builder()
-//            .member(member)
-//            .image(url)
-//            .reservationDetail(reservationDetail)
-//            .build();
-//        scheduleRepository.save(reservationSchedule);
-//
-//        return reservationSchedule.getId();
-//    }
-
 }
