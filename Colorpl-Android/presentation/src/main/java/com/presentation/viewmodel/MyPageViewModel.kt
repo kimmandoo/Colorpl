@@ -84,9 +84,7 @@ class MyPageViewModel @Inject constructor(
 
 
 
-    init {
-        getAllTicket()
-    }
+
 
     fun getAllTicket() {
         viewModelScope.launch {

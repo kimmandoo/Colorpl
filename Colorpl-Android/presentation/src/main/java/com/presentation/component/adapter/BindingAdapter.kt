@@ -330,7 +330,6 @@ fun changeDateText(textView: TextView, date: String?) {
 
         textView.text = formattedDate
     }
-
 }
 
 @BindingAdapter("priceBySeatClass", "seatClassKey", "flag")
