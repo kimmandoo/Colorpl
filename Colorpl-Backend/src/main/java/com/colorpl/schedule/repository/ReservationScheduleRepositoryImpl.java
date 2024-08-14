@@ -33,6 +33,8 @@ public class ReservationScheduleRepositoryImpl implements ReservationScheduleRep
             .join(reservation.reservationDetails, reservationDetail).fetchJoin()
             .join(reservationDetail.showSchedule, showSchedule).fetchJoin()
             .join(showSchedule.showDetail, showDetail).fetchJoin()
+            .join(showDetail.hall, hall).fetchJoin()
+            .join(hall.theater, theater).fetchJoin()
             .where(
                 memberEq(condition.getMember()),
                 dateTimeBetween(condition.getFrom(), condition.getTo())
