@@ -13,7 +13,7 @@ from routers.schedule import router as router_schedule
 from routers.review import router as router_review
 from routers.comment import router as router_comment
 from routers.reservation import router as router_reservation
-from utils.image import router as router_image
+# from utils.image import router as router_image
 from routers.theater_hall import router as router_theater_hall
 from routers.show_detail import router as router_show_detail
 from routers.price import router as router_price
@@ -37,7 +37,7 @@ app.include_router(router_schedule, prefix='/cs', tags=["schedule"])
 app.include_router(router_review, prefix='/cs', tags=["review"])
 app.include_router(router_comment, prefix='/cs', tags=["comment"])
 app.include_router(router_reservation, prefix='/vm', tags=["reservation"])
-app.include_router(router_image, prefix='/utils', tags=["utils"])
+# app.include_router(router_image, prefix='/utils', tags=["utils"])
 app.include_router(router_theater_hall, prefix='/vm', tags=["theater_hall"])
 app.include_router(router_show_detail, prefix='/vm', tags=["show_detail"])
 app.include_router(router_price, prefix='/vm', tags=["price"])
@@ -62,6 +62,6 @@ async def read_root(request: Request):
 # async def serve_react_app():
 #     return FileResponse(os.path.join(static_directory, "index.html"))
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

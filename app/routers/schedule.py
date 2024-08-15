@@ -7,7 +7,7 @@ from crud.schedule import get_schedules, has_review, update_schedule, get_schedu
 from database import get_db
 from typing import List, Optional
 from utils.enum import Category
-from utils.image import delete_image_file, update_image_file, save_image_file
+# from utils.image import delete_image_file, update_image_file, save_image_file
 from models import Hall, Reservation, ReservationDetail, Review, Schedule, ShowDetail, ShowSchedule
 
 router = APIRouter()
