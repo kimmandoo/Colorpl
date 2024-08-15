@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import Theater, Hall
-from app.schemas.theater_hall import TheaterCreate, TheaterUpdate
+from models import Theater, Hall
+from schemas.theater_hall import TheaterCreate, TheaterUpdate
 
 def get_theater_by_api_id(db: Session, theater_api_id: str):
     return db.query(Theater).filter(Theater.theater_api_id == theater_api_id).first()
@@ -81,8 +81,8 @@ def update_theater(db: Session, theater_id: int, theater_update: TheaterUpdate):
 def get_all_theaters(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Theater).offset(skip).limit(limit).all()
 
-def search_theaters_by_name(db: Session, theater_name: str):
-    return db.query(Theater).filter(Theater.theater_name.ilike(f"%{theater_name}%")).all()
+def search_theaters_by_name(db: Session, theater_name: str, skip: int = 0, limit: int = 10):
+    return db.query(Theater).filter(Theater.theater_name.ilike(f"%{theater_name}%")).offset(skip).limit(limit).all()
 
 def get_halls_by_theater(db: Session, theater_id: int):
     return db.query(Hall).filter(Hall.theater_id == theater_id).all()

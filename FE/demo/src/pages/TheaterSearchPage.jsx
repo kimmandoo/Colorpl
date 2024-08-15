@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Box, TextField, Button, Typography, List, ListItem, ListItemText, Paper } from '@mui/material';
 import api from '../api';
 
 const TheaterSearchPage = ({ onHallSelect }) => {
@@ -29,37 +30,73 @@ const TheaterSearchPage = ({ onHallSelect }) => {
   };
 
   return (
-    <div>
-      <h2>극장 찾기</h2>
-      <input 
-        type="text" 
-        value={theaterName} 
-        onChange={(e) => setTheaterName(e.target.value)} 
-        placeholder="Enter theater name" 
-      />
-      <button onClick={searchTheaters}>Search</button>
+    <Box 
+      display="flex" 
+      alignItems="flex-start" 
+      justifyContent="space-between" 
+      minHeight="100vh" 
+      p={3}
+      gap={2}
+    >
+      {/* 검색창 섹션 */}
+      <Paper elevation={3} sx={{ p: 2, width: '20%' }}>
+        <Typography variant="h5" gutterBottom>
+          극장 검색
+        </Typography>
+        <TextField
+          variant="outlined"
+          label="극장 이름"
+          value={theaterName}
+          onChange={(e) => setTheaterName(e.target.value)}
+          placeholder="극장 이름을 입력하세요"
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <Button 
+          variant="contained" 
+          onClick={searchTheaters} 
+          fullWidth
+        >
+          검색
+        </Button>
+      </Paper>
 
-      <ul>
-        {theaters.map(theater => (
-          <li key={theater.theater_id} onClick={() => handleTheaterClick(theater)}>
-            {theater.theater_name}
-          </li>
-        ))}
-      </ul>
+      {/* 극장 결과 섹션 */}
+      <Paper elevation={3} sx={{ p: 2, width: '35%' }}>
+        <Typography variant="h5" gutterBottom>
+          검색 결과
+        </Typography>
+        <List>
+          {theaters.map(theater => (
+            <ListItem 
+              button 
+              key={theater.theater_id} 
+              onClick={() => handleTheaterClick(theater)}
+            >
+              <ListItemText primary={theater.theater_name} />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
 
-      {halls.length > 0 && (
-        <div>
-          <h3>홀 선택</h3>
-          <ul>
-            {halls.map(hall => (
-              <li key={hall.hall_id} onClick={() => handleHallClick(hall)}>
-                {hall.HALL_NAME}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+      {/* 홀 결과 섹션 */}
+      <Paper elevation={3} sx={{ p: 2, width: '35%' }}>
+        <Typography variant="h5" gutterBottom>
+          홀 선택
+        </Typography>
+        <List>
+          {halls.map(hall => (
+            <ListItem 
+              button 
+              key={hall.hall_id} 
+              onClick={() => handleHallClick(hall)}
+            >
+              <ListItemText primary={hall.HALL_NAME} />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+    </Box>
   );
 };
 

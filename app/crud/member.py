@@ -1,8 +1,8 @@
 from datetime import timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from ..models import Member, Schedule, Review, Comment, Reservation, MemberCategories
-from ..schemas.member import MemberSearch, MemberUpdateDTO, MemberActivity
+from models import Member, Schedule, Review, Comment, Reservation, MemberCategories
+from schemas.member import MemberSearch, MemberUpdateDTO, MemberActivity
 from typing import List
 
 def get_member(db: Session, member_id: int):
@@ -25,10 +25,10 @@ def get_members_activity(db: Session, skip: int = 0, limit: int = 10):
     members = db.query(Member).offset(skip).limit(limit).all()
     return _get_member_activities(db, members)
 
-def search_member(db: Session, search: MemberSearch, skip: int = 0, limit: int = 10):
+def search_member(db: Session, search: MemberSearch):
     query = db.query(Member)
     query = apply_member_search_filters(query, search)
-    members = query.offset(skip).limit(limit).all()
+    members = query.offset(search.skip).limit(search.limit).all()
     return _get_member_activities(db, members)
 
 def apply_member_search_filters(query, search: MemberSearch):
@@ -69,7 +69,20 @@ def apply_member_search_filters(query, search: MemberSearch):
 def _get_member_activities(db: Session, members):
     member_activities = []
     for member in members:
-        schedules_count = db.query(Schedule).filter(Schedule.member_id == member.member_id).count()
+        # Schedule에서 Custom 스케줄과 Reservation 스케줄 합산
+        custom_schedule_count = db.query(Schedule).filter(
+            Schedule.member_id == member.member_id,
+            Schedule.dtype == 'C'
+        ).count()
+
+        reservation_schedule_count = db.query(Schedule).filter(
+            Schedule.member_id == member.member_id,
+            Schedule.dtype == 'R'
+        ).count()
+
+        # 전체 schedules_count는 custom_schedule_count와 reservation_schedule_count의 합
+        schedules_count = custom_schedule_count + reservation_schedule_count
+
         reviews_count = db.query(Review).join(Schedule).filter(Schedule.member_id == member.member_id).count()
         comments_count = db.query(Comment).filter(Comment.member_id == member.member_id).count()
         reservations_count = db.query(Reservation).filter(Reservation.member_id == member.member_id).count()
@@ -87,3 +100,4 @@ def _get_member_activities(db: Session, members):
             "type": member.type
         })
     return member_activities
+

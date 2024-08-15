@@ -48,3 +48,5 @@ class MemberSearch(BaseModel):
     create_date_from: Optional[datetime] = None
     create_date_to: Optional[datetime] = None
     category: Optional[List[str]] = None
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10

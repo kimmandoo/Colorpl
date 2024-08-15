@@ -132,7 +132,9 @@ const ScheduleDetail = () => {
           />
         </Box>
         <Avatar 
-          src={`https://i11d109.p.ssafy.io/images/${formData.schedule_image}`} 
+          src={formData.schedule_image.startsWith('http') 
+            ? formData.schedule_image 
+            : `https://i11d109.p.ssafy.io/images/${formData.schedule_image}`} 
           alt={formData.schedule_name} 
           sx={{ width: 300, height: 300, mr: 3 }}
         />
@@ -140,7 +142,6 @@ const ScheduleDetail = () => {
 
       <Button variant="contained" onClick={handleUpdate} sx={{ mt: 2, mb: 2 }}>수정 완료</Button>
       <Button variant="outlined" onClick={() => navigate('/schedules')} sx={{ mb: 2 }}>목록으로 돌아가기</Button>
-      <Button variant="contained" onClick={handleOpenModal} sx={{ mb: 2 }}>이미지 업데이트</Button>
 
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>

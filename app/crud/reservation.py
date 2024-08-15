@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import Reservation, Member, ReservationDetail, ShowSchedule, ShowDetail, Hall
-from app.schemas.reservation import ReservationUpdate, ReservationSearch
+from models import Reservation, Member, ReservationDetail, ShowSchedule, ShowDetail, Hall
+from schemas.reservation import ReservationUpdate, ReservationSearch
 
 def get_reservations_activity(db: Session, skip: int = 0, limit: int = 10):
     query = db.query(
@@ -90,7 +90,7 @@ def update_reservation(db: Session, reservation_id: int, reservation_update: Res
     db.refresh(reservation)
     return reservation
 
-def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, limit: int = 10):
+def search_reservations(db: Session, search: ReservationSearch):
     query = db.query(
         Reservation.reserve_id,
         Member.member_id,
@@ -118,7 +118,7 @@ def search_reservations(db: Session, search: ReservationSearch, skip: int = 0, l
     if search.is_refunded is not None:
         query = query.filter(Reservation.is_refunded == search.is_refunded)
 
-    reservations = query.offset(skip).limit(limit).all()
+    reservations = query.offset(search.skip).limit(search.limit).all()
 
     return [
         {

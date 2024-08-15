@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import ShowSchedule, ShowDetail
-from app.schemas.show_schedule import ShowScheduleCreate
+from models import ShowSchedule, ShowDetail
+from schemas.show_schedule import ShowScheduleCreate
 
 def create_show_schedule(db: Session, show_schedule: ShowScheduleCreate):
     db_show_schedule = ShowSchedule(

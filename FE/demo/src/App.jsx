@@ -21,19 +21,22 @@ import AdminManagement from './pages/AdminManagement';
 import AdminDetail from './pages/AdminDetail';
 import MultiStepForm from './pages/MultiStepForm';
 import TheatersTablePage from './pages/TheatersTablePage';
+import TheaterHallPage from './pages/TheaterHallPage';
 import api from './api';
 import theme from './theme';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenu, setExpandedMenu] = useState('');
 
   const handleLogout = async () => {
     try {
       await api.post('/auth/logout');
+      setUser(null); // 로그아웃 시 사용자 상태를 명확히 null로 설정
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/login'; // 로그인 페이지로 강제 리다이렉트
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -49,15 +52,19 @@ const App = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log("user_data", response.data);
           setUser(response.data);
         } catch (error) {
           console.error('Failed to fetch user', error);
         }
       }
+      setLoading(false); // 로딩 완료
     };
     fetchUser();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 상태에서 사이드바 렌더링 방지
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -108,6 +115,8 @@ const App = () => {
             <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate user={user} /></PrivateRoute>} /> 
             <Route path="/reservations" element={<PrivateRoute><Reservations user={user} /></PrivateRoute>} />
             <Route path="/reservations/:reservation_id" element={<PrivateRoute><ReservationDetail user={user} /></PrivateRoute>} />
+            <Route path="/theaters" element={<PrivateRoute><TheatersTablePage user={user} /></PrivateRoute>} />
+            <Route path="/theaters/:theater_id" element={<PrivateRoute><TheaterHallPage user={user} /></PrivateRoute>} />
             <Route path="/register-show" element={<PrivateRoute><MultiStepForm user={user} /></PrivateRoute>} />
             <Route path="/theaters" element={<PrivateRoute><TheatersTablePage user={user} /></PrivateRoute>} />
             {user && user.role === 1 && (

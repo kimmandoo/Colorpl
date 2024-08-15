@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.schemas.review import ReviewDetail, ReviewUpdateDTO, ReviewSearch, ReviewActivity
-from app.crud import review as crud_review
+from database import get_db
+from schemas.review import ReviewDetail, ReviewUpdateDTO, ReviewSearch, ReviewActivity
+from crud import review as crud_review
 from typing import List
 
 router = APIRouter()
@@ -30,6 +30,6 @@ def update_review(review_id: int, review_update: ReviewUpdateDTO, db: Session = 
 
 
 @router.post("/reviews/search", response_model=List[ReviewActivity])
-def search_reviews(search: ReviewSearch, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    reviews = crud_review.search_reviews(db, search, skip=skip, limit=limit)
+def search_reviews(search: ReviewSearch, db: Session = Depends(get_db)):
+    reviews = crud_review.search_reviews(db, search)
     return reviews

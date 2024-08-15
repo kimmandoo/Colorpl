@@ -43,6 +43,8 @@ class CommentSearch(BaseModel):
     create_date_from: Optional[datetime] = None
     create_date_to: Optional[datetime] = None
     is_inappropriate: Optional[bool] = None
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10
 
     class Config:
         from_attributes = True

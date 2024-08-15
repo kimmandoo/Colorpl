@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import date, datetime
-from ..utils.enum import Category
+from utils.enum import Category
 
 class CommentDetail(BaseModel):
     comment_id: int
@@ -48,6 +48,8 @@ class ReviewSearch(BaseModel):
     schedule_name: Optional[str] = None
     is_spoiler: Optional[bool] = None
     schedule_category: Optional[Category] = None
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10
 
     class Config:
         from_attributes = True

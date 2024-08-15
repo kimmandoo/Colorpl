@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from app.database import get_db
-from app.schemas.member import MemberDetail, MemberUpdateDTO, MemberActivity, MemberSearch
-from app.crud import member as crud_member
+from database import get_db
+from schemas.member import MemberDetail, MemberUpdateDTO, MemberActivity, MemberSearch
+from crud import member as crud_member
 # from datetime import datetime
 
 router = APIRouter()
@@ -27,8 +27,8 @@ def update_member(member_id: int, member_update: MemberUpdateDTO, db: Session = 
     return member
 
 @router.post("/members/search", response_model=List[MemberActivity])
-def search_member(search: MemberSearch, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    members = crud_member.search_member(db, search, skip, limit)
+def search_member(search: MemberSearch, db: Session = Depends(get_db)):
+    members = crud_member.search_member(db, search)
     if not members:
         raise HTTPException(status_code=404, detail="Members not found")
     return members

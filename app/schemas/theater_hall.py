@@ -39,5 +39,6 @@ class TheaterResponse(BaseModel):
 
 class TheaterSearchRequest(BaseModel):
     theater_name: str
-
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10
     

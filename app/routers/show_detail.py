@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.crud.show_detail import create_show_detail, get_show_detail_by_id, get_show_detail_by_api_id, get_show_details_by_name
-from app.schemas.show_detail import ShowDetailCreate, ShowDetailResponse, ShowDetailSearch
-from app.database import get_db
+from crud.show_detail import create_show_detail, get_show_detail_by_id, get_show_detail_by_api_id, get_show_details_by_name
+from schemas.show_detail import ShowDetailCreate, ShowDetailResponse, ShowDetailSearch
+from database import get_db
 
 router = APIRouter()
 

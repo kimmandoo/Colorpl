@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import ShowDetail, Hall, Seat, ShowSchedule, PriceBySeatClass
-from app.schemas.show_detail import ShowDetailCreate
+from models import ShowDetail, Hall, Seat, ShowSchedule, PriceBySeatClass
+from schemas.show_detail import ShowDetailCreate
 
 def create_show_detail(db: Session, show_detail: ShowDetailCreate):
     db_show_detail = ShowDetail(

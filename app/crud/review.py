@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from app.models import Review, Schedule, Member, Comment, Empathy
+from models import Review, Schedule, Member, Comment, Empathy
 from sqlalchemy import func
-from app.schemas.review import ReviewSearch, ReviewUpdateDTO
+from schemas.review import ReviewSearch, ReviewUpdateDTO
 
 def get_reviews_activity(db: Session, skip: int = 0, limit: int = 10):
     reviews = db.query(
@@ -107,7 +107,7 @@ def update_review(db: Session, review_id: int, review_update: ReviewUpdateDTO):
     
     return updated_review
 
-def search_reviews(db: Session, search: ReviewSearch, skip: int = 0, limit: int = 10):
+def search_reviews(db: Session, search: ReviewSearch):
     query = db.query(
         Review.review_id,
         Review.schedule_id,
@@ -166,7 +166,7 @@ def search_reviews(db: Session, search: ReviewSearch, skip: int = 0, limit: int 
     if "schedule_category" in search_data:
         query = query.filter(Schedule.schedule_category == search_data["schedule_category"])
 
-    reviews = query.offset(skip).limit(limit).all()
+    reviews = query.offset(search.skip).limit(search.limit).all()
 
     review_list = []
     for review in reviews:

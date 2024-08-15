@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.crud import comment as crud_comment
-from app.schemas.comment import CommentActivity, CommentDetail, CommentUpdate, CommentSearch
-from app.database import get_db
+from crud import comment as crud_comment
+from schemas.comment import CommentActivity, CommentDetail, CommentUpdate, CommentSearch
+from database import get_db
 from typing import List
 
 router = APIRouter()
@@ -27,6 +27,6 @@ def update_comment(comment_id: int, comment_update: CommentUpdate, db: Session =
     return comment
 
 @router.post("/comments/search", response_model=List[CommentDetail])
-def search_comments(search: CommentSearch, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    comments = crud_comment.search_comments(db, search, skip=skip, limit=limit)
+def search_comments(search: CommentSearch, db: Session = Depends(get_db)):
+    comments = crud_comment.search_comments(db, search)
     return comments

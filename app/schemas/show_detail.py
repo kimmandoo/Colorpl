@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from app.utils.enum import Category, Region, ShowState
+from utils.enum import Category, Region, ShowState
 
 class ShowDetailCreate(BaseModel):
     show_detail_api_id: str = Field(..., alias="SHOW_API_ID")
@@ -35,5 +35,6 @@ class ShowDetailResponse(BaseModel):
 
 class ShowDetailSearch(BaseModel):
     show_detail_name: str
+
 
 

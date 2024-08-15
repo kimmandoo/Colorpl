@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.theater_hall import HallResponse, TheaterCreate, TheaterSearchRequest, TheaterUpdate, TheaterResponse
-from app.crud import theater_hall as crud_theater_hall
-from app.database import get_db
+from schemas.theater_hall import HallResponse, TheaterCreate, TheaterSearchRequest, TheaterUpdate, TheaterResponse
+from crud import theater_hall as crud_theater_hall
+from database import get_db
 
 router = APIRouter()
 
@@ -50,8 +50,8 @@ def get_halls_by_theater_route(theater_id: int, db: Session = Depends(get_db)):
     return halls
 
 @router.post("/theaters/search", response_model=List[TheaterResponse])
-def search_theaters_route(search_request: TheaterSearchRequest, db: Session = Depends(get_db)):
-    theaters = crud_theater_hall.search_theaters_by_name(db, search_request.theater_name)
+def search_theaters_route(search: TheaterSearchRequest, db: Session = Depends(get_db)):
+    theaters = crud_theater_hall.search_theaters_by_name(db, search.theater_name, search.skip, search.limit)
     if not theaters:
         raise HTTPException(status_code=404, detail="No theaters found with the given name")
     return theaters

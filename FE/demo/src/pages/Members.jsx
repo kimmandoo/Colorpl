@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField,
   FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography,
-  Chip
+  Chip, Paper
 } from '@mui/material';
 import api from '../api';
 
@@ -16,7 +16,7 @@ const Members = () => {
   const [error, setError] = useState('');
   const [open, setOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const [loading, setLoading] = useState(false);  // 요청 중 상태 관리
+  const [loading, setLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useState({
     nickname: '',
@@ -28,7 +28,6 @@ const Members = () => {
 
   const navigate = useNavigate();
 
-  // 빈 값 제거 함수
   const cleanSearchParams = (params) => {
     const cleanedParams = { ...params };
     Object.keys(cleanedParams).forEach((key) => {
@@ -39,7 +38,6 @@ const Members = () => {
     return cleanedParams;
   };
 
-  // 데이터 로드 요청 (activity 엔드포인트)
   const fetchActivityData = useCallback(async (params) => {
     setLoading(true);
     try {
@@ -60,7 +58,6 @@ const Members = () => {
     }
   }, []);
 
-  // 검색 요청 (search 엔드포인트)
   const fetchSearchData = useCallback(async (params) => {
     setLoading(true);
     try {
@@ -85,7 +82,6 @@ const Members = () => {
     }
   }, []);
 
-  // 최초 렌더링 및 의존성에 따른 데이터 로드
   useEffect(() => {
     if (loading) return;
 
@@ -99,7 +95,6 @@ const Members = () => {
     }
   }, [currentPage, selectedOptions, fetchActivityData, fetchSearchData]);
 
-  // 검색 요청 핸들러
   const handleSearch = () => {
     if (loading) return;
     setCurrentPage(1);
@@ -110,7 +105,6 @@ const Members = () => {
     });
   };
 
-  // 검색 조건 초기화 핸들러
   const handleReset = () => {
     if (loading) return;
     setSearchParams({
@@ -125,18 +119,15 @@ const Members = () => {
     fetchActivityData({ skip: 0, limit: membersPerPage });
   };
 
-  // 페이지 변경 핸들러
   const handlePageChange = (event, value) => {
     if (loading) return;
     setCurrentPage(value);
   };
 
-  // Snackbar 닫기 핸들러
   const handleCloseSnackbar = () => {
     setOpen(false);
   };
 
-  // 클릭 이벤트 핸들러
   const handleCellClick = (endpoint, memberId, nickname) => {
     if (loading) return;
     navigate(endpoint, {
@@ -144,20 +135,28 @@ const Members = () => {
     });
   };
 
+  // Enter 키로 검색 요청 핸들러
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <Box>
-      {/* 검색 영역 */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
         <TextField
           label="닉네임"
           value={searchParams.nickname}
           onChange={(e) => setSearchParams({ ...searchParams, nickname: e.target.value })}
+          onKeyPress={handleKeyPress}
           sx={{ width: '150px' }}
         />
         <TextField
           label="이메일"
           value={searchParams.email}
           onChange={(e) => setSearchParams({ ...searchParams, email: e.target.value })}
+          onKeyPress={handleKeyPress}
           sx={{ width: '200px' }}
         />
         <TextField
@@ -196,7 +195,6 @@ const Members = () => {
         <Button variant="outlined" onClick={handleReset} sx={{ width: '100px' }} disabled={loading}>초기화</Button>
       </Box>
 
-      {/* 선택된 검색 옵션 표시 */}
       {Object.keys(selectedOptions).length > 0 && (
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle1">선택된 검색 옵션:</Typography>
@@ -212,64 +210,65 @@ const Members = () => {
         </Box>
       )}
 
-      {/* 데이터가 없을 때 메시지 표시 */}
       {members.length === 0 ? (
         <Typography variant="body1">검색 결과가 없습니다.</Typography>
       ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>닉네임</TableCell>
-              <TableCell>이메일</TableCell>
-              <TableCell>가입일</TableCell>
-              <TableCell>타입</TableCell>
-              <TableCell>카테고리</TableCell>
-              <TableCell>스케줄 수</TableCell>
-              <TableCell>리뷰 수</TableCell>
-              <TableCell>댓글 수</TableCell>
-              <TableCell>예약 수</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {members.map((member) => (
-              <TableRow key={member.member_id} hover>
-                <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.member_id}</TableCell>
-                <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.nickname}</TableCell>
-                <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.email}</TableCell>
-                <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{new Date(member.create_date).toLocaleDateString('ko-KR')}</TableCell>
-                <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer' }}>{member.type}</TableCell>
-                <TableCell>{member.categories ? member.categories.join(', ') : 'N/A'}</TableCell>
-                <TableCell
-                  onClick={() => handleCellClick('/schedules', member.member_id, member.nickname)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {member.schedules_count}
-                </TableCell>
-                <TableCell 
-                  onClick={() => handleCellClick('/reviews', member.member_id, member.nickname)} 
-                  style={{ cursor: 'pointer' }}
-                >
-                  {member.reviews_count}
-                </TableCell>
-                <TableCell onClick={() => handleCellClick('/comments', member.member_id, member.nickname)} style={{ cursor: 'pointer' }}>{member.comments_count}</TableCell>
-                <TableCell onClick={() => handleCellClick('/reservations', member.member_id, member.nickname)} style={{ cursor: 'pointer' }}>{member.reservations_count}</TableCell>
+        <Paper elevation={3}>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>ID</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>닉네임</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>이메일</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>가입일</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>타입</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>카테고리</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>스케줄 수</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>리뷰 수</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>댓글 수</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#f5f5f5' }}>예약 수</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {members.map((member) => (
+                <TableRow key={member.member_id} hover>
+                  <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.member_id}</TableCell>
+                  <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.nickname}</TableCell>
+                  <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.email}</TableCell>
+                  <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{new Date(member.create_date).toLocaleDateString('ko-KR')}</TableCell>
+                  <TableCell onClick={() => navigate(`/members/${member.member_id}`)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.type}</TableCell>
+                  <TableCell style={{ backgroundColor: '#ffffff' }}>{member.categories ? member.categories.join(', ') : 'N/A'}</TableCell>
+                  <TableCell
+                    onClick={() => handleCellClick('/schedules', member.member_id, member.nickname)}
+                    style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}
+                  >
+                    {member.schedules_count}
+                  </TableCell>
+                  <TableCell
+                    onClick={() => handleCellClick('/reviews', member.member_id, member.nickname)}
+                    style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}
+                  >
+                    {member.reviews_count}
+                  </TableCell>
+                  <TableCell onClick={() => handleCellClick('/comments', member.member_id, member.nickname)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.comments_count}</TableCell>
+                  <TableCell onClick={() => handleCellClick('/reservations', member.member_id, member.nickname)} style={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>{member.reservations_count}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
       )}
 
       <Pagination
         count={maxPages}
-        page={currentPage || 1} // NaN 방지를 위해 기본값 설정
+        page={currentPage || 1}
         onChange={handlePageChange}
         variant="outlined"
         shape="rounded"
         showFirstButton
         showLastButton
-        siblingCount={3} // 중앙에 표시될 페이지 수
-        boundaryCount={2} // 양쪽 끝에 표시될 페이지 수
+        siblingCount={3}
+        boundaryCount={2}
         sx={{ mt: 2 }}
       />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleCloseSnackbar}>

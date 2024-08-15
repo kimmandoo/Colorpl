@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends,HTTPException
 from sqlalchemy.orm import Session
-from app.crud import reservation as crud_reservation
-from app.schemas.reservation import ReservationActivity, ReservationDetail, ReservationUpdate, ReservationSearch
-from app.database import get_db
+from crud import reservation as crud_reservation
+from schemas.reservation import ReservationActivity, ReservationDetail, ReservationUpdate, ReservationSearch
+from database import get_db
 from typing import List
 
 router = APIRouter()
@@ -26,5 +26,5 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
     return reservation
 
 @router.post("/reservations/search", response_model=List[ReservationActivity])
-def search_reservations(search: ReservationSearch, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    return crud_reservation.search_reservations(db, search, skip=skip, limit=limit)
+def search_reservations(search: ReservationSearch, db: Session = Depends(get_db)):
+    return crud_reservation.search_reservations(db, search)

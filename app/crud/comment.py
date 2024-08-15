@@ -2,10 +2,10 @@ from datetime import timedelta
 from typing import List
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models import Comment, Member, Review
+from database import get_db
+from models import Comment, Member, Review
 from sqlalchemy import func
-from app.schemas.comment import CommentActivity, CommentDetail, CommentSearch, CommentUpdate
+from schemas.comment import CommentActivity, CommentDetail, CommentSearch, CommentUpdate
 
 def get_comments_activity(db: Session, skip: int = 0, limit: int = 10) -> List[CommentActivity]:
     comments = db.query(
@@ -83,7 +83,7 @@ def update_comment(comment_id: int, comment_update: CommentUpdate, db: Session =
     )
 
 # 댓글 검색
-def search_comments(db: Session, search: CommentSearch, skip: int = 0, limit: int = 10):    
+def search_comments(db: Session, search: CommentSearch):    
     query = db.query(
         Comment.comment_id,
         Comment.review_id,
@@ -138,7 +138,7 @@ def search_comments(db: Session, search: CommentSearch, skip: int = 0, limit: in
         else:
             query = query.filter(~Comment.content.like('%규정 위반 댓글입니다%'))
 
-    comments = query.offset(skip).limit(limit).all()
+    comments = query.offset(search.skip).limit(search.limit).all()
 
     comment_list = []
     for comment in comments:

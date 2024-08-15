@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import PriceBySeatClass
-from app.schemas.price import PriceBySeatClassCreate
+from models import PriceBySeatClass
+from schemas.price import PriceBySeatClassCreate
 
 def create_price_by_seat_class(db: Session, price_data: PriceBySeatClassCreate):
     # price_data가 단일 항목인지, 리스트인지 확인하고 각각 처리

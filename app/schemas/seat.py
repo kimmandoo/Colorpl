@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from app.utils.enum import SeatGrade
+from utils.enum import SeatGrade
 
 class SeatCreate(BaseModel):
     seat_col: int

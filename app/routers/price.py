@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.price import PriceBySeatClassCreate, PriceBySeatClassResponse
-from app.crud.price import create_price_by_seat_class, get_price_by_seat_class
-from app.database import get_db
+from schemas.price import PriceBySeatClassCreate, PriceBySeatClassResponse
+from crud.price import create_price_by_seat_class, get_price_by_seat_class
+from database import get_db
 
 router = APIRouter()
 

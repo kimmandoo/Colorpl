@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
-from app.utils.enum import SeatGrade
+from utils.enum import SeatGrade
 
 class PriceBySeatClassCreate(BaseModel):
     show_detail_id: int

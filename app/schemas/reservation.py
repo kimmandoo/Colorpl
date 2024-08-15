@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
-from app.utils.enum import Category
+from utils.enum import Category
 
 class ReservationActivity(BaseModel):
     reserve_id: int
@@ -46,4 +46,6 @@ class ReservationSearch(BaseModel):
     email: Optional[str] = None
     reserve_id: Optional[int] = None
     show_detail_category: Optional[Category] = None
-    is_refunded: Optional[bool] = None  
+    is_refunded: Optional[bool] = None
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10

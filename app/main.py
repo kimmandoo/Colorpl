@@ -4,21 +4,21 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from app.auth.utils import create_super_admin
+from auth.utils import create_super_admin
 from utils.config import security_settings
-from app.database import Base, engine
-from app.auth.routes import router as router_auth
-from app.routers.member import router as router_member
-from app.routers.schedule import router as router_schedule
-from app.routers.review import router as router_review
-from app.routers.comment import router as router_comment
-from app.routers.reservation import router as router_reservation
-from app.utils.image import router as router_image
-from app.routers.theater_hall import router as router_theater_hall
-from app.routers.show_detail import router as router_show_detail
-from app.routers.price import router as router_price
-from app.routers.show_schedule import router as router_show_schedule
-from app.routers.seat import router as router_seat
+from database import Base, engine
+from auth.routes import router as router_auth
+from routers.member import router as router_member
+from routers.schedule import router as router_schedule
+from routers.review import router as router_review
+from routers.comment import router as router_comment
+from routers.reservation import router as router_reservation
+from utils.image import router as router_image
+from routers.theater_hall import router as router_theater_hall
+from routers.show_detail import router as router_show_detail
+from routers.price import router as router_price
+from routers.show_schedule import router as router_show_schedule
+from routers.seat import router as router_seat
 
 app = FastAPI()
 

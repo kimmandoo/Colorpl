@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
-from app.models import Seat
-from app.schemas.seat import SeatCreate
+from models import Seat
+from schemas.seat import SeatCreate
 
 def create_seat(db: Session, seat: SeatCreate):
     db_seat = Seat(
