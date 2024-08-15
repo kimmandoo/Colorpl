@@ -214,8 +214,6 @@ class ReservationFragment :
 
     /** 지역 선택 리스트 Dialog */
     private fun showLocationPickerDialog() {
-        Toast.makeText(binding.root.context, "날짜 클릭", Toast.LENGTH_SHORT).show()
-
         // 지역 이름 리스트를 추출
         val locationList = Area.AREA_PAIR_LIST.map { it.first }.toTypedArray()
 

@@ -20,7 +20,6 @@ class LocationPickerDialog(
         builder.setTitle("지역 선택")
         builder.setItems(locationList) { dialog, which ->
             val selectedCity = locationList[which]
-            Toast.makeText(builder.context, "Selected: $selectedCity | which: $which", Toast.LENGTH_SHORT).show()
             onLocationSelected(selectedCity)
             dialog.dismiss()
         }
