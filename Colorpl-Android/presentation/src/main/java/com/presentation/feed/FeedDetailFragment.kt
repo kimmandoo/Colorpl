@@ -74,6 +74,7 @@ class FeedDetailFragment :
             launch {
                 feedViewModel.reviewDeleteResponse.collectLatest { reviewId ->
                     if (reviewId > 0) {
+                        feedViewModel.getFeed()
                         dismiss()
                     }
                 }
