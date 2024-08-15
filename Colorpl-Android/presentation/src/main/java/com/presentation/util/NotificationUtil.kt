@@ -37,7 +37,7 @@ fun sendNotification(
     val channelId = "colorpl"
 
     val notificationBuilder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.ic_colorpl_logo)
+        .setSmallIcon(R.drawable.ic_notification_logo)
         .setContentTitle(context.getString(R.string.notification_colorpl_title))
         .setStyle(
             NotificationCompat.BigTextStyle()
