@@ -11,13 +11,12 @@ const TheaterHallPage = () => {
   useEffect(() => {
     const fetchTheater = async () => {
       try {
+        console.log('Theater ID from useParams:', theaterId); // Theater ID 확인용 콘솔 로그
+        
         if (!theaterId) {
           throw new Error('Theater ID is missing');
         }
-
-        console.log('Fetching theater data for ID:', theaterId); // 디버깅을 위한 로그
         
-        // 극장 정보와 연결된 홀 정보를 모두 가져옵니다.
         const response = await api.get(`/vm/theaters/${theaterId}`);
         setTheater(response.data);
       } catch (error) {

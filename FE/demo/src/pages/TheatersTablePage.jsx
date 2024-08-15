@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Pagination, TableContainer, Paper, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // 추가
+import { Link } from 'react-router-dom';
 import api from '../api';
 
 const TheatersTablePage = () => {
@@ -11,8 +11,6 @@ const TheatersTablePage = () => {
   const [totalTheaters, setTotalTheaters] = useState(0);
   const [isSearchMode, setIsSearchMode] = useState(false);
   const maxPages = 100;
-
-  const navigate = useNavigate(); // 추가
 
   const cleanSearchParams = (params) => {
     const cleanedParams = { ...params };
@@ -66,10 +64,6 @@ const TheatersTablePage = () => {
     setCurrentPage(value);
   };
 
-  const handleRowClick = (theaterId) => {
-    navigate(`/theaters/${theaterId}`);
-  };
-
   return (
     <Box>
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
@@ -99,13 +93,13 @@ const TheatersTablePage = () => {
             </TableHead>
             <TableBody>
               {theaters.map((theater) => (
-                <TableRow
-                  key={theater.theater_id}
-                  onClick={() => handleRowClick(theater.theater_id)} // 클릭 핸들러 추가
-                  sx={{ cursor: 'pointer' }} // 클릭 커서를 포인터로 변경
-                >
+                <TableRow key={theater.theater_id} sx={{ cursor: 'pointer' }}>
                   <TableCell>{theater.theater_api_id}</TableCell>
-                  <TableCell>{theater.theater_name}</TableCell>
+                  <TableCell>
+                    {/* <Link to={`/theaters/${theater.theater_id}`} style={{ textDecoration: 'none', color: 'inherit' }}> */}
+                      {theater.theater_name}
+                    {/* </Link> */}
+                  </TableCell>
                   <TableCell>{theater.theater_address}</TableCell>
                   <TableCell>{theater.halls.length}</TableCell>
                 </TableRow>

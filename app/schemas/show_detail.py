@@ -34,7 +34,17 @@ class ShowDetailResponse(BaseModel):
         use_enum_values = True
 
 class ShowDetailSearch(BaseModel):
-    show_detail_name: str
+    show_detail_api_id: Optional[str] = None
+    show_detail_name: Optional[str] = None
+    show_detail_area: Optional[Region] = None
+    show_detail_state: Optional[ShowState] = None
+    show_detail_category: Optional[Category] = None
+    skip: Optional[int] = 0
+    limit: Optional[int] = 10
+
+    class Config:
+        use_enum_values = True
+        populate_by_name = True
 
 
 

@@ -37,6 +37,15 @@ const Reviews = () => {
     return cleanedParams;
   };
 
+  const transformReviewData = (data) => {
+    // BIT(1) 값을 boolean으로 변환
+    return data.map(review => ({
+      ...review,
+      is_spoiler: Boolean(review.is_spoiler), // BIT(1) 값을 boolean으로 변환
+      is_active: Boolean(review.is_active) // 다른 BIT(1) 값들도 여기에 추가 가능
+    }));
+  };
+
   const loadActivityData = useCallback(async () => {
     const skip = (currentPage - 1) * reviewsPerPage;
     try {
@@ -47,8 +56,9 @@ const Reviews = () => {
         },
       });
 
-      setReviews(response.data);
-      if (response.data.length === 0 && currentPage > 1) {
+      const transformedData = transformReviewData(response.data); // 데이터를 변환하여 저장
+      setReviews(transformedData);
+      if (transformedData.length === 0 && currentPage > 1) {
         setOpen(true);
       }
     } catch (error) {
@@ -66,8 +76,9 @@ const Reviews = () => {
       });
 
       if (Array.isArray(response.data)) {
-        setReviews(response.data);
-        if (response.data.length === 0) {
+        const transformedData = transformReviewData(response.data); // 데이터를 변환하여 저장
+        setReviews(transformedData);
+        if (transformedData.length === 0) {
           setOpen(true);
         }
       } else {

@@ -8,11 +8,13 @@ import SchedulePage from './ShowSchedulePage';
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(0);
-  const [selectedHallId, setSelectedHallId] = useState(null);
-  const [showDetail, setShowDetail] = useState(null);
-  const [priceDetails, setPriceDetails] = useState([]);
-  const [seatLayout, setSeatLayout] = useState([]);
-  const [schedule, setSchedule] = useState(null);
+  const [formData, setFormData] = useState({
+    selectedHallId: null,
+    showDetail: null,
+    priceDetails: [],
+    seatLayout: [],
+    schedule: null,
+  });
 
   const steps = ['극장 선택', '공연 정보', '가격 설정', '좌석 배치', '스케줄 설정', '요약'];
 
@@ -25,31 +27,64 @@ const MultiStepForm = () => {
   };
 
   const handleTheaterSelect = (hallId) => {
-    setSelectedHallId(hallId);
+    console.log('Selected Hall ID:', hallId); // Debugging: 확인을 위한 콘솔 로그
+    setFormData((prev) => ({ ...prev, selectedHallId: hallId }));
     handleNextStep();
+  };
+
+  const handleSubmit = () => {
+    console.log('Data to submit:', formData);
+    // 여기서 API 호출을 수행할 수 있습니다.
   };
 
   const handleReset = () => {
     setStep(0);
-    setSelectedHallId(null);
-    setShowDetail(null);
-    setPriceDetails([]);
-    setSeatLayout([]);
-    setSchedule(null);
+    setFormData({
+      selectedHallId: null,
+      showDetail: null,
+      priceDetails: [],
+      seatLayout: [],
+      schedule: null,
+    });
   };
 
   const renderStep = () => {
     switch (step) {
       case 0:
-        return <TheaterSearchPage onHallSelect={handleTheaterSelect} />;
+        return <TheaterSearchPage onHallSelect={(hallId) => { handleTheaterSelect(hallId); }} />;
       case 1:
-        return <ShowDetailPage selectedHallId={selectedHallId} onShowDetailSubmit={(detail) => { setShowDetail(detail); handleNextStep(); }} />;
+        return <ShowDetailPage
+          selectedHallId={formData.selectedHallId}
+          onShowDetailSubmit={(detail) => {
+            setFormData((prev) => ({ ...prev, showDetail: detail }));
+            handleNextStep();
+          }}
+        />;
       case 2:
-        return <PriceBySeatClassPage showDetail={showDetail} onPricesSubmit={(prices) => { setPriceDetails(prices); handleNextStep(); }} />;
+        return <PriceBySeatClassPage
+          showDetail={formData.showDetail}
+          onPricesSubmit={(prices) => {
+            setFormData((prev) => ({ ...prev, priceDetails: prices }));
+            handleNextStep();
+          }}
+        />;
       case 3:
-        return <SeatLayoutPage showDetail={showDetail} onSeatLayoutSubmit={(layout) => { setSeatLayout(layout); handleNextStep(); }} />;
+        return <SeatLayoutPage
+          showDetail={formData.showDetail}
+          onSeatLayoutSubmit={(layout) => {
+            setFormData((prev) => ({ ...prev, seatLayout: layout }));
+            handleNextStep();
+          }}
+        />;
       case 4:
-        return <SchedulePage showDetail={showDetail} onScheduleSubmit={(scheduleData) => { setSchedule(scheduleData); handleNextStep(); }} />;
+        return <SchedulePage
+          showDetail={formData.showDetail}
+          onScheduleSubmit={(scheduleData) => {
+            setFormData((prev) => ({ ...prev, schedule: scheduleData }));
+            handleNextStep();
+          }}
+          hallId={formData.selectedHallId} // hallId 전달
+        />;
       case 5:
         return (
           <Box textAlign="center">
@@ -62,54 +97,47 @@ const MultiStepForm = () => {
                   <TextField
                     fullWidth
                     label="선택된 홀 ID"
-                    value={selectedHallId || ''}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    value={formData.selectedHallId || ''}
+                    InputProps={{ readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="공연 이름"
-                    value={showDetail?.show_detail_name || ''}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    value={formData.showDetail?.show_detail_name || ''}
+                    InputProps={{ readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="가격 정보"
-                    value={priceDetails.map(price => `${price.price_by_seat_class_seat_class}: ${price.price_by_seat_class_price}`).join(', ')}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    value={(formData.priceDetails ?? []).map(price => `${price.price_by_seat_class_seat_class}: ${price.price_by_seat_class_price}`).join(', ')}
+                    InputProps={{ readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="좌석 배치"
-                    value={seatLayout.map(layout => `Row: ${layout.row}, Col: ${layout.col}, Class: ${layout.class}`).join(', ')}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    value={(formData.seatLayout ?? []).map(layout => `Row: ${layout.row}, Col: ${layout.col}, Class: ${layout.class}`).join(', ')}
+                    InputProps={{ readOnly: true }}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="스케줄"
-                    value={schedule?.map(s => `${s.show_schedule_date_time}`).join(', ') || ''}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    value={(formData.schedule ?? []).map(s => `${s.show_schedule_date_time}`).join(', ') || ''}
+                    InputProps={{ readOnly: true }}
                   />
                 </Grid>
               </Grid>
             </form>
+            {/* <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
+              제출하기
+            </Button> */}
             <Button variant="contained" color="primary" onClick={handleReset} sx={{ mt: 2 }}>
               다시 등록하기
             </Button>

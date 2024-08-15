@@ -208,7 +208,7 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </ListItemIcon>
               <ListItemText primary="공연 등록" />
             </ListItem>
-            <ListItem button onClick={handleItemClick}>
+            <ListItem button component={Link} to="/showdetails" onClick={handleItemClick}>
               <ListItemIcon>
                 <MovieIcon />
               </ListItemIcon>

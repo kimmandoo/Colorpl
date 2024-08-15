@@ -16,17 +16,18 @@ const SchedulePage = ({ showDetail, onScheduleSubmit, hallId }) => {
   const [existingSchedules, setExistingSchedules] = useState([]);
 
   useEffect(() => {
-    // 홀에 등록된 기존 스케줄 가져오기
-    const fetchSchedules = async () => {
-      try {
-        const response = await api.get(`/vm/schedules/hall/${hallId}`);
-        setExistingSchedules(response.data);
-      } catch (error) {
-        console.error('Error fetching schedules:', error);
-      }
-    };
-
-    fetchSchedules();
+    console.log('Received hallId:', hallId); // Debugging: 확인을 위한 콘솔 로그
+    if (hallId) {
+      const fetchSchedules = async () => {
+        try {
+          const response = await api.get(`/vm/schedules/hall/${hallId}`);
+          setExistingSchedules(response.data);
+        } catch (error) {
+          console.error('Error fetching schedules:', error);
+        }
+      };
+      fetchSchedules();
+    }
   }, [hallId]);
 
   const handleAddSchedule = () => {
@@ -49,7 +50,6 @@ const SchedulePage = ({ showDetail, onScheduleSubmit, hallId }) => {
   };
 
   const checkForConflict = (date, time) => {
-    // 선택된 날짜와 시간이 기존 스케줄과 겹치는지 확인
     const selectedDateTime = new Date(date);
     selectedDateTime.setHours(time.getHours());
     selectedDateTime.setMinutes(time.getMinutes());
@@ -102,44 +102,50 @@ const SchedulePage = ({ showDetail, onScheduleSubmit, hallId }) => {
         <Typography variant="h4" gutterBottom>
           스케줄 설정
         </Typography>
-        {schedules.map((schedule, index) => (
-          <Box key={index} mb={2} width="100%" maxWidth="600px">
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <DatePicker
-                  label="날짜 선택"
-                  value={schedule.date}
-                  onChange={(newDate) => handleScheduleChange(index, 'date', newDate)}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TimePicker
-                  label="시간 선택"
-                  value={schedule.time}
-                  onChange={(newTime) => handleScheduleChange(index, 'time', newTime)}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="런타임 (예: 2시간 5분)"
-                  value={schedule.runtime}
-                  onChange={(e) => handleScheduleChange(index, 'runtime', e.target.value)}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
-        <Box display="flex" justifyContent="center" gap={2} mt={2}>
-          <Button variant="contained" onClick={handleAddSchedule}>
-            스케줄 추가
-          </Button>
-          <Button variant="outlined" onClick={handleSubmit}>
-            모든 스케줄 제출
-          </Button>
-        </Box>
+        {hallId ? (
+          <>
+            {schedules.map((schedule, index) => (
+              <Box key={index} mb={2} width="100%" maxWidth="600px">
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <DatePicker
+                      label="날짜 선택"
+                      value={schedule.date}
+                      onChange={(newDate) => handleScheduleChange(index, 'date', newDate)}
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TimePicker
+                      label="시간 선택"
+                      value={schedule.time}
+                      onChange={(newTime) => handleScheduleChange(index, 'time', newTime)}
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="런타임 (예: 2시간 5분)"
+                      value={schedule.runtime}
+                      onChange={(e) => handleScheduleChange(index, 'runtime', e.target.value)}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            ))}
+            <Box display="flex" justifyContent="center" gap={2} mt={2}>
+              <Button variant="contained" onClick={handleAddSchedule}>
+                스케줄 추가
+              </Button>
+              <Button variant="outlined" onClick={handleSubmit}>
+                모든 스케줄 제출
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <Typography variant="h6">홀 ID가 제공되지 않았습니다. 이전 단계로 돌아가 홀을 선택해주세요.</Typography>
+        )}
       </Box>
     </LocalizationProvider>
   );

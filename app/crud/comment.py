@@ -54,13 +54,14 @@ def get_comment_by_id(db: Session, comment_id: int) -> CommentDetail:
     )
 
 # 댓글 업데이트
-def update_comment(comment_id: int, comment_update: CommentUpdate, db: Session = Depends(get_db)) -> CommentDetail:
+def update_comment(db: Session, comment_id: int, comment_update: CommentUpdate) -> CommentDetail:
     comment = db.query(Comment).filter(Comment.comment_id == comment_id).first()
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
 
     update_data = comment_update.dict(exclude_unset=True)
     for key, value in update_data.items():
+        print(f"Updating {key} to {value}")
         setattr(comment, key, value)
 
     db.commit()

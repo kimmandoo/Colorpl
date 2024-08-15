@@ -19,6 +19,12 @@ def get_all_theaters(skip: int = 0, limit: int = 10, db: Session = Depends(get_d
     theaters = crud_theater_hall.get_all_theaters(db, skip=skip, limit=limit)
     return theaters
 
+@router.get("/theaters/{theater_id}", response_model=TheaterResponse)
+def get_theater(theater_id: int, db: Session = Depends(get_db)):
+    theater = crud_theater_hall.get_theater(db, theater_id)
+    if not theater:
+        raise HTTPException(status_code=404, detail="Theater not found")
+    return theater
 
 @router.put("/theaters/{theater_id}", response_model=TheaterResponse)
 def update_theater(theater_id: int, theater_update: TheaterUpdate, db: Session = Depends(get_db)):
@@ -35,12 +41,6 @@ def delete_theater(theater_id: int, db: Session = Depends(get_db)):
     crud_theater_hall.delete_theater(db, theater_id)
     return {"message": "Theater deleted successfully"}
 
-@router.get("/theaters/{theater_id}", response_model=TheaterResponse)
-def get_theater(theater_id: int, db: Session = Depends(get_db)):
-    theater = crud_theater_hall.get_theater(db, theater_id)
-    if not theater:
-        raise HTTPException(status_code=404, detail="Theater not found")
-    return theater
 
 @router.get("/theaters/{theater_id}/halls", response_model=List[HallResponse])
 def get_halls_by_theater_route(theater_id: int, db: Session = Depends(get_db)):

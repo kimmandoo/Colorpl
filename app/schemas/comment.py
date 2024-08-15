@@ -17,8 +17,11 @@ class CommentActivity(BaseModel):
 class CommentBase(BaseModel):
     content: Optional[str] = None
 
-class CommentUpdate(CommentBase):
-    pass
+class CommentUpdate(BaseModel):
+    content: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 class CommentDetail(CommentBase):
     comment_id: int
