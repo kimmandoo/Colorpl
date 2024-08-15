@@ -5,16 +5,21 @@
     <data>
 
         <import type="android.view.View" />
-        <import type="java.util.List"/>
+
+        <import type="java.util.List" />
+
         <variable
             name="price"
             type="String" />
+
         <variable
             name="type"
             type="com.presentation.util.PaymentResult" />
+
         <variable
             name="seat"
             type="List&lt;com.domain.model.Seat&gt;" />
+
         <variable
             name="payReceipt"
             type="com.domain.model.PayReceipt" />
@@ -48,14 +53,15 @@
 
             <TextView
                 android:id="@+id/tv_purchase"
+                style="@style/suite_medium_16"
+                changeDateText="@{payReceipt.purchasedAt}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tv_status"
-                app:layout_constraintStart_toStartOf="@+id/tv_status"
-                style="@style/suite_medium_16"
                 android:layout_marginTop="8dp"
-                changeDateText="@{payReceipt.purchasedAt}"
-                android:textColor="@color/timber_wolf"/>
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintStart_toStartOf="@+id/tv_status"
+                app:layout_constraintTop_toBottomOf="@+id/tv_status" />
+
             <ImageView
                 android:id="@+id/iv_menu"
                 android:layout_width="wrap_content"
@@ -82,12 +88,14 @@
 
             <ImageView
                 android:id="@+id/iv_image"
-                android:layout_width="120dp"
+                android:layout_width="150dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/cl_content_value"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_marginStart="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cl_content_value"
+                app:layout_constraintEnd_toStartOf="@+id/cl_content_value"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/cl_content_value" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_content_value"
@@ -95,10 +103,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="19dp"
                 android:layout_marginStart="19dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_image"
-                app:layout_constraintTop_toTopOf="@+id/iv_image"
-                app:layout_constraintVertical_chainStyle="spread_inside">
+                app:layout_constraintTop_toTopOf="parent"
+                >
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -106,22 +115,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_payment_title"
+                    android:includeFontPadding="false"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_title_value" />
 
                 <TextView
                     android:id="@+id/tv_title_value"
                     style="@style/suite_medium_12"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
                     android:layout_marginStart="26dp"
+                    android:layout_marginEnd="5dp"
                     android:text="@{payReceipt.orderName}"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tv_title"
-                    app:layout_constraintTop_toTopOf="@+id/tv_title" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_price"
@@ -130,20 +141,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_payment_price"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_sit"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_price_value" />
 
                 <TextView
                     android:id="@+id/tv_price_value"
                     style="@style/suite_medium_12"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
                     android:text="@{price}"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tv_title_value"
-                    app:layout_constraintTop_toTopOf="@+id/tv_price" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_value" />
 
                 <TextView
                     android:id="@+id/tv_sit"
@@ -152,20 +164,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_payment_sit"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_location"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_price" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_sit_value" />
 
                 <TextView
                     android:id="@+id/tv_sit_value"
                     style="@style/suite_extra_bold_14"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:setFormattedGrade="@{seat}"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tv_price_value"
-                    app:layout_constraintTop_toTopOf="@+id/tv_sit" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_price_value"
+                    app:setFormattedGrade="@{seat}" />
 
 
                 <TextView
@@ -173,22 +186,22 @@
                     style="@style/suite_regular_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_page_payment_price"
+                    android:text="@string/my_page_payment_location"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_time"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_sit" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_location_value" />
 
                 <TextView
                     android:id="@+id/tv_location_value"
                     style="@style/suite_medium_12"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="@{payReceipt.theaterName}"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tv_title_value"
-                    app:layout_constraintTop_toTopOf="@+id/tv_location" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sit_value" />
 
                 <TextView
                     android:id="@+id/tv_time"
@@ -197,20 +210,24 @@
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_payment_date"
                     android:textColor="@color/timber_wolf"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_time_value" />
 
                 <TextView
                     android:id="@+id/tv_time_value"
                     style="@style/suite_medium_12"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tv_title_value"
-                    app:layout_constraintTop_toTopOf="@+id/tv_time" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_location_value" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
