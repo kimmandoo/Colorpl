@@ -116,7 +116,7 @@ class Schedule(Base):
     schedule_name = Column(String(255))
     schedule_seat = Column(String(255))
     member_id = Column(Integer, ForeignKey('member.member_id'))
-    reserve_detail_id = Column(BigInteger, ForeignKey('reservation_detail.reserve_detail_id'))
+    reserve_id = Column(BigInteger, ForeignKey('reservation.reserve_id'))
 
     member = relationship("Member", back_populates="schedules")
     reviews = relationship("Review", back_populates="schedule")

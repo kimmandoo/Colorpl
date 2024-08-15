@@ -12,7 +12,7 @@ import DashboardHome from './DashboardHome';
 const Dashboard = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const location = useLocation();
-
+  
   useEffect(() => {
     // 로그인 후 대시보드로 이동할 때 사이드바를 확장된 상태로 설정
     setSidebarExpanded(true);

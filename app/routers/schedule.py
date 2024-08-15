@@ -45,7 +45,7 @@ def update_schedule_endpoint(
     db.refresh(schedule)
 
     review_written = has_review(db, schedule.schedule_id)
-    is_reserved = schedule.reserve_detail_id is not None
+    is_reserved = schedule.reserve_id is not None
 
     return {
         "schedule_id": schedule.schedule_id,

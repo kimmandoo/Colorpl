@@ -4,20 +4,21 @@ import { CssBaseline, Box, ThemeProvider } from '@mui/material';
 import Sidebar from './components/Sidebar';
 import TopRightIcons from './components/TopRightIcons';
 import Members from './pages/Members';
-import MemberDetail from './pages/MemberDetail'; // 멤버 상세 페이지
+import MemberDetail from './pages/MemberDetail';
 import Reviews from './pages/Reviews';
 import ReviewDetail from './pages/ReviewDetail';
 import Comments from './pages/Comments';
 import CommentDetail from './pages/CommentDetail';
-import Schedules from './pages/Schedules'; // Schedules 페이지 추가
-import ScheduleDetail from './pages/ScheduleDetail'; // Schedule 상세 페이지
-import ScheduleImageUpdate from './pages/ScheduleImageUpdate'; // Schedule 이미지 업데이트 페이지
+import Schedules from './pages/Schedules';
+import ScheduleDetail from './pages/ScheduleDetail';
+import ScheduleImageUpdate from './pages/ScheduleImageUpdate';
 import Reservations from './pages/Reservations';
 import ReservationDetail from './pages/ReservationDetail';
 import LoginScreen from './pages/LoginScreen';
 import PrivateRoute from './components/PrivateRoute';
 import DashboardHome from './pages/DashboardHome';
 import AdminManagement from './pages/AdminManagement';
+import AdminDetail from './pages/AdminDetail';
 import MultiStepForm from './pages/MultiStepForm';
 import TheatersTablePage from './pages/TheatersTablePage';
 import api from './api';
@@ -48,6 +49,7 @@ const App = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+          console.log("user_data", response.data);
           setUser(response.data);
         } catch (error) {
           console.error('Failed to fetch user', error);
@@ -61,9 +63,17 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Router>
         <CssBaseline />
-        {user && (
+        {user === null ? (
+          <div></div> // 로딩 중 메시지 또는 스피너 표시
+        ) : (
           <>
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} expandedMenu={expandedMenu} setExpandedMenu={setExpandedMenu} />
+            <Sidebar
+              user={user}
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              expandedMenu={expandedMenu}
+              setExpandedMenu={setExpandedMenu}
+            />
             <TopRightIcons
               user={user}
               onProfileClick={() => console.log("Profile clicked")}
@@ -86,23 +96,24 @@ const App = () => {
           <Routes>
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/" element={user ? <Navigate replace to="/dashboard" /> : <Navigate replace to="/login" />} />
-            <Route path="/dashboard" element={<PrivateRoute><DashboardHome /></PrivateRoute>} />
-            <Route path="/members" element={<PrivateRoute><Members /></PrivateRoute>} />
-            <Route path="/members/:member_id" element={<PrivateRoute><MemberDetail /></PrivateRoute>} />
-            <Route path="/reviews" element={<PrivateRoute><Reviews /></PrivateRoute>} />
-            <Route path="/reviews/:review_id" element={<PrivateRoute><ReviewDetail /></PrivateRoute>} />
-            <Route path="/comments" element={<PrivateRoute><Comments /></PrivateRoute>} />
-            <Route path="/comments/:comment_id" element={<PrivateRoute><CommentDetail /></PrivateRoute>} />
-            <Route path="/schedules" element={<PrivateRoute><Schedules /></PrivateRoute>} /> 
-            <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail /></PrivateRoute>} /> 
-            <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate /></PrivateRoute>} /> 
-            <Route path="/reservations" element={<PrivateRoute><Reservations /></PrivateRoute>} />
-            <Route path="/reservations/:reservation_id" element={<PrivateRoute><ReservationDetail /></PrivateRoute>} />
-            <Route path="/register-show" element={<PrivateRoute><MultiStepForm /></PrivateRoute>} />
-            <Route path="/theaters" element={<PrivateRoute><TheatersTablePage /></PrivateRoute>} />
+            <Route path="/dashboard" element={<PrivateRoute><DashboardHome user={user} /></PrivateRoute>} />
+            <Route path="/members" element={<PrivateRoute><Members user={user} /></PrivateRoute>} />
+            <Route path="/members/:member_id" element={<PrivateRoute><MemberDetail user={user} /></PrivateRoute>} />
+            <Route path="/reviews" element={<PrivateRoute><Reviews user={user} /></PrivateRoute>} />
+            <Route path="/reviews/:review_id" element={<PrivateRoute><ReviewDetail user={user} /></PrivateRoute>} />
+            <Route path="/comments" element={<PrivateRoute><Comments user={user} /></PrivateRoute>} />
+            <Route path="/comments/:comment_id" element={<PrivateRoute><CommentDetail user={user} /></PrivateRoute>} />
+            <Route path="/schedules" element={<PrivateRoute><Schedules user={user} /></PrivateRoute>} /> 
+            <Route path="/schedules/:schedule_id" element={<PrivateRoute><ScheduleDetail user={user} /></PrivateRoute>} /> 
+            <Route path="/schedules/:schedule_id/image" element={<PrivateRoute><ScheduleImageUpdate user={user} /></PrivateRoute>} /> 
+            <Route path="/reservations" element={<PrivateRoute><Reservations user={user} /></PrivateRoute>} />
+            <Route path="/reservations/:reservation_id" element={<PrivateRoute><ReservationDetail user={user} /></PrivateRoute>} />
+            <Route path="/register-show" element={<PrivateRoute><MultiStepForm user={user} /></PrivateRoute>} />
+            <Route path="/theaters" element={<PrivateRoute><TheatersTablePage user={user} /></PrivateRoute>} />
             {user && user.role === 1 && (
-              <Route path="/admin-management" element={<PrivateRoute><AdminManagement /></PrivateRoute>} />
+              <Route path="/admin-management" element={<PrivateRoute><AdminManagement user={user} /></PrivateRoute>} />
             )}
+            <Route path="/admin-detail/:adminId" element={<PrivateRoute><AdminDetail user={user} /></PrivateRoute>} />
           </Routes>
         </Box>
       </Router>

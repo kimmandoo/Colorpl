@@ -51,7 +51,7 @@ class ScheduleCreate(BaseModel):
     schedule_longitude: Optional[float] = None
     schedule_location: Optional[str] = None
     member_id: int
-    reserve_detail_id: Optional[int] = None
+    reserve_id: Optional[int] = None
 
 class ScheduleUpdateDTO(BaseModel):
     member_id: Optional[int]

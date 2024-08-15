@@ -57,6 +57,7 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </Typography>
             </ListItemIcon>
           </ListItem>
+          
           <ListItem
             button
             onMouseEnter={() => handleMouseEnter('userManagement')}
@@ -80,6 +81,7 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </Typography>
             </ListItemIcon>
           </ListItem>
+          
           <ListItem
             button
             onMouseEnter={() => handleMouseEnter('salesManagement')}
@@ -103,6 +105,34 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </Typography>
             </ListItemIcon>
           </ListItem>
+          
+          {user?.role === 1 && (  // role이 1인 경우에만 관리자 관리 항목을 표시
+            <ListItem
+              button
+              component={Link}
+              to="/admin-management"
+              onClick={handleItemClick}
+              sx={{
+                justifyContent: 'center',
+                flexDirection: 'column',
+                '&:hover': {
+                  bgcolor: 'rgba(0, 0, 0, 0.08)',
+                  '& .MuiListItemIcon-root': {
+                    bgcolor: 'rgba(0, 0, 0, 0.08)',
+                    borderRadius: '50%',
+                  },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <ManageAccountsIcon />
+                <Typography variant="caption" display="block">
+                  관리자 <br /> 관리
+                </Typography>
+              </ListItemIcon>
+            </ListItem>
+          )}
+          
         </List>
       </Box>
 
@@ -152,14 +182,6 @@ const Sidebar = ({ user, expandedMenu, setExpandedMenu }) => {
               </ListItemIcon>
               <ListItemText primary="예매 관리" />
             </ListItem>
-            {user?.role === 1 && (
-              <ListItem button component={Link} to="/admin-management" onClick={handleItemClick}>
-                <ListItemIcon>
-                  <ManageAccountsIcon />
-                </ListItemIcon>
-                <ListItemText primary="관리자 관리" />
-              </ListItem>
-            )}
           </List>
         </Box>
       )}

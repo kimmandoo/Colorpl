@@ -44,3 +44,14 @@ class Administrator(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ApproveDeleteRequest(BaseModel):
+    admin_id: str
+    token: str
+
+class ApproveAdministratorRequest(BaseModel):
+    admin_id: str
+
+class RoleUpdateRequest(BaseModel):
+    admin_id: str
+    role: int

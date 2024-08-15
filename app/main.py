@@ -1,4 +1,7 @@
+import os
 from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from app.auth.utils import create_super_admin
@@ -22,7 +25,7 @@ app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=security_settings.SECRET_KEY)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,6 +53,15 @@ def on_startup():
 async def read_root(request: Request):
     return {"message": "Hello"}
 
+# static_directory = r"C:\Users\SSAFY\Desktop\mobile\S11P12D109\FE\demo\build"
+
+# app.mount("/static", StaticFiles(directory=os.path.join(static_directory, "static")), name="static")
+
+
+# @app.get("/{path_name:path}")
+# async def serve_react_app():
+#     return FileResponse(os.path.join(static_directory, "index.html"))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=80)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

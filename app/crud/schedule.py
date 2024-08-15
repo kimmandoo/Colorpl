@@ -14,7 +14,7 @@ def get_schedules(db: Session, search: Optional[ScheduleSearch] = None, skip: in
         Member.member_id,
         Member.nickname,
         Member.email,
-        Schedule.reserve_detail_id
+        Schedule.reserve_id
     ).join(Member, Schedule.member_id == Member.member_id)
 
     if search:
@@ -39,7 +39,7 @@ def get_schedules(db: Session, search: Optional[ScheduleSearch] = None, skip: in
                 schedule_category=schedule.schedule_category,
                 review_written=bool(review),
                 review_id=review_id,
-                is_reserved=schedule.reserve_detail_id is not None
+                is_reserved=schedule.reserve_id is not None
             )
         )
 
@@ -79,7 +79,7 @@ def get_schedule_by_id(db: Session, schedule_id: int) -> Optional[ScheduleDetail
             schedule_location=query.schedule_location,
             schedule_seat=query.schedule_seat,
             schedule_image=query.schedule_image,
-            is_reserved=query.reserve_detail_id is not None,
+            is_reserved=query.reserve_id is not None,
         )
     return None
 
@@ -107,7 +107,7 @@ def get_schedule_detail(db: Session, schedule_id: int) -> Optional[ScheduleDetai
         schedule_image=schedule.schedule_image,
         review_written=has_review(db, schedule.schedule_id),
         review_id=review_id,
-        is_reserved=schedule.reserve_detail_id is not None
+        is_reserved=schedule.reserve_id is not None
     )
 
 def apply_schedule_search_filters(query, search: ScheduleSearch):
@@ -136,9 +136,9 @@ def apply_schedule_search_filters(query, search: ScheduleSearch):
     
     if "is_reserved" in search_data:
         if search_data["is_reserved"]:
-            query = query.filter(Schedule.reserve_detail_id.isnot(None))
+            query = query.filter(Schedule.reserve_id.isnot(None))
         else:
-            query = query.filter(Schedule.reserve_detail_id.is_(None))
+            query = query.filter(Schedule.reserve_id.is_(None))
     
     return query
 
@@ -166,7 +166,7 @@ def update_schedule(db: Session, schedule_id: int, schedule_update: ScheduleUpda
 def create_schedule(db: Session, schedule: ScheduleCreate, filename: str) -> ScheduleDetail:
     db_schedule = Schedule(
         **schedule.dict(),
-        dtype='RESERVATION' if schedule.reserve_detail_id else 'CUSTOM',
+        dtype='RESERVATION' if schedule.reserve_id else 'CUSTOM',
         schedule_image=filename
     )
     db.add(db_schedule)

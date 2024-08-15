@@ -6,7 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
-const TopRightIcons = ({ user, onProfileClick, onNotificationsClick, onSettingsClick, onLogout }) => {
+const TopRightIcons = ({ user, onNotificationsClick, onSettingsClick, onLogout }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
@@ -21,6 +21,11 @@ const TopRightIcons = ({ user, onProfileClick, onNotificationsClick, onSettingsC
   const handleAdminManagement = () => {
     handleMenuClose();
     navigate('/admin-management');
+  };
+
+  const handleProfileClick = () => {
+    handleMenuClose();
+    navigate(`/admin-detail/${user?.id}`);
   };
 
   return (
@@ -47,7 +52,7 @@ const TopRightIcons = ({ user, onProfileClick, onNotificationsClick, onSettingsC
           <Typography variant="body2">{user?.email}</Typography>
         </Box>
         <Divider />
-        <MenuItem onClick={onProfileClick}>프로필 수정</MenuItem>
+        <MenuItem onClick={handleProfileClick}>프로필 수정</MenuItem>
         {user?.role === 1 && <MenuItem onClick={handleAdminManagement}>관리자 관리</MenuItem>}
       </Menu>
     </Box>

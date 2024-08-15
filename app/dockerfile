@@ -1,0 +1,13 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
+
+WORKDIR /app
+
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+COPY . /app/
+
+ENV PYTHONPATH="/app"
+
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py", "app.main:app"]

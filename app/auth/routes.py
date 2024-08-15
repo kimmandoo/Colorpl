@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
+
+from auth.dependencies import admin_only
 from .database import get_db
 from .models import Administrator, AdministratorStatus, AdminProfile
-from .schemas import AdministratorCreate, Token
+from .schemas import AdministratorCreate, ApproveAdministratorRequest, ApproveDeleteRequest, RoleUpdateRequest, Token
 from .schemas import Administrator as AdministratorSchema
 from .utils import (
     create_access_token,
@@ -102,12 +104,13 @@ async def request_delete_account(token: str = Depends(oauth2_scheme), db: Sessio
 
     return {"message": "Account deletion requested"}
 
-@router.post("/admin/approve_delete/{admin_id}")
-async def approve_delete_account(admin_id: str, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    role = get_current_user_role(token, db)
+@router.post("/admin/approve_delete")
+async def approve_delete_account(request: ApproveDeleteRequest, db: Session = Depends(get_db)):
+    role = get_current_user_role(request.token, db)
     if role != 1:
         raise HTTPException(status_code=403, detail="Super Admin access required")
-    status = db.query(AdministratorStatus).filter(AdministratorStatus.admin_id == admin_id).first()
+    
+    status = db.query(AdministratorStatus).filter(AdministratorStatus.admin_id == request.admin_id).first()
     if status is None:
         raise HTTPException(status_code=404, detail="Administrator status not found")
     if status.deleted:
@@ -117,7 +120,8 @@ async def approve_delete_account(admin_id: str, token: str = Depends(oauth2_sche
     status.deleted_at = datetime.utcnow()
     db.commit()
 
-    return {"message": f"Administrator {admin_id} has been deleted"}    
+    return {"message": f"Administrator {request.admin_id} has been deleted"}
+    
 
 # /profile
 
@@ -217,9 +221,9 @@ async def list_administrators(db: Session = Depends(get_db)):
     admins = db.query(Administrator).all()
     return admins
 
-@router.put("/admin/administrators/{admin_id}/approve", dependencies=[Depends(super_admin_required)])
-async def approve_administrator(admin_id: str, db: Session = Depends(get_db)):
-    admin = db.query(Administrator).filter(Administrator.id == admin_id).first()
+@router.put("/admin/administrators/approve")
+async def approve_administrator(request: ApproveAdministratorRequest, db: Session = Depends(get_db)):
+    admin = db.query(Administrator).filter(Administrator.id == request.admin_id).first()
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     
@@ -229,19 +233,19 @@ async def approve_administrator(admin_id: str, db: Session = Depends(get_db)):
 
     return {"message": f"Administrator {admin.username} approved"}
 
-@router.put("/admin/administrators/{admin_id}/role", dependencies=[Depends(super_admin_required)])
-async def approve_administrator(admin_id: str, role: int, db: Session = Depends(get_db)):
-    admin = db.query(Administrator).filter(Administrator.id == admin_id).first()
+@router.put("/admin/administrators/role")
+async def update_administrator_role(request: RoleUpdateRequest, db: Session = Depends(get_db)):
+    admin = db.query(Administrator).filter(Administrator.id == request.admin_id).first()
     if admin is None:
         raise HTTPException(status_code=404, detail="Administrator not found")
     
-    admin.role = role
+    admin.role = request.role
     db.commit()
 
-    return {"message": f"Administrator {admin.username} approved assigned role {role}"}
+    return {"message": f"Administrator {admin.username} assigned role {request.role}"}
 
 
-@router.get("/admin/administrators/{admin_id}", dependencies=[Depends(super_admin_required)])
+@router.get("/admin/administrators/{admin_id}", dependencies=[Depends(admin_only)])
 async def get_administrator(admin_id: str, db: Session = Depends(get_db)):
     admin = db.query(Administrator).filter(Administrator.id == admin_id).first()
     if admin is None:
