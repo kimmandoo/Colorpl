@@ -41,7 +41,7 @@ public class FileSystemStorageService implements StorageService {
         Path path = Paths.get(fileDir, filename);
         File file = path.toFile();
 
-        while (!file.delete()) {
+        if (!file.delete()) {
             log.info("파일 삭제에 실패했습니다. {}", filename);
         }
     }
