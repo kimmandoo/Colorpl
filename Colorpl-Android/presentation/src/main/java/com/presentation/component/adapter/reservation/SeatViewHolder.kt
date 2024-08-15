@@ -15,7 +15,7 @@ class SeatViewHolder(
 
             if(seat.isReserved){
                 clItem.setBackgroundResource (
-                    R.color.eerie_black
+                    R.drawable.rectangle_calendar_temp_8
                 )
             }else{
                 clItem.setBackgroundResource(
@@ -24,7 +24,7 @@ class SeatViewHolder(
                         "S" -> R.drawable.selector_timber_wolf_to_green_for_seat
                         "A" -> R.drawable.selector_timber_wolf_to_blue_for_seat
                         "B" -> R.drawable.selector_timber_wolf_to_purple_for_seat
-                        else -> R.color.eerie_black
+                        else -> R.drawable.rectangle_calendar_temp_8
                     }
                 )
             }
