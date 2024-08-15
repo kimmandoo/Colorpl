@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +31,7 @@ import com.presentation.util.roadTimeChange
 import com.presentation.util.setEmotion
 import com.presentation.util.setImageCenterCrop
 import com.presentation.util.setup
+import com.presentation.viewmodel.ScheduleViewModel
 import com.presentation.viewmodel.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -41,6 +43,7 @@ import kotlinx.coroutines.launch
 class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fragment_ticket) {
 
     private val ticketViewModel: TicketViewModel by viewModels()
+    private val scheduleViewModel: ScheduleViewModel by activityViewModels()
     override var mapView: MapView? = null
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
@@ -145,7 +148,9 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
         ticketViewModel.ticketDeleteResponse.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 if (it) {
+                    scheduleViewModel.refreshTickets()
                     Toast.makeText(requireContext(), "티켓이 삭제되었습니다", Toast.LENGTH_SHORT).show()
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
                     dismissLoading()
                     findNavController().popBackStack()
                 }
@@ -160,6 +165,8 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
     private fun initClickEvent() {
         binding.apply {
             includeTop.ivBack.setOnClickListener {
+                scheduleViewModel.refreshTickets()
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
                 findNavController().popBackStack()
             }
             includeMyReview.clFeedDetail.setOnClickListener {
@@ -225,6 +232,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 ?.getStateFlow<Boolean>("closed", false)
                 ?.collectLatest { closed ->
                     if (closed) {
+                        scheduleViewModel.refreshTickets()
                         ticketViewModel.getSingleTicket(args.ticket)
                         findNavController().currentBackStackEntry?.savedStateHandle?.set(
                             "closed",

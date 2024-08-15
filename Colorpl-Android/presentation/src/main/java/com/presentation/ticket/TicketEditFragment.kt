@@ -229,6 +229,7 @@ class TicketEditFragment :
                         initWorkerManager()
                     }
                     Toast.makeText(requireContext(), "티켓을 수정했습니다", Toast.LENGTH_SHORT).show()
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
                     navigatePopBackStack()
                 } else {
                     Toast.makeText(requireContext(), "티켓 수정에 실패했습니다", Toast.LENGTH_SHORT).show()

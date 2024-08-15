@@ -72,14 +72,16 @@ class ScheduleViewModel @Inject constructor(
                             CalendarMode.MONTH -> {
                                 _calendarItems.value =
                                     matchTicketsToCalendar(_calendarItems.value, result.data)
+                                _tickets.emit(result.data)
                             }
 
                             CalendarMode.WEEK -> {
+                                forceUpdate()
                                 val updatedWeekItems =
                                     getOnlySelectedWeek(_selectedDate.value, _calendarItems.value)
                                 _calendarItems.value =
                                     matchTicketsToCalendar(updatedWeekItems, result.data)
-                                filterTicketsForSelectedWeek()
+                                _tickets.emit(result.data)
                             }
                         }
 
@@ -115,7 +117,6 @@ class ScheduleViewModel @Inject constructor(
                 val ticketDate = ticket.dateTime.toLocalDate()
                 ticketDate in startOfWeek..endOfWeek
             } ?: emptyList()
-
             _filteredTickets.emit(filteredList)
         }
     }
@@ -231,6 +232,21 @@ class ScheduleViewModel @Inject constructor(
             _calendarItems.value = matchTicketsToCalendar(updateList, _tickets.last())
             _filteredTickets.emit(_tickets.replayCache.firstOrNull() ?: emptyList())
         }
+    }
+
+    fun forceUpdate(){
+        val fullMonthCalendar = createCalendar(_selectedDate.value)
+        val weekCalendar = getOnlySelectedWeek(_selectedDate.value, fullMonthCalendar)
+
+        _calendarItems.value = weekCalendar.map { item ->
+            item.copy(
+                isSelected = item.date == _selectedDate.value,
+                isWeek = true
+            )
+        }
+        _clickedDate.value = _calendarItems.value.find { it.isSelected }
+        updateDisplayDate()
+        filterTicketsForSelectedWeek()
     }
 
     fun updateCalendarWeekMode(

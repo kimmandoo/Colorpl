@@ -14,8 +14,10 @@ class CalendarViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(data: CalendarItem) {
         binding.apply {
-            Glide.with(binding.root.context).load(data.imgUrl).centerCrop().into(ivTicket)
+            invalidateAll()
             ivTicket.visibility = if (data.isWeek) {
+                Glide.with(binding.root.context).load(data.imgUrl).skipMemoryCache(true).centerCrop()
+                    .into(ivTicket)
                 View.VISIBLE
             } else {
                 View.GONE

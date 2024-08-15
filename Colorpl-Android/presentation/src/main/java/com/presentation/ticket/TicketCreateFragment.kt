@@ -208,6 +208,7 @@ class TicketCreateFragment :
                             initWorkerManager()
                         }
                         dismissLoading()
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
                         Toast.makeText(requireContext(), "티켓을 생성했습니다", Toast.LENGTH_SHORT).show()
                         navigatePopBackStack()
                     }

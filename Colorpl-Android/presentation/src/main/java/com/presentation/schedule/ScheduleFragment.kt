@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 private const val TAG = "ScheduleFragment"
@@ -36,7 +38,7 @@ private const val TAG = "ScheduleFragment"
 @AndroidEntryPoint
 class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment_schedule) {
 
-    private val viewModel: ScheduleViewModel by viewModels()
+    private val viewModel: ScheduleViewModel by activityViewModels()
     private var handlePullState = 0
     private val swipeThreshold: Int = 100
     private var startX: Float = 0f
@@ -81,21 +83,23 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.calendarItems.collectLatest { calendarList ->
+                    Timber.tag("refresh check").d("$calendarList")
                     calendarAdapter.submitList(
                         viewModel.matchTicketsToCalendar(
                             calendarList,
                             viewModel.tickets.last()
-                        )
+                        ).toMutableList()
                     )
                 }
             }
             launch {
                 viewModel.tickets.collectLatest { tickets ->
+                    Timber.tag("refresh check").d("$tickets")
                     calendarAdapter.submitList(
                         viewModel.matchTicketsToCalendar(
                             viewModel.calendarItems.value,
                             tickets
-                        )
+                        ).toMutableList()
                     )
                 }
             }
@@ -208,7 +212,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>(R.layout.fragment
                 handlePullState++
             }
         }
-        if (handlePullState > 5) {
+        if (handlePullState > 8) {
             viewModel.restoreCalendarMode()
             binding.rvTicket.visibility = View.INVISIBLE
             handlePullState = 0
