@@ -19,6 +19,7 @@ import com.presentation.viewmodel.MyPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
@@ -88,6 +89,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 when (it) {
                     is MyPageEventState.UseTicket -> {
                         binding.apply {
+                            Timber.d("데이터 확인 ${it.data.size}")
                             ticketTitle = true
                             ticketCount = it.data.size.toString()
                             ticketAdapter.submitList(it.data)
@@ -119,7 +121,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     private fun initClickEvent() {
 
         binding.apply {
-            ivTicketStar.postDelayed(300L) {
+            ivTicketStar.postDelayed(500L) {
                 binding.ivTicketStar.performClick()
             }
             ivTicketStar.setOnClickListener {
