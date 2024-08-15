@@ -154,6 +154,9 @@ class ReservationPaymentFragment :
 
                     is PaymentEventState.PayFail -> {
                         Toast.makeText(requireActivity(), "결제 실패", Toast.LENGTH_SHORT).show()
+                        reservationViewModel.setViewPagerStatus(ViewPagerManager.NEXT)
+                        ViewPagerManager.movePrevious()
+                        Timber.tag("payFail").e("이동")
                     }
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)

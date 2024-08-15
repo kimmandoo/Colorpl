@@ -32,7 +32,7 @@ fun RecyclerView.overScrollControl(logic: (Int, Float) -> Unit) {
 
 fun String.formatIsoToKorean(): String {
     val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
-    val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일\na h시", Locale.KOREAN)
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일\na h시 mm분", Locale.KOREAN)
 
     val dateTime = LocalDateTime.parse(this, isoFormatter)
     return dateTime.format(outputFormatter)
