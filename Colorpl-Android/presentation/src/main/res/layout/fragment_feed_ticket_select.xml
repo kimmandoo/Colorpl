@@ -38,14 +38,14 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_feed_ticket_select"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="100dp"
             android:clipChildren="false"
             android:clipToPadding="false"
-            app:layout_constraintDimensionRatio="74:73"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintBottom_toTopOf="@id/tv_select"/>
 
 
         <TextView
@@ -53,15 +53,16 @@
             style="@style/suite_extra_bold_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:background="@drawable/rectangle_imperial_red_8"
+            android:layout_marginBottom="30dp"
             android:paddingHorizontal="30dp"
             android:paddingVertical="10dp"
             android:text="@string/feed_ticket_select_complete"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vp_feed_ticket_select" />
+             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
