@@ -22,6 +22,10 @@ datastore = "1.1.1"
 lifecycle-runtime-ktx = "2.8.3"
 lifecycle-extensions = "2.2.0"
 pagingRuntimeKtx = "3.3.1"
+tasksText = "0.20230731"
+tensorflowLite = "2.9.0"
+tensorflowLiteMetadata = "0.4.2"
+tensorflowLiteSupport = "0.4.2"
 workRuntimeKtx = "2.9.0"
 
 # BootPay
@@ -99,6 +103,10 @@ naver-maps = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverm
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 
 # Logging
+tasks-text = { module = "com.google.mediapipe:tasks-text", version.ref = "tasksText" }
+tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
+tensorflow-lite-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflowLiteMetadata" }
+tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 # Permission

@@ -18,14 +18,18 @@ import com.bumptech.glide.Glide
 import com.colorpl.presentation.R
 import com.colorpl.presentation.databinding.FragmentReviewBinding
 import com.domain.model.Review
+import com.google.mediapipe.tasks.text.textclassifier.TextClassifierResult
 import com.presentation.base.BaseDialogFragment
-import com.presentation.component.dialog.LoadingDialog
 import com.presentation.util.ImageProcessingUtil
+import com.presentation.util.SpoilerWeightClassifier
 import com.presentation.util.getPhotoGallery
 import com.presentation.viewmodel.ReviewViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -36,6 +40,45 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
     private lateinit var photoUri: Uri
     private val viewModel: ReviewViewModel by viewModels()
     private val args: ReviewFragmentArgs by navArgs()
+    private lateinit var classifier: SpoilerWeightClassifier
+    private var spoilerWeight = 0
+
+
+    private val listener = object :
+        SpoilerWeightClassifier.TextResultsListener {
+        override fun onResult(
+            results: TextClassifierResult,
+            inferenceTime: Long
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.setSpoilerWeight(
+                    results.classificationResult()
+                        .classifications().first()
+                        .categories().first().index()
+                )
+                Timber.tag("tensorflow").d(
+                    "${
+                        results.classificationResult()
+                            .classifications().first()
+                            .categories().first().index()
+                    }"
+                )
+            }
+        }
+
+        override fun onError(error: String) {
+            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        classifier = SpoilerWeightClassifier(
+            context = requireContext(),
+            listener = listener
+        )
+    }
+
 
     override fun initView(savedInstanceState: Bundle?) {
         observeViewModel()
@@ -54,6 +97,11 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         binding.ivEnroll.setOnClickListener {
             getPhotoGallery(pickImageLauncher)
         }
+
+        binding.etContent.addTextChangedListener { edit ->
+            classifier.classify(edit.toString())
+        }
+
     }
 
     private fun initEmotion() {
@@ -82,11 +130,12 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             review = Review(
                 args.ticketId,
                 binding.etContent.text.toString(),
-                false,
+                viewModel.spoilerWeight.value,
                 viewModel.selectedEmotion.value + 1
             ),
             image
         )
+
         showLoading()
     }
 
@@ -100,7 +149,10 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
 
             launch {
                 viewModel.reviewResponse.collectLatest { reviewId ->
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set("refresh", true)
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                        "refresh",
+                        true
+                    )
                     dismissLoading()
                     if (reviewId > 0) navigatePopBackStack() else {
                         Toast.makeText(requireContext(), "리뷰 등록에 실패했습니다", Toast.LENGTH_SHORT)
@@ -152,4 +204,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 }

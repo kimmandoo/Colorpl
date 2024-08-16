@@ -109,4 +109,9 @@ dependencies {
     implementation(libs.bootpay)
     // DotsIndicator
     implementation(libs.dotsindicator)
+
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tasks.text)
 }

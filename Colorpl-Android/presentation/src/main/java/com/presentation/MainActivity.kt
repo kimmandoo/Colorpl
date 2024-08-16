@@ -15,6 +15,7 @@ import com.naver.maps.map.CameraPosition
 import com.presentation.base.BaseActivity
 import com.presentation.util.LocationHelper
 import com.presentation.util.Page
+import com.presentation.util.SpoilerWeightClassifier
 import com.presentation.util.checkLocationPermission
 import com.presentation.util.locationPermission
 import com.presentation.util.notificationPermission
