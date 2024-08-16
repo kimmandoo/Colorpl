@@ -1,0 +1,239 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.presentation.util.SeatClass" />
+        <import type="com.presentation.util.Category" />
+
+        <variable
+            name="type"
+            type="com.presentation.util.TopButtonsStatus" />
+        <variable
+            name="viewModel"
+            type="com.presentation.viewmodel.ReservationDetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.reservation.ReservationDetailFragment">
+
+        <include
+            android:id="@+id/include_top_center"
+            layout="@layout/include_top_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:type="@{type}"
+            app:title="@{viewModel.reservationInfo.title}" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/include_top_center"
+            app:layout_constraintBottom_toTopOf="@id/tv_reservation_next"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="40dp"
+                android:background="@color/eerie_black"
+                >
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="600dp"
+                    android:scaleType="centerCrop"
+                    app:loadImageToReservationDetail="@{viewModel.reservationInfo.contentImg}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars" />
+
+                <View
+                    android:id="@+id/v_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/iv_image" />
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_category"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_1" />
+                <TextView
+                    android:id="@+id/tv_category_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category"
+                    tools:text="영화"
+                    />
+
+
+
+                <View
+                    android:id="@+id/v_line_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_category_info" />
+                <TextView
+                    android:id="@+id/tv_cast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_cast"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_3" />
+                <TextView
+                    android:id="@+id/tv_cast_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@{viewModel.reservationInfo.cast}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_cast"
+                    tools:text="하정우, 차태현, 주지훈, 김향기 외"
+                    />
+
+                <View
+                    android:id="@+id/v_line_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_cast_info" />
+                <TextView
+                    android:id="@+id/tv_runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_runtime"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_4" />
+                <TextView
+                    android:id="@+id/tv_runtime_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@{viewModel.reservationInfo.runtime}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime"
+                    tools:text="2시간 00분"
+                    />
+
+
+
+                <View
+                    android:id="@+id/v_line_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#80D3D3D3"
+                    app:layout_constraintTop_toBottomOf="@id/tv_runtime_info" />
+
+                <TextView
+                    android:id="@+id/tv_price_by_seat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/reservation_detail_price_by_seat"
+                    style="@style/suite_regular_16"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintTop_toBottomOf="@id/v_line_6" />
+
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.R.value}"
+                    app:flag="@{null}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat"
+                    tools:text="R석 : 14,000원"
+                    />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_s"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.S.value}"
+                    app:flag="@{null}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_r"
+                    tools:text="S석 : 14,000원"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.A.value}"
+                    app:flag="@{null}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_s"
+                    tools:text="A석 : 14,000원"
+                    />
+                <TextView
+                    android:id="@+id/tv_price_by_seat_info_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="right"
+                    app:priceBySeatClass="@{viewModel.reservationInfo.priceBySeatClass}"
+                    app:seatClassKey="@{SeatClass.B.value}"
+                    app:flag="@{null}"
+                    style="@style/suite_semibold_16"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_price_by_seat_info_a"
+                    tools:text="B석 : 14,000원"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <TextView
+            android:id="@+id/tv_reservation_next"
+            style="@style/suite_semibold_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/imperial_red"
+            android:gravity="center"
+            android:paddingVertical="13dp"
+            android:text="@string/reservation_detail_next"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

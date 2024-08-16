@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_schedule">
+
+    <!-- Main-->
+
+    <fragment
+        android:id="@+id/fragment_feed"
+        android:name="com.presentation.feed.FeedFragment"
+        android:label="FeedFragment"
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right">
+
+            <argument
+                android:name="reviewId"
+                android:defaultValue="0"
+                app:argType="integer" />
+
+        </action>
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_map"
+        android:name="com.presentation.map.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_ticket"
+            app:destination="@id/fragment_ticket">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_schedule"
+        android:name="com.presentation.schedule.ScheduleFragment"
+        android:label="ScheduleFragment"
+        tools:layout="@layout/fragment_schedule">
+        <action
+            android:id="@+id/action_fragment_schedule_to_fragment_notification"
+            app:destination="@id/fragment_notification" />
+        <action
+            android:id="@+id/action_fragment_schedule_to_nav_ticket_graph"
+            app:destination="@id/nav_ticket_graph">
+            <argument
+                android:name="photoType"
+                app:argType="com.presentation.util.TicketType" />
+        </action>
+        <action
+            android:id="@+id/action_fragment_schedule_to_fragment_ticket"
+            app:destination="@id/fragment_ticket">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+
+    </fragment>
+
+    <!-- Feed -->
+    <dialog
+        android:id="@+id/fragment_feed_detail"
+        android:name="com.presentation.feed.FeedDetailFragment"
+        android:label="FeedDetailFragment"
+        tools:layout="@layout/fragment_feed_detail">
+        <argument
+            android:name="reviewId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_fragment_feed_detail_to_fragment_user_search"
+            app:destination="@id/fragment_user_search">
+            <argument
+                android:name="member"
+                app:nullable="true"
+                app:argType="string" />
+        </action>
+    </dialog>
+
+    <dialog
+        android:id="@+id/fragment_feed_ticket_select"
+        android:name="com.presentation.feed.FeedTicketSelectFragment"
+        tools:layout="@layout/fragment_feed_ticket_select">
+        <action
+            android:id="@+id/action_fragment_feed_ticket_select_to_fragment_review"
+            app:destination="@id/fragment_review"
+            app:popUpTo="@id/fragment_feed_ticket_select"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="ticketId"
+                app:argType="integer" />
+        </action>
+    </dialog>
+
+    <!-- Reservation -->
+    <fragment
+        android:id="@+id/fragment_reservation"
+        android:name="com.presentation.reservation.ReservationFragment"
+        android:label="ReservationFragment"
+        tools:layout="@layout/fragment_reservation">
+        <action
+            android:id="@+id/action_fragment_reservation_to_fragment_reservation_detail"
+            app:destination="@+id/fragment_reservation_detail" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reservation_detail"
+        android:name="com.presentation.reservation.ReservationDetailFragment"
+        tools:layout="@layout/fragment_reservation_detail">
+        <argument
+            android:name="reservationDetail"
+            app:argType="com.domain.model.ReservationInfo" />
+        <action
+            android:id="@+id/action_fragment_reservation_detail_to_fragment_reservation_progress"
+            app:destination="@id/fragment_reservation_progress" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_reservation_progress"
+        android:name="com.presentation.reservation.ReservationProgressFragment"
+        tools:layout="@layout/fragment_reservation_progress">
+        <argument
+            android:name="reservationDetail"
+            app:argType="com.domain.model.ReservationInfo" />
+        <action
+            android:id="@+id/action_fragment_reservation_progress_to_fragment_ticket"
+            app:destination="@id/fragment_ticket"
+            app:exitAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down"
+            app:popUpTo="@id/fragment_reservation">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+
+    </fragment>
+
+
+    <!-- Ticket -->
+    <dialog
+        android:id="@+id/fragment_ticket"
+        android:name="com.presentation.ticket.TicketFragment"
+        android:label="TicketFragment"
+        tools:layout="@layout/fragment_ticket">
+        <action
+            android:id="@+id/action_fragment_ticket_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail">
+            <argument
+                android:name="reviewId"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+        <argument
+            android:name="ticket"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_fragment_ticket_to_nav_ticket_update_graph"
+            app:destination="@id/nav_ticket_update_graph">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_fragment_ticket_to_ticketEditFragment"
+            app:destination="@id/ticketEditFragment">
+            <argument
+                android:name="ticket"
+                app:argType="integer" />
+        </action>
+    </dialog>
+
+
+    <!-- Notification -->
+
+    <fragment
+        android:id="@+id/fragment_notification"
+        android:name="com.presentation.notification.NotificationFragment"
+        tools:layout="@layout/fragment_notification" />
+
+
+    <!-- MyPage-->
+    <fragment
+        android:id="@+id/fragment_my_page"
+        android:name="com.presentation.my_page.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page">
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_profile_update"
+            app:destination="@id/fragment_profile_update"
+            app:enterAnim="@anim/down_to_top"
+            app:popExitAnim="@anim/top_to_down" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_user_search"
+            app:destination="@id/fragment_user_search"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_my_review"
+            app:destination="@id/fragment_my_review"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_notice"
+            app:destination="@id/fragment_notice"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_payment_history"
+            app:destination="@id/fragment_payment_history"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_setting"
+            app:destination="@id/fragment_setting"
+            app:enterAnim="@anim/anim_fade_in_x_right_to_left" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select" />
+        <action
+            android:id="@+id/action_fragment_my_page_to_fragment_ticket"
+            app:destination="@id/fragment_ticket" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_profile_update"
+        android:name="com.presentation.my_page.ProfileUpdateFragment"
+        tools:layout="@layout/fragment_profile_update">
+
+        <argument
+            android:name="member"
+            app:argType="com.domain.model.Member" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/fragment_user_search"
+        android:name="com.presentation.my_page.MemberSearchFragment"
+        tools:layout="@layout/fragment_user_search">
+        <argument
+            android:name="member"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_fragment_user_search_to_fragment_other_my_page"
+            app:destination="@id/fragment_other_my_page" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/fragment_my_review"
+        android:name="com.presentation.my_page.MyReviewFragment"
+        tools:layout="@layout/fragment_my_review">
+
+        <action
+            android:id="@+id/action_fragment_my_review_to_fragment_feed_ticket_select"
+            app:destination="@id/fragment_feed_ticket_select" />
+        <action
+            android:id="@+id/action_fragment_my_review_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_notice"
+        android:name="com.presentation.my_page.NoticeFragment"
+        tools:layout="@layout/fragment_notice" />
+
+    <fragment
+        android:id="@+id/fragment_payment_history"
+        android:name="com.presentation.my_page.PaymentHistoryFragment"
+        tools:layout="@layout/fragment_payment_history" />
+
+    <fragment
+        android:id="@+id/fragment_setting"
+        android:name="com.presentation.my_page.SettingFragment"
+        tools:layout="@layout/fragment_setting" />
+
+    <dialog
+        android:id="@+id/fragment_review"
+        android:name="com.presentation.feed.ReviewFragment"
+        tools:layout="@layout/fragment_review">
+        <argument
+            android:name="ticketId"
+            app:argType="integer" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/fragment_other_my_page"
+        android:name="com.presentation.my_page.OtherMyPageFragment"
+        tools:layout="@layout/fragment_other_my_page">
+
+        <argument
+            android:name="memberInfo"
+            app:argType="com.domain.model.MemberSearch" />
+        <action
+            android:id="@+id/action_fragment_other_my_page_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+
+    </fragment>
+
+    <include app:graph="@navigation/nav_ticket_graph" />
+
+    <include app:graph="@navigation/nav_sign_graph" />
+
+    <include app:graph="@navigation/nav_ticket_update_graph" />
+
+
+</navigation>

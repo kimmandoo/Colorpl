@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_item"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="2dp">
+
+        <TextView
+            android:id="@+id/tv_seat"
+            style="@style/suite_extra_bold_12"
+            android:textSize="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:textColor="@color/selector_eerie_black_to_white"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="A1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

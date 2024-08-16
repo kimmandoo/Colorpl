@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/eerie_black"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_review"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/rectangle_white_10"
+            app:layout_constraintBottom_toTopOf="@id/et_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_enroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_image_add"
+            app:layout_constraintBottom_toBottomOf="@id/iv_review"
+            app:layout_constraintEnd_toEndOf="@id/iv_review"
+            app:layout_constraintStart_toStartOf="@id/iv_review"
+            app:layout_constraintTop_toTopOf="@id/iv_review" />
+
+        <EditText
+            android:id="@+id/et_content"
+            style="@style/suite_bold_18"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/rectangle_timber_wolf_10"
+            android:gravity="start"
+            android:hint="@string/feed_et_hint_review"
+            android:padding="8dp"
+            android:textColor="@color/calendar_temp"
+            android:textColorHint="@color/eerie_black"
+            app:layout_constraintBottom_toTopOf="@+id/ll_emotion"
+            app:layout_constraintTop_toBottomOf="@+id/iv_review"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_emotion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/tv_confirm"
+            app:layout_constraintTop_toBottomOf="@id/et_content">
+
+            <ImageView
+                android:id="@+id/iv_excited"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/selector_ic_excited" />
+
+            <ImageView
+                android:id="@+id/iv_love"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/selector_ic_love" />
+
+            <ImageView
+                android:id="@+id/iv_tired"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/selector_ic_tired" />
+
+            <ImageView
+                android:id="@+id/iv_crying"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/selector_ic_crying" />
+
+            <ImageView
+                android:id="@+id/iv_angry"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/selector_ic_angry" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/selector_rectangle_timber_wolf_5_to_rectangle_imperial_red_5"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/schedule_confirm"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_emotion" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

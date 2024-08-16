@@ -1,0 +1,160 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="payResult"
+            type="com.domain.model.PayResult" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.presentation.reservation.ReservationCompleteFragment">
+
+        <TextView
+            android:id="@+id/tv_reservation_count"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/reservation_complete_value"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/iv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/ic_ticket_circle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reservation_count" />
+
+        <TextView
+            android:id="@+id/tv_complete_notice"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/reservation_complete_notice"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_complete" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_complete_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:background="@color/eerie_black"
+            app:layout_constraintTop_toBottomOf="@+id/tv_complete_notice">
+
+
+            <TextView
+                android:id="@+id/tv_pay_info"
+                style="@style/suite_semibold_20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="26dp"
+                android:text="@string/reservation_pay_info"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_pay_number"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:text="@string/reservation_pay_number"
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintStart_toStartOf="@+id/tv_pay_info"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pay_info" />
+
+            <TextView
+                android:id="@+id/tv_pay_number_value"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:layout_marginEnd="14dp"
+                android:text="@{payResult.receiptId}"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pay_info" />
+
+            <TextView
+                android:id="@+id/tv_pay_date"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/reservation_pay_date"
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintStart_toStartOf="@+id/tv_pay_info"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pay_number" />
+
+            <TextView
+                android:id="@+id/tv_pay_date_value"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                app:changeDateText="@{payResult.purchaseAt}"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_pay_date" />
+
+            <TextView
+                android:id="@+id/tv_pay_money"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="43dp"
+                android:text="@string/reservation_pay_value"
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_pay_info"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pay_date" />
+
+            <TextView
+                android:id="@+id/tv_pay_money_value"
+                style="@style/suite_medium_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                app:price="@{payResult.price}"
+                value="@{`원`}"
+                android:textColor="@color/imperial_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_pay_money" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_complete"
+            style="@style/suite_semibold_20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/imperial_red"
+            android:gravity="center"
+            android:paddingVertical="13dp"
+            android:text="@string/reservation_complete"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_title">알림</string>
+    <string name="notification_delete_all">모두 지우기</string>
+
+    <string name="notification_colorpl_title">컬러플</string>
+    <string name="notification_colorpl_body">바디</string>
+</resources>
