@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="dayText" type="String" />
+    </data>
+    <TextView
+        style="@style/suite_bold_16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@{dayText}"
+        android:textSize="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+</layout>

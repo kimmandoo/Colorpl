@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="night">#FF0B090A</color>
+    <color name="eerie_black">#FF161A1D</color>
+    <color name="eerie_black_fifty">#80161A1D</color>
+    <color name="light_eerie_black">#FF555555</color>
+    <color name="cornell_red">#FFA4161A</color>
+    <color name="imperial_red">#FFE5383B</color>
+    <color name="timber_wolf">#FFD3D3D3</color>
+    <color name="timber_wolf_eighty">#CCD3D3D3</color>
+    <color name="calendar_temp">#FF3b414a</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_fifty">#80FFFFFF</color>
+    <color name="white_twenty">#33FFFFFF</color>
+    <color name="light_gray">#FFAAAAAA</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="black_fifty">#80000000</color>
+    <color name="purple">#9A10B2</color>
+    <color name="green">#18B20A</color>
+    <color name="blue">#386BF6</color>
+
+</resources>

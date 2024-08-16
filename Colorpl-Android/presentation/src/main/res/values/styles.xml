@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomBottomNavTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingExtra">20dp</item>
+    </style>
+
+    <style name="CustomDatePicker" parent="android:Widget.Material.DatePicker">
+        <item name="android:textColor">#FF0000</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_bold</item>
+    </style>
+
+    <style name="CustomDateRangePicker" parent="CustomDatePicker">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_bold</item>
+        <item name="backgroundColor">@color/imperial_red</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/imperial_red</item>
+        <item name="colorControlHighlight">@color/timber_wolf</item>
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:headerBackground">@color/imperial_red</item>
+        <item name="android:calendarTextColor">@color/white</item>
+        <item name="android:dayOfWeekBackground">@color/imperial_red</item>
+        <item name="android:yearListSelectorColor">@color/timber_wolf</item>
+        <item name="android:datePickerStyle">@style/CustomDatePickerStyle</item>
+    </style>
+
+    <style name="CustomDatePickerStyle" parent="android:Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/imperial_red</item>
+        <item name="android:calendarTextColor">@color/white</item>
+        <item name="android:dayOfWeekBackground">@color/imperial_red</item>
+        <item name="android:yearListSelectorColor">@color/timber_wolf</item>
+    </style>
+
+    <style name="CustomAlertDialogListItem" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/timber_wolf</item>
+        <item name="android:background">@color/eerie_black</item>
+        <item name="fontFamily">@font/suite_bold</item>
+    </style>
+
+    <style name="FABPopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_fab_open</item>
+        <item name="android:windowExitAnimation">@anim/anim_fab_close</item>
+    </style>
+
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="queryBackground">@null</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/suite_medium</item>
+    </style>
+
+    <style name="CustomSearchViewReservation" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColor">@color/night</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="queryBackground">@null</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:editTextColor">@color/night</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/suite_semibold</item>
+    </style>
+
+
+
+    <style name="FullScreenDialogSlideLtoR" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/night</item>
+        <item name="android:windowAnimationStyle">@style/SlideRightAnimation</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:navigationBarColor">@color/night</item>
+    </style>
+
+    <style name="FullScreenDialogNoAnim" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/SlideInOutNoAnimation</item>
+        <item name="android:windowBackground">@color/night</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:navigationBarColor">@color/night</item>
+    </style>
+
+    <style name="SlideRightAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/anim_slide_out_right</item>
+    </style>
+
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeErrorColor">@color/imperial_red</item>
+        <item name="errorEnabled">true</item>
+        <item name="colorError">@color/imperial_red</item>
+        <item name="android:radius">5dp</item>
+        <item name="backgroundColor">@color/timber_wolf</item>
+        <item name="errorIconDrawable">@android:color/transparent</item>
+        <item name="boxBackgroundColor">@color/timber_wolf</item>
+    </style>
+
+    <style name="SlideInOutNoAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_slide_in_right</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <style name="SeparateCornerRadius" parent="">
+        <item name="cornerSizeBottomRight">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+    </style>
+</resources>

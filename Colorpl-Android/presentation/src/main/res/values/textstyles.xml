@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Suite Extra Bold -->
+    <style name="suite_extra_bold_36">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="suite_extra_bold_25">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="suite_extra_bold_20">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="suite_extra_bold_18">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="suite_extra_bold_16">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_extra_bold_15">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="suite_extra_bold_14">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="suite_extra_bold_12">
+        <item name="fontFamily">@font/suite_extra_bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Suite Bold -->
+    <style name="suite_bold_20">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="suite_bold_18">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="suite_bold_17">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+    <style name="suite_bold_16">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_bold_14">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="suite_bold_12">
+        <item name="fontFamily">@font/suite_bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <!-- Suite Semibold-->
+    <style name="suite_semibold_20">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="suite_semibold_16">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_semibold_15">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="suite_semibold_14">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="suite_semibold_12">
+        <item name="fontFamily">@font/suite_semibold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <!-- Suite Regular-->
+    <style name="suite_regular_15">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <!-- Suite Medium-->
+    <style name="suite_medium_20">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="suite_medium_18">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="suite_medium_16">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_medium_14">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="suite_medium_13">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+    <style name="suite_medium_12">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="suite_medium_10">
+        <item name="fontFamily">@font/suite_medium</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <!-- Suite Regular -->
+    <style name="suite_regular_20">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="suite_regular_18">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="suite_regular_16">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="suite_regular_14">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="suite_regular_12">
+        <item name="fontFamily">@font/suite_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+</resources>
