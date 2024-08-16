@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, TextField, Avatar, Snackbar, Alert } from '@mui/material';
+import { Box, Typography, Button, TextField, Snackbar, Alert, FormControlLabel, Checkbox } from '@mui/material';
 import api from '../api';
 
 const CommentDetail = () => {
@@ -13,7 +13,7 @@ const CommentDetail = () => {
     create_date: '',
     update_date: '',
     review: '',
-    is_inappropriate: false
+    is_inappropriate: false,
   });
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -32,7 +32,7 @@ const CommentDetail = () => {
           create_date: response.data.create_date,
           update_date: response.data.update_date,
           review: response.data.review,
-          is_inappropriate: response.data.is_inappropriate
+          is_inappropriate: response.data.is_inappropriate,
         });
       } catch (error) {
         console.error('Failed to fetch comment details:', error);
@@ -47,7 +47,14 @@ const CommentDetail = () => {
 
   const handleUpdate = async () => {
     try {
-      await api.patch(`/cs/comments/${comment_id}`, formData);
+      const updatedContent = formData.is_inappropriate 
+        ? '규정 위반 댓글입니다.' 
+        : formData.content;
+
+      await api.patch(`/cs/comments/${comment_id}`, {
+        ...formData,
+        content: updatedContent
+      });
       setSnackbarMessage('Comment updated successfully');
       setSnackbarSeverity('success');
       setOpenSnackbar(true);
@@ -78,6 +85,7 @@ const CommentDetail = () => {
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
             sx={{ mb: 2 }}
+            disabled={formData.is_inappropriate} // 규정 위반이면 수정 불가
           />
           <TextField
             label="닉네임"
@@ -115,12 +123,15 @@ const CommentDetail = () => {
             sx={{ mb: 2 }}
             disabled
           />
-          <TextField
-            label="규정 위반 여부"
-            fullWidth
-            value={formData.is_inappropriate ? '위반' : '정상'}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.is_inappropriate}
+                onChange={(e) => setFormData({ ...formData, is_inappropriate: e.target.checked })}
+              />
+            }
+            label="규정 위반 댓글로 설정"
             sx={{ mb: 2 }}
-            disabled
           />
         </Box>
       </Box>

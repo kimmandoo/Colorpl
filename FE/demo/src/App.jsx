@@ -21,8 +21,6 @@ import AdminManagement from './pages/AdminManagement';
 import AdminDetail from './pages/AdminDetail';
 import MultiStepForm from './pages/MultiStepForm';
 import TheatersTablePage from './pages/TheatersTablePage';
-// import TheaterHallPage from './pages/TheaterHallPage';
-import ShowDetailPage from './pages/ShowDetailPage';
 import api from './api';
 import theme from './theme';
 import ShowDetailsTable from './pages/ShowDetailTable';
@@ -118,7 +116,6 @@ const App = () => {
             <Route path="/reservations" element={<PrivateRoute><Reservations user={user} /></PrivateRoute>} />
             <Route path="/reservations/:reservation_id" element={<PrivateRoute><ReservationDetail user={user} /></PrivateRoute>} />
             <Route path="/theaters" element={<PrivateRoute><TheatersTablePage user={user} /></PrivateRoute>} />
-            {/* <Route path="/theaters/:theater_id" element={<PrivateRoute><TheaterHallPage user={user} /></PrivateRoute>} /> */}
             <Route path="/register-show" element={<PrivateRoute><MultiStepForm user={user} /></PrivateRoute>} />
             <Route path="/showdetails" element={<PrivateRoute><ShowDetailsTable user={user} /></PrivateRoute>} />
             {user && user.role === 1 && (

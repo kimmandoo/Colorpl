@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Integer, BigInteger, Enum, DateTime, ForeignKey, Float, Boolean, Text, func
 from sqlalchemy.orm import relationship, Session
 from datetime import datetime
-from app.database import Base
-from app.utils.enum import Category, Region, ShowState, SeatGrade
+from database import Base
+from utils.enum import Category, Region, ShowState, SeatGrade
 
 class BaseEntity:
     create_date = Column(DateTime, default=datetime.utcnow)

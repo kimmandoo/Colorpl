@@ -1,13 +1,11 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
+FROM python:latest
 
-WORKDIR /app
+WORKDIR /
 
-COPY requirements.txt /app/
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+COPY . .
 
-COPY . /app/
+RUN pip install -r requirements.txt
 
-ENV PYTHONPATH="/app"
+EXPOSE 8000
 
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py", "app.main:app"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5001"]

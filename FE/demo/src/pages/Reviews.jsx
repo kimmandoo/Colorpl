@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography, Chip, Modal } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Pagination, Snackbar, Alert, Typography, Chip, Modal, Checkbox } from '@mui/material';
 import api from '../api';
 
 const Reviews = () => {
@@ -38,11 +38,10 @@ const Reviews = () => {
   };
 
   const transformReviewData = (data) => {
-    // BIT(1) 값을 boolean으로 변환
+    // `tinyint(1)` 값을 boolean으로 변환
     return data.map(review => ({
       ...review,
-      is_spoiler: Boolean(review.is_spoiler), // BIT(1) 값을 boolean으로 변환
-      is_active: Boolean(review.is_active) // 다른 BIT(1) 값들도 여기에 추가 가능
+      is_spoiler: review.is_spoiler === 1 // `tinyint(1)` 값을 boolean으로 변환
     }));
   };
 
@@ -98,7 +97,7 @@ const Reviews = () => {
     const fetchInitialData = async () => {
       const skip = (currentPage - 1) * reviewsPerPage;
       if (location.state && !initialLoadDone) {
-        const { member_id, nickname } = location.state;
+        const { member_id, nickname, updatedReviewId } = location.state;
         const params = {
           member_id,
           nickname,
@@ -108,6 +107,11 @@ const Reviews = () => {
         await loadSearchData(params);
         setInitialLoadDone(true);
         navigate(location.pathname, { replace: true });
+
+        // 리뷰가 수정된 경우, 목록에서 업데이트된 리뷰 반영
+        if (updatedReviewId) {
+          await loadActivityData();
+        }
       } else if (Object.keys(selectedOptions).length > 0) {
         const params = {
           ...selectedOptions,
@@ -121,7 +125,7 @@ const Reviews = () => {
     };
 
     fetchInitialData();
-  }, [currentPage, location.state, loadSearchData, loadActivityData, initialLoadDone]);
+  }, [currentPage, location.state, loadSearchData, loadActivityData, initialLoadDone, navigate]);
 
   const handleSearch = () => {
     setCurrentPage(1);
@@ -199,8 +203,8 @@ const Reviews = () => {
             onChange={(e) => setSearchParams({ ...searchParams, is_spoiler: e.target.value })}
           >
             <MenuItem value="">전체</MenuItem>
-            <MenuItem value="true">스포일러 있음</MenuItem>
-            <MenuItem value="false">스포일러 없음</MenuItem>
+            <MenuItem value={1}>스포일러 있음</MenuItem>
+            <MenuItem value={0}>스포일러 없음</MenuItem>
           </Select>
         </FormControl>
         <FormControl sx={{ width: '150px' }}>
@@ -240,7 +244,7 @@ const Reviews = () => {
               <Chip label={`스케줄 이름: ${selectedOptions.schedule_name}`} />
             )}
             {selectedOptions.is_spoiler !== undefined && (
-              <Chip label={`스포일러 여부: ${selectedOptions.is_spoiler === 'true' ? '있음' : '없음'}`} />
+              <Chip label={`스포일러 여부: ${selectedOptions.is_spoiler === 1 ? '있음' : '없음'}`} />
             )}
             {selectedOptions.schedule_category && (
               <Chip label={`카테고리: ${selectedOptions.schedule_category}`} />
@@ -264,6 +268,7 @@ const Reviews = () => {
               <TableCell>카테고리</TableCell>
               <TableCell>리뷰 감정</TableCell>
               <TableCell>공감 수</TableCell>
+              <TableCell>스포일러 여부</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -278,6 +283,9 @@ const Reviews = () => {
                 <TableCell onClick={() => navigate(`/reviews/${review.review_id}`)} style={{ cursor: 'pointer' }}>{review.schedule_category}</TableCell>
                 <TableCell onClick={() => navigate(`/reviews/${review.review_id}`)} style={{ cursor: 'pointer' }}>{review.review_emotion}</TableCell>
                 <TableCell onClick={() => navigate(`/reviews/${review.review_id}`)} style={{ cursor: 'pointer' }}>{review.empathy_num}</TableCell>
+                <TableCell>
+                  <Checkbox checked={review.is_spoiler} disabled />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

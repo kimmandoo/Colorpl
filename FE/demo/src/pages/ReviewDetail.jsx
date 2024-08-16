@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, Modal, TextField, Avatar } from '@mui/material';
+import { Box, Typography, Button, TextField, Avatar, FormControlLabel, Checkbox } from '@mui/material';
 import api from '../api';
 
 const ReviewDetail = () => {
   const { review_id } = useParams();
   const [review, setReview] = useState(null);
+  const [originalContent, setOriginalContent] = useState(''); // 원래의 리뷰 내용을 저장
   const [formData, setFormData] = useState({
     review_content: '',
     review_emotion: 0,
@@ -15,18 +16,18 @@ const ReviewDetail = () => {
     create_date: '',
     update_date: '',
     nickname: '',
-    email: ''
+    email: '',
+    review_filename: '',
   });
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchReviewDetail = async () => {
       try {
         const response = await api.get(`/cs/reviews/${review_id}`);
         setReview(response.data);
+        setOriginalContent(response.data.review_content); // 원래의 리뷰 내용을 저장
         setFormData({
-          review_filename: response.data.review_filename,
           review_content: response.data.review_content,
           review_emotion: response.data.review_emotion,
           is_spoiler: response.data.is_spoiler,
@@ -35,7 +36,8 @@ const ReviewDetail = () => {
           create_date: response.data.create_date,
           update_date: response.data.update_date,
           nickname: response.data.nickname,
-          email: response.data.email
+          email: response.data.email,
+          review_filename: response.data.review_filename,
         });
       } catch (error) {
         console.error('Failed to fetch review details:', error);
@@ -47,16 +49,24 @@ const ReviewDetail = () => {
 
   const handleUpdate = async () => {
     try {
-      await api.patch(`/cs/reviews/${review_id}`, formData);
-      navigate('/reviews'); // 업데이트 후 리뷰 목록으로 돌아가기
+      await api.patch(`/cs/reviews/${review_id}`, {
+        ...formData,
+        review_content: formData.is_spoiler ? '스포일러 리뷰입니다' : formData.review_content,
+      });
+      navigate('/reviews', { state: { updatedReviewId: review_id } }); // 업데이트 후 리뷰 목록으로 돌아가기
     } catch (error) {
       console.error('리뷰 정보 업데이트에 실패했습니다.', error);
     }
   };
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-  
+  const handleSpoilerChange = (event) => {
+    const isChecked = event.target.checked;
+    setFormData({
+      ...formData,
+      is_spoiler: isChecked,
+      review_content: isChecked ? '스포일러 리뷰입니다' : originalContent, // 원래의 리뷰 내용을 복원하거나 스포일러 메시지로 설정
+    });
+  };
 
   if (!review) return <Typography>로딩 중...</Typography>;
 
@@ -74,6 +84,7 @@ const ReviewDetail = () => {
             value={formData.review_content}
             onChange={(e) => setFormData({ ...formData, review_content: e.target.value })}
             sx={{ mb: 2 }}
+            disabled={formData.is_spoiler} // 스포일러인 경우 내용 수정 불가
           />
           <TextField
             label="감정"
@@ -83,18 +94,20 @@ const ReviewDetail = () => {
             onChange={(e) => setFormData({ ...formData, review_emotion: e.target.value })}
             sx={{ mb: 2 }}
           />
-          <TextField
-            label="스포일러 여부"
-            fullWidth
-            value={formData.is_spoiler ? 'Yes' : 'No'}
-            onChange={(e) => setFormData({ ...formData, is_spoiler: e.target.value === 'Yes' })}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.is_spoiler}
+                onChange={handleSpoilerChange}
+              />
+            }
+            label="스포일러 리뷰입니다"
             sx={{ mb: 2 }}
           />
           <TextField
             label="스케줄 이름"
             fullWidth
             value={formData.schedule_name}
-            onChange={(e) => setFormData({ ...formData, schedule_name: e.target.value })}
             sx={{ mb: 2 }}
             disabled
           />
@@ -102,7 +115,6 @@ const ReviewDetail = () => {
             label="카테고리"
             fullWidth
             value={formData.schedule_category}
-            onChange={(e) => setFormData({ ...formData, schedule_category: e.target.value })}
             sx={{ mb: 2 }}
             disabled
           />
@@ -144,7 +156,6 @@ const ReviewDetail = () => {
 
       <Button variant="contained" onClick={handleUpdate} sx={{ mt: 2, mb: 2 }}>수정 완료</Button>
       <Button variant="outlined" onClick={() => navigate('/reviews')} sx={{ mb: 2 }}>목록으로 돌아가기</Button>
-
     </Box>
   );
 };
