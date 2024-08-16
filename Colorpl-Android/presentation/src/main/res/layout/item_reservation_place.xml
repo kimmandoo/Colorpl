@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="type"
+            type="boolean" />
+
+        <variable
+            name="ReservationPairInfo"
+            type="com.domain.model.ReservationPairInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/eerie_black">
+
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/night"
+            android:visibility="@{type ? View.GONE : View.VISIBLE, default = visible}"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_place"
+            style="@style/suite_bold_18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:text="@{ReservationPairInfo.placeName}"
+            android:textColor="@color/white"
+            android:visibility="@{type ? View.GONE : View.VISIBLE, default = visible}"
+            app:layout_constraintTop_toBottomOf="@id/v_line"
+            tools:text="수원 CGV" />
+
+
+        <TextView
+            android:id="@+id/tv_theater"
+            style="@style/suite_medium_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left"
+            android:text="@{ReservationPairInfo.hallName}"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/tv_place"
+            tools:text="1관 (100석)" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_theater"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="4"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tv_theater" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

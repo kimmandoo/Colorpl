@@ -1,0 +1,85 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="count"
+            type="int" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.my_page.MyReviewFragment">
+
+
+        <include
+            android:id="@+id/include_top"
+            layout="@layout/include_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{@string/my_page_my_review}" />
+
+
+        <TextView
+            android:id="@+id/tv_review_count"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="14dp"
+            android:includeFontPadding="false"
+            android:text="@string/my_page_use_review_count"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include_top" />
+
+        <TextView
+            android:id="@+id/tv_review_count_value"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:includeFontPadding="false"
+            android:text="@{String.valueOf(count)}"
+            android:textColor="@color/imperial_red"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_review_count"
+            app:layout_constraintStart_toEndOf="@+id/tv_review_count"
+            app:layout_constraintTop_toTopOf="@+id/tv_review_count" />
+
+        <include
+            android:id="@+id/ic_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/include_empty_view"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_count_value"
+            android:layout_marginTop="30dp"
+            app:title="@{@string/my_page_my_review_empty}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_feed"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingBottom="40dp"
+            android:layout_marginTop="30dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_count" />
+
+
+        <ImageView
+            android:id="@+id/img_feed_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/ic_ticket_plus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
