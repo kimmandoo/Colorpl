@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.domain.model.Review
 import com.domain.usecase.ReviewCreateUseCase
 import com.domain.util.DomainResult
+import com.presentation.util.SpoilerWeightClassifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -26,6 +28,17 @@ class ReviewViewModel @Inject constructor(
     val confirmCheck: StateFlow<Boolean> = _confirmCheck
     private val _reviewResponse = MutableSharedFlow<Int>()
     val reviewResponse: SharedFlow<Int> = _reviewResponse.asSharedFlow()
+    private val _spoilerWeight = MutableStateFlow<Boolean>(false)
+    val spoilerWeight: StateFlow<Boolean> = _spoilerWeight
+
+
+    fun setSpoilerWeight(weight: Int) {
+        _spoilerWeight.value = if(weight == 1){
+            true
+        }else{
+            false
+        }
+    }
 
     fun setEmotion(index: Int) {
         _selectedEmotion.value = index
