@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationDetailDTO {
+public class ReservationDetailResponse {
 
     private Long id;
     private Byte row;
     private Byte col;
     private Long showScheduleId;
 
-    public static ReservationDetailDTO toReservationDetailDTO(ReservationDetail reservationDetail) {
-        return ReservationDetailDTO.builder()
+    public static ReservationDetailResponse toReservationDetailResponse(ReservationDetail reservationDetail) {
+        return ReservationDetailResponse.builder()
             .id(reservationDetail.getId())
             .row(reservationDetail.getRow())
             .col(reservationDetail.getCol())

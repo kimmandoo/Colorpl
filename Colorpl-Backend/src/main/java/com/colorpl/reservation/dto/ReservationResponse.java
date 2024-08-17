@@ -1,7 +1,7 @@
 package com.colorpl.reservation.dto;
 
 import com.colorpl.reservation.domain.Reservation;
-import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,18 +15,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationDTO {
+public class ReservationResponse {
     private Long id;
     private Integer memberId;
     private LocalDateTime date;
     private String amount;
     private String comment;
     private boolean isRefunded;
-    private List<ReservationDetailDTO> reservationDetails;
+    private List<ReservationDetailRequest> reservationDetails;
 
     //--DTO로 변환--
-    public static ReservationDTO toReservationDTO(Reservation reservation) {
-        return ReservationDTO.builder()
+    public static ReservationResponse toReservationResponse(Reservation reservation) {
+        return ReservationResponse.builder()
             .id(reservation.getId())
             .memberId(reservation.getMember().getId())
             .date(reservation.getDate())
@@ -35,7 +35,7 @@ public class ReservationDTO {
             .isRefunded(reservation.isRefunded())
             .reservationDetails(reservation.getReservationDetails()
                 .stream()
-                .map(ReservationDetailDTO::toReservationDetailDTO)
+                .map(ReservationDetailRequest::toReservationDetailRequest)
                 .collect(Collectors.toList()))
             .build();
     }
