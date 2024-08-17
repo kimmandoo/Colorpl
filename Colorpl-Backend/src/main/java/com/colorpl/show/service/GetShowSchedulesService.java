@@ -36,7 +36,7 @@ public class GetShowSchedulesService {
         Hall hall = Hall.builder().name(showDetail.getHall().getName()).countSeats(rows * cols)
             .build();
         showDetail.getShowSchedules().forEach(showSchedule -> {
-            Integer remainingSeats = (int) getReservationStatusService.getReservationStatus(
+            Integer remainingSeats = (int) getReservationStatusService.getReservationStatusByShowScheduleIdWithCaching(
                     showSchedule.getId()).getReserved().values().stream()
                 .filter(item -> item.getIsReserved().equals(false)).count();
             Timetable timetable = Timetable.builder().showScheduleId(showSchedule.getId())

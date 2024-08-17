@@ -37,8 +37,8 @@ class GetReservationStatusServiceTest {
     }
 
     @Test
-    void getReservationStatus() {
-        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatus(2L);
+    void getReservationStatusByShowScheduleIdWithCaching() {
+        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatusByShowScheduleIdWithCaching(2L);
         assertThat(reservationStatus.getReserved().get(seat.toString())).isEqualTo(true);
     }
 }

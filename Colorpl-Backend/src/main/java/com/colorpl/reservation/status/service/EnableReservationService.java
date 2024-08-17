@@ -17,7 +17,7 @@ public class EnableReservationService {
     private Long expiration;
 
     public void enableReservation(Long showScheduleId, Integer row, Integer col) {
-        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatus(
+        ReservationStatus reservationStatus = getReservationStatusService.getReservationStatusByShowScheduleIdWithCaching(
             showScheduleId);
         reservationStatus.enableReservation(row, col, expiration);
         reservationStatusRepository.save(reservationStatus);

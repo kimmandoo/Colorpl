@@ -12,8 +12,12 @@ public class GetReservationStatusService {
     private final ReservationStatusRepository reservationStatusRepository;
     private final CreateReservationStatusService createReservationStatusService;
 
-    public ReservationStatus getReservationStatus(Long showScheduleId) {
+    public ReservationStatus getReservationStatusByShowScheduleIdWithCaching(Long showScheduleId) {
         return reservationStatusRepository.findById(showScheduleId).orElseGet(
             () -> createReservationStatusService.createReservationStatus(showScheduleId));
+    }
+
+    public ReservationStatus getReservationStatusByShowScheduleId(Long showScheduleId) {
+        return createReservationStatusService.createReservationStatus(showScheduleId);
     }
 }

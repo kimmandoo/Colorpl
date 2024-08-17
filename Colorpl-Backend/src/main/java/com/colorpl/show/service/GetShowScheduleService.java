@@ -15,6 +15,6 @@ public class GetShowScheduleService {
 
     @Transactional(readOnly = true)
     public Map<String, Item> getShowSchedule(Long showScheduleId) {
-        return getReservationStatusService.getReservationStatus(showScheduleId).getReserved();
+        return getReservationStatusService.getReservationStatusByShowScheduleIdWithCaching(showScheduleId).getReserved();
     }
 }
