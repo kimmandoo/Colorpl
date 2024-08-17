@@ -11,9 +11,11 @@ import com.colorpl.show.domain.ShowDetail;
 import com.colorpl.show.dto.GetShowSchedulesRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,52 +26,44 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ShowDetail> getShowDetails(
-        LocalDate date,
-        String keyword,
-        List<Area> area,
-        Category category,
-        Integer cursorId,
-        int limit
-    ) {
+    public List<ShowDetail> getShowsByCondition(LocalDate date, String keyword, List<Area> area, Category category, Integer cursorId, Long limit) {
         return queryFactory
-            .select(showDetail).distinct()
-            .from(showDetail)
-            .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(
-                dateEq(date),
-                nameContains(keyword),
-                areaIn(area),
-                categoryEq(category),
-                cursorIdGt(cursorId)
-            )
-            .limit(limit)
-            .fetch();
-
+                .select(showDetail).distinct()
+                .from(showDetail)
+                .join(showDetail.showSchedules, showSchedule).fetchJoin()
+                .where(
+                        dateEq(date),
+                        nameContains(keyword),
+                        areaIn(area),
+                        categoryEq(category),
+                        cursorIdGt(cursorId)
+                )
+                .limit(limit)
+                .fetch();
     }
 
     @Override
     public ShowDetail getShowDetail(Integer showDetailId) {
         return queryFactory
-            .select(showDetail)
-            .from(showDetail)
-            .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(showDetail.id.eq(showDetailId))
-            .fetchOne();
+                .select(showDetail)
+                .from(showDetail)
+                .join(showDetail.showSchedules, showSchedule).fetchJoin()
+                .where(showDetail.id.eq(showDetailId))
+                .fetchOne();
     }
 
     public ShowDetail getShowSchedules(GetShowSchedulesRequest condition) {
         return queryFactory
-            .select(showDetail).distinct()
-            .from(showDetail)
-            .join(showDetail.hall, hall).fetchJoin()
-            .join(hall.theater, theater).fetchJoin()
-            .join(showDetail.showSchedules, showSchedule).fetchJoin()
-            .where(
-                showDetailIdEq(condition.getShowDetailId()),
-                dateEq(condition.getDate())
-            )
-            .fetchOne();
+                .select(showDetail).distinct()
+                .from(showDetail)
+                .join(showDetail.hall, hall).fetchJoin()
+                .join(hall.theater, theater).fetchJoin()
+                .join(showDetail.showSchedules, showSchedule).fetchJoin()
+                .where(
+                        showDetailIdEq(condition.getShowDetailId()),
+                        dateEq(condition.getDate())
+                )
+                .fetchOne();
     }
 
     private BooleanExpression dateEq(LocalDate date) {

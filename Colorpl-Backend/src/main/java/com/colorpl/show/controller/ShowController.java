@@ -5,11 +5,11 @@ import com.colorpl.show.domain.Category;
 import com.colorpl.show.dto.CreateShowByApiIdRequest;
 import com.colorpl.show.dto.CreateShowByDateRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
-import com.colorpl.show.dto.GetShowDetailsResponse;
+import com.colorpl.show.dto.GetShowsByConditionResponse;
 import com.colorpl.show.dto.GetShowSchedulesResponse;
 import com.colorpl.show.service.CreateShowService;
 import com.colorpl.show.service.GetShowDetailService;
-import com.colorpl.show.service.GetShowDetailsService;
+import com.colorpl.show.service.GetShowService;
 import com.colorpl.show.service.GetShowScheduleService;
 import com.colorpl.show.service.GetShowSchedulesService;
 import java.net.URI;
@@ -31,28 +31,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class ShowController {
 
-    private final GetShowDetailsService getShowDetailsService;
+    private final GetShowService getShowDetailsService;
     private final GetShowDetailService getShowDetailService;
     private final GetShowSchedulesService getShowSchedulesService;
     private final GetShowScheduleService getShowScheduleService;
     private final CreateShowService createShowService;
+    private final GetShowService getShowService;
 
     @GetMapping
-    public ResponseEntity<List<GetShowDetailsResponse>> getShowDetails(
-        @RequestParam(required = false) LocalDate date,
-        @RequestParam(required = false) String keyword,
-        @RequestParam(required = false) List<Area> area,
-        @RequestParam(required = false) Category category,
-        @RequestParam(required = false) Integer cursorId,
-        @RequestParam(defaultValue = "10") int limit
-    ) {
-        return ResponseEntity.ok(getShowDetailsService.getShowDetails(
-            date,
-            keyword,
-            area,
-            category,
-            cursorId,
-            limit));
+    public ResponseEntity<List<GetShowsByConditionResponse>> getShowsByCondition(
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) List<Area> area,
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) Integer cursorId,
+            @RequestParam(defaultValue = "10") Long limit
+            ) {
+        return ResponseEntity.ok(getShowService.getShowsByCondition(
+                date,
+                keyword,
+                area,
+                category,
+                cursorId,
+                limit
+        ));
     }
 
     @GetMapping("/{showDetailId}")

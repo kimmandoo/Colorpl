@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class GetShowDetailsResponse {
+public class GetShowsByConditionResponse {
 
     private Integer id;
     private String name;
@@ -21,8 +21,8 @@ public class GetShowDetailsResponse {
     private String posterImagePath;
     private Category category;
 
-    public static GetShowDetailsResponse from(ShowDetail showDetail) {
-        return GetShowDetailsResponse.builder()
+    public static GetShowsByConditionResponse from(ShowDetail showDetail) {
+        return GetShowsByConditionResponse.builder()
             .id(showDetail.getId())
             .name(showDetail.getName())
             .runtime(showDetail.getRuntime())
