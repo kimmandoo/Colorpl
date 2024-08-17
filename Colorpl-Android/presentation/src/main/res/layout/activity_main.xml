@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="bottomVisibility"
+            type="boolean" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.presentation.MainActivity">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/nav_graph" />
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/eerie_black"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
+            app:fabAnchorMode="cradle"
+            app:fabCradleMargin="5dp"
+            app:fabCradleRoundedCornerRadius="20dp">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation_bar"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:paddingVertical="4dp"
+                app:itemActiveIndicatorStyle="@style/CustomBottomNavTextAppearance"
+                app:itemIconSize="24dp"
+                app:itemIconTint="@color/selector_timber_wolf_to_imperial_red"
+                app:itemRippleColor="@android:color/transparent"
+                app:itemTextAppearanceActive="@style/CustomBottomNavTextAppearance"
+                app:itemTextAppearanceInactive="@style/CustomBottomNavTextAppearance"
+                app:itemTextColor="@color/selector_timber_wolf_to_imperial_red"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/menu_bottom_nav" />
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_ticket"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:clickable="true"
+            android:contentDescription="@string/menu_reservation"
+            android:focusable="true"
+            android:foreground="@drawable/selector_ticket"
+            android:visibility="@{bottomVisibility ? View.VISIBLE : View.GONE}"
+            app:layout_anchor="@id/bottom_app_bar" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

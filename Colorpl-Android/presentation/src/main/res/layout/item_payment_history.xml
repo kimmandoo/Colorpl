@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="java.util.List" />
+
+        <variable
+            name="price"
+            type="String" />
+
+        <variable
+            name="type"
+            type="com.presentation.util.PaymentResult" />
+
+        <variable
+            name="seat"
+            type="List&lt;com.domain.model.Seat&gt;" />
+
+        <variable
+            name="payReceipt"
+            type="com.domain.model.PayReceipt" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rectangle_eerie_black_10">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_status"
+                style="@style/suite_bold_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="11dp"
+                android:text="@{payReceipt.statusLocale}"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_purchase"
+                style="@style/suite_medium_16"
+                changeDateText="@{payReceipt.purchasedAt}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/timber_wolf"
+                app:layout_constraintStart_toStartOf="@+id/tv_status"
+                app:layout_constraintTop_toBottomOf="@+id/tv_status" />
+
+            <ImageView
+                android:id="@+id/iv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="9dp"
+                android:background="@drawable/ic_more_horiz"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="21dp"
+            android:paddingBottom="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_top">
+
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="120dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="3:4"
+                android:layout_marginStart="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cl_content_value"
+                app:layout_constraintEnd_toStartOf="@+id/cl_content_value"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cl_content_value" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_content_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="19dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_image"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/suite_regular_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_title"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_title_value" />
+
+                <TextView
+                    android:id="@+id/tv_title_value"
+                    style="@style/suite_medium_12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@{payReceipt.orderName}"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_title"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    style="@style/suite_regular_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_price"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_price_value" />
+
+                <TextView
+                    android:id="@+id/tv_price_value"
+                    style="@style/suite_medium_12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@{price}"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_title_value"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title_value" />
+
+                <TextView
+                    android:id="@+id/tv_sit"
+                    style="@style/suite_regular_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_sit"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_sit_value" />
+
+                <TextView
+                    android:id="@+id/tv_sit_value"
+                    style="@style/suite_extra_bold_14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_price_value"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_price_value"
+                    app:setFormattedGrade="@{seat}" />
+
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    style="@style/suite_regular_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_location"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_location_value" />
+
+                <TextView
+                    android:id="@+id/tv_location_value"
+                    style="@style/suite_medium_12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@{payReceipt.theaterName}"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_title_value"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_sit_value" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/suite_regular_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_date"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_time_value" />
+
+                <TextView
+                    android:id="@+id/tv_time_value"
+                    style="@style/suite_medium_12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_title_value"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_location_value" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setPaymentBackground="@{type}" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_grade"
+        style="@style/suite_bold_14"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/rectangle_imperial_red_8_stroke_4_imperial_red"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="R"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_grade_cnt"
+        style="@style/suite_medium_14"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="2dp"
+        android:paddingEnd="8dp"
+        android:text="@string/reservation_seat_cnt"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_grade"
+        app:layout_constraintEnd_toStartOf="@id/tv_grade_price"
+        app:layout_constraintStart_toEndOf="@id/tv_grade"
+        app:layout_constraintTop_toTopOf="@id/tv_grade" />
+
+    <TextView
+        android:id="@+id/tv_grade_price"
+        style="@style/suite_medium_14"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:paddingEnd="12dp"
+        android:text="0원"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_grade_cnt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_grade_cnt"
+        app:layout_constraintTop_toTopOf="@id/tv_grade_cnt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

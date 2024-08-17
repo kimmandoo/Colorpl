@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reservation_seat_type_price">%s %s원"</string>
+    <string name="reservation">예매하기</string>
+    <string name="exit">나가기</string>
+    <!-- 예매 시작-->
+    <string name="reservation_detail_category">카테고리</string>
+    <string name="reservation_detail_genre">장르</string>
+    <string name="reservation_detail_cast">출연</string>
+    <string name="reservation_detail_runtime">러닝타임</string>
+    <string name="reservation_detail_content">내용</string>
+    <string name="reservation_detail_price_by_seat">좌석별 가격</string>
+    <string name="reservation_detail_next">예매하기</string>
+
+    <string name="reservation_time_table_value">극장 및 시간 선택 (1/4)</string>
+
+    <string name="reservation_seat_value">좌석 선택 (2/4)</string>
+
+    <string name="reservation_info_value">결제하기 (3/4)</string>
+    <string name="reservation_info">예매정보</string>
+    <string name="reservation_discount">할인적용</string>
+    <string name="reservation_ssafy_discount">SSAFY 교육생 할인</string>
+    <string name="reservation_coupon_discount">쿠폰할인</string>
+    <string name="reservation_pay_how">결제방법</string>
+    <string name="reservation_boot_pay">부트페이</string>
+    <string name="reservation_ssafy_pay">싸피페이</string>
+    <string name="reservation_caution">이용/취소/환불 규정을 확인해주세요.</string>
+    <string name="reservation_pay">결제하기</string>
+    <string name="reservation_discount_pay">- 할인금액</string>
+    <string name='reservation_result_pay'>최종 결제금액</string>
+
+    <!-- 예매 완료 -->
+    <string name="reservation_complete_value">예매완료 (4/4)</string>
+    <string name="reservation_complete_notice">예매가 완료되었습니다.</string>
+    <string name="reservation_pay_info">결제정보</string>
+    <string name="reservation_pay_number">결제번호</string>
+    <string name="reservation_pay_date">결제일시</string>
+    <string name="reservation_pay_value">결제금액</string>
+    <string name="reservation_complete">완료</string>
+    <string name="reservation_seat_cnt">x%d</string>
+    <string name="reservation_price">%s원</string>
+
+    <string name="reservation_date_today">오늘</string>
+    <string name="reservation_date_tomorrow">내일</string>
+    <string name="reservation_selected_title">선택한 날짜</string>
+
+    <!-- 안내 메시지 -->
+    <string name="reservation_over_time">이미 지난 일정 입니다.\n다른 일정을 선택해주십시오.</string>
+
+</resources>

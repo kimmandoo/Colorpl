@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginHorizontal="12dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:background="@drawable/ic_ticket_layout"-->
+    <!--        app:cardCornerRadius="20dp">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="200dp">-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/iv_ticket"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="200dp"-->
+    <!--                android:layout_weight="3"-->
+    <!--                android:layout_margin="10dp"-->
+    <!--                android:scaleType="centerCrop"-->
+    <!--                android:src="@drawable/dummy_ticket" />-->
+
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:layout_weight="2"-->
+    <!--                android:orientation="vertical">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/tv_title"-->
+    <!--                    style="@style/suite_extra_bold_16"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="0dp"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@color/calendar_temp"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:paddingHorizontal="4dp"-->
+    <!--                    android:textColor="@color/white" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/tv_where"-->
+    <!--                    style="@style/suite_bold_16"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="0dp"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@color/calendar_temp"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:paddingHorizontal="4dp"-->
+    <!--                    android:textColor="@color/white" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/tv_when"-->
+    <!--                    style="@style/suite_bold_14"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="0dp"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@color/calendar_temp"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:paddingHorizontal="4dp"-->
+    <!--                    android:textColor="@color/white" />-->
+
+    <!--            </LinearLayout>-->
+    <!--        </LinearLayout>-->
+    <!--    </androidx.cardview.widget.CardView>-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/ic_ticket_layout">
+
+        <LinearLayout
+            android:id="@+id/ll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginVertical="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                app:cardCornerRadius="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_ticket"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/dummy_ticket"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/ll_data"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/suite_extra_bold_14"
+                    android:textSize="14dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingHorizontal="4dp"
+                    android:textColor="@color/white"
+                    tools:text="제목" />
+
+                <TextView
+                    android:id="@+id/tv_where"
+                    style="@style/suite_medium_12"
+                    android:textSize="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingHorizontal="4dp"
+                    android:textColor="@color/white"
+                    tools:text="장소" />
+
+                <TextView
+                    android:id="@+id/tv_when"
+                    style="@style/suite_bold_12"
+                    android:textSize="14dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingHorizontal="4dp"
+                    android:textColor="@color/white"
+                    tools:text="일시" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

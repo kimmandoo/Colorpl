@@ -1,0 +1,235 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night"
+        tools:context="com.presentation.my_page.SettingFragment">
+
+        <include
+            android:id="@+id/include_top"
+            layout="@layout/include_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@{@string/my_page_setting}" />
+
+        <View
+            android:id="@+id/line_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="34dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/include_top" />
+
+
+        <TextView
+            android:id="@+id/tv_account"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="7dp"
+            android:text="@string/my_page_account"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_top" />
+
+        <TextView
+            android:id="@+id/tv_logout"
+            style="@style/suite_medium_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_log_out"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_account" />
+
+        <TextView
+            android:id="@+id/tv_password_change"
+            style="@style/suite_medium_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_password_change"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_logout" />
+
+        <TextView
+            android:id="@+id/tv_sign_out"
+            style="@style/suite_medium_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_sign_out"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_password_change" />
+
+        <View
+            android:id="@+id/line_middle"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="13dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sign_out" />
+
+        <TextView
+            android:id="@+id/tv_notification"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="7dp"
+            android:text="@string/my_page_notification"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_middle" />
+
+        <TextView
+            android:id="@+id/tv_notification_send"
+            style="@style/suite_medium_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_notification_send"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintEnd_toStartOf="@+id/sc_notification_send"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sc_notification_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:thumb="@drawable/selector_ic_switch_button"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_notification_send"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_notification_send"
+            app:track="@drawable/selector_ic_switch" />
+
+
+        <TextView
+            android:id="@+id/tv_notification_sound"
+            style="@style/suite_medium_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_notification_sound"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sc_notification_sound"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_send" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sc_notification_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:thumb="@drawable/selector_ic_switch_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_notification_sound"
+            app:layout_constraintTop_toTopOf="@+id/tv_notification_sound"
+            app:track="@drawable/selector_ic_switch" />
+
+        <TextView
+            android:id="@+id/tv_notification_vibrate"
+            style="@style/suite_medium_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sc_notification_sound"
+            android:text="@string/my_page_notification_vibrate"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_sound" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sc_notification_vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:thumb="@drawable/selector_ic_switch_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_notification_vibrate"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_notification_vibrate"
+            app:track="@drawable/selector_ic_switch" />
+
+        <View
+            android:id="@+id/line_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="13dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_vibrate" />
+
+        <TextView
+            android:id="@+id/tv_etc"
+            style="@style/suite_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="7dp"
+            android:text="@string/my_page_etc"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_bottom" />
+
+
+        <TextView
+            android:id="@+id/tv_version"
+            style="@style/suite_medium_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_version"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintEnd_toStartOf="@+id/tv_version_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_etc" />
+
+        <TextView
+            android:id="@+id/tv_version_value"
+            style="@style/suite_semibold_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:text="@string/my_page_version_value"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_etc"
+            app:layout_constraintTop_toTopOf="@+id/tv_version" />
+
+
+        <TextView
+            android:id="@+id/tv_inquire"
+            style="@style/suite_medium_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_page_inquire"
+            android:textColor="@color/timber_wolf"
+            app:layout_constraintTop_toBottomOf="@+id/tv_version" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

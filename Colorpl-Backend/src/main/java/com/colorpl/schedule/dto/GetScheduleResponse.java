@@ -8,6 +8,9 @@ import com.colorpl.show.domain.Category;
 import com.colorpl.show.domain.ShowDetail;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,13 +77,20 @@ public class GetScheduleResponse {
         GetScheduleResponseBuilder builder) {
         ShowDetail showDetail = reservationSchedule.getReservation().getReservationDetails().get(0)
             .getShowSchedule().getShowDetail();
+
+
+        List<String> seats = reservationSchedule.getReservation().getReservationDetails()
+                .stream()
+                .map(detail -> convertToSeatFormat(detail.getRow(), detail.getCol()))
+                .collect(Collectors.toList());
+
+        // 좌석 정보를 문자열로 변환
+        String seatInfo = String.join(", ", seats);
+
         return builder
             .type(ScheduleType.RESERVATION)
             .image(showDetail.getPosterImagePath())
-            .seat(String.valueOf(
-                (char) ('A' + reservationSchedule.getReservation().getReservationDetails().get(0)
-                    .getRow())).concat(String.valueOf(
-                reservationSchedule.getReservation().getReservationDetails().get(0).getCol() + 1)))
+            .seat(seatInfo)
             .dateTime(reservationSchedule.getReservation().getReservationDetails().get(0)
                 .getShowSchedule().getDateTime())
             .name(showDetail.getName())
@@ -90,5 +100,14 @@ public class GetScheduleResponse {
             .latitude(showDetail.getHall().getTheater().getLatitude())
             .longitude(showDetail.getHall().getTheater().getLongitude())
             .build();
+    }
+
+
+    // 좌석 변환 메서드
+    private static String convertToSeatFormat(int row, int col) {
+        // row를 알파벳으로 변환 (0 -> A, 1 -> B, ...)
+        char rowChar = (char) ('A' + row);
+        // col을 숫자로 변환 (1부터 시작)
+        return rowChar + String.valueOf(col + 1);
     }
 }
