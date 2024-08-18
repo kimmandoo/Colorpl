@@ -22,4 +22,11 @@ public class GetShowService {
         return showDetailRepository.getShowsByCondition(date, keyword, area, category, cursorId,
             limit).stream().map(GetShowsByConditionResponse::from).toList();
     }
+
+    public List<GetShowsByConditionResponse> getShowsByConditionNoCaching(LocalDate date,
+        String keyword,
+        List<Area> area, Category category, Integer cursorId, Long limit) {
+        return showDetailRepository.getShowsByCondition(date, keyword, area, category, cursorId,
+            limit).stream().map(GetShowsByConditionResponse::from).toList();
+    }
 }

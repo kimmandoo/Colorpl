@@ -5,13 +5,13 @@ import com.colorpl.show.domain.Category;
 import com.colorpl.show.dto.CreateShowByApiIdRequest;
 import com.colorpl.show.dto.CreateShowByDateRequest;
 import com.colorpl.show.dto.GetShowDetailResponse;
-import com.colorpl.show.dto.GetShowsByConditionResponse;
 import com.colorpl.show.dto.GetShowSchedulesResponse;
+import com.colorpl.show.dto.GetShowsByConditionResponse;
 import com.colorpl.show.service.CreateShowService;
 import com.colorpl.show.service.GetShowDetailService;
-import com.colorpl.show.service.GetShowService;
 import com.colorpl.show.service.GetShowScheduleService;
 import com.colorpl.show.service.GetShowSchedulesService;
+import com.colorpl.show.service.GetShowService;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -40,20 +40,39 @@ public class ShowController {
 
     @GetMapping
     public ResponseEntity<List<GetShowsByConditionResponse>> getShowsByCondition(
-            @RequestParam(required = false) LocalDate date,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) List<Area> area,
-            @RequestParam(required = false) Category category,
-            @RequestParam(required = false) Integer cursorId,
-            @RequestParam(defaultValue = "10") Long limit
-            ) {
+        @RequestParam(required = false) LocalDate date,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) List<Area> area,
+        @RequestParam(required = false) Category category,
+        @RequestParam(required = false) Integer cursorId,
+        @RequestParam(defaultValue = "10") Long limit
+    ) {
         return ResponseEntity.ok(getShowService.getShowsByCondition(
-                date,
-                keyword,
-                area,
-                category,
-                cursorId,
-                limit
+            date,
+            keyword,
+            area,
+            category,
+            cursorId,
+            limit
+        ));
+    }
+
+    @GetMapping("/no-caching")
+    public ResponseEntity<List<GetShowsByConditionResponse>> getShowsByConditionNoCaching(
+        @RequestParam(required = false) LocalDate date,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) List<Area> area,
+        @RequestParam(required = false) Category category,
+        @RequestParam(required = false) Integer cursorId,
+        @RequestParam(defaultValue = "10") Long limit
+    ) {
+        return ResponseEntity.ok(getShowService.getShowsByConditionNoCaching(
+            date,
+            keyword,
+            area,
+            category,
+            cursorId,
+            limit
         ));
     }
 
