@@ -142,5 +142,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_content" />
 
+        <TextView
+            style="@style/suite_extra_bold_18"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:id="@+id/tv_spoiler"
+            android:text="스포일러가 포함된 리뷰입니다"
+            android:background="#803B414A"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_content" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
