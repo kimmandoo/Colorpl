@@ -4,6 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -41,7 +43,6 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
     private val viewModel: ReviewViewModel by viewModels()
     private val args: ReviewFragmentArgs by navArgs()
     private lateinit var classifier: SpoilerWeightClassifier
-    private var spoilerWeight = 0
 
 
     private val listener = object :
@@ -98,9 +99,21 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             getPhotoGallery(pickImageLauncher)
         }
 
-        binding.etContent.addTextChangedListener { edit ->
-            classifier.classify(edit.toString())
-        }
+        binding.etContent.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(s.toString().length > 20){
+                    classifier.classify(s.toString())
+                }
+            }
+        })
 
     }
 

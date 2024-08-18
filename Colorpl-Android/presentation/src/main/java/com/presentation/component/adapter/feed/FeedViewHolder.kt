@@ -19,9 +19,9 @@ class FeedViewHolder(
     fun bind(data: Feed) {
         binding.apply {
             Timber.d("데이터 확인여 ${data.myempathy}")
-            val clickScope = listOf(tvContent,tvProfile, tvTitle, ivContent, ivComment, tvCommentCnt)
+            val clickScope =
+                listOf(tvContent, tvProfile, tvTitle, ivContent, ivComment, tvCommentCnt)
             tvTitle.text = data.title
-            tvContent.text = data.content
             tvEmotion.text = data.empathy.toString()
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
@@ -30,6 +30,13 @@ class FeedViewHolder(
                 ivContent.visibility = View.GONE
             } else {
                 ivContent.setImageCenterCrop(data.imgurl)
+            }
+            tvContent.text = if (data.spoiler) {
+                tvSpoiler.visibility = View.VISIBLE
+                "스포일러가 포함된 리뷰입니다"
+            } else {
+                tvSpoiler.visibility = View.GONE
+                data.content
             }
             clickScope.forEach {
                 it.setOnClickListener { onFeedContentClickListener(data.id) }
