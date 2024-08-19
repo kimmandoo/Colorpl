@@ -223,15 +223,15 @@ class TicketCreateFragment :
     }
 
     private fun initWorkerManager() {
-        val description = viewModel.description.value
-        val ticketDate = stringToCalendar(description?.schedule ?: "")?.timeInMillis ?: 0
+        val description = viewModel.setSchedule.value
+        Timber.d("데이터 연기 확인 $description")
+        val ticketDate = stringToCalendar(description)?.timeInMillis ?: 0
         val currentTime = System.currentTimeMillis()
         val delay = ticketDate - hourToMills(4) - currentTime
         val latLng = viewModel.geocodingLatLng.value
         val data = Data.Builder()
             .putString("latLng", "${latLng.latitude},${latLng.longitude}")
             .build()
-        Timber.d("지도 데이터 확인 ${viewModel.geocodingLatLng.value}")
         val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>()
             .setInputData(data)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
