@@ -16,6 +16,7 @@ import timber.log.Timber
 
 fun sendNotification(
     context: Context,
+    title : String?,
     time: String?,
     distance: String?,
     settingsInfo: Setting
@@ -41,7 +42,7 @@ fun sendNotification(
         .setContentTitle(context.getString(R.string.notification_colorpl_title))
         .setStyle(
             NotificationCompat.BigTextStyle()
-                .bigText("현재 위치로부터 공연 장소까지 걸리는\n시간 : $time \n거리 : $distance\n늦지 않게 출발하세요!")
+                .bigText("${title} 일정을 잊지 않으셨죠?\n현재 위치로부터 공연 장소까지 걸리는\n시간 : $time \n거리 : $distance\n늦지 않게 출발하세요!")
         )
         .setAutoCancel(true)
         .setContentIntent(pendingIntent)

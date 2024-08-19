@@ -230,7 +230,7 @@ class TicketCreateFragment :
         val delay = ticketDate - hourToMills(4) - currentTime
         val latLng = viewModel.geocodingLatLng.value
         val data = Data.Builder()
-            .putString("latLng", "${latLng.latitude},${latLng.longitude}")
+            .putString("latLng", "${latLng.latitude},${latLng.longitude},${binding.etTitle.text}")
             .build()
         val fcmWorkRequest: OneTimeWorkRequest = OneTimeWorkRequestBuilder<FcmWorker>()
             .setInputData(data)

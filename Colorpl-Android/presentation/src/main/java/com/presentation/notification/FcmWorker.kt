@@ -52,11 +52,13 @@ class FcmWorker @AssistedInject constructor(
                             Timber.tag("Work").d("$setting")
                             when (result) {
                                 is DomainResult.Success -> {
-                                    val data = result.data
+                                    val value = result.data
 
                                     sendNotification(
-                                        context = context, data?.totalTime?.roadTimeChange(),
-                                        data?.totalDistance?.distanceChange(),
+                                        context = context,
+                                        data[2],
+                                        value?.totalTime?.roadTimeChange(),
+                                        value?.totalDistance?.distanceChange(),
                                         setting
                                     )
                                 }
