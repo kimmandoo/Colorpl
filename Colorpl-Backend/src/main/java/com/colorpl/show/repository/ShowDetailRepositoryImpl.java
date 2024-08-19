@@ -66,6 +66,31 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
             .fetchOne();
     }
 
+    @Override
+    public List<ShowDetail> getShowsByConditionV2(LocalDate date, String keyword, List<Area> area,
+        Category category, Integer cursorId, Long limit) {
+        return queryFactory
+            .selectFrom(showDetail)
+            .where(
+                showDetail.id.in(
+                    queryFactory
+                        .select(showSchedule.showDetail.id)
+                        .from(showSchedule)
+                        .join(showSchedule.showDetail, showDetail)
+                        .where(
+                            dateEq(date),
+                            nameContains(keyword),
+                            areaIn(area),
+                            categoryEq(category),
+                            cursorIdGt(cursorId)
+                        )
+                        .groupBy(showSchedule.showDetail.id)
+                        .limit(limit)
+                        .fetch()
+                ))
+            .fetch();
+    }
+
     private BooleanExpression dateEq(LocalDate date) {
         if (date == null) {
             return null;
