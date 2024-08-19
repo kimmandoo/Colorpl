@@ -55,7 +55,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
                 val res = results.classificationResult()
                     .classifications().first()
                     .categories().first()
-                if (res.index() == 0 && res.score() < 0.6 || res.index() == 1) {
+                if ((res.index() == 0 && res.score() < 0.6) || res.index() == 1) {
                     Timber.tag("tensorflow").d("${viewModel.spoilerWeight.value}")
                     viewModel.setSpoilerWeight(
                         1
