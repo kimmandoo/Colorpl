@@ -52,16 +52,25 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             inferenceTime: Long
         ) {
             CoroutineScope(Dispatchers.IO).launch {
-                viewModel.setSpoilerWeight(
-                    results.classificationResult()
-                        .classifications().first()
-                        .categories().first().index()
-                )
+                val res = results.classificationResult()
+                    .classifications().first()
+                    .categories().first()
+                if (res.index() == 0 && res.score() < 0.6 || res.index() == 1) {
+                    Timber.tag("tensorflow").d("${viewModel.spoilerWeight.value}")
+                    viewModel.setSpoilerWeight(
+                        1
+                    )
+                }else{
+                    viewModel.setSpoilerWeight(
+                        0
+                    )
+                }
+
                 Timber.tag("tensorflow").d(
                     "${
                         results.classificationResult()
                             .classifications().first()
-                            .categories().first().index()
+                            .categories()
                     }"
                 )
             }
@@ -109,7 +118,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString().length > 20) {
+                if (s.toString().length > 10) {
                     classifier.classify(s.toString())
                 }
             }
