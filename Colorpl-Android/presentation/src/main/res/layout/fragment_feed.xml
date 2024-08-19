@@ -24,29 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/sv_search"
-                    android:layout_width="260dp"
-                    android:layout_height="48dp"
-                    android:theme="@style/CustomSearchView"
-                    android:visibility="invisible"
-                    app:closeIcon="@drawable/ic_close_white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:queryHint="@string/feed_search_hint"
-                    app:searchHintIcon="@drawable/ic_search"
-                    app:searchIcon="@drawable/ic_search" />
-
-                <ImageView
-                    android:id="@+id/iv_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_filter"
-                    app:layout_constraintBottom_toBottomOf="@+id/sv_search"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/sv_search" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_filter"
@@ -55,10 +32,59 @@
                     android:layout_marginTop="4dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/sv_search"
-                    app:layout_constraintTop_toBottomOf="@id/sv_search"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:listitem="@layout/item_feed_filter" />
+
+
+                <TextView
+                    android:id="@+id/tv_spoiler"
+                    style="@style/suite_medium_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/feed_spoiler_ok"
+                    android:textColor="@color/timber_wolf"
+                    app:layout_constraintEnd_toStartOf="@+id/sc_spoiler"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_filter" />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_spoiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:background="@null"
+                    android:thumb="@drawable/selector_ic_switch_button"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_spoiler"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_spoiler"
+                    app:track="@drawable/selector_ic_switch" />
+
+                <!--                <androidx.appcompat.widget.SearchView-->
+                <!--                    android:id="@+id/sv_search"-->
+                <!--                    android:layout_width="260dp"-->
+                <!--                    android:layout_height="48dp"-->
+                <!--                    android:theme="@style/CustomSearchView"-->
+                <!--                    android:visibility="invisible"-->
+                <!--                    app:closeIcon="@drawable/ic_close_white"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent"-->
+                <!--                    app:queryHint="@string/feed_search_hint"-->
+                <!--                    app:searchHintIcon="@drawable/ic_search"-->
+                <!--                    app:searchIcon="@drawable/ic_search" />-->
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/iv_filter"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="8dp"-->
+                <!--                    android:layout_marginEnd="12dp"-->
+                <!--                    android:src="@drawable/ic_filter"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="@+id/sv_search"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="@+id/sv_search" />-->
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

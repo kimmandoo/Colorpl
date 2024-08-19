@@ -99,7 +99,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             getPhotoGallery(pickImageLauncher)
         }
 
-        binding.etContent.addTextChangedListener(object : TextWatcher{
+        binding.etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -109,7 +109,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if(s.toString().length > 20){
+                if (s.toString().length > 20) {
                     classifier.classify(s.toString())
                 }
             }

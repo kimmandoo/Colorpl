@@ -36,10 +36,7 @@ class SpoilerWeightClassifier(
                 "Text classifier failed to initialize. See error logs for " +
                         "details"
             )
-            Timber.e(
-                TAG, "Text classifier failed to load the task with error: " + e
-                    .message
-            )
+
         }
     }
 

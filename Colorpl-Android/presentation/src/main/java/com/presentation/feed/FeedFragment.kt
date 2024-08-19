@@ -1,7 +1,6 @@
 package com.presentation.feed
 
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -48,6 +48,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     override fun initView() {
         initFilter()
         initFeed()
+        initClickEvent()
         observeFilter()
         observeDialog()
         onFeedRegisterClickListener()
@@ -65,7 +66,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
     private fun observeFilter() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.currentFilter.collect { filter ->
-                updateFilterUI(filter)
+                updateFilterUI(filter.first)
             }
         }
     }
@@ -85,10 +86,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
 
         viewModel.pagedFeed.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { pagingData ->
             pagingData?.let { feed ->
-                val filteredList = if (viewModel.currentFilter.value == "전체") {
-                    feed
-                } else {
-                    feed.filter { it.category == viewModel.currentFilter.value }
+                val data = viewModel.currentFilter.value
+                val filteredList = when {
+                    data.first == "전체" && data.second -> feed
+                    data.first == "전체" && !data.second -> feed.filter { !it.spoiler }
+                    data.first != "전체" && data.second -> feed.filter { it.category == data.first }
+                    else -> feed.filter { it.category == data.first && !it.spoiler }
                 }
                 feedAdapter.submitData(viewLifecycleOwner.lifecycle, filteredList)
             }
@@ -117,7 +120,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                 item.copy(isSelected = false)
             }
         }
-        viewModel.setFilter(clickedItem.name)
+        viewModel.setFilter(clickedItem.name, true)
         filterAdapter.submitList(updatedList)
     }
 
@@ -161,6 +164,20 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(R.layout.fragment_feed) {
                 }
         }
     }
+
+    private fun initClickEvent() {
+        binding.apply {
+            scSpoiler.isChecked = true
+            scSpoiler.setOnCheckedChangeListener { _, isChecked ->
+                Timber.d("스포일러 여부 $isChecked")
+                tvSpoiler.text =
+                    if (isChecked) requireActivity().getString(R.string.feed_spoiler_ok)
+                    else requireActivity().getString(R.string.feed_spoiler_no)
+                viewModel.setFilter(type = false, spoiler = isChecked)
+            }
+        }
+    }
+
 
     private fun refreshFeed() {
         feedAdapter.refresh()

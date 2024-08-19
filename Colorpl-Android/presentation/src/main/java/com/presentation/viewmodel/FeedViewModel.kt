@@ -36,6 +36,8 @@ class FeedViewModel @Inject constructor(
 ) : ViewModel() {
     private val _pagedFeed = MutableStateFlow<PagingData<Feed>?>(null)
     val pagedFeed = _pagedFeed
+
+
     private val _pagedComment = MutableStateFlow<PagingData<Comment>?>(null)
     val pagedComment = _pagedComment
     private val _reviewEditResponse = MutableSharedFlow<Int>()
@@ -50,8 +52,9 @@ class FeedViewModel @Inject constructor(
     val commentCreateResponse = _commentCreateResponse.asSharedFlow()
     private val _refreshTrigger = MutableSharedFlow<Unit>()
     val refreshTrigger = _refreshTrigger.asSharedFlow()
-    private val _currentFilter = MutableStateFlow<String>("전체")
-    val currentFilter: StateFlow<String> = _currentFilter
+
+    private val _currentFilter = MutableStateFlow<Pair<String, Boolean>>(Pair("전체", true))
+    val currentFilter: StateFlow<Pair<String, Boolean>> = _currentFilter
 
     //리뷰 상세
     private val _reviewDetail = MutableStateFlow(ReviewDetail())
@@ -173,8 +176,14 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun setFilter(filter: String) {
-        _currentFilter.value = filter
+    // type -> true : 카테고리, false :  스포일러
+    fun setFilter(filter: String = "전체", type: Boolean, spoiler: Boolean = false) {
+        if (type) {
+            _currentFilter.value = Pair(filter, currentFilter.value.second)
+        } else {
+            _currentFilter.value = Pair(currentFilter.value.first, spoiler)
+        }
+
         getFeed()
     }
 
@@ -185,6 +194,7 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
+
 
     fun getComment(reviewId: Int) {
         viewModelScope.launch {
