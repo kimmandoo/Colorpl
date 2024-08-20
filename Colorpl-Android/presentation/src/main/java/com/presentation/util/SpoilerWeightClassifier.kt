@@ -33,8 +33,7 @@ class SpoilerWeightClassifier(
             textClassifier = TextClassifier.createFromOptions(context, options)
         } catch (e: IllegalStateException) {
             listener.onError(
-                "Text classifier failed to initialize. See error logs for " +
-                        "details"
+                "Text classifier failed to initialize. See error logs for $e"
             )
 
         }

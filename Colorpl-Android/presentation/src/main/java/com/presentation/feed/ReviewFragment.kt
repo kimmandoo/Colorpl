@@ -4,8 +4,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -60,7 +58,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
                     viewModel.setSpoilerWeight(
                         1
                     )
-                }else{
+                } else {
                     viewModel.setSpoilerWeight(
                         0
                     )
@@ -77,7 +75,7 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
         }
 
         override fun onError(error: String) {
-            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+            Timber.d("에러 확인 $error")
         }
     }
 
@@ -108,22 +106,11 @@ class ReviewFragment : BaseDialogFragment<FragmentReviewBinding>(R.layout.fragme
             getPhotoGallery(pickImageLauncher)
         }
 
-        binding.etContent.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+        binding.etContent.addTextChangedListener { s ->
+            if (s.toString().length > 10) {
+                classifier.classify(s.toString())
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if (s.toString().length > 10) {
-                    classifier.classify(s.toString())
-                }
-            }
-        })
-
+        }
     }
 
     private fun initEmotion() {
