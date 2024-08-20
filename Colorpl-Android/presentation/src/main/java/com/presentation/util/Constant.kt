@@ -9,7 +9,7 @@ enum class Mode(val mode: String) {
     WALK("WALK"),
     BUS("BUS"),
     SUBWAY("SUBWAY"),
-    EXPRESS_BUS("EXPRESS BUS"),
+    EXPRESS_BUS("EXPRESSBUS"),
     TRAIN("TRAIN"),
     AIRPLANE("AIRPLANE"),
     FERRY("FERRY"),
