@@ -26,7 +26,7 @@ class FeedViewHolder(
             tvProfile.text = data.writer
             tvCommentCnt.text = data.commentscount.toString()
             tvUploadDate.text = data.createdate
-            if (data.imgurl == "http://i11d109.p.ssafy.io/images/noimg.png") {
+            if (data.imgurl == "https://i11d109.p.ssafy.io/images/noimg.png") {
                 ivContent.visibility = View.GONE
             } else {
                 ivContent.setImageCenterCrop(data.imgurl)
