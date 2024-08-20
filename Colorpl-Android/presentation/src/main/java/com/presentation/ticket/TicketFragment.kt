@@ -217,7 +217,7 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                     pathOverlay.apply {
                         coords = segment.map { it.route }
                         color = when (segment.first().mode) {
-                            0 -> ContextCompat.getColor(requireContext(), R.color.blue) // 도보
+                            0 -> ContextCompat.getColor(requireContext(), R.color.light_gray) // 도보
                             1 -> ContextCompat.getColor(requireContext(), R.color.orange) // 버스나 지하철
                             2 -> ContextCompat.getColor(requireContext(), R.color.imperial_red) // 고속버스
                             else -> ContextCompat.getColor(requireContext(), R.color.orange) // 그 외
