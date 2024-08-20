@@ -223,6 +223,16 @@ class TicketViewModel @Inject constructor(
                                         currentSegment.addAll(newPoints)
                                     }
                                 }
+                                Mode.EXPRESS_BUS.mode ->{
+                                    route.passShape?.let { lineString ->
+                                        val newPoints = parseLatLng(2, lineString)
+                                        if (currentMode != 2) {
+                                            addCurrentSegment()
+                                            currentMode = 2
+                                        }
+                                        currentSegment.addAll(newPoints)
+                                    }
+                                }
                                 else -> {
                                     route.passShape?.let { lineString ->
                                         val newPoints = parseLatLng(1, lineString)
