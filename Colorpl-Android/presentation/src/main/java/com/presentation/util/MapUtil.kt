@@ -141,7 +141,7 @@ fun clickMarker(
                 Timber.d("데이터 확인 $markerData")
                 lifecycleScope.launch {
                     val async = lifecycleScope.async(Dispatchers.IO) {
-                        convertBitmapFromURL(markerData.imgUrl.replace("http", "https"))
+                        convertBitmapFromURL(markerData.imgUrl)
                     }
                     icon = combineImages(context, R.drawable.ic_default_pin, async.await() ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888))
                 }
