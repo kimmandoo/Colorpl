@@ -22,11 +22,15 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+
+data class RouteClassify(
+    val mode: Int,
+    val route: LatLng
+)
 
 @HiltViewModel
 class TicketViewModel @Inject constructor(
@@ -36,8 +40,8 @@ class TicketViewModel @Inject constructor(
     private val geocodingUseCase: GeocodingUseCase
 ) : ViewModel() {
 
-    private val _routeData = MutableSharedFlow<Pair<Route, List<LatLng>>>()
-    val routeData: SharedFlow<Pair<Route, List<LatLng>>> = _routeData.asSharedFlow()
+    private val _routeData = MutableSharedFlow<Pair<Route, MutableList<List<RouteClassify>>>>()
+    val routeData: SharedFlow<Pair<Route, List<List<RouteClassify>>>> = _routeData.asSharedFlow()
     private val _latLng = MutableStateFlow(LatLng(0.0, 0.0))
     val latLng: StateFlow<LatLng> get() = _latLng
     private val _isRouteNull = MutableSharedFlow<Boolean>()
@@ -175,7 +179,7 @@ class TicketViewModel @Inject constructor(
 
     fun getRoute(destination: LatLng) {
         viewModelScope.launch {
-            val routeData = mutableListOf<LatLng>()
+            val routeSegments = mutableListOf<List<RouteClassify>>()
             tmapRouteUseCase(
                 startX = latLng.value.longitude.toString(),
                 startY = latLng.value.latitude.toString(),
@@ -187,24 +191,63 @@ class TicketViewModel @Inject constructor(
                         _isRouteNull.emit(true)
                     }
                     data?.let {
+                        var currentSegment = mutableListOf<RouteClassify>()
+                        var currentMode = -1
+
+                        fun addCurrentSegment() {
+                            if (currentSegment.isNotEmpty()) {
+                                routeSegments.add(currentSegment)
+                                currentSegment = mutableListOf()
+                            }
+                        }
+
                         for (route in data.legs) {
                             when (route.mode) {
                                 Mode.WALK.mode -> {
-                                    route.steps?.let { steps ->
-                                        for (lineString in steps) {
-                                            routeData.addAll(parseLatLng(lineString.linestring))
+                                    route.steps?.forEach { step ->
+                                        val newPoints = parseLatLng(0, step.linestring)
+                                        if (currentMode != 0) {
+                                            addCurrentSegment()
+                                            currentMode = 0
                                         }
+                                        currentSegment.addAll(newPoints)
                                     }
                                 }
-
+                                Mode.BUS.mode, Mode.SUBWAY.mode -> {
+                                    route.passShape?.let { lineString ->
+                                        val newPoints = parseLatLng(1, lineString)
+                                        if (currentMode != 1) {
+                                            addCurrentSegment()
+                                            currentMode = 1
+                                        }
+                                        currentSegment.addAll(newPoints)
+                                    }
+                                }
+                                Mode.EXPRESS_BUS.mode, Mode.TRAIN.mode ->{
+                                    route.passShape?.let { lineString ->
+                                        val newPoints = parseLatLng(2, lineString)
+                                        if (currentMode != 2) {
+                                            addCurrentSegment()
+                                            currentMode = 2
+                                        }
+                                        currentSegment.addAll(newPoints)
+                                    }
+                                }
                                 else -> {
                                     route.passShape?.let { lineString ->
-                                        routeData.addAll(parseLatLng(lineString))
+                                        val newPoints = parseLatLng(1, lineString)
+                                        if (currentMode != 1) {
+                                            addCurrentSegment()
+                                            currentMode = 1
+                                        }
+                                        currentSegment.addAll(newPoints)
                                     }
                                 }
                             }
                         }
-                        val pairData = Pair(data, routeData)
+                        addCurrentSegment() // 마지막 세그먼트 추가
+
+                        val pairData = Pair(data, routeSegments)
                         _routeData.emit(pairData)
                     }
                 }.onFailure { error ->
@@ -214,12 +257,16 @@ class TicketViewModel @Inject constructor(
         }
     }
 
-    private fun parseLatLng(lineString: String): List<LatLng> {
+    private fun parseLatLng(mode: Int, lineString: String): List<RouteClassify> {
         return lineString.split(" ").map { coords ->
             val (longitude, latitude) = coords.split(",")
-            LatLng(latitude.toDouble(), longitude.toDouble())
+            RouteClassify(
+                mode = mode,
+                route = LatLng(latitude.toDouble(), longitude.toDouble())
+            )
         }
     }
+
 
 
 }

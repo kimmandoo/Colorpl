@@ -200,10 +200,65 @@
                         android:layout_marginBottom="15dp"
                         android:text="@{@string/ticket_total_time(totalTime)}"
                         android:textColor="@color/eerie_black"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/ll_route"
                         app:layout_constraintStart_toStartOf="@+id/tv_total_distance"
                         app:layout_constraintTop_toBottomOf="@id/tv_total_distance" />
 
+                    <LinearLayout
+                        android:id="@+id/ll_route"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingBottom="10dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/tv_total_time">
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/rectangle_light_grey_8"
+                            app:cardCornerRadius="8dp" />
+
+                        <TextView
+                            style="@style/suite_bold_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/eerie_black"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="도보" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/rectangle_orange_8"
+                            app:cardCornerRadius="8dp" />
+
+                        <TextView
+                            style="@style/suite_bold_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/eerie_black"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="버스, 지하철" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/rectangle_imperial_red_8"
+                            app:cardCornerRadius="8dp" />
+
+                        <TextView
+                            style="@style/suite_bold_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/eerie_black"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="고속버스, 기차" />
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

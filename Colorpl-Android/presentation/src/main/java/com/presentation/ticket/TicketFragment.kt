@@ -2,6 +2,7 @@ package com.presentation.ticket
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -19,6 +20,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.MultipartPathOverlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.presentation.base.BaseMapDialogFragment
@@ -150,7 +152,10 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
                 if (it) {
                     scheduleViewModel.refreshTickets()
                     Toast.makeText(requireContext(), "티켓이 삭제되었습니다", Toast.LENGTH_SHORT).show()
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set("closed", true)
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                        "closed",
+                        true
+                    )
                     dismissLoading()
                     findNavController().popBackStack()
                 }
@@ -207,22 +212,31 @@ class TicketFragment : BaseMapDialogFragment<FragmentTicketBinding>(R.layout.fra
             }.launchIn(viewLifecycleOwner.lifecycleScope)
         ticketViewModel.routeData.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { routeData ->
-                val routeOverlay = PathOverlay()
-                routeOverlay.apply {
-                    coords = routeData.second
-                    color = ContextCompat.getColor(binding.root.context, R.color.imperial_red)
-                    outlineWidth = 5
-                    map = naverMap
+                routeData.second.forEach { segment ->
+                    val pathOverlay = PathOverlay()
+                    pathOverlay.apply {
+                        coords = segment.map { it.route }
+                        color = when (segment.first().mode) {
+                            0 -> ContextCompat.getColor(requireContext(), R.color.light_gray) // 도보
+                            1 -> ContextCompat.getColor(requireContext(), R.color.orange) // 버스나 지하철
+                            2 -> ContextCompat.getColor(requireContext(), R.color.imperial_red) // 고속버스
+                            else -> ContextCompat.getColor(requireContext(), R.color.orange) // 그 외
+                        }
+                        outlineWidth = 5
+                        map = naverMap
+                    }
                 }
+                val firstData = routeData.second.first().first().route
+                naverMap.cameraPosition = CameraPosition(firstData, 14.0)
+
                 binding.apply {
                     totalTime = routeData.first.totalTime.roadTimeChange()
                     totalDistance = routeData.first.totalDistance.distanceChange()
                     this.clFindRoadContent.visibility = View.VISIBLE
                 }
-                val firstData = routeData.second.first()
-                naverMap.cameraPosition = CameraPosition(firstData, 16.0)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
 
     private fun observeDialog() {
         viewLifecycleOwner.lifecycleScope.launch {
