@@ -23,10 +23,18 @@ public class GetShowService {
             limit).stream().map(GetShowsByConditionResponse::from).toList();
     }
 
+    @Cacheable(value = "showsByConditionV2", key = "T(String).valueOf(#date ?: 'null') + '_' + T(String).valueOf(#keyword ?: 'null') + '_' + T(java.util.Objects).hash(#area) + '_' + T(String).valueOf(#category ?: 'null') + '_' + T(String).valueOf(#cursorId ?: 'null') + '_' + #limit")
     public List<GetShowsByConditionResponse> getShowsByConditionV2(LocalDate date,
         String keyword,
         List<Area> area, Category category, Integer cursorId, Long limit) {
         return showDetailRepository.getShowsByConditionV2(date, keyword, area, category, cursorId,
             limit).stream().map(GetShowsByConditionResponse::from).toList();
+    }
+
+    public List<GetShowsByConditionResponse> getShowsByConditionNoCaching(LocalDate date,
+                                                                   String keyword,
+                                                                   List<Area> area, Category category, Integer cursorId, Long limit) {
+        return showDetailRepository.getShowsByConditionV2(date, keyword, area, category, cursorId,
+                limit).stream().map(GetShowsByConditionResponse::from).toList();
     }
 }

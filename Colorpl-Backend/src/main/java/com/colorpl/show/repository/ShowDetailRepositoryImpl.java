@@ -71,6 +71,7 @@ public class ShowDetailRepositoryImpl implements ShowDetailRepositoryCustom {
         Category category, Integer cursorId, Long limit) {
         return queryFactory
             .selectFrom(showDetail)
+            .join(showDetail.priceBySeatClass).fetchJoin()
             .where(
                 showDetail.id.in(
                     queryFactory

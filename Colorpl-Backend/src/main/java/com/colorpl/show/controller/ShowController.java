@@ -47,7 +47,7 @@ public class ShowController {
         @RequestParam(required = false) Integer cursorId,
         @RequestParam(defaultValue = "10") Long limit
     ) {
-        return ResponseEntity.ok(getShowService.getShowsByCondition(
+        return ResponseEntity.ok(getShowService.getShowsByConditionV2(
             date,
             keyword,
             area,
@@ -57,7 +57,7 @@ public class ShowController {
         ));
     }
 
-    @GetMapping("/v2")
+    @GetMapping("/no-caching")
     public ResponseEntity<List<GetShowsByConditionResponse>> getShowsByConditionV2(
         @RequestParam(required = false) LocalDate date,
         @RequestParam(required = false) String keyword,
@@ -66,7 +66,7 @@ public class ShowController {
         @RequestParam(required = false) Integer cursorId,
         @RequestParam(defaultValue = "10") Long limit
     ) {
-        return ResponseEntity.ok(getShowService.getShowsByConditionV2(
+        return ResponseEntity.ok(getShowService.getShowsByConditionNoCaching(
             date,
             keyword,
             area,
