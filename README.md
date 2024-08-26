@@ -1,3 +1,18 @@
+## 안드로이드 기술 스택
+
+- Coroutine, Flow
+- Hilt(apply MultiModule)
+- Jetpack - Navigation, Paging, ViewModel, DataBinding, DataStore, Safe Args, WorkManager
+- Bootpay
+- OkHttp3, Retrofit2
+- NaverMap API, Naver Geocoding API, Tmap 대중교통 API
+- Google SignIn
+- Glide
+- OpenAI - VisionAPI
+- TensorFlowLite
+- Timber
+----
+
 ![image-13(Powered by MaxAI)](https://github.com/user-attachments/assets/47c326f4-ad64-4ab7-baa9-e7ddad9fdbf0)
 ![시스템 구성도 아키텍처](https://github.com/user-attachments/assets/7def5b92-d1df-4789-8400-53e948ce0367)
 ![image-1(Powered by MaxAI)](https://github.com/user-attachments/assets/8904503a-3873-4211-b4d8-72c824ea8a9a)
